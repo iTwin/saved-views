@@ -1,0 +1,34 @@
+{
+  "type": "module",
+  "scripts": {
+    "start": "run-p --silent start:*",
+    "start:backend": "npm start --prefix packages/test-app-backend",
+    "start:frontend": "npm start --prefix packages/test-app-frontend",
+    "test": "run-p --silent test:*",
+    "test:components": "npm test --prefix packages/saved-views-react",
+    "cover": "run-p --silent cover:*",
+    "cover:components": "npm run test:cover --prefix packages/saved-views-react",
+    "lint": "eslint '**/*.{ts,tsx}'",
+    "typecheck": "run-p --silent typecheck:*",
+    "typecheck:components": "npm run typecheck --prefix packages/saved-views-react",
+    "typecheck:backend": "npm run typecheck --prefix packages/test-app-backend",
+    "typecheck:frontend": "npm run typecheck --prefix packages/test-app-frontend",
+    "release": "ts-node --esm scripts/release.ts"
+  },
+  "engines": {
+    "pnpm": ">=8",
+    "npm": "<0",
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@types/node": "^18.11.9",
+    "@typescript-eslint/eslint-plugin": "^6.1.0",
+    "@typescript-eslint/parser": "^6.1.0",
+    "eslint": "^8.45.0",
+    "eslint-plugin-react": "^7.33.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "npm-run-all": "^4.1.5",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  }
+}

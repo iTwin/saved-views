@@ -1,0 +1,30 @@
+{
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "editor.trimAutoWhitespace": true,
+
+  "files.associations": {
+    ".env.*": "properties",
+  },
+  "files.exclude": {
+    "**/coverage": true,
+    "**/node_modules": true,
+  },
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+
+  "json.format.enable": true,
+  "json.format.keepLines": true,
+
+  "typescript.format.semicolons": "insert",
+  "typescript.reportStyleChecksAsWarnings": true,
+
+  "[javascript][typescript][typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+  },
+
+  "[json][jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features",
+  },
+}

@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": [ "DOM", "DOM.Iterable", "ESNext" ],
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "paths": {
+      "@itwin/saved-views-react": [ "../saved-views-react/src/index.ts" ],
+    },
+  },
+  "include": [ "src" ],
+  "references": [ { "path": "./tsconfig.node.json" } ]
+}
