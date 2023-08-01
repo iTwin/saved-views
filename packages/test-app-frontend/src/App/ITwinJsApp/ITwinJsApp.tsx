@@ -5,11 +5,9 @@
 import { AppNotificationManager, ConfigurableUiContent, UiFramework } from "@itwin/appui-react";
 import { Id64 } from "@itwin/core-bentley";
 import {
-  AuthorizationClient, BentleyCloudRpcManager, BentleyCloudRpcParams, IModelReadRpcInterface, IModelTileRpcInterface
+  AuthorizationClient, BentleyCloudRpcManager, BentleyCloudRpcParams, IModelReadRpcInterface, IModelTileRpcInterface,
 } from "@itwin/core-common";
-import {
-  CheckpointConnection, IModelApp, IModelConnection, ViewCreator3d, ViewState
-} from "@itwin/core-frontend";
+import { CheckpointConnection, IModelApp, IModelConnection, ViewCreator3d, ViewState } from "@itwin/core-frontend";
 import { ITwinLocalization } from "@itwin/core-i18n";
 import { UiCore } from "@itwin/core-react";
 import { FrontendIModelsAccess } from "@itwin/imodels-access-frontend";

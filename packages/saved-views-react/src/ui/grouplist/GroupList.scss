@@ -1,0 +1,14 @@
+// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+
+/* No search results or no views defined */
+.itwin-saved-views-view-list-nosearchresults {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+  padding: 0 20px;
+  color: var(--iui-color-text);
+  opacity: 0.85;
+  pointer-events: none;
+  font-style: italic;
+}

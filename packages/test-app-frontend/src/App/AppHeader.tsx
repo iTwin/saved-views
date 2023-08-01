@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 import { SvgDeveloper, SvgMoon, SvgSun } from "@itwin/itwinui-icons-react";
 import {
-  Button, DropdownMenu, Header, HeaderLogo, IconButton, MenuItem, UserIcon, getUserColor
+  Button, DropdownMenu, Header, HeaderLogo, IconButton, MenuItem, UserIcon, getUserColor,
 } from "@itwin/itwinui-react";
 import { ReactElement, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";

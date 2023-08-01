@@ -7,7 +7,8 @@ import { AuthorizationClient } from "@itwin/core-common";
 import { Code } from "@itwin/itwinui-react";
 import { User, UserManager, WebStorageStateStore } from "oidc-client-ts";
 import {
-  ComponentType, createContext, Fragment, PropsWithChildren, ReactElement, ReactNode, useContext, useEffect, useRef, useState
+  ComponentType, createContext, Fragment, PropsWithChildren, ReactElement, ReactNode, useContext, useEffect, useRef,
+  useState,
 } from "react";
 import { useNavigate } from "react-router-dom";
 

@@ -1,0 +1,218 @@
+// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+
+$outline-size: 2px;
+
+.itwin-saved-views-view-list-item-thumbnail.itwin-saved-views-view-list-item-highlight {
+  border: solid 1px var(--iui-color-icon-accent);
+  background-color: var(--iui-color-background-disabled);
+}
+
+/* A single item (view) in thumbnail view */
+.itwin-saved-views-view-list-item-thumbnail {
+  width: 146px; // we give it an arbitrary width
+  height: 98px; // arbitrary height
+  margin: 0 10px;
+  color: var(--iui-color-text);
+  background: var(--iui-color-background-hover);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  box-shadow: 0 1px 3px 0 RGBA(0, 0, 0, 0.2);
+  cursor: pointer;
+
+  /* view name (clipped) */
+  .itwin-saved-views-view-item-label-thumbnail {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    box-sizing: border-box;
+    height: 33px;
+
+    .itwin-saved-views-default-icon {
+      display: flex;
+      margin-left: 4px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .label {
+      flex: 1;
+      text-align: left;
+      padding-left: 6px;
+      font-size: 12px;
+      padding-top: 12px;
+      padding-bottom: 12px;
+      min-width: 0 !important;
+      min-height: 0 !important;
+      border: 0 solid transparent;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      opacity: 0.85;
+      color: var(--iui-color-text);
+    }
+  }
+
+  &:hover {
+    box-shadow: 0 0 6px 0 RGBA(var(--iui-color-border-foreground-hover), 0.75);
+    color: var(--iui-color-text);
+  }
+}
+
+/* Thumbnail container */
+.itwin-saved-views-view-item-thumbnail-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--iui-color-background-backdrop);
+  box-sizing: border-box;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: RGBA(var(--iui-color-foreground-hsl), 0.5);
+    z-index: 1;
+    transition: 0.5s;
+    opacity: 0;
+  }
+
+  /* Fill the thumbnail (should we fill differently?) */
+  > img {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  > .saved-view-icon,
+  .imodel-view-icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: var(--iui-color-white);
+    padding: 5px;
+    z-index: 2;
+    text-shadow: 0 0 3px var(--iui-color-foreground-hsl);
+    background-color: transparent;
+  }
+
+  > .saved-view-icon {
+    margin-right: 3px;
+    margin-top: 3px;
+    font-size: 14px;
+    padding: 4px;
+    background-color: Hsl(0 0% 0% / 0.4);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+  }
+
+  .imodel-view-icon {
+    background-color: transparent;
+  }
+
+  > .toggle {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: 3px;
+    margin-left: 3px;
+    z-index: 2;
+    opacity: 0;
+    transition: 0.5s;
+  }
+
+  > .toggle.checked {
+    opacity: 1;
+  }
+
+  /* No thumbnail svg (displayed at 50%) */
+  > .no-thumbnail {
+    width: 50%;
+
+    path,
+    circle {
+      fill: #cccccc;
+    }
+  }
+
+  &:hover {
+    .toggle {
+      opacity: 1;
+    }
+  }
+}
+
+.itwin-saved-views-spinner-overlay {
+  position: absolute;
+  margin: auto;
+  z-index: 10;
+}
+
+/* More (...) icon */
+.itwin-saved-views-view-item-more {
+  position: relative;
+  cursor: pointer;
+
+  > .icon {
+    padding-right: 8px;
+    padding-top: 14px;
+    padding-bottom: 14px;
+    font-size: 16px;
+    opacity: 0.65;
+    color: var(--iui-color-text);
+  }
+}
+
+// "Open" prompt
+.itwin-saved-views-view-list-item-thumbnail
+  .itwin-saved-views-view-item-thumbnail-container
+  .open {
+  display: inline-block;
+  text-decoration: none;
+  font-size: var(--iui-font-size-1);
+  z-index: 2;
+  padding: 7px 14px;
+  border: 1px solid var(--iui-color-white);
+  background-color: transparent;
+  transform: scale(0.5);
+  transition: all 0.3s ease-in;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  color: var(--iui-color-white);
+  text-transform: uppercase;
+}
+
+// display "Open" on hover
+.itwin-saved-views-view-list-item-thumbnail
+  .itwin-saved-views-view-item-thumbnail-container:hover
+  .open {
+  opacity: 1;
+  filter: alpha(opacity=100);
+  transform: scale(1);
+
+  &:hover {
+    box-shadow: 0 0 5px var(--iui-color-white);
+  }
+}
+
+// hover over preview
+.itwin-saved-views-view-list-item-thumbnail:hover
+  .itwin-saved-views-view-item-thumbnail-container {
+  cursor: pointer;
+
+  &::before {
+    opacity: 1;
+  }
+}
