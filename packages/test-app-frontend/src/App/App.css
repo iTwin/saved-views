@@ -1,0 +1,32 @@
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+
+@font-face {
+  font-family: 'Noto Sans';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: local("Noto Sans"), url('/NotoSans.ttf') format("opentype");
+}
+
+.signin-prompt {
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.signin-prompt > div {
+  width: 256px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  padding: 22px;
+}
+
+.signin-prompt svg {
+  height: var(--iui-size-3xl);
+  width: var(--iui-size-3xl);
+  fill: var(--iui-color-icon);
+}
