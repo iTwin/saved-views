@@ -9,9 +9,9 @@ import { connect, type ConnectedProps } from "react-redux";
 
 import { IModelConnectionCache } from "../../../api/caches/IModelConnectionCache";
 import { SavedViewsManager } from "../../../api/SavedViewsManager";
-import type { SavedView, SavedViewBase, SavedViewBaseUpdate, } from "../../../api/utilities/SavedViewTypes";
+import type { SavedView, SavedViewBase, SavedViewBaseUpdate } from "../../../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../../../api/utilities/SavedViewUtil";
-import { setDefaultViewId, setViewSelected, type SavedViewsState, } from "../../../store/SavedViewsStateReducer";
+import { setDefaultViewId, setViewSelected, type SavedViewsState } from "../../../store/SavedViewsStateReducer";
 import MoveViewsDialog from "../../grouplist/groupitem/MoveViewsDialog";
 import { ContextMenu, ContextMenuProps } from "../../popupmenu/ContextMenu";
 import type { MenuItem } from "../../popupmenu/PopupMenuItem";

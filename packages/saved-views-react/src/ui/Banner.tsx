@@ -14,7 +14,7 @@ import { animated, useSpring } from "react-spring";
 import { IModelConnectionCache } from "../api/caches/IModelConnectionCache";
 import { SavedViewsManager } from "../api/SavedViewsManager";
 import { TagManager } from "../api/TagManager";
-import type { Group, SavedViewBase, Tag, } from "../api/utilities/SavedViewTypes";
+import type { Group, SavedViewBase, Tag } from "../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../api/utilities/SavedViewUtil";
 import { usePreferredViewport } from "../hooks/usePreferredViewport";
 import {

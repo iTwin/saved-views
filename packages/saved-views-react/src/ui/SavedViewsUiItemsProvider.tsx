@@ -10,7 +10,7 @@ import { type ITwinLocalization } from "@itwin/core-i18n";
 import * as React from "react";
 
 import { SavedViewsManager } from "../api/SavedViewsManager";
-import { SavedViewsWidget, type SavedViewsWidgetProps, } from "./SavedViewsWidget";
+import { SavedViewsWidget, type SavedViewsWidgetProps } from "./SavedViewsWidget";
 
 /** HOC that injects the want2dViews prop
  * @public

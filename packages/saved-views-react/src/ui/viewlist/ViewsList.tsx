@@ -14,11 +14,11 @@ import { FixedSizeList, type ListChildComponentProps } from "react-window";
 import { IModelConnectionCache } from "../../api/caches/IModelConnectionCache";
 import { SavedViewsManager } from "../../api/SavedViewsManager";
 import { type TargetViewport } from "../../api/TargetViewport";
-import { type SavedView, type SavedViewBase, } from "../../api/utilities/SavedViewTypes";
+import { type SavedView, type SavedViewBase } from "../../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../../api/utilities/SavedViewUtil";
 import { type SavedViewsState } from "../../store/SavedViewsStateReducer";
 import { processViewStateSelected } from "./ProcessViewState";
-import { default as SavedViewItem, type SavedViewItemProps, } from "./viewitem/SavedViewItem";
+import { default as SavedViewItem, type SavedViewItemProps } from "./viewitem/SavedViewItem";
 import type { SavedViewContextMenuItemProps } from "./viewitem/SavedViewItemContextMenu";
 import ViewItem, { type ViewItemProps } from "./viewitem/ViewItem";
 

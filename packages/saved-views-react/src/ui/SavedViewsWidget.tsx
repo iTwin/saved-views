@@ -15,15 +15,16 @@ import { SvgPin, SvgPinHollow } from "@itwin/itwinui-icons-react";
 import { IconButton } from "@itwin/itwinui-react";
 import * as React from "react";
 
-import { GroupCache, GroupCacheEventType, type GroupCacheEventArgs, } from "../api/caches/GroupCache";
+import { GroupCache, GroupCacheEventType, type GroupCacheEventArgs } from "../api/caches/GroupCache";
 import { IModelConnectionCache } from "../api/caches/IModelConnectionCache";
-import { SavedViewCacheEventType, SavedViewsCache, type SavedViewCacheEventArgs, } from "../api/caches/SavedViewsCache";
+import { SavedViewCacheEventType, SavedViewsCache, type SavedViewCacheEventArgs } from "../api/caches/SavedViewsCache";
 import { SavedViewsManager } from "../api/SavedViewsManager";
-import { type Group, type SavedView, type SavedViewBase, } from "../api/utilities/SavedViewTypes";
+import { type Group, type SavedView, type SavedViewBase } from "../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../api/utilities/SavedViewUtil";
 import {
   clearSelectedViews, createGroup, deleteGroup, deleteView, setDefaultViewId, setDesktopViews, setDisplayErrors,
-  setDisplaySuccess, setEnableApplyDefaultView, setIModel, setShowDefaultView, setShowThumbnails, updateGroup, updateView,
+  setDisplaySuccess, setEnableApplyDefaultView, setIModel, setShowDefaultView, setShowThumbnails, updateGroup,
+  updateView,
 } from "../store/SavedViewsStateReducer";
 import Banner from "./Banner";
 import { type GroupItemContextMenuItemProps } from "./grouplist/groupitem/GroupItemContextMenu";
