@@ -100,41 +100,6 @@ export interface SavedViewBaseSetting {
   tags?: Tag[];
 }
 
-/**
- * Saved view spatial setting instance
- */
-export interface SavedViewSetting extends SavedViewBaseSetting {
-  displayStyleProps: DisplayStyle3dProps;
-  modelSelectorProps: ModelSelectorProps;
-  modelExtents?: Range3dProps;
-  viewDefinitionProps: SpatialViewDefinitionProps;
-  perModelCategoryVisibility?: PerModelCategoryVisibilityProps[]; //treated as extension
-}
-
-/**
- * Saved view 2d setting instance
- */
-export interface SavedView2dSetting extends SavedViewBaseSetting {
-  viewDefinitionProps: ViewDefinition2dProps;
-  displayStyleProps: DisplayStyleProps;
-  sectionDrawing?: SectionDrawingViewProps;
-  sheetProps?: SheetProps;
-  sheetAttachments?: Id64Array;
-}
-
-/**
- * Format to save thumbnails in settings service
- */
-export interface SavedThumbnailSetting {
-  thumbnailId: string;
-  thumbnail: string;
-}
-
-export interface ViewDataSplit {
-  viewSetting: SavedViewBaseSetting;
-  thumbnailSetting: SavedThumbnailSetting;
-}
-
 export interface GroupUpdate {
   name?: string;
   shared?: boolean;

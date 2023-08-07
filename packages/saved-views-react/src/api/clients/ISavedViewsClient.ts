@@ -8,7 +8,6 @@ import { type IModelConnection } from "@itwin/core-frontend";
 import {
   type SavedView, type SavedViewBase, type SavedViewBaseSetting, type SavedViewBaseUpdate,
 } from "../utilities/SavedViewTypes";
-import { CombinedId } from "./CombinedId";
 
 /** Is a 3d saved view */
 export function isSavedView3d(view: SavedViewBase | SavedViewBaseUpdate): view is SavedView {
@@ -30,12 +29,6 @@ export function isDrawingSavedView(view: SavedViewBase) {
 /** Is a 2d sheet saved view */
 export function isSheetSavedView(view: SavedViewBase) {
   return view.is2d !== undefined && view.is2d && "sheetProps" in view;
-}
-
-/** Is id from a legacy comboId */
-export function isLegacy(id: string): boolean {
-  const sep = CombinedId.separate(id);
-  return sep === undefined || sep.source !== 0;
 }
 
 /**

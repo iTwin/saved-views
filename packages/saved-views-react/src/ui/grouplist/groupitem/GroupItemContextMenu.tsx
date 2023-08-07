@@ -50,11 +50,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type Props = PropsFromRedux & GroupItemContextMenuProps;
 
-/** GroupItemContextMenu widget state */
-export interface GroupItemContextMenuState {
-  opened: boolean;
-}
-
 /** Group Item Context Menu */
 class GroupItemContextMenu extends ContextMenu<Props> {
   constructor(props: Props) {

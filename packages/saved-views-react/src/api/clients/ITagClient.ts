@@ -6,8 +6,6 @@ import { type IModelConnection } from "@itwin/core-frontend";
 
 import { type ReadOnlyTag, type Tag } from "../utilities/SavedViewTypes";
 
-export const TagSettingsNames = "availableTags";
-
 export abstract class AbstractTagClient {
   abstract getTagsOnModel(): Promise<Tag[]>;
   abstract updateTagsOnModel(
