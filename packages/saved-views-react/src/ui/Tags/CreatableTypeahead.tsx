@@ -8,13 +8,13 @@ import type { Props } from "react-select/base/index";
 import CreatableSelect from "react-select/creatable";
 import type { MenuProps } from "react-select/src/components/Menu";
 
-import styles from "./Typeahead.module.scss";
+import "./Typeahead.module.scss";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function ThemedMenu(props: MenuProps<any>) {
   return (
     <div
-      className={styles.typeaheadReactSelectWrapper}
+      className="typeaheadReactSelectWrapper"
       data-testid="TypeaheadThemedMenu"
     >
       <components.Menu {...props} />
@@ -56,7 +56,7 @@ function CreatableTypeaheadComponent<OptionType extends OptionTypeBase = { label
   return (
     <div
       data-testid="ThemedTypeahead"
-      className={`${styles.typeaheadReactSelectWrapper} ${props.className}`}
+      className={`typeaheadReactSelectWrapper ${props.className}`}
       onClick={props.onClick}
     >
       <CreatableSelect
