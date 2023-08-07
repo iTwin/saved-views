@@ -1,4 +1,7 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import { UiFramework } from "@itwin/appui-react";
 import { Guid, Logger } from "@itwin/core-bentley";
 import { SvgCamera, SvgCloseSmall, SvgFolderAdd, SvgTag } from "@itwin/itwinui-icons-react";
@@ -11,26 +14,18 @@ import { animated, useSpring } from "react-spring";
 import { IModelConnectionCache } from "../api/caches/IModelConnectionCache";
 import { SavedViewsManager } from "../api/SavedViewsManager";
 import { TagManager } from "../api/TagManager";
-import type {
-  Group,
-  SavedViewBase,
-  Tag,
-} from "../api/utilities/SavedViewTypes";
+import type { Group, SavedViewBase, Tag, } from "../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../api/utilities/SavedViewUtil";
 import { usePreferredViewport } from "../hooks/usePreferredViewport";
 import {
-  addSearchTag,
-  removeSearchTag,
-  setGroupOpen,
-  setRenaming,
-  setSearchFilter,
-  type SavedViewsState,
+  addSearchTag, removeSearchTag, setGroupOpen, setRenaming, setSearchFilter, type SavedViewsState,
 } from "../store/SavedViewsStateReducer";
-import "./Banner.scss";
 import BannerContextMenu from "./BannerContextMenu";
 import { createNewSavedView } from "./createNewSavedView";
 import MoveViewsDialog from "./grouplist/groupitem/MoveViewsDialog";
 import type { MenuItem } from "./popupmenu/PopupMenuItem";
+
+import "./Banner.scss";
 
 interface BannerProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

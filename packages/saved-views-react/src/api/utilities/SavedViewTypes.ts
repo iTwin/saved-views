@@ -1,16 +1,11 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import { type Id64Array } from "@itwin/core-bentley";
 import type {
-  AppearanceOverrideProps,
-  CategorySelectorProps,
-  DisplayStyle3dProps,
-  DisplayStyleProps,
-  EmphasizeElementsProps,
-  FeatureAppearanceProps,
-  ModelSelectorProps,
-  SectionDrawingViewProps,
-  SheetProps,
-  SpatialViewDefinitionProps,
+  AppearanceOverrideProps, CategorySelectorProps, DisplayStyle3dProps, DisplayStyleProps, EmphasizeElementsProps,
+  FeatureAppearanceProps, ModelSelectorProps, SectionDrawingViewProps, SheetProps, SpatialViewDefinitionProps,
   ViewDefinition2dProps,
 } from "@itwin/core-common";
 import type { Range3dProps } from "@itwin/core-geometry";

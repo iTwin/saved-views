@@ -1,29 +1,27 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import { Guid } from "@itwin/core-bentley";
 import type { ViewDefinitionProps } from "@itwin/core-common";
 import { type IModelConnection } from "@itwin/core-frontend";
 import type { CommonProps } from "@itwin/core-react";
 import * as React from "react";
-import { type ConnectedProps, connect } from "react-redux";
+import { connect, type ConnectedProps } from "react-redux";
 import AutoSizer, { type Size } from "react-virtualized-auto-sizer";
-import { type ListChildComponentProps, FixedSizeList } from "react-window";
+import { FixedSizeList, type ListChildComponentProps } from "react-window";
 
 import { IModelConnectionCache } from "../../api/caches/IModelConnectionCache";
 import { SavedViewsManager } from "../../api/SavedViewsManager";
 import { type TargetViewport } from "../../api/TargetViewport";
-import {
-  type SavedView,
-  type SavedViewBase,
-} from "../../api/utilities/SavedViewTypes";
+import { type SavedView, type SavedViewBase, } from "../../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../../api/utilities/SavedViewUtil";
 import { type SavedViewsState } from "../../store/SavedViewsStateReducer";
 import { processViewStateSelected } from "./ProcessViewState";
-import {
-  type SavedViewItemProps,
-  default as SavedViewItem,
-} from "./viewitem/SavedViewItem";
+import { default as SavedViewItem, type SavedViewItemProps, } from "./viewitem/SavedViewItem";
 import type { SavedViewContextMenuItemProps } from "./viewitem/SavedViewItemContextMenu";
 import ViewItem, { type ViewItemProps } from "./viewitem/ViewItem";
+
 import "./ViewsList.scss";
 
 function RenderRow({ index, style, data }: ListChildComponentProps) {

@@ -1,14 +1,9 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-
-import {
-  type FeatureAppearanceProps,
-  FeatureAppearance,
-} from "@itwin/core-common";
-import {
-  type FeatureOverrideProvider,
-  type FeatureSymbology,
-  type Viewport,
-} from "@itwin/core-frontend";
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+import { FeatureAppearance, type FeatureAppearanceProps } from "@itwin/core-common";
+import { type FeatureOverrideProvider, type FeatureSymbology, type Viewport, } from "@itwin/core-frontend";
 
 /**
  * Note: this file should be included (added) to ui-framework.  It is included

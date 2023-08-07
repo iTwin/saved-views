@@ -1,8 +1,10 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import { Logger } from "@itwin/core-bentley";
 import type { ViewDefinitionProps, ViewQueryParams } from "@itwin/core-common";
-import { type IModelConnection, ViewState } from "@itwin/core-frontend";
+import { ViewState, type IModelConnection } from "@itwin/core-frontend";
 
 const LOGGER_CATEGORY = "DesktopViewsCache";
 

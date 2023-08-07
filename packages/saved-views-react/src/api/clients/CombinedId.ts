@@ -1,7 +1,10 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-import { parse, stringify } from "uuid";
-import { encode, decode } from "base64-arraybuffer";
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+import { decode, encode } from "base64-arraybuffer";
 import { isBase64 } from "class-validator";
+import { parse, stringify } from "uuid";
 
 const UUID_BYTE_COUNT = 16;
 const BASE64_BYTE_LENGTH = 4;

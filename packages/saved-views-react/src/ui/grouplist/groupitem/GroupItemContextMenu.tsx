@@ -1,22 +1,18 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-import { type ConnectedProps, connect } from "react-redux";
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+import { connect, type ConnectedProps } from "react-redux";
 
 import { IModelConnectionCache } from "../../../api/caches/IModelConnectionCache";
 import { SavedViewsManager } from "../../../api/SavedViewsManager";
-import type {
-  Group,
-  SavedViewBase,
-  SavedViewBaseUpdate,
-} from "../../../api/utilities/SavedViewTypes";
+import type { Group, SavedViewBase, SavedViewBaseUpdate } from "../../../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../../../api/utilities/SavedViewUtil";
-import {
-  type SavedViewsState,
-  setGroupOpen,
-  setRenaming,
-} from "../../../store/SavedViewsStateReducer";
+import { setGroupOpen, setRenaming, type SavedViewsState } from "../../../store/SavedViewsStateReducer";
 import { createNewSavedView } from "../../createNewSavedView";
 import { ContextMenu, ContextMenuProps } from "../../popupmenu/ContextMenu";
 import type { MenuItem } from "../../popupmenu/PopupMenuItem";
+
 import "./GroupItem.scss";
 
 export interface GroupItemContextMenuItemProps extends MenuItem {

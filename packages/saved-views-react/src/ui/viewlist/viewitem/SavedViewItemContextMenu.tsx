@@ -1,27 +1,24 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import { UiFramework } from "@itwin/appui-react";
 import { IModelApp } from "@itwin/core-frontend";
 import { SvgCrown } from "@itwin/itwinui-icons-react";
-import { type ConnectedProps, connect } from "react-redux";
+import { connect, type ConnectedProps } from "react-redux";
 
 import { IModelConnectionCache } from "../../../api/caches/IModelConnectionCache";
 import { SavedViewsManager } from "../../../api/SavedViewsManager";
-import type {
-  SavedView,
-  SavedViewBase,
-  SavedViewBaseUpdate,
-} from "../../../api/utilities/SavedViewTypes";
+import type { SavedView, SavedViewBase, SavedViewBaseUpdate, } from "../../../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../../../api/utilities/SavedViewUtil";
-import {
-  type SavedViewsState,
-  setDefaultViewId,
-  setViewSelected,
-} from "../../../store/SavedViewsStateReducer";
+import { setDefaultViewId, setViewSelected, type SavedViewsState, } from "../../../store/SavedViewsStateReducer";
 import MoveViewsDialog from "../../grouplist/groupitem/MoveViewsDialog";
 import { ContextMenu, ContextMenuProps } from "../../popupmenu/ContextMenu";
 import type { MenuItem } from "../../popupmenu/PopupMenuItem";
 import TagManagementDialog from "../../Tags/TagManagementDialog";
+
 import "./ViewItem.scss";
+
 export interface SavedViewContextMenuItemProps extends MenuItem {
   onClick: (savedView: SavedViewBase) => void;
 }

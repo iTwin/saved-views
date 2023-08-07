@@ -1,11 +1,13 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import { type IModelConnection } from "@itwin/core-frontend";
 
+import { SavedViewsManager } from "../SavedViewsManager";
 import { DesktopViewsCache } from "./DesktopViewsCache";
 import { GroupCache } from "./GroupCache";
 import { SavedViewsCache } from "./SavedViewsCache";
-import { SavedViewsManager } from "../SavedViewsManager";
 
 /** WIP not sure if this is needed, SavedViewCache per IModelConnection */
 

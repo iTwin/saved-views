@@ -1,4 +1,7 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import { BeUiEvent } from "@itwin/core-bentley";
 import { type IModelConnection, type ViewState } from "@itwin/core-frontend";
 

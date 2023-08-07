@@ -1,5 +1,7 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import { type ViewDefinitionProps } from "@itwin/core-common";
 import { type IModelConnection } from "@itwin/core-frontend";
 import { createSlice } from "@reduxjs/toolkit";
@@ -7,12 +9,7 @@ import type { PayloadAction } from "react-redux-typescript";
 
 import { type TargetViewport } from "../api/TargetViewport";
 import { type Group, type SavedView } from "../api/utilities/SavedViewTypes";
-import {
-  type BooleanObject,
-  type GroupObject,
-  type SavedViewsObject,
-  SavedViewActions,
-} from "./SavedViewsActions";
+import { SavedViewActions, type BooleanObject, type GroupObject, type SavedViewsObject } from "./SavedViewsActions";
 
 export type SavedViewsState = {
   selectedViews: SavedView[];

@@ -1,12 +1,9 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-import {
-  type Ref,
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-} from "react";
-import { type OptionTypeBase, components } from "react-select";
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+import { forwardRef, useEffect, useImperativeHandle, useRef, type Ref } from "react";
+import { components, type OptionTypeBase } from "react-select";
 import type { Props } from "react-select/base/index";
 import CreatableSelect from "react-select/creatable";
 import type { MenuProps } from "react-select/src/components/Menu";

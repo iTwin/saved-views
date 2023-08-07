@@ -1,33 +1,23 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-import {
-  IModelApp,
-  NotifyMessageDetails,
-  OutputMessagePriority,
-} from "@itwin/core-frontend";
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+import { IModelApp, NotifyMessageDetails, OutputMessagePriority } from "@itwin/core-frontend";
 // TODO: Use Icon from @itwin/itwinui-react
-import { type CommonProps, Icon, LoadingSpinner } from "@itwin/core-react";
+import { Icon, LoadingSpinner, type CommonProps } from "@itwin/core-react";
 import { SvgCrown } from "@itwin/itwinui-icons-react";
 import { Checkbox, Input } from "@itwin/itwinui-react";
 import { isURL } from "class-validator";
 import React, { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { type ConnectedProps, connect } from "react-redux";
+import { connect, type ConnectedProps } from "react-redux";
 
 import { IModelConnectionCache } from "../../../api/caches/IModelConnectionCache";
 import { SavedViewsManager } from "../../../api/SavedViewsManager";
-import type {
-  SavedView,
-  SavedViewBase,
-  SavedViewBaseUpdate,
-} from "../../../api/utilities/SavedViewTypes";
+import type { SavedView, SavedViewBase, SavedViewBaseUpdate } from "../../../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../../../api/utilities/SavedViewUtil";
-import {
-  type SavedViewsState,
-  setRenaming,
-  setViewSelected,
-} from "../../../store/SavedViewsStateReducer";
-import SavedViewItemContextMenu, {
-  type SavedViewContextMenuItemProps,
-} from "./SavedViewItemContextMenu";
+import { setRenaming, setViewSelected, type SavedViewsState } from "../../../store/SavedViewsStateReducer";
+import SavedViewItemContextMenu, { type SavedViewContextMenuItemProps } from "./SavedViewItemContextMenu";
+
 import "./ViewItem.scss";
 
 /** Saved View Item Props */

@@ -1,4 +1,7 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import { getClassName } from "@itwin/appui-abstract";
 import { Logger } from "@itwin/core-bentley";
 import type { ThumbnailProps, ViewDefinitionProps } from "@itwin/core-common";

@@ -1,4 +1,7 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import { RelativePosition as Position } from "@itwin/appui-abstract";
 import { PopupContextMenu } from "@itwin/core-react";
 import { Component, MouseEvent } from "react";

@@ -1,4 +1,7 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import { ImageBuffer } from "@itwin/core-common";
 import { IModelApp, Viewport, canvasToImageBuffer, imageBufferToBase64EncodedPng } from "@itwin/core-frontend";
 import React, { useCallback, useEffect, useRef, useState } from "react";

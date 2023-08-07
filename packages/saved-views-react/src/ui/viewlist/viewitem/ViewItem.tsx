@@ -1,13 +1,16 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import type { ViewDefinitionProps } from "@itwin/core-common";
-import { type CommonProps, LoadingSpinner } from "@itwin/core-react";
+import { LoadingSpinner, type CommonProps } from "@itwin/core-react";
 import * as React from "react";
-import { type ConnectedProps, connect } from "react-redux";
+import { connect, type ConnectedProps } from "react-redux";
 
 import { ThumbnailCache } from "../../../api/caches/ThumbnailCache";
 import { SavedViewsManager } from "../../../api/SavedViewsManager";
 import { type SavedViewsState } from "../../../store/SavedViewsStateReducer";
+
 import "./ViewItem.scss";
 
 /** ViewItem widget props */

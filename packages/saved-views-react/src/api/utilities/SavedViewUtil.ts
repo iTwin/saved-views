@@ -1,49 +1,29 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import { getClassName } from "@itwin/appui-abstract";
 import { Guid, Logger } from "@itwin/core-bentley";
 import {
-  type ImageBuffer,
-  type SheetProps,
-  type SpatialViewDefinitionProps,
-  type ViewDefinitionProps,
+  Code, type ImageBuffer, type SheetProps, type SpatialViewDefinitionProps, type ViewDefinitionProps,
   type ViewStateProps,
-  Code,
 } from "@itwin/core-common";
 import {
-  type IModelConnection,
-  type Viewport,
-  type ViewState,
-  DrawingViewState,
-  EmphasizeElements,
-  getCenteredViewRect,
-  getCompressedJpegFromCanvas,
-  imageBufferToBase64EncodedPng,
-  imageBufferToCanvas,
-  IModelApp,
-  NotifyMessageDetails,
-  OutputMessagePriority,
-  SheetViewState,
-  SpatialViewState,
-  ViewState3d,
+  DrawingViewState, EmphasizeElements, IModelApp, NotifyMessageDetails, OutputMessagePriority, SheetViewState,
+  SpatialViewState, ViewState3d, getCenteredViewRect, getCompressedJpegFromCanvas, imageBufferToBase64EncodedPng,
+  imageBufferToCanvas, type IModelConnection, type ViewState, type Viewport,
 } from "@itwin/core-frontend";
 import { Point2d } from "@itwin/core-geometry";
 import matcher from "matcher";
 
-import { ModelsAndCategoriesCache } from "../caches/ModelsAndCategoriesCache";
-import {
-  isDrawingSavedView,
-  isSheetSavedView,
-  isSpatialSavedView,
-} from "../clients/ISavedViewsClient";
-import { SavedViewEvents, SavedViewsManager } from "../SavedViewsManager";
-import { type TargetViewport, getTargetViewport } from "../TargetViewport";
-import {
-  type PerModelCategoryVisibilityProps,
-  type SavedView,
-  type SavedView2d,
-  type SavedViewBase,
-} from "./SavedViewTypes";
 import { ModelCategoryOverrideProvider } from "../../ui/viewlist/ModelCategoryOverrideProvider";
+import { SavedViewEvents, SavedViewsManager } from "../SavedViewsManager";
+import { getTargetViewport, type TargetViewport } from "../TargetViewport";
+import { ModelsAndCategoriesCache } from "../caches/ModelsAndCategoriesCache";
+import { isDrawingSavedView, isSheetSavedView, isSpatialSavedView } from "../clients/ISavedViewsClient";
+import {
+  type PerModelCategoryVisibilityProps, type SavedView, type SavedView2d, type SavedViewBase,
+} from "./SavedViewTypes";
 
 const getThumbnail = (vp: Viewport, width: number, height: number): ImageBuffer | undefined => {
   // Passing in vp.target.viewRect instead of vp.viewRect because currently vp.viewRect is not updated

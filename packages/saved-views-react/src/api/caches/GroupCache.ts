@@ -1,9 +1,12 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import { BeUiEvent } from "@itwin/core-bentley";
 import { type IModelConnection } from "@itwin/core-frontend";
 
-import { type Group, type GroupUpdate } from "../utilities/SavedViewTypes";
 import { IGroupClient } from "../clients/IGroupClient";
+import { type Group, type GroupUpdate } from "../utilities/SavedViewTypes";
 
 /** Event types to delineate what kind of change occurred when the group cache is modified */
 export enum GroupCacheEventType {

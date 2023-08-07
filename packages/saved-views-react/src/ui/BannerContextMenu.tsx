@@ -1,20 +1,21 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import { SvgDownload } from "@itwin/itwinui-icons-react";
 import { type SelectOption } from "@itwin/itwinui-react";
 import { connect, type ConnectedProps } from "react-redux";
 
 import { SavedViewsManager } from "../api/SavedViewsManager";
 import {
-  setApplyCameraOnly,
-  setFilterContent,
-  setTurnOnModelsCategories,
-  setTurnOnModelsCategoriesNotHidden,
+  setApplyCameraOnly, setFilterContent, setTurnOnModelsCategories, setTurnOnModelsCategoriesNotHidden,
   type SavedViewsState,
 } from "../store/SavedViewsStateReducer";
-import "./BannerContextMenu.scss";
 import { DownloadViewportLink } from "./DownloadViewportLink";
 import { ContextMenu, ContextMenuProps } from "./popupmenu/ContextMenu";
 import type { MenuItem } from "./popupmenu/PopupMenuItem";
+
+import "./BannerContextMenu.scss";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mapState = (rootState: any) => {

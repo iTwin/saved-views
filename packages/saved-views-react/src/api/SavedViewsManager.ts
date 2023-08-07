@@ -1,5 +1,7 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import { getClassName, UiError } from "@itwin/appui-abstract";
 import { ReducerRegistryInstance, StateManager, SyncUiEventDispatcher, UiFramework } from "@itwin/appui-react";
 import { BeEvent, type AccessToken } from "@itwin/core-bentley";

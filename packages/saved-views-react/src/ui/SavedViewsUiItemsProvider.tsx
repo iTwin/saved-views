@@ -1,21 +1,16 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import {
-  type StatusBarItem,
-  type UiItemsProvider,
-  StageUsage,
-  StatusBarItemUtilities,
-  StatusBarSection,
-  useActiveViewport,
+  StageUsage, StatusBarItemUtilities, StatusBarSection, useActiveViewport, type StatusBarItem, type UiItemsProvider,
 } from "@itwin/appui-react";
 import { IModelApp } from "@itwin/core-frontend";
 import { type ITwinLocalization } from "@itwin/core-i18n";
 import * as React from "react";
 
 import { SavedViewsManager } from "../api/SavedViewsManager";
-import {
-  type SavedViewsWidgetProps,
-  SavedViewsWidget,
-} from "./SavedViewsWidget";
+import { SavedViewsWidget, type SavedViewsWidgetProps, } from "./SavedViewsWidget";
 
 /** HOC that injects the want2dViews prop
  * @public
@@ -51,7 +46,7 @@ export class SavedViewsUiItemsProvider implements UiItemsProvider {
   public readonly id = SavedViewsUiItemsProvider.providerId;
   public static i18n: ITwinLocalization;
 
-  public constructor(private props: SavedViewsWidgetProps) {}
+  public constructor(private props: SavedViewsWidgetProps) { }
 
   public provideStatusBarItems(_stageId: string, stageUsage: string): StatusBarItem[] {
     const statusBarItems: StatusBarItem[] = [];

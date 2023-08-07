@@ -1,19 +1,12 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import type { Id64Array, Id64String } from "@itwin/core-bentley";
 import {
-  type ViewStateProps,
-  BackgroundMapSettings,
-  BackgroundMapType,
-  Code,
-  IModel,
-  QueryRowFormat,
-  RenderMode,
+  BackgroundMapSettings, BackgroundMapType, Code, IModel, QueryRowFormat, RenderMode, type ViewStateProps,
 } from "@itwin/core-common";
-import {
-  type IModelConnection,
-  type ViewState,
-  SpatialViewState,
-} from "@itwin/core-frontend";
+import { SpatialViewState, type IModelConnection, type ViewState } from "@itwin/core-frontend";
 
 import { SavedViewsManager } from "../SavedViewsManager";
 

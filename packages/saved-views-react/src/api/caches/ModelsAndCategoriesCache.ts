@@ -1,14 +1,13 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import type { Id64Array } from "@itwin/core-bentley";
 import { type IModelConnection, type ViewState } from "@itwin/core-frontend";
 
 import { IModelQueryClient } from "../clients/IModelQueryClient";
 import { isSavedView3d } from "../clients/ISavedViewsClient";
-import {
-  type SavedView,
-  type SavedViewBase,
-} from "../utilities/SavedViewTypes";
+import { type SavedView, type SavedViewBase } from "../utilities/SavedViewTypes";
 
 const getDiff = (arr1: string[] | Set<string>, arr2: string[] | Set<string>) => {
   const set1 = new Set([...arr1]);

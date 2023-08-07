@@ -1,6 +1,8 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-
-import { type ScreenViewport, IModelApp } from "@itwin/core-frontend";
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+import { IModelApp, type ScreenViewport } from "@itwin/core-frontend";
 
 // specifies either the selected viewport or the first opened viewport as the target for a saved view
 export type TargetViewport = "selected" | "first";

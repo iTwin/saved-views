@@ -1,11 +1,13 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-
-/** @module PopupMenu */
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import { ContextMenuItem, Icon } from "@itwin/core-react";
-import { type SelectOption, Select, ToggleSwitch } from "@itwin/itwinui-react";
+import { Select, ToggleSwitch, type SelectOption } from "@itwin/itwinui-react";
 import { Component, MouseEvent } from "react";
 
 import { SavedViewsManager } from "../../api/SavedViewsManager";
+
 import "./PopupMenuItem.scss";
 
 /** Properties for [[PopupMenuItem]] component */

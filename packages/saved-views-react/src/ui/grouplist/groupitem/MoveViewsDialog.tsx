@@ -1,19 +1,19 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import { DialogButtonType } from "@itwin/appui-abstract";
 import { UiFramework } from "@itwin/appui-react";
 import { Dialog } from "@itwin/core-react";
 import { Select } from "@itwin/itwinui-react";
 import * as React from "react";
-import { type ConnectedProps, connect } from "react-redux";
+import { connect, type ConnectedProps } from "react-redux";
 
 import { IModelConnectionCache } from "../../../api/caches/IModelConnectionCache";
 import { SavedViewsManager } from "../../../api/SavedViewsManager";
 import { SavedViewUtil } from "../../../api/utilities/SavedViewUtil";
-import {
-  type SavedViewsState,
-  clearSelectedViews,
-} from "../../../store/SavedViewsStateReducer";
+import { clearSelectedViews, type SavedViewsState } from "../../../store/SavedViewsStateReducer";
+
 import "./MoveViewsDialog.scss";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

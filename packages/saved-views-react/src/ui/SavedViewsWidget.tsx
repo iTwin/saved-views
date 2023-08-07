@@ -1,57 +1,29 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-
-import { type UiSyncEventArgs, getClassName } from "@itwin/appui-abstract";
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+import { getClassName, type UiSyncEventArgs } from "@itwin/appui-abstract";
 import {
-  SessionStateActionId,
-  StatusBar,
-  StatusBarDialog,
-  StatusBarLabelIndicator,
-  StatusBarLabelSide,
-  SyncUiEventDispatcher,
-  UiFramework,
-  ViewUtilities,
+  SessionStateActionId, StatusBar, StatusBarDialog, StatusBarLabelIndicator, StatusBarLabelSide, SyncUiEventDispatcher,
+  UiFramework, ViewUtilities,
 } from "@itwin/appui-react";
 import { Logger } from "@itwin/core-bentley";
 import type { ViewDefinitionProps } from "@itwin/core-common";
 import { type IModelConnection } from "@itwin/core-frontend";
-import { type CommonProps, LoadingSpinner } from "@itwin/core-react";
+import { LoadingSpinner, type CommonProps } from "@itwin/core-react";
 import { SvgPin, SvgPinHollow } from "@itwin/itwinui-icons-react";
 import { IconButton } from "@itwin/itwinui-react";
 import * as React from "react";
 
-import {
-  type GroupCacheEventArgs,
-  GroupCache,
-  GroupCacheEventType,
-} from "../api/caches/GroupCache";
+import { GroupCache, GroupCacheEventType, type GroupCacheEventArgs, } from "../api/caches/GroupCache";
 import { IModelConnectionCache } from "../api/caches/IModelConnectionCache";
-import {
-  type SavedViewCacheEventArgs,
-  SavedViewCacheEventType,
-  SavedViewsCache,
-} from "../api/caches/SavedViewsCache";
+import { SavedViewCacheEventType, SavedViewsCache, type SavedViewCacheEventArgs, } from "../api/caches/SavedViewsCache";
 import { SavedViewsManager } from "../api/SavedViewsManager";
-import {
-  type Group,
-  type SavedView,
-  type SavedViewBase,
-} from "../api/utilities/SavedViewTypes";
+import { type Group, type SavedView, type SavedViewBase, } from "../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../api/utilities/SavedViewUtil";
 import {
-  clearSelectedViews,
-  createGroup,
-  deleteGroup,
-  deleteView,
-  setDefaultViewId,
-  setDesktopViews,
-  setDisplayErrors,
-  setDisplaySuccess,
-  setEnableApplyDefaultView,
-  setIModel,
-  setShowDefaultView,
-  setShowThumbnails,
-  updateGroup,
-  updateView,
+  clearSelectedViews, createGroup, deleteGroup, deleteView, setDefaultViewId, setDesktopViews, setDisplayErrors,
+  setDisplaySuccess, setEnableApplyDefaultView, setIModel, setShowDefaultView, setShowThumbnails, updateGroup, updateView,
 } from "../store/SavedViewsStateReducer";
 import Banner from "./Banner";
 import { type GroupItemContextMenuItemProps } from "./grouplist/groupitem/GroupItemContextMenu";
@@ -297,7 +269,7 @@ export class SavedViewsWidget extends React.Component<
       this.props.iModelConnection &&
       (this.props.iModelConnection.iModelId !== this.state.imodel.iModelId ||
         this.props.iModelConnection.changeset.id !==
-          this.state.imodel.changeset.id)
+        this.state.imodel.changeset.id)
     ) {
       SavedViewsManager.dispatchActiontoStore(setIModel(this.props.iModelConnection));
       await this.loadViews(true);

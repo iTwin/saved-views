@@ -1,4 +1,7 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import { Icon, type CommonProps } from "@itwin/core-react";
 import { Input } from "@itwin/itwinui-react";
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
@@ -8,21 +11,13 @@ import { IModelConnectionCache } from "../../../api/caches/IModelConnectionCache
 import { SavedViewsManager } from "../../../api/SavedViewsManager";
 import type { Group, GroupUpdate } from "../../../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../../../api/utilities/SavedViewUtil";
-import {
-  selectShouldGroupRenderSelector,
-  selectViews,
-} from "../../../store/SavedViewsGroupItemStateSelectors";
-import {
-  setGroupOpen,
-  setRenaming,
-  type SavedViewsState,
-} from "../../../store/SavedViewsStateReducer";
+import { selectShouldGroupRenderSelector, selectViews } from "../../../store/SavedViewsGroupItemStateSelectors";
+import { setGroupOpen, setRenaming, type SavedViewsState } from "../../../store/SavedViewsStateReducer";
 import type { SavedViewContextMenuItemProps } from "../../viewlist/viewitem/SavedViewItemContextMenu";
 import ViewsList from "../../viewlist/ViewsList";
+import GroupItemContextMenu, { type GroupItemContextMenuItemProps } from "./GroupItemContextMenu";
+
 import "./GroupItem.scss";
-import GroupItemContextMenu, {
-  type GroupItemContextMenuItemProps,
-} from "./GroupItemContextMenu";
 
 /** GroupItem widget props */
 export interface GroupItemProps extends CommonProps {
@@ -116,7 +111,7 @@ function GroupItem({
         ) {
           setRenaming({ id: group.id, renaming: false });
         }
-      }
+      };
 
       document.body.addEventListener("click", handleClickOutside);
 
