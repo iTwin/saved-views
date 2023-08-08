@@ -12,7 +12,7 @@ import { applyUrlPrefix, clientId } from "../environment";
 import { AppContext, appContext } from "./AppContext";
 import { AppHeader } from "./AppHeader";
 import {
-  AuthorizationState, createAuthorizationProvider, SignInCallback, SignInSilent, SignInSilentCallback, useAuthorization
+  AuthorizationState, createAuthorizationProvider, SignInCallback, SignInSilent, SignInSilentCallback, useAuthorization,
 } from "./Authorization";
 import { LoadingScreen } from "./common/LoadingScreen";
 import { ErrorPage } from "./errors/ErrorPage";

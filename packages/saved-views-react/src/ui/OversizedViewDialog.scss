@@ -1,0 +1,22 @@
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+
+.oversized-view-dialog-container {
+  padding: 10px;
+
+  .oversized-view-dialog-content {
+    display: flex;
+    align-items: center;
+
+    .oversized-view-dialog-warning {
+      color: var(--iui-color-text-warning);
+      font-size: 28px;
+    }
+
+    .oversized-view-dialog-description {
+      margin-left: 10px;
+    }
+  }
+}

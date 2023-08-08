@@ -1,0 +1,77 @@
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+
+$width: 500px; // 3 columns
+$width-small: 340px; // 2 columns
+$height: 625px; // 5 rows
+$height-medium: 500px; // 4 rows
+$height-small: 415px; // 3 rows
+
+.itwin-saved-views-gradient-overlay {
+  width: $width;
+  height: 16px;
+  background-image: linear-gradient(
+    RGBA(var(--iui-color-background-hsl), 0),
+    RGBA(var(--iui-color-background-hsl), 1)
+  );
+  position: absolute;
+  bottom: 0;
+}
+
+// Responsive sizing for widget pop-up
+.itwin-saved-views-responsive {
+  @media screen and (min-width: 950px) {
+    width: $width;
+  }
+  @media screen and (max-width: 949px) {
+    width: $width-small;
+  }
+  @media screen and (min-height: 1001px) {
+    height: $height;
+  }
+  @media screen and (max-height: 1000px) {
+    height: $height-medium;
+  }
+  @media screen and (max-height: 768px) {
+    height: $height-small;
+  }
+}
+
+// Old CSS used to feature gate responsive div CSS
+.itwin-saved-views-static {
+  height: 414px;
+  width: 339px;
+}
+
+.itwin-saved-views-group-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.itwin-saved-views-view-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.itwin-saved-views-view-list-contained {
+  height: 100%;
+}
+
+.itwin-saved-views-view-list-contained .nz-dialog {
+  height: 100%;
+  width: 0;
+  position: absolute;
+  top: 0;
+  left: 50%;
+}
+
+.itwin-saved-views-view-list-div {
+  display: flex;
+  height: 100%;
+}

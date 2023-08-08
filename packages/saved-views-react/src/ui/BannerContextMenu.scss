@@ -1,0 +1,44 @@
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+
+.dv-link-wrapper {
+  width: 100%;
+
+  a,
+  a:visited {
+    color: var(--iui-color-text);
+  }
+
+  &:hover,
+  &:active {
+    a,
+    a:visited {
+      color: var(--iui-color-text);
+    }
+  }
+}
+
+.dv-link {
+  fill: currentColor;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  font-weight: 400;
+  line-height: 1.42857143;
+  white-space: nowrap;
+  text-decoration: none;
+  text-decoration-line: none;
+  text-decoration-style: initial;
+  text-decoration-color: initial;
+  margin: 1px 0; // text under anchor tag does not have padding
+  margin-left: 6px;
+  gap: 10px;
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+}

@@ -16,24 +16,13 @@
     "no-alert": "warn",
     "no-empty": [ "warn", { "allowEmptyCatch": true } ],
     "no-eval": "error",
-    "@typescript-eslint/comma-dangle": [
-      "warn",
-      {
-        "arrays": "always-multiline",
-        "objects": "always-multiline",
-        "imports": "never",
-        "exports": "always-multiline",
-        "functions": "always-multiline",
-        "enums": "always-multiline",
-        "generics": "always-multiline",
-        "tuples": "always-multiline"
-      }
-    ],
+    "@typescript-eslint/comma-dangle": [ "warn", "always-multiline" ],
     "@typescript-eslint/member-delimiter-style": [ "warn", { "singleline": { "requireLast": true } } ],
     "@typescript-eslint/no-confusing-void-expression": [ "warn", { "ignoreArrowShorthand": true } ],
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-misused-promises": [ "error", { "checksVoidReturn": false } ],
     "@typescript-eslint/no-redundant-type-constituents": "off",
+    "@typescript-eslint/no-unnecessary-type-assertion": "off",
     "@typescript-eslint/no-unsafe-assignment": "off",
     "@typescript-eslint/no-unsafe-argument": "off",
     "@typescript-eslint/no-unsafe-call": "off",
