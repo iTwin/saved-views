@@ -18,7 +18,7 @@ export class SaveViewsClient implements ISavedViewsClient {
   }
 
   async getSavedView(args: singleSavedViewArgs): Promise<SavedViewResponse> {
-    const url = `${this.baseURL}/${args.savedViewsId.combinedIdString}`;
+    const url = `${this.baseURL}/${args.savedViewId.combinedIdString}`;
     const resp = await callITwinApi({
       url: url,
       method: HttpActions.GET,
@@ -70,7 +70,7 @@ export class SaveViewsClient implements ISavedViewsClient {
   }
 
   async updateSavedView(args: updateSavedViewArgs): Promise<SavedViewResponse> {
-    const url = `${this.baseURL}/${args.savedViewsId.combinedIdString}`;
+    const url = `${this.baseURL}/${args.savedViewId.combinedIdString}`;
     const resp = await callITwinApi({
       url: url,
       method: HttpActions.PATCH,
@@ -86,7 +86,7 @@ export class SaveViewsClient implements ISavedViewsClient {
   }
 
   async deleteSavedView(args: singleSavedViewArgs): Promise<void> {
-    const url = `${this.baseURL}/${args.savedViewsId.combinedIdString}`;
+    const url = `${this.baseURL}/${args.savedViewId.combinedIdString}`;
     await callITwinApi({
       url: url,
       method: HttpActions.DELETE,

@@ -5,7 +5,7 @@ import { GroupClient } from "./baseClients/groupClient";
 import { SaveViewsClient } from './baseClients/savedViewsClient';
 import { TagsClient } from "./baseClients/tagsService";
 import { ImageClient } from './baseClients/imageClient';
-import { commonClientArgs } from "./models/clientModels/commonClientInterfaces";
+import { commonClientArgs, isValidBaseUrl } from "./models/clientModels/commonClientInterfaces";
 
 /**
  * This is a monoClient that is used to access all the other clients associated with savedViews.
@@ -29,7 +29,9 @@ export class SaveViewsMonoClient {
   private readonly _imageClient: ImageClient;
 
   constructor(args: commonClientArgs) {
-    // todo need to fix args base URL
+    if (!isValidBaseUrl(args.baseURL)) {
+      throw new Error("Base URL does not conform to pattern: https://{...}api.bentley.com/savedviews");
+    }
     this._savedViewsClient = new SaveViewsClient(args);
     this._tagClient = new TagsClient(args);
     this._extensionClient = new SavedViewsExtensionsClient(args);

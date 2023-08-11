@@ -6,7 +6,7 @@ import { CombinedId, SavedViewResponse, SavedViewListResponse, SavedViewCreate, 
 
 export interface singleSavedViewArgs extends commonRequestArgs {
   /** saved view id to query after */
-  savedViewsId: CombinedId;
+  savedViewId: CombinedId;
   /** affects the granularity of the data returned
    *  ONLY for get requests will be ignored for PUT POST DELETE
    *  MINIMAL = "return=minimal", least info

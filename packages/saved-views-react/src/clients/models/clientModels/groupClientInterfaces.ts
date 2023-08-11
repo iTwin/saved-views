@@ -17,7 +17,7 @@ export interface getAllGroupArgs extends commonRequestArgs {
 
 export interface createGroup extends commonRequestArgs {
   /** group to create*/
-  groupPayload:GroupCreate;
+  groupPayload: GroupCreate;
 }
 
 export interface updateGroupArgs extends singleGroupArgs {
@@ -42,13 +42,13 @@ export interface GroupClient {
    * Creates a group
    * @throws on non 2xx response
  */
-  createGroup(args:createGroup): Promise<GroupResponse>;
+  createGroup(args: createGroup): Promise<GroupResponse>;
 
   /**
    * updates a group
    * @throws on non 2xx response
  */
-  updateGroup(args:updateGroupArgs): Promise<GroupResponse>;
+  updateGroup(args: updateGroupArgs): Promise<GroupResponse>;
 
   /**
    * deletes a group

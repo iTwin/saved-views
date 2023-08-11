@@ -13,7 +13,7 @@ export class TagsClient implements ITagsClient {
   private readonly getAccessToken: () => Promise<string>;
 
   constructor(args: commonClientArgs) {
-    this.baseURL = args.baseURL;
+    this.baseURL = `${args.baseURL}/tags`;
     this.getAccessToken = args.getAccessToken;
   }
 

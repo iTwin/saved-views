@@ -11,7 +11,7 @@ export interface CallITwinApiParams<BodyType extends object> {
   body?: BodyType;
 }
 
-export async function callITwinApi<BodyType extends object>(args:CallITwinApiParams<BodyType>): Promise<Record<string, unknown>> {
+export async function callITwinApi<BodyType extends object>(args: CallITwinApiParams<BodyType>): Promise<Record<string, unknown>> {
   const response = await fetch(
     args.url,
     {

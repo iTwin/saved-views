@@ -11,7 +11,7 @@ export class GroupClient implements IGroupClient {
   private readonly getAccessToken: () => Promise<string>;
 
   constructor(args: commonClientArgs) {
-    this.baseURL = args.baseURL;
+    this.baseURL = `${args.baseURL}/groups`;
     this.getAccessToken = args.getAccessToken;
   }
 
