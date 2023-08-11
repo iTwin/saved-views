@@ -1,3 +1,5 @@
+// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+
 import { CombinedId, ExtensionsUpdate, ExtensionResponse, ExtensionListResponse } from "@bentley/itwin-saved-views-utilities";
 import { commonRequestArgs } from "./commonClientInterfaces";
 

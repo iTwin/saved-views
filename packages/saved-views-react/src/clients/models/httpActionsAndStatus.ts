@@ -11,7 +11,6 @@ export enum HttpActions {
   PUT = "PUT",
 }
 
-
 /**
  * Status enum for request.
  */

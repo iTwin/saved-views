@@ -1,10 +1,10 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 
 import { ExtensionListResponse, ExtensionResponse } from "@bentley/itwin-saved-views-utilities";
-import { HttpActions } from "./models/httpActionsAndStatus";
-import { callITwinApi } from "./utils/apiUtils";
-import { commonClientArgs } from "./models/clientModels/commonClientInterfaces";
-import { ExtensionsClient, createExtensionArgs, singleExtensionArgs, commonExtensionArgs } from "./models/clientModels/extensionClientInterfaces";
+import { HttpActions } from "../models/httpActionsAndStatus";
+import { callITwinApi } from "../utils/apiUtils";
+import { commonClientArgs } from "../models/clientModels/commonClientInterfaces";
+import { ExtensionsClient, createExtensionArgs, singleExtensionArgs, commonExtensionArgs } from "../models/clientModels/extensionClientInterfaces";
 
 export class SavedViewsExtensionsClient implements ExtensionsClient {
   private readonly baseURL;

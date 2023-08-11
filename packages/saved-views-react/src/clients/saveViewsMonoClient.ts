@@ -1,10 +1,11 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 
-import { SavedViewsExtensionsClient } from "./extensionsClient";
-import { GroupClient } from "./groupClient";
-import { SaveViewsClient } from './savedClient';
-import { TagsClient } from "./tagsService";
-import { ImageClient } from './imageClient';
+import { SavedViewsExtensionsClient } from "./baseClients/extensionsClient";
+import { GroupClient } from "./baseClients/groupClient";
+import { SaveViewsClient } from './baseClients/savedViewsClient';
+import { TagsClient } from "./baseClients/tagsService";
+import { ImageClient } from './baseClients/imageClient';
+import { commonClientArgs } from "./models/clientModels/commonClientInterfaces";
 
 /**
  * This is a monoClient that is used to access all the other clients associated with savedViews.
@@ -27,12 +28,13 @@ export class SaveViewsMonoClient {
   private readonly _groupClient: GroupClient;
   private readonly _imageClient: ImageClient;
 
-  constructor() {
-    this._savedViewsClient = new SaveViewsClient();
-    this._tagClient = new TagsClient();
-    this._extensionClient = new SavedViewsExtensionsClient();
-    this._groupClient = new GroupClient();
-    this._imageClient = new ImageClient();
+  constructor(args: commonClientArgs) {
+    // todo need to fix args base URL
+    this._savedViewsClient = new SaveViewsClient(args);
+    this._tagClient = new TagsClient(args);
+    this._extensionClient = new SavedViewsExtensionsClient(args);
+    this._groupClient = new GroupClient(args);
+    this._imageClient = new ImageClient(args);
   }
 
 

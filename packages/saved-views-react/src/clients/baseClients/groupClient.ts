@@ -1,10 +1,10 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 
 import { GroupListResponse, GroupResponse } from "@bentley/itwin-saved-views-utilities";
-import { GroupClient as IGroupClient, createGroup, getAllGroupArgs, singleGroupArgs, updateGroupArgs } from "./models/clientModels/groupClientInterfaces";
-import { commonClientArgs } from "./models/clientModels/commonClientInterfaces";
-import { HttpActions } from "./models/httpActionsAndStatus";
-import { callITwinApi } from "./utils/apiUtils";
+import { GroupClient as IGroupClient, createGroup, getAllGroupArgs, singleGroupArgs, updateGroupArgs } from "../models/clientModels/groupClientInterfaces";
+import { commonClientArgs } from "../models/clientModels/commonClientInterfaces";
+import { HttpActions } from "../models/httpActionsAndStatus";
+import { callITwinApi } from "../utils/apiUtils";
 
 export class GroupClient implements IGroupClient {
   private readonly baseURL;
