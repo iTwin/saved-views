@@ -16,7 +16,7 @@ export class ImageClient implements iImageClient {
   }
 
   async getImage(args: getImageArgs): Promise<ImageResponse> {
-    const url = `${this.baseURL}/${args.savedViewId.combinedIdString}/image?size=${args.size}`;
+    const url = `${this.baseURL}/${args.savedViewId}/image?size=${args.size}`;
     const resp = await callITwinApi({
       url: url,
       method: HttpActions.GET,
@@ -31,7 +31,7 @@ export class ImageClient implements iImageClient {
   }
 
   async updateImage(args: updateImageArgs): Promise<ImageResponse> {
-    const url = `${this.baseURL}/${args.savedViewId.combinedIdString}/image`;
+    const url = `${this.baseURL}/${args.savedViewId}/image`;
     const resp = await callITwinApi({
       url: url,
       method: HttpActions.PUT,

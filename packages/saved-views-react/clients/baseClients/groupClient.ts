@@ -16,7 +16,7 @@ export class GroupClient implements IGroupClient {
   }
 
   async getGroup(args: singleGroupArgs): Promise<GroupResponse> {
-    const url = `${this.baseURL}/${args.groupId.combinedIdString}`;
+    const url = `${this.baseURL}/${args.groupId}`;
     const resp = await callITwinApi({
       url: url,
       method: HttpActions.GET,
@@ -62,10 +62,10 @@ export class GroupClient implements IGroupClient {
   }
 
   async updateGroup(args: updateGroupArgs): Promise<GroupResponse> {
-    const url = `${this.baseURL}/${args.groupId.combinedIdString}`;
+    const url = `${this.baseURL}/${args.groupId}`;
     const resp = await callITwinApi({
       url: url,
-      method: HttpActions.GET,
+      method: HttpActions.PATCH,
       getAccessToken: this.getAccessToken,
       signal: args.signal,
       headers: {
@@ -78,10 +78,10 @@ export class GroupClient implements IGroupClient {
   }
 
   async deleteGroup(args: singleGroupArgs): Promise<void> {
-    const url = `${this.baseURL}/${args.groupId.combinedIdString}`;
+    const url = `${this.baseURL}/${args.groupId}`;
     await callITwinApi({
       url: url,
-      method: HttpActions.GET,
+      method: HttpActions.DELETE,
       getAccessToken: this.getAccessToken,
       signal: args.signal,
       headers: {

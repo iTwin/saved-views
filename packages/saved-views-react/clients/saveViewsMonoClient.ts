@@ -3,7 +3,7 @@
 import { SavedViewsExtensionsClient } from "./baseClients/extensionsClient";
 import { GroupClient } from "./baseClients/groupClient";
 import { SaveViewsClient } from './baseClients/savedViewsClient';
-import { TagsClient } from "./baseClients/tagsService";
+import { TagsClient } from "./baseClients/tagsClient";
 import { ImageClient } from './baseClients/imageClient';
 import { commonClientArgs, isValidBaseUrl } from "./models/clientModels/commonClientInterfaces";
 

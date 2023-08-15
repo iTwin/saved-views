@@ -7,7 +7,7 @@ import { CombinedId, ImageResponse, ImageUpdate } from "@bentley/itwin-saved-vie
 
 export interface commonImageArgs extends commonRequestArgs {
   /** savedViewId id to query after */
-  savedViewId: CombinedId;
+  savedViewId: string;
 }
 
 export interface getImageArgs extends commonImageArgs {

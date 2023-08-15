@@ -3,7 +3,7 @@
 /**
  * Image Size enum for request.
  */
-export declare enum ImageSize {
+export enum ImageSize {
   FULL = "full",
   THUMBNAIL = "thumbnail",
 }

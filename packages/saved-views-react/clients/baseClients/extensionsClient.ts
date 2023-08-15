@@ -16,7 +16,7 @@ export class SavedViewsExtensionsClient implements ExtensionsClient {
   }
 
   async createExtension(args: createExtensionArgs): Promise<ExtensionResponse> {
-    const url = `${this.baseURL}/${args.savedViewId.combinedIdString}/extensions/`;
+    const url = `${this.baseURL}/${args.savedViewId}/extensions/`;
 
     const resp = await callITwinApi({
       url: url,
@@ -33,7 +33,7 @@ export class SavedViewsExtensionsClient implements ExtensionsClient {
   }
 
   async getExtension(args: singleExtensionArgs): Promise<ExtensionResponse> {
-    const url = `${this.baseURL}/${args.savedViewId.combinedIdString}/extensions/${args.extensionName}`;
+    const url = `${this.baseURL}/${args.savedViewId}/extensions/${args.extensionName}`;
 
     const resp = await callITwinApi({
       url: url,
@@ -49,7 +49,7 @@ export class SavedViewsExtensionsClient implements ExtensionsClient {
   }
 
   async getAllExtensions(args: commonExtensionArgs): Promise<ExtensionListResponse> {
-    const url = `${this.baseURL}/${args.savedViewId.combinedIdString}/extensions/`;
+    const url = `${this.baseURL}/${args.savedViewId}/extensions/`;
 
     const resp = await callITwinApi({
       url: url,
@@ -65,7 +65,7 @@ export class SavedViewsExtensionsClient implements ExtensionsClient {
   }
 
   async deleteExtension(args: singleExtensionArgs): Promise<void> {
-    const url = `${this.baseURL}/${args.savedViewId.combinedIdString}/extensions/${args.extensionName}`;
+    const url = `${this.baseURL}/${args.savedViewId}/extensions/${args.extensionName}`;
 
     await callITwinApi({
       url: url,

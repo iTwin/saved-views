@@ -2,11 +2,11 @@
 
 import { preferOptions } from "../prefer";
 import { commonRequestArgs } from "./commonClientInterfaces";
-import { CombinedId, SavedViewResponse, SavedViewListResponse, SavedViewCreate, SavedViewUpdate } from '@bentley/itwin-saved-views-utilities';
+import { SavedViewResponse, SavedViewListResponse, SavedViewCreate, SavedViewUpdate } from "@bentley/itwin-saved-views-utilities";
 
 export interface singleSavedViewArgs extends commonRequestArgs {
   /** saved view id to query after */
-  savedViewId: CombinedId;
+  savedViewId: string;
   /** affects the granularity of the data returned
    *  ONLY for get requests will be ignored for PUT POST DELETE
    *  MINIMAL = "return=minimal", least info

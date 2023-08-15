@@ -1,6 +1,6 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 
-import { CombinedId, TagCreate, TagListResponse, TagResponse, TagUpdate } from "@bentley/itwin-saved-views-utilities";
+import { TagCreate, TagListResponse, TagResponse, TagUpdate } from "@bentley/itwin-saved-views-utilities";
 import { commonRequestArgs } from "./commonClientInterfaces";
 
 export interface updateTagArgs extends singleTagArgs{
@@ -15,7 +15,7 @@ export interface createTagArgs extends commonRequestArgs{
 
 export interface singleTagArgs extends commonRequestArgs {
   /** tag id to query after */
-  tagId: CombinedId;
+  tagId: string;
 }
 
 export interface getAllTagArgs extends commonRequestArgs {

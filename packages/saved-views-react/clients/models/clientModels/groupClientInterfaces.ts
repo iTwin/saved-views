@@ -5,7 +5,7 @@ import { commonRequestArgs } from "./commonClientInterfaces";
 
 export interface singleGroupArgs extends commonRequestArgs {
   /** groupId id to query after */
-  groupId: CombinedId;
+  groupId: string;
 }
 
 export interface getAllGroupArgs extends commonRequestArgs {

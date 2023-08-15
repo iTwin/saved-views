@@ -34,7 +34,7 @@ export class TagsClient implements ITagsClient {
   }
 
   async getTag(args: singleTagArgs): Promise<TagResponse> {
-    const url = `${this.baseURL}/${args.tagId.combinedIdString}`;
+    const url = `${this.baseURL}/${args.tagId}`;
     const resp = await callITwinApi({
       url: url,
       method: HttpActions.GET,
@@ -45,7 +45,7 @@ export class TagsClient implements ITagsClient {
         ...args.headers,
       },
     });
-    return resp.body as TagResponse;
+    return resp as unknown as TagResponse;
   }
 
   async getAllTags(args: getAllTagArgs): Promise<TagListResponse> {
@@ -62,11 +62,11 @@ export class TagsClient implements ITagsClient {
         ...args.headers,
       },
     });
-    return resp.body as TagListResponse;
+    return resp as unknown as TagListResponse;
   }
 
   async deleteTag(args: singleTagArgs): Promise<void> {
-    const url = `${this.baseURL}/${args.tagId.combinedIdString}`;
+    const url = `${this.baseURL}/${args.tagId}`;
 
     await callITwinApi({
       url: url,
@@ -82,7 +82,7 @@ export class TagsClient implements ITagsClient {
   }
 
   async updateTag(args: updateTagArgs): Promise<TagResponse> {
-    const url = `${this.baseURL}/${args.tagId.combinedIdString}`;
+    const url = `${this.baseURL}/${args.tagId}`;
 
     const resp = await callITwinApi({
       url: url,
