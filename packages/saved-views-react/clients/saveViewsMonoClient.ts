@@ -5,7 +5,7 @@ import { GroupClient } from "./baseClients/groupClient";
 import { SaveViewsClient } from './baseClients/savedViewsClient';
 import { TagsClient } from "./baseClients/tagsClient";
 import { ImageClient } from './baseClients/imageClient';
-import { commonClientArgs, isValidBaseUrl } from "./models/clientModels/commonClientInterfaces";
+import { commonClientArgs, isValidBaseUrl } from "./models/clientModels/CommonClientInterfaces";
 
 /**
  * This is a monoClient that is used to access all the other clients associated with savedViews.

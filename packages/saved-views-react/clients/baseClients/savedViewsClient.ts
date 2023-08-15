@@ -2,10 +2,10 @@
 
 import { SavedViewListResponse, SavedViewResponse } from "@bentley/itwin-saved-views-utilities";
 import { HttpActions } from "../models/httpActionsAndStatus";
-import { SaveViewsClient as ISavedViewsClient, createSavedViewArgs, getAllSavedViewArgs, singleSavedViewArgs, updateSavedViewArgs } from "../models/clientModels/savedViewClientInterfaces";
+import { SaveViewsClient as ISavedViewsClient, createSavedViewArgs, getAllSavedViewArgs, singleSavedViewArgs, updateSavedViewArgs } from "../models/clientModels/SavedViewClientInterfaces";
 import { callITwinApi } from "../utils/apiUtils";
 import { preferOptions } from "../models/prefer";
-import { commonClientArgs } from "../models/clientModels/commonClientInterfaces";
+import { commonClientArgs } from "../models/clientModels/CommonClientInterfaces";
 
 export class SaveViewsClient implements ISavedViewsClient {
 
@@ -19,6 +19,7 @@ export class SaveViewsClient implements ISavedViewsClient {
 
   async getSavedView(args: singleSavedViewArgs): Promise<SavedViewResponse> {
     const url = `${this.baseURL}/${args.savedViewId}`;
+
     const resp = await callITwinApi({
       url: url,
       method: HttpActions.GET,
@@ -39,6 +40,7 @@ export class SaveViewsClient implements ISavedViewsClient {
     const topDomainParam = args.top ? `&$top=${args.top}` : "";
     const skipDomainParam = args.skip ? `&$skip=${args.skip}` : "";
     const url = `${this.baseURL}/?iTwinId=${args.iTwinId}${iModelDomainParam}${groupIdDomainParam}${topDomainParam}${skipDomainParam}`;
+
     const resp = await callITwinApi({
       url: url,
       method: HttpActions.GET,
@@ -55,6 +57,7 @@ export class SaveViewsClient implements ISavedViewsClient {
 
   async createSavedView(args: createSavedViewArgs): Promise<SavedViewResponse> {
     const url = `${this.baseURL}/`;
+
     const resp = await callITwinApi({
       url: url,
       method: HttpActions.POST,
@@ -71,6 +74,7 @@ export class SaveViewsClient implements ISavedViewsClient {
 
   async updateSavedView(args: updateSavedViewArgs): Promise<SavedViewResponse> {
     const url = `${this.baseURL}/${args.savedViewId}`;
+
     const resp = await callITwinApi({
       url: url,
       method: HttpActions.PATCH,
@@ -87,6 +91,7 @@ export class SaveViewsClient implements ISavedViewsClient {
 
   async deleteSavedView(args: singleSavedViewArgs): Promise<void> {
     const url = `${this.baseURL}/${args.savedViewId}`;
+
     await callITwinApi({
       url: url,
       method: HttpActions.DELETE,

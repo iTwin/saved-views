@@ -1,7 +1,7 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 
-import { CombinedId, GroupResponse, GroupListResponse, GroupCreate, GroupUpdate } from "@bentley/itwin-saved-views-utilities";
-import { commonRequestArgs } from "./commonClientInterfaces";
+import { GroupResponse, GroupListResponse, GroupCreate, GroupUpdate } from "@bentley/itwin-saved-views-utilities";
+import { commonRequestArgs } from "./CommonClientInterfaces";
 
 export interface singleGroupArgs extends commonRequestArgs {
   /** groupId id to query after */

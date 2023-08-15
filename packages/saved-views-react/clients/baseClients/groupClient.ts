@@ -1,8 +1,8 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 
 import { GroupListResponse, GroupResponse } from "@bentley/itwin-saved-views-utilities";
-import { GroupClient as IGroupClient, createGroup, getAllGroupArgs, singleGroupArgs, updateGroupArgs } from "../models/clientModels/groupClientInterfaces";
-import { commonClientArgs } from "../models/clientModels/commonClientInterfaces";
+import { GroupClient as IGroupClient, createGroup, getAllGroupArgs, singleGroupArgs, updateGroupArgs } from "../models/clientModels/GroupClientInterfaces";
+import { commonClientArgs } from "../models/clientModels/CommonClientInterfaces";
 import { HttpActions } from "../models/httpActionsAndStatus";
 import { callITwinApi } from "../utils/apiUtils";
 
@@ -17,6 +17,7 @@ export class GroupClient implements IGroupClient {
 
   async getGroup(args: singleGroupArgs): Promise<GroupResponse> {
     const url = `${this.baseURL}/${args.groupId}`;
+
     const resp = await callITwinApi({
       url: url,
       method: HttpActions.GET,
@@ -33,6 +34,7 @@ export class GroupClient implements IGroupClient {
   async getAllGroups(args: getAllGroupArgs): Promise<GroupListResponse> {
     const iModelDomainParam = args.iModelId ? `&iModelId=${args.iModelId}` : "";
     const url = `${this.baseURL}/?iTwinId=${args.iTwinId}${iModelDomainParam}`;
+
     const resp = await callITwinApi({
       url: url,
       method: HttpActions.GET,
@@ -63,6 +65,7 @@ export class GroupClient implements IGroupClient {
 
   async updateGroup(args: updateGroupArgs): Promise<GroupResponse> {
     const url = `${this.baseURL}/${args.groupId}`;
+
     const resp = await callITwinApi({
       url: url,
       method: HttpActions.PATCH,
@@ -79,6 +82,7 @@ export class GroupClient implements IGroupClient {
 
   async deleteGroup(args: singleGroupArgs): Promise<void> {
     const url = `${this.baseURL}/${args.groupId}`;
+
     await callITwinApi({
       url: url,
       method: HttpActions.DELETE,

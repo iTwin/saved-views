@@ -1,8 +1,8 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 
 import { ImageSize } from "../imageSize";
-import { commonRequestArgs } from "./commonClientInterfaces";
-import { CombinedId, ImageResponse, ImageUpdate } from "@bentley/itwin-saved-views-utilities";
+import { commonRequestArgs } from "./CommonClientInterfaces";
+import { ImageResponse, ImageUpdate } from "@bentley/itwin-saved-views-utilities";
 
 
 export interface commonImageArgs extends commonRequestArgs {

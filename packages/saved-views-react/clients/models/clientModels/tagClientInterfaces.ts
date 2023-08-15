@@ -1,14 +1,14 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 
 import { TagCreate, TagListResponse, TagResponse, TagUpdate } from "@bentley/itwin-saved-views-utilities";
-import { commonRequestArgs } from "./commonClientInterfaces";
+import { commonRequestArgs } from "./CommonClientInterfaces";
 
-export interface updateTagArgs extends singleTagArgs{
+export interface updateTagArgs extends singleTagArgs {
   /** payload tag to update tag */
   tagPayload: TagUpdate;
 }
 
-export interface createTagArgs extends commonRequestArgs{
+export interface createTagArgs extends commonRequestArgs {
   /** payload tag to create tag */
   tagPayload: TagCreate;
 }

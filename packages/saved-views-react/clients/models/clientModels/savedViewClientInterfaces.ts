@@ -1,7 +1,7 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 
 import { preferOptions } from "../prefer";
-import { commonRequestArgs } from "./commonClientInterfaces";
+import { commonRequestArgs } from "./CommonClientInterfaces";
 import { SavedViewResponse, SavedViewListResponse, SavedViewCreate, SavedViewUpdate } from "@bentley/itwin-saved-views-utilities";
 
 export interface singleSavedViewArgs extends commonRequestArgs {

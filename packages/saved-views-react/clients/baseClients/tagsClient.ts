@@ -1,8 +1,8 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 
 import { TagListResponse, TagResponse } from "@bentley/itwin-saved-views-utilities";
-import { TagsClient as ITagsClient, createTagArgs, getAllTagArgs, singleTagArgs, updateTagArgs } from "../models/clientModels/tagClientInterfaces";
-import { commonClientArgs } from "../models/clientModels/commonClientInterfaces";
+import { TagsClient as ITagsClient, createTagArgs, getAllTagArgs, singleTagArgs, updateTagArgs } from "../models/clientModels/TagClientInterfaces";
+import { commonClientArgs } from "../models/clientModels/CommonClientInterfaces";
 import { callITwinApi } from "../utils/apiUtils";
 import { HttpActions } from "../models/httpActionsAndStatus";
 
@@ -19,6 +19,7 @@ export class TagsClient implements ITagsClient {
 
   async createTag(args: createTagArgs): Promise<TagResponse> {
     const url = this.baseURL;
+
     const resp = await callITwinApi({
       url: url,
       method: HttpActions.POST,
@@ -35,6 +36,7 @@ export class TagsClient implements ITagsClient {
 
   async getTag(args: singleTagArgs): Promise<TagResponse> {
     const url = `${this.baseURL}/${args.tagId}`;
+
     const resp = await callITwinApi({
       url: url,
       method: HttpActions.GET,

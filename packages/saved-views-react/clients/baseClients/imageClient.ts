@@ -3,8 +3,8 @@
 import { ImageResponse } from "@bentley/itwin-saved-views-utilities";
 import { callITwinApi } from "../utils/apiUtils";
 import { HttpActions } from "../models/httpActionsAndStatus";
-import { commonClientArgs } from "../models/clientModels/commonClientInterfaces";
-import { ImageClient as iImageClient, getImageArgs, updateImageArgs } from "../models/clientModels/imageClientInterfaces";
+import { commonClientArgs } from "../models/clientModels/CommonClientInterfaces";
+import { ImageClient as iImageClient, getImageArgs, updateImageArgs } from "../models/clientModels/ImageClientInterfaces";
 
 export class ImageClient implements iImageClient {
   private readonly baseURL;
@@ -17,6 +17,7 @@ export class ImageClient implements iImageClient {
 
   async getImage(args: getImageArgs): Promise<ImageResponse> {
     const url = `${this.baseURL}/${args.savedViewId}/image?size=${args.size}`;
+
     const resp = await callITwinApi({
       url: url,
       method: HttpActions.GET,
@@ -32,6 +33,7 @@ export class ImageClient implements iImageClient {
 
   async updateImage(args: updateImageArgs): Promise<ImageResponse> {
     const url = `${this.baseURL}/${args.savedViewId}/image`;
+
     const resp = await callITwinApi({
       url: url,
       method: HttpActions.PUT,

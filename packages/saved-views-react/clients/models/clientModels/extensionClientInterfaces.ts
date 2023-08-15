@@ -1,7 +1,7 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 
 import { ExtensionsUpdate, ExtensionResponse, ExtensionListResponse } from "@bentley/itwin-saved-views-utilities";
-import { commonRequestArgs } from "./commonClientInterfaces";
+import { commonRequestArgs } from "./CommonClientInterfaces";
 
 export interface commonExtensionArgs extends commonRequestArgs {
   /** savedViewId id to query after */
