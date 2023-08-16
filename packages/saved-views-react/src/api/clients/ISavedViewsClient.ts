@@ -41,8 +41,7 @@ export interface ISavedViewsClient {
     projectId: string,
     iModelId: string | undefined,
     namespace: string,
-    applicationSpecific?: boolean,
-    applicationIds?: string[]
+    applicationSpecific?: boolean
   ) => Promise<SavedViewBaseSetting>;
 
   /** Get the full view object from the service by joining the two view setting and thumbnail into a single object */
@@ -53,7 +52,6 @@ export interface ISavedViewsClient {
     savedViewNamespace: string,
     thumbnailNamespace?: string,
     applicationSpecific?: boolean,
-    applicationIds?: string[]
   ) => Promise<SavedViewBase>;
 
   /**
@@ -92,7 +90,6 @@ export interface ISavedViewsClient {
     savedViewNamespace?: string,
     thumbnailNamespace?: string,
     applicationSpecific?: boolean,
-    applicationIds?: string[]
   ) => Promise<SavedViewBase>;
 
   /**
@@ -136,7 +133,6 @@ export interface ISavedViewsClient {
     thumbnailId?: string,
     thumbnailNamespace?: string,
     applicationSpecific?: boolean,
-    applicationIds?: string[]
   ) => Promise<void>;
 
   /**
@@ -164,7 +160,6 @@ export interface ISavedViewsClient {
     savedViewNamespace?: string,
     thumbnailNamespace?: string,
     applicationSpecific?: boolean,
-    applicationIds?: string[]
   ) => Promise<SavedViewBase[]>;
 
   /**
@@ -184,7 +179,6 @@ export interface ISavedViewsClient {
     savedViewNamespace?: string,
     thumbnailNamespace?: string,
     applicationSpecific?: boolean,
-    applicationIds?: string[],
     getAccessToken?: () => Promise<AccessToken>
   ) => Promise<SavedViewBase[]>;
 }
