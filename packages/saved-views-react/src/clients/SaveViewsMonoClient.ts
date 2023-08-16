@@ -1,10 +1,10 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 
-import { SavedViewsExtensionsClient } from "./baseClients/extensionsClient";
-import { GroupClient } from "./baseClients/groupClient";
-import { SaveViewsClient } from './baseClients/savedViewsClient';
-import { TagsClient } from "./baseClients/tagsClient";
-import { ImageClient } from './baseClients/imageClient';
+import { SavedViewsExtensionsClient } from "./baseClients/ExtensionsClient";
+import { GroupClient } from "./baseClients/GroupClient";
+import { SaveViewsClient } from "./baseClients/SavedViewsClient";
+import { TagsClient } from "./baseClients/TagsClient";
+import { ImageClient } from "./baseClients/ImageClient";
 import { commonClientArgs, isValidBaseUrl } from "./models/clientModels/CommonClientInterfaces";
 
 /**
@@ -21,7 +21,6 @@ import { commonClientArgs, isValidBaseUrl } from "./models/clientModels/CommonCl
  * saveViewsClient.groupClient.getGroup(...)
 */
 export class SaveViewsMonoClient {
-
   private readonly _savedViewsClient: SaveViewsClient;
   private readonly _tagClient: TagsClient;
   private readonly _extensionClient: SavedViewsExtensionsClient;
@@ -38,7 +37,6 @@ export class SaveViewsMonoClient {
     this._groupClient = new GroupClient(args);
     this._imageClient = new ImageClient(args);
   }
-
 
   /**
    * return client
