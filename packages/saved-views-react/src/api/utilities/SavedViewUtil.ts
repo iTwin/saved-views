@@ -14,7 +14,7 @@ import {
   imageBufferToCanvas, type IModelConnection, type ViewState, type Viewport,
 } from "@itwin/core-frontend";
 import { Point2d } from "@itwin/core-geometry";
-import matcher from "matcher";
+import * as matcher from "matcher";
 
 import { ModelCategoryOverrideProvider } from "../../ui/viewlist/ModelCategoryOverrideProvider";
 import { SavedViewEvents, SavedViewsManager } from "../SavedViewsManager";

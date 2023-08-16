@@ -231,6 +231,9 @@ importers:
       '@itwin/core-react':
         specifier: ^4.3.0
         version: 4.3.0(@itwin/appui-abstract@4.0.6)(@itwin/core-bentley@4.0.6)(react-dom@17.0.0)(react@17.0.0)
+      '@itwin/imodel-components-react':
+        specifier: ^4.3.0
+        version: 4.3.0(@itwin/appui-abstract@4.0.6)(@itwin/components-react@4.3.0)(@itwin/core-bentley@4.0.6)(@itwin/core-common@4.0.6)(@itwin/core-frontend@4.0.6)(@itwin/core-geometry@4.0.6)(@itwin/core-quantity@4.0.6)(@itwin/core-react@4.3.0)(react-dom@17.0.0)(react@17.0.0)
       '@itwin/imodels-access-frontend':
         specifier: ^4.0.4
         version: 4.0.4(@itwin/core-bentley@4.0.6)(@itwin/core-common@4.0.6)(@itwin/core-frontend@4.0.6)
@@ -1875,7 +1878,7 @@ packages:
       vite: ^4
     dependencies:
       '@swc/core': 1.3.70
-      vite: 4.4.7(@types/node@18.11.9)
+      vite: 4.4.7(@types/node@18.11.9)(sass@1.64.1)
     transitivePeerDependencies:
       - '@swc/helpers'
 
@@ -5137,41 +5140,6 @@ packages:
       picocolors: 1.0.0
       vite: 4.4.7(@types/node@18.11.9)(sass@1.64.1)
     dev: false
-
-  /vite@4.4.7(@types/node@18.11.9):
-    resolution: {integrity: sha512-6pYf9QJ1mHylfVh39HpuSfMPojPSKVxZvnclX1K1FyZ1PXDOcLBibdq5t1qxJSnL63ca8Wf4zts6mD8u8oc9Fw==}
-    engines: {node: ^14.18.0 || >=16.0.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': '>= 14'
-      less: '*'
-      lightningcss: ^1.21.0
-      sass: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.4.0
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      less:
-        optional: true
-      lightningcss:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-    dependencies:
-      '@types/node': 18.11.9
-      esbuild: 0.18.17
-      postcss: 8.4.27
-      rollup: 3.26.3
-    optionalDependencies:
-      fsevents: 2.3.2
 
   /vite@4.4.7(@types/node@18.11.9)(sass@1.64.1):
     resolution: {integrity: sha512-6pYf9QJ1mHylfVh39HpuSfMPojPSKVxZvnclX1K1FyZ1PXDOcLBibdq5t1qxJSnL63ca8Wf4zts6mD8u8oc9Fw==}
