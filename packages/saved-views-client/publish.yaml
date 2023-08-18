@@ -7,7 +7,7 @@ pr: none
 
 variables:
   - name: packageName
-    value: saved-views-react
+    value: "saved-views-client"
   - name: packageVersion
     value: ${{ replace(variables['Build.SourceBranchName'], 'v', '') }}
   - name: tarballName
