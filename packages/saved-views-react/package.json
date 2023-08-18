@@ -41,7 +41,6 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@itwin/itwin-saved-views-types": "0.0.3",
     "@itwin/appui-abstract": "^4.0.6",
     "@itwin/appui-react": "^4.3.0",
     "@itwin/core-bentley": "^4.0.6",
