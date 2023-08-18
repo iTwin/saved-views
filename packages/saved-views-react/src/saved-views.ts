@@ -24,4 +24,3 @@ export * from "./ui/viewlist/ProcessViewState";
 // TODO: re-enable once the extension api is finished
 // export * from "./savedViews";
 export * from "./ui/viewlist/viewitem/SavedViewItemContextMenu";
-export * from "./clients/saveViewsMonoClient"
