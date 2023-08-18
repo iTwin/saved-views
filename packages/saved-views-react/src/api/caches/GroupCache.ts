@@ -79,7 +79,7 @@ export class GroupCache {
     }
 
     return (
-      this._cache!.filter((value: Group) => group.id === value.id).length !== 0
+      this._cache.filter((value) => group.id === value.id).length !== 0
     );
   }
 

@@ -63,11 +63,9 @@ class ViewItem extends React.PureComponent<Props, ViewItemState> {
     const iModelConnection = this.props.connection;
 
     if (this.props.showThumnbails) {
-      const thumbnail = await ThumbnailCache.getThumbnail(iModelConnection!, this.props.viewProps);
+      const thumbnail = await ThumbnailCache.getThumbnail(iModelConnection, this.props.viewProps);
       if (thumbnail) {
-        const blob = new Blob([thumbnail!.image], {
-          type: "image/" + thumbnail!.format,
-        });
+        const blob = new Blob([thumbnail.image], { type: "image/" + thumbnail.format });
         // Load thumbnails
         if (!this._unmounted) {
           this.setState({ thumbnail: URL.createObjectURL(blob) });

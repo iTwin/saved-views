@@ -171,20 +171,24 @@ export function Banner(props: Props) {
   };
 
   const handleGroupAdd = () => {
-    const cache = IModelConnectionCache.getGroupCache(props.connection!);
-    const name = cache!.getNewGroupName();
+    if (!props.connection) {
+      throw new Error("iModelConnection is undefined");
+    }
+
+    const cache = IModelConnectionCache.getGroupCache(props.connection);
+    const name = cache.getNewGroupName() ?? "";
 
     const group: Group = {
-      name: name!,
+      name,
       id: Guid.createValue(),
       shared: false,
-      userId: props.userId!,
+      userId: props.userId,
     };
 
     setCreatingGroup(true);
 
-    cache!
-      .createGroup(props.connection!, group)
+    cache
+      .createGroup(props.connection, group)
       .then((newGroup: Group) => {
         props.setRenaming({ id: newGroup.id, renaming: true });
       })

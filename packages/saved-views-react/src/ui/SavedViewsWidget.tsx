@@ -181,7 +181,11 @@ export class SavedViewsWidget extends React.Component<
     }
 
     SyncUiEventDispatcher.onSyncUiEvent.addListener(this.handleIModelConnectionChanged);
-    const { iTwinId, iModelId } = this.state.imodel!;
+    if (!this.state.imodel) {
+      throw new Error("iModelConnection is undefined");
+    }
+
+    const { iTwinId, iModelId } = this.state.imodel;
 
     if (
       (enableApplyDefaultView === true || showDefaultView === true) &&
@@ -210,24 +214,24 @@ export class SavedViewsWidget extends React.Component<
       case SavedViewCacheEventType.SavedViewShared:
         SavedViewsManager.dispatchActiontoStore(
           updateView({
-            groupId: args.savedView!.groupId ?? SavedViewsManager.ungroupedId,
-            id: args.savedView!.id,
-            newView: args.savedView! as SavedView,
+            groupId: args.savedView?.groupId ?? SavedViewsManager.ungroupedId,
+            id: args.savedView?.id,
+            newView: args.savedView as SavedView,
           }),
         );
         break;
       case SavedViewCacheEventType.SavedViewUpdated:
         SavedViewsManager.dispatchActiontoStore(
           deleteView({
-            groupId: args.savedView!.groupId ?? SavedViewsManager.ungroupedId,
-            id: args.savedView!.id,
+            groupId: args.savedView?.groupId ?? SavedViewsManager.ungroupedId,
+            id: args.savedView?.id,
           }),
         );
         SavedViewsManager.dispatchActiontoStore(
           updateView({
-            groupId: args.updatedView!.groupId ?? SavedViewsManager.ungroupedId,
-            id: args.updatedView!.id,
-            newView: args.updatedView! as SavedView,
+            groupId: args.updatedView?.groupId ?? SavedViewsManager.ungroupedId,
+            id: args.updatedView?.id,
+            newView: args.updatedView as SavedView,
           }),
         );
 
@@ -235,8 +239,8 @@ export class SavedViewsWidget extends React.Component<
       case SavedViewCacheEventType.SavedViewRemoved:
         SavedViewsManager.dispatchActiontoStore(
           deleteView({
-            groupId: args.savedView!.groupId ?? SavedViewsManager.ungroupedId,
-            id: args.savedView!.id,
+            groupId: args.savedView?.groupId ?? SavedViewsManager.ungroupedId,
+            id: args.savedView?.id,
           }),
         );
         break;
@@ -251,15 +255,15 @@ export class SavedViewsWidget extends React.Component<
         await this.loadGroups(true);
         break;
       case GroupCacheEventType.GroupAdded:
-        SavedViewsManager.dispatchActiontoStore(createGroup({ newGroup: args.group! }));
+        SavedViewsManager.dispatchActiontoStore(createGroup({ newGroup: args.group }));
         await this.loadGroups(true);
         break;
       case GroupCacheEventType.GroupShared:
       case GroupCacheEventType.GroupUpdated:
-        SavedViewsManager.dispatchActiontoStore(updateGroup({ id: args.group!.id, newGroup: args.group! }));
+        SavedViewsManager.dispatchActiontoStore(updateGroup({ id: args.group?.id, newGroup: args.group }));
         break;
       case GroupCacheEventType.GroupRemoved:
-        SavedViewsManager.dispatchActiontoStore(deleteGroup({ id: args.group!.id }));
+        SavedViewsManager.dispatchActiontoStore(deleteGroup({ id: args.group?.id }));
         break;
     }
   }
@@ -289,15 +293,16 @@ export class SavedViewsWidget extends React.Component<
   }
 
   private async loadGroups(refresh?: boolean) {
-    const groups: Group[] = await IModelConnectionCache
-      .getGroupCache(this.state.imodel!)!
-      .getGroups(this.state.imodel!, refresh);
+    if (!this.state.imodel) {
+      throw new Error("iModelConnection is undefined");
+    }
+
+    const groups = await IModelConnectionCache
+      .getGroupCache(this.state.imodel)
+      .getGroups(this.state.imodel, refresh);
 
     // Blank iModelConnection will never have desktop view group
-    if (
-      this.state.imodel === undefined ||
-      (this.state.imodel && !this.state.imodel.isBlank)
-    ) {
+    if ((this.state.imodel && !this.state.imodel.isBlank)) {
       groups.push(this._desktopViewsGroup);
     }
 
@@ -319,7 +324,11 @@ export class SavedViewsWidget extends React.Component<
 
     groups.unshift(this._ungroupGroup);
 
-    const currentGroups = SavedViewsManager.state!.groups;
+    if (!SavedViewsManager.state) {
+      throw new Error();
+    }
+
+    const currentGroups = SavedViewsManager.state.groups;
 
     for (const groupId in currentGroups) {
       if (Object.prototype.hasOwnProperty.call(currentGroups, groupId)) {
@@ -497,7 +506,11 @@ export class SavedViewsWidget extends React.Component<
   }
 
   private resolveInvalidGroupIds() {
-    const views = SavedViewsManager.state!.savedViews;
+    if (!SavedViewsManager.state) {
+      throw new Error();
+    }
+
+    const views = SavedViewsManager.state.savedViews;
 
     const viewsByObject = Object.values(views);
 
@@ -512,10 +525,9 @@ export class SavedViewsWidget extends React.Component<
       for (const s of Object.values(o)) {
         if (s.groupId === SavedViewsManager.ungroupedId) {
           continue;
-        } else if (
-          s.groupId &&
-          SavedViewsManager.state!.groups[s.groupId] === undefined
-        ) {
+        }
+
+        if (s.groupId && SavedViewsManager.state.groups[s.groupId] === undefined) {
           SavedViewsManager.dispatchActiontoStore(
             updateView({
               groupId: SavedViewsManager.ungroupedId,
@@ -528,9 +540,9 @@ export class SavedViewsWidget extends React.Component<
           );
         } else if (
           s.groupId &&
-          SavedViewsManager.state!.groups[s.groupId] &&
-          SavedViewsManager.state!.groups[s.groupId].userId !== s.userId &&
-          SavedViewsManager.state!.groups[s.groupId].shared === false &&
+          SavedViewsManager.state.groups[s.groupId] &&
+          SavedViewsManager.state.groups[s.groupId].userId !== s.userId &&
+          SavedViewsManager.state.groups[s.groupId].shared === false &&
           s.shared === false
         ) {
           SavedViewsManager.dispatchActiontoStore(

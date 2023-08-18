@@ -40,7 +40,7 @@ export class ViewCreator {
     const mergedDisplayProps = seedViewStateProps.displayStyleProps;
     mergedDisplayProps.jsonProperties.styles = {
       ...mergedDisplayProps.jsonProperties.styles,
-      ...viewStateProps.displayStyleProps.jsonProperties!.styles,
+      ...viewStateProps.displayStyleProps.jsonProperties?.styles,
     };
 
     return {

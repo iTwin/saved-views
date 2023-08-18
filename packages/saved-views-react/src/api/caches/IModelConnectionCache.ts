@@ -27,13 +27,15 @@ export class IModelConnectionCache {
     return this.getSavedViewCache(key);
   }
 
-  public static getSavedViewCache(key: IModelConnection): SavedViewsCache | undefined {
-    if (this._viewsCache.get(key) === undefined) {
-      const savedViewCache = new SavedViewsCache(SavedViewsManager.savedViewsClient);
-      this._viewsCache.set(key, savedViewCache);
+  public static getSavedViewCache(key: IModelConnection): SavedViewsCache {
+    const existingCache = this._viewsCache.get(key);
+    if (existingCache) {
+      return existingCache;
     }
 
-    return this._viewsCache.get(key);
+    const savedViewCache = new SavedViewsCache(SavedViewsManager.savedViewsClient);
+    this._viewsCache.set(key, savedViewCache);
+    return savedViewCache;
   }
 
   public static createGroupCache(key: IModelConnection): GroupCache | undefined {
@@ -49,12 +51,14 @@ export class IModelConnectionCache {
     return this._desktopViewsCache.get(key);
   }
 
-  public static getGroupCache(key: IModelConnection): GroupCache | undefined {
-    if (this._groupCache.get(key) === undefined) {
-      const groupCache = new GroupCache(SavedViewsManager.groupClient);
-      this._groupCache.set(key, groupCache);
+  public static getGroupCache(key: IModelConnection): GroupCache {
+    const existingGroup = this._groupCache.get(key);
+    if (existingGroup) {
+      return existingGroup;
     }
 
-    return this._groupCache.get(key);
+    const groupCache = new GroupCache(SavedViewsManager.groupClient);
+    this._groupCache.set(key, groupCache);
+    return groupCache;
   }
 }

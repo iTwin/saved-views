@@ -398,7 +398,7 @@ export class SavedViewUtil {
   }
 
   public static showError(component: string, briefKey: string, detailedKey: string, error?: Error) {
-    if (!SavedViewsManager.state!.displayErrors) {
+    if (!SavedViewsManager.state?.displayErrors) {
       return;
     }
 
@@ -414,7 +414,7 @@ export class SavedViewUtil {
   }
 
   public static showSuccess(component: string, briefKey: string, detailedKey?: string) {
-    if (!SavedViewsManager.state!.displaySuccess) {
+    if (!SavedViewsManager.state?.displaySuccess) {
       return;
     }
 

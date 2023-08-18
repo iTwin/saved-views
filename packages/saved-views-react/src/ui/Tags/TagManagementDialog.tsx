@@ -54,7 +54,11 @@ function TagManagementDialog({
   const typeaheadRef = useRef<HTMLElement>(null);
   const [inputValue, setInputValue] = useState<string | null>(null);
 
-  const iModelConnCache = IModelConnectionCache.getSavedViewCache(iModelConn!);
+  if (!iModelConn) {
+    throw new Error("iModelConnection is undefined");
+  }
+
+  const iModelConnCache = IModelConnectionCache.getSavedViewCache(iModelConn);
 
   useEffect(() => {
     const getAllTags = async () => {
