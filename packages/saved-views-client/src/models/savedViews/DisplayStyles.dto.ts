@@ -64,5 +64,5 @@ export interface DisplayStyle3dSettingsProps extends DisplayStyleSettingsProps {
   ambientOcclusion?: AmbientOcclusionProps;
   solarShadows?: SolarShadowSettingsProps;
   lights?: LightSettingsProps;
-  planProjections?: { [modelId: string]: PlanProjectionSettingsProps };
+  planProjections?: { [modelId: string]: PlanProjectionSettingsProps; };
 }

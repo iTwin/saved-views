@@ -31,7 +31,7 @@ export class CombinedId implements ContextIds {
     discriminator: string | number,
     resourceId?: string,
     iTwinId?: string,
-    iModelId?: string
+    iModelId?: string,
   ) {
     if (discriminatorIsSourceValue(discriminator)) {
       const source = discriminator;
@@ -39,7 +39,7 @@ export class CombinedId implements ContextIds {
         source,
         resourceId ?? "",
         iTwinId ?? "",
-        iModelId
+        iModelId,
       );
       if (combinedId) {
         this.combinedIdString = combinedId;
@@ -97,12 +97,12 @@ export class CombinedId implements ContextIds {
         CombinedId.reorderByteGroupsToRFCinPlace(
           combinedBytes.subarray(
             1 + index * UUID_BYTE_COUNT,
-            1 + (index + 1) * UUID_BYTE_COUNT
-          )
+            1 + (index + 1) * UUID_BYTE_COUNT,
+          ),
         );
       });
       return encode(combinedBytes).replace(/[=+\/]/g, (c: string) =>
-        c === "=" ? "" : c === "+" ? "-" : "_"
+        c === "=" ? "" : c === "+" ? "-" : "_",
       );
     } catch (error) {
       return "";
@@ -119,7 +119,7 @@ export class CombinedId implements ContextIds {
       .replace(/[-_]/g, (c) => (c === "-" ? "+" : "/"))
       .padEnd(
         Math.ceil(combinedId.length / BASE64_BYTE_LENGTH) * BASE64_BYTE_LENGTH,
-        "="
+        "=",
       );
     if (!isBase64(base64)) {
       return undefined;
@@ -133,7 +133,7 @@ export class CombinedId implements ContextIds {
     const ids = [];
     for (let i = 0; i < idsBytes.byteLength / UUID_BYTE_COUNT; i++) {
       const id = new Uint8Array(
-        idsBytes.slice(i * UUID_BYTE_COUNT, (i + 1) * UUID_BYTE_COUNT)
+        idsBytes.slice(i * UUID_BYTE_COUNT, (i + 1) * UUID_BYTE_COUNT),
       );
       CombinedId.reorderByteGroupsToRFCinPlace(id);
       try {

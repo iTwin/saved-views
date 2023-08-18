@@ -43,7 +43,7 @@ export class ImageClient implements iImageClient {
         Accept: "application/vnd.bentley.itwin-platform.v1+json",
         ...args.headers,
       },
-      body: args.imagePayload
+      body: args.imagePayload,
     });
     return resp as unknown as ImageResponse;
   }

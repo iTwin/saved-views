@@ -26,7 +26,7 @@ export interface ShapeProps {
   transform: [
     [qx: number, qy: number, qz: number, ax: number],
     [qx: number, qy: number, qz: number, ax: number],
-    [qx: number, qy: number, qz: number, ax: number]
+    [qx: number, qy: number, qz: number, ax: number],
   ];
   zLow?: number;
   zHigh?: number;

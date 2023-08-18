@@ -102,11 +102,11 @@ export interface ViewItwinDrawing extends ViewItwin2d {
   drawingToSpatialTransform?: [
     [qx: number, qy: number, qz: number, ax: number],
     [qx: number, qy: number, qz: number, ax: number],
-    [qx: number, qy: number, qz: number, ax: number]
+    [qx: number, qy: number, qz: number, ax: number],
   ];
   modelExtents: [
     low: [x: number, y: number, z: number],
-    high: [x: number, y: number, z: number]
+    high: [x: number, y: number, z: number],
   ];
 }
 

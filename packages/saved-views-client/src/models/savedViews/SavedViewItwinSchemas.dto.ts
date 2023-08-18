@@ -25,11 +25,11 @@ export interface SavedViewItwin3d extends SavedViewRspBase {
   /**
    * Store Of View Data Coming From Service
    */
-  savedViewData: { itwin3dView: ViewItwin3d };
+  savedViewData: { itwin3dView: ViewItwin3d; };
 }
 
 export const isSavedViewItwin3d = (
-  savedViewRsp: SavedViewRspBase
+  savedViewRsp: SavedViewRspBase,
 ): savedViewRsp is SavedViewItwin3d =>
   "itwin3dView" in savedViewRsp.savedViewData;
 
@@ -40,11 +40,11 @@ export interface SavedViewItwinSheet extends SavedViewRspBase {
   /**
    * Store Of View Data Coming From Service
    */
-  savedViewData: { itwinSheetView: ViewItwinSheet };
+  savedViewData: { itwinSheetView: ViewItwinSheet; };
 }
 
 export const isSavedViewItwinSheet = (
-  savedViewRsp: SavedViewRspBase
+  savedViewRsp: SavedViewRspBase,
 ): savedViewRsp is SavedViewItwinSheet =>
   "itwinSheetView" in savedViewRsp.savedViewData;
 
@@ -55,10 +55,10 @@ export interface SavedViewItwinDrawing extends SavedViewRspBase {
   /**
    * Store Of View Data Coming From Service
    */
-  savedViewData: { itwinDrawingView: ViewItwinDrawing };
+  savedViewData: { itwinDrawingView: ViewItwinDrawing; };
 }
 
 export const isSavedViewItwinDrawing = (
-  savedViewRsp: SavedViewRspBase
+  savedViewRsp: SavedViewRspBase,
 ): savedViewRsp is SavedViewItwinDrawing =>
   "itwinDrawingView" in savedViewRsp.savedViewData;
