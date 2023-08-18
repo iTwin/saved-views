@@ -1,24 +1,24 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 
-import { TagCreate, TagListResponse, TagResponse, TagUpdate } from "@bentley/itwin-saved-views-utilities";
-import { commonRequestArgs } from "./CommonClientInterfaces";
+import { TagCreate, TagListResponse, TagResponse, TagUpdate } from "@itwin/itwin-saved-views-types";
+import { CommonRequestArgs } from "./CommonClientInterfaces";
 
-export interface updateTagArgs extends singleTagArgs {
+export interface UpdateTagArgs extends singleTagArgs {
   /** payload tag to update tag */
   tagPayload: TagUpdate;
 }
 
-export interface createTagArgs extends commonRequestArgs {
+export interface createTagArgs extends CommonRequestArgs {
   /** payload tag to create tag */
   tagPayload: TagCreate;
 }
 
-export interface singleTagArgs extends commonRequestArgs {
+export interface singleTagArgs extends CommonRequestArgs {
   /** tag id to query after */
   tagId: string;
 }
 
-export interface getAllTagArgs extends commonRequestArgs {
+export interface getAllTagArgs extends CommonRequestArgs {
   /** iTwin id to query after */
   iTwinId: string;
   /** optional iModel id to query after */
@@ -49,5 +49,5 @@ export interface TagsClient {
   /** updates tag
    * @throws on non 2xx response
  */
-  updateTag(args: updateTagArgs): Promise<TagResponse>;
+  updateTag(args: UpdateTagArgs): Promise<TagResponse>;
 }

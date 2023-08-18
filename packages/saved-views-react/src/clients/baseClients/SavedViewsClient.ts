@@ -1,23 +1,23 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 
-import { SavedViewListResponse, SavedViewResponse } from "@bentley/itwin-saved-views-utilities";
-import { HttpActions } from "../models/httpActionsAndStatus";
-import { SaveViewsClient as ISavedViewsClient, createSavedViewArgs, getAllSavedViewArgs, singleSavedViewArgs, updateSavedViewArgs } from "../models/clientModels/SavedViewClientInterfaces";
+import { SavedViewListResponse, SavedViewResponse } from "@itwin/itwin-saved-views-types";
+import { HttpActions } from "../models/HttpActionsAndStatus";
+import { SaveViewsClient as ISavedViewsClient, CreateSavedViewArgs, GetAllSavedViewArgs, SingleSavedViewArgs, UpdateSavedViewArgs } from "../models/clientModels/SavedViewClientInterfaces";
 import { callITwinApi } from "../utils/apiUtils";
-import { preferOptions } from "../models/prefer";
-import { commonClientArgs } from "../models/clientModels/CommonClientInterfaces";
+import { PreferOptions } from "../models/Prefer";
+import { CommonClientArgs } from "../models/clientModels/CommonClientInterfaces";
 
 export class SaveViewsClient implements ISavedViewsClient {
 
   private readonly baseURL;
   private readonly getAccessToken: () => Promise<string>;
 
-  constructor(args: commonClientArgs) {
+  constructor(args: CommonClientArgs) {
     this.baseURL = args.baseURL;
     this.getAccessToken = args.getAccessToken;
   }
 
-  async getSavedView(args: singleSavedViewArgs): Promise<SavedViewResponse> {
+  async getSavedView(args: SingleSavedViewArgs): Promise<SavedViewResponse> {
     const url = `${this.baseURL}/${args.savedViewId}`;
 
     const resp = await callITwinApi({
@@ -27,14 +27,14 @@ export class SaveViewsClient implements ISavedViewsClient {
       signal: args.signal,
       headers: {
         Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        prefer: args.prefer ? args.prefer : preferOptions.MINIMAL,
+        prefer: args.prefer ? args.prefer : PreferOptions.MINIMAL,
         ...args.headers,
       },
     });
     return resp as unknown as SavedViewResponse;
   }
 
-  async getAllSavedViews(args: getAllSavedViewArgs): Promise<SavedViewListResponse> {
+  async getAllSavedViews(args: GetAllSavedViewArgs): Promise<SavedViewListResponse> {
     const iModelDomainParam = args.iModelId ? `&iModelId=${args.iModelId}` : "";
     const groupIdDomainParam = args.groupId ? `&groupId=${args.groupId}` : "";
     const topDomainParam = args.top ? `&$top=${args.top}` : "";
@@ -48,14 +48,14 @@ export class SaveViewsClient implements ISavedViewsClient {
       signal: args.signal,
       headers: {
         Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        prefer: args.prefer ? args.prefer : preferOptions.MINIMAL,
+        prefer: args.prefer ? args.prefer : PreferOptions.MINIMAL,
         ...args.headers,
       },
     });
     return resp as unknown as SavedViewListResponse;
   }
 
-  async createSavedView(args: createSavedViewArgs): Promise<SavedViewResponse> {
+  async createSavedView(args: CreateSavedViewArgs): Promise<SavedViewResponse> {
     const url = `${this.baseURL}/`;
 
     const resp = await callITwinApi({
@@ -72,7 +72,7 @@ export class SaveViewsClient implements ISavedViewsClient {
     return resp as unknown as SavedViewResponse;
   }
 
-  async updateSavedView(args: updateSavedViewArgs): Promise<SavedViewResponse> {
+  async updateSavedView(args: UpdateSavedViewArgs): Promise<SavedViewResponse> {
     const url = `${this.baseURL}/${args.savedViewId}`;
 
     const resp = await callITwinApi({
@@ -89,7 +89,7 @@ export class SaveViewsClient implements ISavedViewsClient {
     return resp as unknown as SavedViewResponse;
   }
 
-  async deleteSavedView(args: singleSavedViewArgs): Promise<void> {
+  async deleteSavedView(args: SingleSavedViewArgs): Promise<void> {
     const url = `${this.baseURL}/${args.savedViewId}`;
 
     await callITwinApi({

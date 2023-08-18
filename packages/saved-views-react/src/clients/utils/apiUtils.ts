@@ -1,6 +1,6 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 
-import { HttpActions } from "../models/httpActionsAndStatus";
+import { HttpActions } from "../models/HttpActionsAndStatus";
 
 export interface CallITwinApiParams<BodyType extends object> {
   method: HttpActions;

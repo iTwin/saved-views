@@ -1,10 +1,10 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 
-import { preferOptions } from "../prefer";
-import { commonRequestArgs } from "./CommonClientInterfaces";
-import { SavedViewResponse, SavedViewListResponse, SavedViewCreate, SavedViewUpdate } from "@bentley/itwin-saved-views-utilities";
+import { PreferOptions } from "../Prefer";
+import { CommonRequestArgs } from "./CommonClientInterfaces";
+import { SavedViewResponse, SavedViewListResponse, SavedViewCreate, SavedViewUpdate } from "@itwin/itwin-saved-views-types";
 
-export interface singleSavedViewArgs extends commonRequestArgs {
+export interface SingleSavedViewArgs extends CommonRequestArgs {
   /** saved view id to query after */
   savedViewId: string;
   /** affects the granularity of the data returned
@@ -12,10 +12,10 @@ export interface singleSavedViewArgs extends commonRequestArgs {
    *  MINIMAL = "return=minimal", least info
    *  REPRESENTATION = "return=representation" most info
   */
-  prefer?: preferOptions;
+  prefer?: PreferOptions;
 }
 
-export interface getAllSavedViewArgs extends commonRequestArgs {
+export interface GetAllSavedViewArgs extends CommonRequestArgs {
   /** id of the project/iTwin the views belong to */
   iTwinId: string;
   /** optional id of the project/iTwin the views belong to */
@@ -30,15 +30,15 @@ export interface getAllSavedViewArgs extends commonRequestArgs {
    *  MINIMAL = "return=minimal", least info
    *  REPRESENTATION = "return=representation" most info
   */
-  prefer?: preferOptions;
+  prefer?: PreferOptions;
 }
 
-export interface createSavedViewArgs extends commonRequestArgs {
+export interface CreateSavedViewArgs extends CommonRequestArgs {
   /** payload for savedView*/
   savedViewPayload: SavedViewCreate;
 }
 
-export interface updateSavedViewArgs extends singleSavedViewArgs {
+export interface UpdateSavedViewArgs extends SingleSavedViewArgs {
   /** payload for savedView */
   savedViewPayload: SavedViewUpdate;
 }
@@ -47,25 +47,25 @@ export interface SaveViewsClient {
   /** gets a savedView
    * @throws on non 2xx response
  */
-  getSavedView(args: singleSavedViewArgs): Promise<SavedViewResponse>;
+  getSavedView(args: SingleSavedViewArgs): Promise<SavedViewResponse>;
 
   /** gets all savedViews
    * @throws on non 2xx response
  */
-  getAllSavedViews(args: getAllSavedViewArgs): Promise<SavedViewListResponse>;
+  getAllSavedViews(args: GetAllSavedViewArgs): Promise<SavedViewListResponse>;
 
   /** creates savedView
    * @throws on non 2xx response
  */
-  createSavedView(args: createSavedViewArgs): Promise<SavedViewResponse>;
+  createSavedView(args: CreateSavedViewArgs): Promise<SavedViewResponse>;
 
   /** creates savedView
   * @throws on non 2xx response
  */
-  updateSavedView(args: updateSavedViewArgs): Promise<SavedViewResponse>;
+  updateSavedView(args: UpdateSavedViewArgs): Promise<SavedViewResponse>;
 
   /**deletes a savedView
    * @throws on non 2xx response
  */
-  deleteSavedView(args: singleSavedViewArgs): Promise<void>;
+  deleteSavedView(args: SingleSavedViewArgs): Promise<void>;
 }

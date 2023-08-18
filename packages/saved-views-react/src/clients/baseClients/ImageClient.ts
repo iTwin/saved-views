@@ -1,21 +1,21 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 
-import { ImageResponse } from "@bentley/itwin-saved-views-utilities";
+import { ImageResponse } from "@itwin/itwin-saved-views-types";
 import { callITwinApi } from "../utils/apiUtils";
-import { HttpActions } from "../models/httpActionsAndStatus";
-import { commonClientArgs } from "../models/clientModels/CommonClientInterfaces";
-import { ImageClient as iImageClient, getImageArgs, updateImageArgs } from "../models/clientModels/ImageClientInterfaces";
+import { HttpActions } from "../models/HttpActionsAndStatus";
+import { CommonClientArgs } from "../models/clientModels/CommonClientInterfaces";
+import { ImageClient as iImageClient, GetImageArgs, UpdateImageArgs } from "../models/clientModels/ImageClientInterfaces";
 
 export class ImageClient implements iImageClient {
   private readonly baseURL;
   private readonly getAccessToken: () => Promise<string>;
 
-  constructor(args: commonClientArgs) {
+  constructor(args: CommonClientArgs) {
     this.baseURL = args.baseURL;
     this.getAccessToken = args.getAccessToken;
   }
 
-  async getImage(args: getImageArgs): Promise<ImageResponse> {
+  async getImage(args: GetImageArgs): Promise<ImageResponse> {
     const url = `${this.baseURL}/${args.savedViewId}/image?size=${args.size}`;
 
     const resp = await callITwinApi({
@@ -31,7 +31,7 @@ export class ImageClient implements iImageClient {
     return resp as unknown as ImageResponse;
   }
 
-  async updateImage(args: updateImageArgs): Promise<ImageResponse> {
+  async updateImage(args: UpdateImageArgs): Promise<ImageResponse> {
     const url = `${this.baseURL}/${args.savedViewId}/image`;
 
     const resp = await callITwinApi({

@@ -1,9 +1,9 @@
-export interface commonRequestArgs {
+export interface CommonRequestArgs {
   signal?: AbortSignal | undefined;
   headers?: Record<string, string> | undefined;
 }
 
-export interface commonClientArgs {
+export interface CommonClientArgs {
   /** url that conforms to pattern https://{...}api.bentley.com/savedviews */
   baseURL: string;
   /** function for getting auth token */

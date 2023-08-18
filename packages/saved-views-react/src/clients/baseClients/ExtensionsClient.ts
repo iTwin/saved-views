@@ -1,21 +1,21 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 
-import { ExtensionListResponse, ExtensionResponse } from "@bentley/itwin-saved-views-utilities";
-import { HttpActions } from "../models/httpActionsAndStatus";
+import { ExtensionListResponse, ExtensionResponse } from "@itwin/itwin-saved-views-types";
+import { HttpActions } from "../models/HttpActionsAndStatus";
 import { callITwinApi } from "../utils/apiUtils";
-import { commonClientArgs } from "../models/clientModels/CommonClientInterfaces";
-import { ExtensionsClient, createExtensionArgs, singleExtensionArgs, commonExtensionArgs } from "../models/clientModels/ExtensionClientInterfaces";
+import { CommonClientArgs } from "../models/clientModels/CommonClientInterfaces";
+import { ExtensionsClient, CreateExtensionArgs, SingleExtensionArgs, CommonExtensionArgs } from "../models/clientModels/ExtensionClientInterfaces";
 
 export class SavedViewsExtensionsClient implements ExtensionsClient {
   private readonly baseURL;
   private readonly getAccessToken: () => Promise<string>;
 
-  constructor(args: commonClientArgs) {
+  constructor(args: CommonClientArgs) {
     this.baseURL = args.baseURL;
     this.getAccessToken = args.getAccessToken;
   }
 
-  async createExtension(args: createExtensionArgs): Promise<ExtensionResponse> {
+  async createExtension(args: CreateExtensionArgs): Promise<ExtensionResponse> {
     const url = `${this.baseURL}/${args.savedViewId}/extensions/`;
 
     const resp = await callITwinApi({
@@ -32,7 +32,7 @@ export class SavedViewsExtensionsClient implements ExtensionsClient {
     return resp as unknown as ExtensionResponse;
   }
 
-  async getExtension(args: singleExtensionArgs): Promise<ExtensionResponse> {
+  async getExtension(args: SingleExtensionArgs): Promise<ExtensionResponse> {
     const url = `${this.baseURL}/${args.savedViewId}/extensions/${args.extensionName}`;
 
     const resp = await callITwinApi({
@@ -48,7 +48,7 @@ export class SavedViewsExtensionsClient implements ExtensionsClient {
     return resp as unknown as ExtensionResponse;
   }
 
-  async getAllExtensions(args: commonExtensionArgs): Promise<ExtensionListResponse> {
+  async getAllExtensions(args: CommonExtensionArgs): Promise<ExtensionListResponse> {
     const url = `${this.baseURL}/${args.savedViewId}/extensions/`;
 
     const resp = await callITwinApi({
@@ -64,7 +64,7 @@ export class SavedViewsExtensionsClient implements ExtensionsClient {
     return resp as unknown as ExtensionListResponse;
   }
 
-  async deleteExtension(args: singleExtensionArgs): Promise<void> {
+  async deleteExtension(args: SingleExtensionArgs): Promise<void> {
     const url = `${this.baseURL}/${args.savedViewId}/extensions/${args.extensionName}`;
 
     await callITwinApi({

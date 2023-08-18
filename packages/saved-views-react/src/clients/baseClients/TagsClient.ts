@@ -1,10 +1,10 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 
-import { TagListResponse, TagResponse } from "@bentley/itwin-saved-views-utilities";
-import { TagsClient as ITagsClient, createTagArgs, getAllTagArgs, singleTagArgs, updateTagArgs } from "../models/clientModels/TagClientInterfaces";
-import { commonClientArgs } from "../models/clientModels/CommonClientInterfaces";
+import { TagListResponse, TagResponse } from "@itwin/itwin-saved-views-types";
+import { TagsClient as ITagsClient, createTagArgs, getAllTagArgs, singleTagArgs, UpdateTagArgs } from "../models/clientModels/TagClientInterfaces";
+import { CommonClientArgs } from "../models/clientModels/CommonClientInterfaces";
 import { callITwinApi } from "../utils/apiUtils";
-import { HttpActions } from "../models/httpActionsAndStatus";
+import { HttpActions } from "../models/HttpActionsAndStatus";
 
 
 export class TagsClient implements ITagsClient {
@@ -12,7 +12,7 @@ export class TagsClient implements ITagsClient {
   private readonly baseURL;
   private readonly getAccessToken: () => Promise<string>;
 
-  constructor(args: commonClientArgs) {
+  constructor(args: CommonClientArgs) {
     this.baseURL = `${args.baseURL}/tags`;
     this.getAccessToken = args.getAccessToken;
   }
@@ -83,7 +83,7 @@ export class TagsClient implements ITagsClient {
 
   }
 
-  async updateTag(args: updateTagArgs): Promise<TagResponse> {
+  async updateTag(args: UpdateTagArgs): Promise<TagResponse> {
     const url = `${this.baseURL}/${args.tagId}`;
 
     const resp = await callITwinApi({

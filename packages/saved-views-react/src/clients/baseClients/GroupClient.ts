@@ -1,21 +1,21 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 
-import { GroupListResponse, GroupResponse } from "@bentley/itwin-saved-views-utilities";
-import { GroupClient as IGroupClient, createGroup, getAllGroupArgs, singleGroupArgs, updateGroupArgs } from "../models/clientModels/GroupClientInterfaces";
-import { commonClientArgs } from "../models/clientModels/CommonClientInterfaces";
-import { HttpActions } from "../models/httpActionsAndStatus";
+import { GroupListResponse, GroupResponse } from "@itwin/itwin-saved-views-types";
+import { GroupClient as IGroupClient, CreateGroup, GetAllGroupArgs, SingleGroupArgs, UpdateGroupArgs } from "../models/clientModels/GroupClientInterfaces";
+import { CommonClientArgs } from "../models/clientModels/CommonClientInterfaces";
+import { HttpActions } from "../models/HttpActionsAndStatus";
 import { callITwinApi } from "../utils/apiUtils";
 
 export class GroupClient implements IGroupClient {
   private readonly baseURL;
   private readonly getAccessToken: () => Promise<string>;
 
-  constructor(args: commonClientArgs) {
+  constructor(args: CommonClientArgs) {
     this.baseURL = `${args.baseURL}/groups`;
     this.getAccessToken = args.getAccessToken;
   }
 
-  async getGroup(args: singleGroupArgs): Promise<GroupResponse> {
+  async getGroup(args: SingleGroupArgs): Promise<GroupResponse> {
     const url = `${this.baseURL}/${args.groupId}`;
 
     const resp = await callITwinApi({
@@ -31,7 +31,7 @@ export class GroupClient implements IGroupClient {
     return resp as unknown as GroupResponse;
   }
 
-  async getAllGroups(args: getAllGroupArgs): Promise<GroupListResponse> {
+  async getAllGroups(args: GetAllGroupArgs): Promise<GroupListResponse> {
     const iModelDomainParam = args.iModelId ? `&iModelId=${args.iModelId}` : "";
     const url = `${this.baseURL}/?iTwinId=${args.iTwinId}${iModelDomainParam}`;
 
@@ -48,7 +48,7 @@ export class GroupClient implements IGroupClient {
     return resp as unknown as GroupListResponse;
   }
 
-  async createGroup(args: createGroup): Promise<GroupResponse> {
+  async createGroup(args: CreateGroup): Promise<GroupResponse> {
     const resp = await callITwinApi({
       url: this.baseURL,
       method: HttpActions.POST,
@@ -63,7 +63,7 @@ export class GroupClient implements IGroupClient {
     return resp as unknown as GroupResponse;
   }
 
-  async updateGroup(args: updateGroupArgs): Promise<GroupResponse> {
+  async updateGroup(args: UpdateGroupArgs): Promise<GroupResponse> {
     const url = `${this.baseURL}/${args.groupId}`;
 
     const resp = await callITwinApi({
@@ -80,7 +80,7 @@ export class GroupClient implements IGroupClient {
     return resp as unknown as GroupResponse;
   }
 
-  async deleteGroup(args: singleGroupArgs): Promise<void> {
+  async deleteGroup(args: SingleGroupArgs): Promise<void> {
     const url = `${this.baseURL}/${args.groupId}`;
 
     await callITwinApi({

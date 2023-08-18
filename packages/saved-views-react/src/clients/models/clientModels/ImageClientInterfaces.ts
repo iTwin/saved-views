@@ -1,21 +1,21 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 
-import { ImageSize } from "../imageSize";
-import { commonRequestArgs } from "./CommonClientInterfaces";
-import { ImageResponse, ImageUpdate } from "@bentley/itwin-saved-views-utilities";
+import { ImageSize } from "../ImageSize";
+import { CommonRequestArgs } from "./CommonClientInterfaces";
+import { ImageResponse, ImageUpdate } from "@itwin/itwin-saved-views-types";
 
 
-export interface commonImageArgs extends commonRequestArgs {
+export interface CommonImageArgs extends CommonRequestArgs {
   /** savedViewId id to query after */
   savedViewId: string;
 }
 
-export interface getImageArgs extends commonImageArgs {
+export interface GetImageArgs extends CommonImageArgs {
   /** size size of the image */
   size: ImageSize;
 }
 
-export interface updateImageArgs extends commonImageArgs {
+export interface UpdateImageArgs extends CommonImageArgs {
   /** payload to update image with */
   imagePayload: ImageUpdate;
 }
@@ -26,11 +26,11 @@ export interface ImageClient {
    * gets a image
    * @throws on non 2xx response
  */
-  getImage(args: getImageArgs): Promise<ImageResponse>;
+  getImage(args: GetImageArgs): Promise<ImageResponse>;
 
   /**
    * updates a image
    * @throws on non 2xx response
  */
-  updateImage(args: updateImageArgs): Promise<ImageResponse>;
+  updateImage(args: UpdateImageArgs): Promise<ImageResponse>;
 }

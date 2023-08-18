@@ -3,7 +3,7 @@
 /**
  * Prefer enum for request.
  */
-export enum preferOptions {
+export enum PreferOptions {
   MINIMAL = "return=minimal",
   REPRESENTATION = "return=representation",
 }
