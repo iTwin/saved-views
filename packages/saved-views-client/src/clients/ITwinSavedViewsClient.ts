@@ -20,7 +20,7 @@ import { CommonClientArgs, isValidBaseUrl } from "./models/clientModels/CommonCl
  * saveViewsClient.imageClient.getImage(...)
  * saveViewsClient.groupClient.getGroup(...)
 */
-export class SaveViewsMonoClient {
+export class ITwinSavedViewsClient {
   private readonly _savedViewsClient: SaveViewsClient;
   private readonly _tagClient: TagsClient;
   private readonly _extensionClient: SavedViewsExtensionsClient;

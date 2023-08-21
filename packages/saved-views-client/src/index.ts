@@ -57,4 +57,4 @@ export * from "./models/tags/TagUpdate.dto";
 export * from "./models/ValidatedQueryOrParam.dto";
 export * from "./models/extensions/ExtensionSavedViewCreate.dto";
 export * from "./models/combinedId";
-export * from "./clients/SaveViewsMonoClient"
+export * from "./clients/ITwinSavedViewsClient"
