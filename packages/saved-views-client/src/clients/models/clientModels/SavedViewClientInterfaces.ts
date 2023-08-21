@@ -21,8 +21,17 @@ import { TagListResponse } from "../../../models/tags/TagListResponse.dto";
 import { TagResponse } from "../../../models/tags/TagResponse.dto";
 import { TagUpdate } from "../../../models/tags/TagUpdate.dto";
 
-export interface SingleSavedViewArgs extends CommonRequestArgs {
+export interface CommonGetAllArgs extends CommonRequestArgs{
+  iTwinId: string;
+
+  iModelId?: string;
+}
+
+export interface RequestBySavedViewIdArgs extends CommonRequestArgs{
   savedViewId: string;
+}
+
+export interface SingleSavedViewArgs extends RequestBySavedViewIdArgs {
   /** affects the granularity of the data returned
    *  ONLY for get requests will be ignored for PUT POST DELETE
    *  MINIMAL = "return=minimal", least info
@@ -31,11 +40,7 @@ export interface SingleSavedViewArgs extends CommonRequestArgs {
   prefer?: PreferOptions;
 }
 
-export interface GetAllSavedViewArgs extends CommonRequestArgs {
-  iTwinId: string;
-
-  iModelId?: string;
-
+export interface GetAllSavedViewArgs extends CommonRequestArgs , CommonGetAllArgs {
   groupId?: string;
   /** optional param for top of page */
   top?: string;
@@ -56,27 +61,16 @@ export interface UpdateSavedViewArgs extends SingleSavedViewArgs {
   savedViewPayload: SavedViewUpdate;
 }
 
-
-export interface CommonImageArgs extends CommonRequestArgs {
-  savedViewId: string;
-}
-
-export interface GetImageArgs extends CommonImageArgs {
+export interface GetImageArgs extends RequestBySavedViewIdArgs {
   size: ImageSize;
 }
 
-export interface UpdateImageArgs extends CommonImageArgs {
+export interface UpdateImageArgs extends RequestBySavedViewIdArgs {
   imagePayload: ImageUpdate;
 }
 
 export interface SingleGroupArgs extends CommonRequestArgs {
   groupId: string;
-}
-
-export interface GetAllGroupArgs extends CommonRequestArgs {
-  iTwinId: string;
-
-  iModelId?: string;
 }
 
 export interface CreateGroup extends CommonRequestArgs {
@@ -87,11 +81,7 @@ export interface UpdateGroupArgs extends SingleGroupArgs {
   groupPayload: GroupUpdate;
 }
 
-export interface CommonExtensionArgs extends CommonRequestArgs {
-  savedViewId: string;
-}
-
-export interface CreateExtensionArgs extends CommonExtensionArgs {
+export interface CreateExtensionArgs extends RequestBySavedViewIdArgs {
   /** extension to be created
    * Extensions allow a saved view to be enhanced with custom data. The extensions have to be defined in a proprietary .JSON schema file. For now, only three extensions are available:
    * 1. PerModelCategoryVisibility
@@ -101,7 +91,7 @@ export interface CreateExtensionArgs extends CommonExtensionArgs {
   extension: ExtensionsUpdate;
 }
 
-export interface SingleExtensionArgs extends CommonExtensionArgs {
+export interface SingleExtensionArgs extends RequestBySavedViewIdArgs {
   extensionName: string;
 }
 
@@ -115,12 +105,6 @@ export interface CreateTagArgs extends CommonRequestArgs {
 
 export interface SingleTagArgs extends CommonRequestArgs {
   tagId: string;
-}
-
-export interface GetAllTagArgs extends CommonRequestArgs {
-  iTwinId: string;
-
-  iModelId?: string;
 }
 
 export interface SaveViewsClient {
@@ -140,7 +124,7 @@ export interface SaveViewsClient {
 
   getGroup(args: SingleGroupArgs): Promise<GroupResponse>;
 
-  getAllGroups(args: GetAllGroupArgs): Promise<GroupListResponse>;
+  getAllGroups(args: CommonGetAllArgs): Promise<GroupListResponse>;
 
   createGroup(args: CreateGroup): Promise<GroupResponse>;
 
@@ -152,7 +136,7 @@ export interface SaveViewsClient {
 
   getExtension(args: SingleExtensionArgs): Promise<ExtensionResponse>;
 
-  getAllExtensions(args: CommonExtensionArgs): Promise<ExtensionListResponse>;
+  getAllExtensions(args: RequestBySavedViewIdArgs): Promise<ExtensionListResponse>;
 
   deleteExtension(args: SingleExtensionArgs): Promise<void>;
 
@@ -160,7 +144,7 @@ export interface SaveViewsClient {
 
   getTag(args: SingleTagArgs): Promise<TagResponse>;
 
-  getAllTags(args: GetAllTagArgs): Promise<TagListResponse>;
+  getAllTags(args: CommonGetAllArgs): Promise<TagListResponse>;
 
   deleteTag(args: SingleTagArgs): Promise<void>;
 
