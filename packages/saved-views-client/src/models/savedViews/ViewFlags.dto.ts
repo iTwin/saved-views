@@ -1,4 +1,7 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 
 /** Enumerates the available basic rendering modes, as part of a DisplayStyle's ViewFlags.
  * The rendering mode broadly affects various aspects of the display style - in particular, whether and how surfaces and their edges are drawn.

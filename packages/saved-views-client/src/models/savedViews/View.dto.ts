@@ -1,4 +1,7 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import {
   ClipPrimitiveShapeProps,
   ClipPrimitivePlaneProps,
@@ -124,5 +127,5 @@ export interface View {
  */
 export interface ViewWithLegacy extends View {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  legacyView?: any;
+  legacyView?: unknown;
 }

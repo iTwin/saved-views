@@ -1,33 +1,35 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-
-import { SavedViewCreate } from "../../../models/savedViews/SavedViewCreate.dto";
-import { SavedViewListResponse } from "../../../models/savedViews/SavedViewListResponse.dto";
-import { SavedViewResponse } from "../../../models/savedViews/SavedViewResponse.dto";
-import { SavedViewUpdate } from "../../../models/savedViews/SavedViewUpdate.dto";
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+import { SavedViewCreate } from "../savedViews/SavedViewCreate.dto";
+import { SavedViewListResponse } from "../savedViews/SavedViewListResponse.dto";
+import { SavedViewResponse } from "../savedViews/SavedViewResponse.dto";
+import { SavedViewUpdate } from "../savedViews/SavedViewUpdate.dto";
 import { PreferOptions } from "../Prefer";
 import { CommonRequestArgs } from "./CommonClientInterfaces";
-import { ImageResponse } from "../../../models/images/ImageResponse.dto";
-import { ImageUpdate } from "../../../models/images/ImageUpdate.dto";
+import { ImageResponse } from "../images/ImageResponse.dto";
+import { ImageUpdate } from "../images/ImageUpdate.dto";
 import { ImageSize } from "../ImageSize";
-import { GroupCreate } from "../../../models/groups/GroupCreate.dto";
-import { GroupListResponse } from "../../../models/groups/GroupListResponse.dto";
-import { GroupResponse } from "../../../models/groups/GroupResponse.dto";
-import { GroupUpdate } from "../../../models/groups/GroupUpdate.dto";
-import { ExtensionListResponse } from "../../../models/extensions/ExtensionListResponse.dto";
-import { ExtensionResponse } from "../../../models/extensions/ExtensionResponse.dto";
-import { ExtensionsUpdate } from "../../../models/extensions/ExtensionsUpdate.dto";
-import { TagCreate } from "../../../models/tags/TagCreate.dto";
-import { TagListResponse } from "../../../models/tags/TagListResponse.dto";
-import { TagResponse } from "../../../models/tags/TagResponse.dto";
-import { TagUpdate } from "../../../models/tags/TagUpdate.dto";
+import { GroupCreate } from "../groups/GroupCreate.dto";
+import { GroupListResponse } from "../groups/GroupListResponse.dto";
+import { GroupResponse } from "../groups/GroupResponse.dto";
+import { GroupUpdate } from "../groups/GroupUpdate.dto";
+import { ExtensionListResponse } from "../extensions/ExtensionListResponse.dto";
+import { ExtensionResponse } from "../extensions/ExtensionResponse.dto";
+import { ExtensionsUpdate } from "../extensions/ExtensionsUpdate.dto";
+import { TagCreate } from "../tags/TagCreate.dto";
+import { TagListResponse } from "../tags/TagListResponse.dto";
+import { TagResponse } from "../tags/TagResponse.dto";
+import { TagUpdate } from "../tags/TagUpdate.dto";
 
-export interface CommonGetAllArgs extends CommonRequestArgs{
+export interface CommonGetAllArgs extends CommonRequestArgs {
   iTwinId: string;
 
   iModelId?: string;
 }
 
-export interface RequestBySavedViewIdArgs extends CommonRequestArgs{
+export interface RequestBySavedViewIdArgs extends CommonRequestArgs {
   savedViewId: string;
 }
 
@@ -40,7 +42,7 @@ export interface SingleSavedViewArgs extends RequestBySavedViewIdArgs {
   prefer?: PreferOptions;
 }
 
-export interface GetAllSavedViewArgs extends CommonRequestArgs , CommonGetAllArgs {
+export interface GetAllSavedViewArgs extends CommonRequestArgs, CommonGetAllArgs {
   groupId?: string;
   /** optional param for top of page */
   top?: string;

@@ -1,11 +1,12 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+
 export * from "./models/CommonMetadata.dto";
-export * from "./models/ContextIds.dto";
 export * from "./models/DeprecatedProperty.dto";
-export * from "./models/ErrorResponse.dto";
 export * from "./models/Links.dto";
 export * from "./models/SharableMetadata.dto";
-export * from "./models/ValidatedQueryOrParam.dto";
 export * from "./models/extensions/Extension.dto";
 export * from "./models/extensions/ExtensionLinks.dto";
 export * from "./models/extensions/ExtensionListItem.dto";
@@ -54,7 +55,5 @@ export * from "./models/tags/TagLinks.dto";
 export * from "./models/tags/TagListResponse.dto";
 export * from "./models/tags/TagResponse.dto";
 export * from "./models/tags/TagUpdate.dto";
-export * from "./models/ValidatedQueryOrParam.dto";
 export * from "./models/extensions/ExtensionSavedViewCreate.dto";
-export * from "./models/combinedId";
-export * from "./clients/ITwinSavedViewsClient"
+export * from "./client/ITwinSavedViewsClient";

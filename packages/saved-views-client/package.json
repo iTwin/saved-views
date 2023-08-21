@@ -7,7 +7,7 @@
     "url": "https://github.com/iTwin/saved-views-react.git",
     "directory": "packages/saved-views-client"
   },
-  "homepage": "https://github.com/iTwin/saved-views-react",
+  "homepage": "https://github.com/iTwin/saved-views-react/pakages/saved-views-client",
   "author": {
     "name": "Bentley Systems, Inc.",
     "url": "https://www.bentley.com"
