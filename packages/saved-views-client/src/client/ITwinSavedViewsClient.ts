@@ -98,7 +98,7 @@ export class ITwinSavedViewsClient implements SaveViewsClient {
         Accept: "application/vnd.bentley.itwin-platform.v1+json",
         ...args.headers,
       },
-      body: args.savedViewPayload
+      body: args.savedViewPayload,
     });
     return resp as unknown as SavedViewResponse;
   }
