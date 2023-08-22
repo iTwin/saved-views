@@ -2,10 +2,10 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { Extension } from "../extensions/Extension.dto";
+import { Extension } from "../Extension.dto";
 import { ExtensionMin } from "../extensions/ExtensionMin.dto";
 import { SharableMetadata } from "../SharableMetadata.dto";
-import { SavedViewTag } from "../tags/SavedViewTag.dto";
+import { SavedViewTag } from "../Tag.dto";
 import { SavedViewLinks } from "./SavedViewLinks.dto";
 
 /**

@@ -1,14 +1,5 @@
 {
-  "extends": [
-    "plugin:react/recommended",
-    "plugin:react/jsx-runtime",
-    "plugin:react-hooks/recommended"
-  ],
-  "settings": {
-    "react": { "version": "detect" }
-  },
   "rules": {
-    "no-console": "warn",
-    "react/function-component-definition": "warn"
+    "no-console": "warn"
   }
 }

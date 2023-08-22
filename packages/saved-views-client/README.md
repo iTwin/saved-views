@@ -1,11 +1,11 @@
-# @itwin/saved-views-react
+# @itwin/saved-views-client
 
 ## About
 
 ## Installation
 
 ```shell
-npm install @itwin/saved-views-react
+npm install @itwin/saved-views-client
 ```
 
 ## Contributing

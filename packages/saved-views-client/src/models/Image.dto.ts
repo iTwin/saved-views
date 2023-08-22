@@ -2,13 +2,19 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { Group } from "./Group.dto";
-import { GroupListLinks } from "./GroupLinks.dto";
+import { Link } from "./Links.dto";
 
 /**
- * Group list response model for restful get all Groups operations.
+ * Image metadata model for restful get Image operation.
  */
-export interface GroupListResponse {
-  groups: Group[];
-  _links: GroupListLinks;
+export type ImageResponse = Link;
+
+/**
+ * Image Input model for create/update
+ */
+export interface ImageUpdate {
+  /**
+   * Base 64 encoded image string.
+   */
+  image: string;
 }
