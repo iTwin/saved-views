@@ -12,22 +12,16 @@ import {
 
 type ViewType = "itwinSheetView" & "itwin3dView" & "itwinDrawingView";
 
-/**
- * SavedViewRsp
- */
+/** SavedViewRsp */
 export interface SavedViewRspBase extends SavedView {
   savedViewData: {
     [key in ViewType]: SavedViewBase;
   };
 }
 
-/**
- * SavedViewItwin3d
- */
+/** SavedViewItwin3d */
 export interface SavedViewItwin3d extends SavedViewRspBase {
-  /**
-   * Store Of View Data Coming From Service
-   */
+  /** Store Of View Data Coming From Service */
   savedViewData: { itwin3dView: ViewItwin3d; };
 }
 
@@ -36,13 +30,9 @@ export const isSavedViewItwin3d = (
 ): savedViewRsp is SavedViewItwin3d =>
   "itwin3dView" in savedViewRsp.savedViewData;
 
-/**
- * SavedViewItwinSheet
- */
+/** SavedViewItwinSheet */
 export interface SavedViewItwinSheet extends SavedViewRspBase {
-  /**
-   * Store Of View Data Coming From Service
-   */
+  /** Store Of View Data Coming From Service */
   savedViewData: { itwinSheetView: ViewItwinSheet; };
 }
 
@@ -51,13 +41,9 @@ export const isSavedViewItwinSheet = (
 ): savedViewRsp is SavedViewItwinSheet =>
   "itwinSheetView" in savedViewRsp.savedViewData;
 
-/**
- * SavedViewItwinDrawing
- */
+/** SavedViewItwinDrawing */
 export interface SavedViewItwinDrawing extends SavedViewRspBase {
-  /**
-   * Store Of View Data Coming From Service
-   */
+  /** Store Of View Data Coming From Service */
   savedViewData: { itwinDrawingView: ViewItwinDrawing; };
 }
 

@@ -1,13 +1,14 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+
 import { FeatureAppearanceProps } from "./FeatureAppearance.dto";
 import { PlanarClipMaskProps } from "./PlanarClipMask.dto";
 
 /**
- * Key used by RealityDataSource to identify provider and reality data format
- * This key identify one and only one reality data source on the provider
+ * Key used by RealityDataSource to identify provider and reality data format.
+ * This key identifies one and only one reality data source on the provider.
  */
 export interface RealityDataSourceKey {
   provider: string;
@@ -46,18 +47,14 @@ export enum SpatialClassifierOutsideDisplay {
   Dimmed = 2,
 }
 
-/**
- * JSON representation of a SpatialClassifierFlags.
- */
+/** JSON representation of SpatialClassifierFlags. */
 export interface SpatialClassifierFlagsProps {
   inside: SpatialClassifierInsideDisplay;
   outside: SpatialClassifierOutsideDisplay;
   isVolumeClassifier?: boolean;
 }
 
-/**
- * JSON representation of a SpatialClassifier.
- */
+/** JSON representation of a SpatialClassifier. */
 export interface SpatialClassifierProps {
   modelId: string;
   expand: number;
@@ -66,11 +63,8 @@ export interface SpatialClassifierProps {
   isActive?: boolean;
 }
 
-/**
- * JSON representation of a ContextRealityModel.
- */
+/** JSON representation of a ContextRealityModel. */
 export interface ContextRealityModelProps {
-  // Original name: rdSourceKey
   realityDataSourceKey?: RealityDataSourceKey;
   tilesetUrl: string;
   realityDataId?: string;

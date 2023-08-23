@@ -3,16 +3,16 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 
-export interface CallITwinApiParams {
+export interface CallITwinApiParams<BodyType> {
   method: "GET"|"POST"|"PATCH"|"PUT"|"DELETE";
   url: string;
   getAccessToken: () => Promise<string>;
   signal?: AbortSignal | undefined;
   headers?: Record<string, string> | undefined;
-  body?: Record<string, unknown> | undefined;
+  body?: BodyType;
 }
 
-export async function callITwinApi(args: CallITwinApiParams): Promise<Record<string, unknown>> {
+export async function callITwinApi<BodyType>(args: CallITwinApiParams<BodyType>): Promise<Record<string, unknown>> {
   const response = await fetch(
     args.url,
     {

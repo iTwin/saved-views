@@ -3,9 +3,7 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 
-/**
- * Correction modes for terrain height
- */
+/** Correction modes for terrain height */
 export enum TerrainHeightOriginMode {
   /** Height value indicates the geodetic height of the IModel origin (also referred to as ellipsoidal or GPS height) */
   Geodetic = 0,
@@ -15,9 +13,7 @@ export enum TerrainHeightOriginMode {
   Ground = 2,
 }
 
-/**
- * JSON representation of the settings of the terrain applied to background map display by a DisplayStyle.
- */
+/** JSON representation of the settings of the terrain applied to background map display by a DisplayStyle. */
 export interface TerrainProps {
   providerName?: string;
   exaggeration?: number;

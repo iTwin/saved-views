@@ -1,23 +1,19 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import { PlanarClipMaskProps } from "./PlanarClipMask.dto";
 import { TerrainProps } from "./TerrainProps.dto";
 
-/**
- * Describes the projection of the background map
- */
+/** Describes the projection of the background map. */
 export enum GlobeMode {
-  /** Display Earth as 3d ellipsoid */
+  /** Display Earth as a 3D ellipsoid. */
   Ellipsoid = 0,
-  /** Display Earth as plane. */
+  /** Display Earth as a plane. */
   Plane = 1,
 }
 
-/**
- * In-memory JSON representation of a BackgroundMapSettings.
- */
+/** In-memory JSON representation of BackgroundMapSettings. */
 export interface BackgroundMapProps {
   groundBias?: number;
   transparency?: number | false;

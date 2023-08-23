@@ -3,9 +3,7 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 
-/**
- * Image Size enum for request.
- */
+/** Image Size enum for request. */
 export enum ImageSize {
   FULL = "full",
   THUMBNAIL = "thumbnail",

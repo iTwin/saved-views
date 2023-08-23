@@ -11,6 +11,7 @@
     "lint": "eslint '**/*.{ts,tsx}'",
     "typecheck": "run-p --silent typecheck:*",
     "typecheck:components": "npm run typecheck --prefix packages/saved-views-react",
+    "typecheck:client": "npm run typecheck --prefix packages/saved-views-client",
     "typecheck:backend": "npm run typecheck --prefix packages/test-app-backend",
     "typecheck:frontend": "npm run typecheck --prefix packages/test-app-frontend",
     "release": "ts-node --esm scripts/release.ts"

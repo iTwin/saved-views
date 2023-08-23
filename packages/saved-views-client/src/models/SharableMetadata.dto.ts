@@ -4,9 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 import { CommonMetadata } from "./CommonMetadata.dto";
 
-/**
- * Shared property, common to saved view and group.
- */
+/** Shared property, common to saved view and group. */
 export interface SharableMetadata extends CommonMetadata {
   shared: boolean;
 }

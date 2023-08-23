@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 
 /**
  * Wire format describing a ClipPlane.
@@ -14,16 +14,13 @@ export interface ClipPlaneProps {
   interior?: boolean;
 }
 
-/**
- * Contains the set of clip planes used to clip the view
- */
+/** Contains the set of clip planes used to clip the view. */
 export interface PlanesProps {
   clips: ClipPlaneProps[][];
   invisible?: boolean;
 }
-/**
- * Contains the shape/polygon used to clip the view
- */
+
+/** Contains the shape/polygon used to clip the view. */
 export interface ShapeProps {
   points: number[][];
   transform: [
@@ -37,16 +34,12 @@ export interface ShapeProps {
   invisible?: boolean;
 }
 
-/**
- * A clip primitive made of a set planes
- */
+/** A clip primitive made of a set planes. */
 export interface ClipPrimitivePlaneProps {
   planes: PlanesProps;
 }
 
-/**
- * A clip primitive made of a shape
- */
+/** A clip primitive made of a shape. */
 export interface ClipPrimitiveShapeProps {
   shape: ShapeProps;
 }

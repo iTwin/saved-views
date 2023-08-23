@@ -6,7 +6,8 @@ import { RgbColorProps } from "./RgbColor.dto";
 
 export type SubLayerId = string | number;
 
-/** JSON representation of the settings associated with a map sublayer included within a MapLayerProps.
+/**
+ * JSON representation of the settings associated with a map sublayer included within a MapLayerProps.
  * A map sub layer represents a set of objects within the layer that can be controlled separately.  These
  * are produced only from map servers that produce images on demand and are not supported by tiled (cached) servers.
  */
@@ -19,8 +20,7 @@ export interface MapSubLayerProps {
   children?: (string | number)[];
 }
 
-/** JSON representation of properties common to both ImageMapLayerProps and ModelMapLayerProps.
- */
+/** JSON representation of properties common to both ImageMapLayerProps and ModelMapLayerProps. */
 export interface CommonMapLayerProps {
   visible?: boolean;
   name: string;
@@ -30,49 +30,41 @@ export interface CommonMapLayerProps {
   transparentBackground?: boolean;
 }
 
-/**
- * stores key-value pair to be added to all requests made involving map layer.
- */
+/** stores key-value pair to be added to all requests made involving map layer. */
 export interface MapLayerKey {
   key: string;
   value: string;
 }
 
-/** JSON representation of an ImageMapLayerSettings.
- */
+/** JSON representation of an ImageMapLayerSettings. */
 export interface ImageMapLayerProps extends CommonMapLayerProps {
   url: string;
   formatId: string;
   subLayers?: MapSubLayerProps[];
 }
 
-/** Enumerates the types of map imagery that can be supplied by a BackgroundMapProvider.
- */
+/** Enumerates the types of map imagery that can be supplied by a BackgroundMapProvider. */
 export enum BackgroundMapType {
   Street = 1,
   Aerial = 2,
   Hybrid = 3,
 }
 
-/** Enumerates a set of supported BackgroundMapProviders that can provide map imagery.
- */
+/** Enumerates a set of supported BackgroundMapProviders that can provide map imagery. */
 export type BackgroundMapProviderName = "BingProvider" | "MapBoxProvider";
 
-/** JSON representation of a BackgroundMapProvider.
- */
+/** JSON representation of a BackgroundMapProvider. */
 export interface BackgroundMapProviderProps {
   name?: string;
   type?: BackgroundMapType;
 }
 
-/** JSON representation of a BaseMapLayerSettings.
- */
+/** JSON representation of a BaseMapLayerSettings. */
 export interface BaseMapLayerProps extends ImageMapLayerProps {
   provider?: BackgroundMapProviderProps;
 }
 
-/** JSON representation of a ModelMapLayerSettings.
- */
+/** JSON representation of a ModelMapLayerSettings. */
 export interface ModelMapLayerProps extends CommonMapLayerProps {
   modelId: string;
 }

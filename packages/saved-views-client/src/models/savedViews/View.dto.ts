@@ -11,36 +11,27 @@ import {
   DisplayStyleSettingsProps,
 } from "./DisplayStyles.dto";
 
-/**
- * Representation of the 3d orientation of an object in space.
- */
+/** Representation of the 3d orientation of an object in space. */
 export interface ViewYawPitchRoll {
   yaw?: number;
   pitch?: number;
   roll?: number;
 }
 
-/**
- * Required camera information
- */
+/** Required camera information */
 export interface ViewCamera {
   lens: number;
   focusDist: number;
   eye: [x: number, y: number, z: number];
 }
 
-/**
- * List of explicitly enabled/disabled Id64Strings, used for Categories and Models
- */
+/** List of explicitly enabled/disabled Id64Strings, used for Categories and Models */
 export interface ViewVisibilityList {
   enabled?: string[];
   disabled?: string[];
 }
 
-/**
- *
- * View
- */
+/** View */
 export interface SavedViewBase {
   /**
    * Origin. (Array of numbers representing x and y)
@@ -62,9 +53,7 @@ export interface SavedViewBase {
   clipVectors?: Array<ClipPrimitivePlaneProps | ClipPrimitiveShapeProps>;
 }
 
-/**
- * Minimum required information saved for a 3D saved view.
- */
+/** Minimum required information saved for a 3D saved view. */
 export interface ViewItwin3d extends SavedViewBase {
   origin: [x: number, y: number, z: number];
   extents: [x: number, y: number, z: number];
@@ -74,9 +63,7 @@ export interface ViewItwin3d extends SavedViewBase {
   displayStyle?: DisplayStyle3dSettingsProps;
 }
 
-/**
- * Minimum required information saved for a 2d saved view (Used by Sheet and Drawings).
- */
+/** Minimum required information saved for a 2d saved view (Used by Sheet and Drawings). */
 export interface ViewItwin2d extends SavedViewBase {
   baseModelId: string;
   origin: [x: number, y: number];
@@ -85,9 +72,7 @@ export interface ViewItwin2d extends SavedViewBase {
   displayStyle?: DisplayStyleSettingsProps;
 }
 
-/**
- * Minimum required information saved for a Sheet saved view.
- */
+/** Minimum required information saved for a Sheet saved view. */
 export interface ViewItwinSheet extends ViewItwin2d {
   width?: number;
   height?: number;
@@ -96,9 +81,7 @@ export interface ViewItwinSheet extends ViewItwin2d {
   sheetAttachments?: string[];
 }
 
-/**
- * Minimum required information saved for a Drawing saved view.
- */
+/** Minimum required information saved for a Drawing saved view. */
 export interface ViewItwinDrawing extends ViewItwin2d {
   spatialView?: string;
   displaySpatialView?: boolean;
@@ -113,18 +96,14 @@ export interface ViewItwinDrawing extends ViewItwin2d {
   ];
 }
 
-/**
- * Minimum Saved View structure so every application can have something to work with.
- */
+/** Minimum Saved View structure so every application can have something to work with. */
 export interface View {
   itwin3dView?: ViewItwin3d;
   itwinSheetView?: ViewItwinSheet;
   itwinDrawingView?: ViewItwinDrawing;
 }
 
-/**
- * Minimum saved view structure including possible legacy data from product setting service.
- */
+/** Minimum saved view structure including possible legacy data from product setting service. */
 export interface ViewWithLegacy extends View {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   legacyView?: unknown;

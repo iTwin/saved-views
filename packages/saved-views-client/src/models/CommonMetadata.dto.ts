@@ -3,9 +3,7 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 
-/**
- * Common properties between saved view, tag, group.
- */
+/** Common properties between saved view, tag, group. */
 export interface CommonMetadata {
   id: string;
   displayName: string;

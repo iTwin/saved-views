@@ -2,12 +2,25 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { CommonClientArgs, isValidBaseUrl } from "../models/client/CommonClientInterfaces";
 import { SavedViewResponse, SavedViewListResponse, TagListResponse, TagResponse, ImageResponse, GroupListResponse, GroupResponse, ExtensionListResponse, ExtensionResponse } from "..";
 import { PreferOptions } from "../models/Prefer";
-import { SingleSavedView, GetSavedViews, CreateSavedView, UpdateSavedView, CreateTag, SingleTag, UpdateTag, GetImage, UpdateImage, CreateGroup, SingleGroup, UpdateGroup, CreateExtension, SingleExtension, RequestBySavedViewId, SaveViewsClient, GetTags, GetGroups } from "../models/client/SavedViewClientInterfaces";
-import { callITwinApi } from "./ApiUtils";
+import { CommonRequestParams } from "../models/client/CommonClientInterfaces";
+import { SingleSavedViewParams, GetSavedViewsParams, CreateSavedViewParams, UpdateSavedViewParams, CreateTagParams, SingleTagParams, UpdateTagParams, GetImageParams, UpdateImageParams, CreateGroupParams, SingleGroupParams, UpdateGroupParams, CreateExtensionParams, SingleExtensionParams, GetExtensionsParams, SaveViewsClient, GetTagsParams, GetGroupsParams } from "../models/client/SavedViewClientInterfaces";
+import { CallITwinApiParams, callITwinApi } from "./ApiUtils";
+import * as _ from "lodash";
 
+export interface CommonClientArgs {
+  /** url that conforms to pattern https://{...}api.bentley.com/savedviews */
+  baseUrl: string;
+  /** function for getting auth token */
+  getAccessToken: () => Promise<string>;
+}
+interface QueryParams<RequestParams extends CommonRequestParams, BodyType extends object> {
+  requestParams: RequestParams;
+  createUrl: () => string;
+  method: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
+  body?: BodyType;
+}
 /**
  * This is client is used to access all services(image groups extensions ...) associated with savedViews.
  *
@@ -20,360 +33,232 @@ import { callITwinApi } from "./ApiUtils";
  * saveViewsClient.getGroup(...)
 */
 export class ITwinSavedViewsClient implements SaveViewsClient {
-  private readonly baseURL;
+  private readonly baseUrl;
   private readonly getAccessToken: () => Promise<string>;
 
   constructor(args: CommonClientArgs) {
-    if (!isValidBaseUrl(args.baseURL)) {
-      throw new Error("Base URL does not conform to pattern: https://{...}api.bentley.com/savedviews");
-    }
-    this.baseURL = args.baseURL;
+    this.baseUrl = args.baseUrl;
     this.getAccessToken = args.getAccessToken;
   }
 
-  async getSavedView(args: SingleSavedView): Promise<SavedViewResponse> {
-    const url = `${this.baseURL}/${args.savedViewId}`;
-
-    const resp = await callITwinApi({
-      url: url,
-      method: "GET",
+  private async queryITwinApi<ReturnType, RequestParams extends CommonRequestParams, BodyType extends object>
+    (queyParams: QueryParams<RequestParams, BodyType>) {
+    
+    const params: CallITwinApiParams<BodyType> = {
+      url: queyParams.createUrl(),
+      method: queyParams.method,
       getAccessToken: this.getAccessToken,
-      signal: args.signal,
+      signal: queyParams.requestParams.signal,
       headers: {
         Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        prefer: args.prefer ? args.prefer : PreferOptions.MINIMAL,
-        ...args.headers,
+        ...queyParams.requestParams.headers,
       },
-    });
-    return resp as unknown as SavedViewResponse;
+      body: queyParams.body,
+    };
+    if (!params.body) {
+      delete params.body;
+    }
+    const resp = await callITwinApi(params);
+    return resp as unknown as ReturnType;
   }
 
-  async getAllSavedViews(args: GetSavedViews): Promise<SavedViewListResponse> {
-    const iModelDomainParam = args.iModelId ? `&iModelId=${args.iModelId}` : "";
-    const groupIdDomainParam = args.groupId ? `&groupId=${args.groupId}` : "";
-    const topDomainParam = args.top ? `&$top=${args.top}` : "";
-    const skipDomainParam = args.skip ? `&$skip=${args.skip}` : "";
-    const url = `${this.baseURL}/?iTwinId=${args.iTwinId}${iModelDomainParam}${groupIdDomainParam}${topDomainParam}${skipDomainParam}`;
+  private addHeadersToHeaders<RequestParams extends CommonRequestParams>(args: RequestParams, headers: object[]) {
+    const argsCopy = _.cloneDeep(args); // Maintain Initial Integrity of Args Object Using Copy On Write Pattern
+    const headersToAdd = headers.reduce((result, currentObject) => {
+      return { ...result, ...currentObject };
+    }, {});
+    argsCopy.headers = { ...argsCopy.headers, ...headersToAdd };
+    return argsCopy;
+  }
 
-    const resp = await callITwinApi({
-      url: url,
+  async getSavedView(args: SingleSavedViewParams): Promise<SavedViewResponse> {
+    const argsCopy = this.addHeadersToHeaders(args, [{ prefer: args.prefer ? args.prefer : PreferOptions.MINIMAL }]);
+    return this.queryITwinApi({
+      requestParams: argsCopy,
+      createUrl: () => `${this.baseUrl}/${argsCopy.savedViewId}`,
       method: "GET",
-      getAccessToken: this.getAccessToken,
-      signal: args.signal,
-      headers: {
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        prefer: args.prefer ? args.prefer : PreferOptions.MINIMAL,
-        ...args.headers,
-      },
     });
-    return resp as unknown as SavedViewListResponse;
   }
 
-  async createSavedView(args: CreateSavedView): Promise<SavedViewResponse> {
-    const url = `${this.baseURL}/`;
+  async getAllSavedViews(args: GetSavedViewsParams): Promise<SavedViewListResponse> {
+    const argsCopy = this.addHeadersToHeaders(args, [{ prefer: args.prefer ? args.prefer : PreferOptions.MINIMAL }]);
+    const createUrl = () => {
+      const iModelId = argsCopy.iModelId ? `&iModelId=${argsCopy.iModelId}` : "";
+      const groupId = args.groupId ? `&groupId=${args.groupId}` : "";
+      const top = args.top ? `&$top=${args.top}` : "";
+      const skip = args.skip ? `&$skip=${args.skip}` : "";
+      return `${this.baseUrl}/?iTwinId=${args.iTwinId}${iModelId}${groupId}${top}${skip}`;
+    };
+    return this.queryITwinApi({
+      requestParams: argsCopy,
+      createUrl: createUrl,
+      method: "GET",
+    });
+  }
 
-    const resp = await callITwinApi({
-      url: url,
+  async createSavedView(args: CreateSavedViewParams): Promise<SavedViewResponse> {
+    return this.queryITwinApi({
+      requestParams: args,
+      createUrl: () => `${this.baseUrl}/`,
       method: "POST",
-      getAccessToken: this.getAccessToken,
-      signal: args.signal,
-      headers: {
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        ...args.headers,
-      },
       body: args.savedViewPayload,
     });
-    return resp as unknown as SavedViewResponse;
   }
 
-  async updateSavedView(args: UpdateSavedView): Promise<SavedViewResponse> {
-    const url = `${this.baseURL}/${args.savedViewId}`;
-
-    const resp = await callITwinApi({
-      url: url,
+  async updateSavedView(args: UpdateSavedViewParams): Promise<SavedViewResponse> {
+    return this.queryITwinApi({
+      requestParams: args,
+      createUrl: () => `${this.baseUrl}/${args.savedViewId}`,
       method: "PATCH",
-      getAccessToken: this.getAccessToken,
-      signal: args.signal,
-      headers: {
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        ...args.headers,
-      },
       body: args.savedViewPayload,
     });
-    return resp as unknown as SavedViewResponse;
   }
 
-  async deleteSavedView(args: SingleSavedView): Promise<void> {
-    const url = `${this.baseURL}/${args.savedViewId}`;
-
-    await callITwinApi({
-      url: url,
+  async deleteSavedView(args: SingleSavedViewParams): Promise<void> {
+    return this.queryITwinApi({
+      requestParams: args,
+      createUrl: () => `${this.baseUrl}/${args.savedViewId}`,
       method: "DELETE",
-      getAccessToken: this.getAccessToken,
-      signal: args.signal,
-      headers: {
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        ...args.headers,
-      },
     });
   }
 
-  async createTag(args: CreateTag): Promise<TagResponse> {
-    const url = this.baseURL;
-    const resp = await callITwinApi({
-      url: url,
+  async createTag(args: CreateTagParams): Promise<TagResponse> {
+    return this.queryITwinApi({
+      requestParams: args,
+      createUrl: () => `${this.baseUrl}/tags`,
       method: "POST",
-      getAccessToken: this.getAccessToken,
-      signal: args.signal,
-      headers: {
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        ...args.headers,
-      },
       body: args.tagPayload,
     });
-    return resp as unknown as TagResponse;
   }
 
-  async getTag(args: SingleTag): Promise<TagResponse> {
-    const url = `${this.baseURL}/${args.tagId}`;
-
-    const resp = await callITwinApi({
-      url: url,
+  async getTag(args: SingleTagParams): Promise<TagResponse> {
+    return this.queryITwinApi({
+      requestParams: args,
+      createUrl: () => `${this.baseUrl}/tags/${args.tagId}`,
       method: "GET",
-      getAccessToken: this.getAccessToken,
-      signal: args.signal,
-      headers: {
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        ...args.headers,
-      },
     });
-    return resp as unknown as TagResponse;
   }
 
-  async getAllTags(args: GetTags): Promise<TagListResponse> {
-    const iModelDomainParam = args.iModelId ? `&iModelId=${args.iModelId}` : "";
-    const url = `${this.baseURL}?iTwinId=${args.iTwinId}${iModelDomainParam}`;
-
-    const resp = await callITwinApi({
-      url: url,
+  async getAllTags(args: GetTagsParams): Promise<TagListResponse> {
+    return this.queryITwinApi({
+      requestParams: args,
+      createUrl: () => {
+        const iModelId = args.iModelId ? `&iModelId=${args.iModelId}` : "";
+        return `${this.baseUrl}/tags/?iTwinId=${args.iTwinId}${iModelId}`;
+      },
       method: "GET",
-      getAccessToken: this.getAccessToken,
-      signal: args.signal,
-      headers: {
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        ...args.headers,
-      },
     });
-    return resp as unknown as TagListResponse;
   }
 
-  async deleteTag(args: SingleTag): Promise<void> {
-    const url = `${this.baseURL}/${args.tagId}`;
-
-    await callITwinApi({
-      url: url,
+  async deleteTag(args: SingleTagParams): Promise<void> {
+    return this.queryITwinApi({
+      requestParams: args,
+      createUrl: () => `${this.baseUrl}/tags/${args.tagId}`,
       method: "DELETE",
-      getAccessToken: this.getAccessToken,
-      signal: args.signal,
-      headers: {
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        ...args.headers,
-      },
     });
-
   }
 
-  async updateTag(args: UpdateTag): Promise<TagResponse> {
-    const url = `${this.baseURL}/${args.tagId}`;
-
-    const resp = await callITwinApi({
-      url: url,
+  async updateTag(args: UpdateTagParams): Promise<TagResponse> {
+    return this.queryITwinApi({
+      requestParams: args,
+      createUrl: () => `${this.baseUrl}/tags/${args.tagId}`,
       method: "PATCH",
-      getAccessToken: this.getAccessToken,
-      signal: args.signal,
-      headers: {
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        ...args.headers,
-      },
       body: args.tagPayload,
     });
-    return resp as unknown as TagResponse;
   }
 
-  async getImage(args: GetImage): Promise<ImageResponse> {
-    const url = `${this.baseURL}/${args.savedViewId}/image?size=${args.size}`;
-
-    const resp = await callITwinApi({
-      url: url,
+  async getImage(args: GetImageParams): Promise<ImageResponse> {
+    return this.queryITwinApi({
+      requestParams: args,
+      createUrl: () => `${this.baseUrl}/${args.savedViewId}/image?size=${args.size}`,
       method: "GET",
-      getAccessToken: this.getAccessToken,
-      signal: args.signal,
-      headers: {
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        ...args.headers,
-      },
     });
-    return resp as unknown as ImageResponse;
   }
 
-  async updateImage(args: UpdateImage): Promise<ImageResponse> {
-    const url = `${this.baseURL}/${args.savedViewId}/image`;
-
-    const resp = await callITwinApi({
-      url: url,
+  async updateImage(args: UpdateImageParams): Promise<ImageResponse> {
+    return this.queryITwinApi({
+      requestParams: args,
+      createUrl: () => `${this.baseUrl}/${args.savedViewId}/image`,
       method: "PUT",
-      getAccessToken: this.getAccessToken,
-      signal: args.signal,
-      headers: {
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        ...args.headers,
-      },
       body: args.imagePayload,
     });
-    return resp as unknown as ImageResponse;
   }
 
-  async getGroup(args: SingleGroup): Promise<GroupResponse> {
-    const url = `${this.baseURL}/${args.groupId}`;
-
-    const resp = await callITwinApi({
-      url: url,
+  async getGroup(args: SingleGroupParams): Promise<GroupResponse> {
+    return this.queryITwinApi({
+      requestParams: args,
+      createUrl: () => `${this.baseUrl}/groups/${args.groupId}`,
       method: "GET",
-      getAccessToken: this.getAccessToken,
-      signal: args.signal,
-      headers: {
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        ...args.headers,
-      },
     });
-    return resp as unknown as GroupResponse;
   }
 
-  async getAllGroups(args: GetGroups): Promise<GroupListResponse> {
-    const iModelDomainParam = args.iModelId ? `&iModelId=${args.iModelId}` : "";
-    const url = `${this.baseURL}/?iTwinId=${args.iTwinId}${iModelDomainParam}`;
-
-    const resp = await callITwinApi({
-      url: url,
+  async getAllGroups(args: GetGroupsParams): Promise<GroupListResponse> {
+    return this.queryITwinApi({
+      requestParams: args,
+      createUrl: () => {
+        const iModelId = args.iModelId ? `&iModelId=${args.iModelId}` : "";
+        return `${this.baseUrl}/groups/?iTwinId=${args.iTwinId}${iModelId}`;
+      },
       method: "GET",
-      getAccessToken: this.getAccessToken,
-      signal: args.signal,
-      headers: {
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        ...args.headers,
-      },
     });
-    return resp as unknown as GroupListResponse;
   }
 
-  async createGroup(args: CreateGroup): Promise<GroupResponse> {
-    const resp = await callITwinApi({
-      url: this.baseURL,
+  async createGroup(args: CreateGroupParams): Promise<GroupResponse> {
+    return this.queryITwinApi({
+      requestParams: args,
+      createUrl: () => `${this.baseUrl}/groups/`,
       method: "POST",
-      getAccessToken: this.getAccessToken,
-      signal: args.signal,
-      headers: {
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        ...args.headers,
-      },
       body: args.groupPayload,
     });
-    return resp as unknown as GroupResponse;
   }
 
-  async updateGroup(args: UpdateGroup): Promise<GroupResponse> {
-    const url = `${this.baseURL}/${args.groupId}`;
-
-    const resp = await callITwinApi({
-      url: url,
+  async updateGroup(args: UpdateGroupParams): Promise<GroupResponse> {
+    return this.queryITwinApi({
+      requestParams: args,
+      createUrl: () => `${this.baseUrl}/groups/${args.groupId}`,
       method: "PATCH",
-      getAccessToken: this.getAccessToken,
-      signal: args.signal,
-      headers: {
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        ...args.headers,
-      },
       body: args.groupPayload,
     });
-    return resp as unknown as GroupResponse;
   }
 
-  async deleteGroup(args: SingleGroup): Promise<void> {
-    const url = `${this.baseURL}/${args.groupId}`;
-
-    await callITwinApi({
-      url: url,
+  async deleteGroup(args: SingleGroupParams): Promise<void> {
+    return this.queryITwinApi({
+      requestParams: args,
+      createUrl: () => `${this.baseUrl}/groups/${args.groupId}`,
       method: "DELETE",
-      getAccessToken: this.getAccessToken,
-      signal: args.signal,
-      headers: {
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        ...args.headers,
-      },
     });
   }
 
-  async createExtension(args: CreateExtension): Promise<ExtensionResponse> {
-    const url = `${this.baseURL}/${args.savedViewId}/extensions/`;
-
-    const resp = await callITwinApi({
-      url: url,
+  async createExtension(args: CreateExtensionParams): Promise<ExtensionResponse> {
+    return this.queryITwinApi({
+      requestParams: args,
+      createUrl: () => `${this.baseUrl}/${args.savedViewId}/extensions/`,
       method: "PUT",
-      getAccessToken: this.getAccessToken,
-      signal: args.signal,
-      headers: {
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        ...args.headers,
-      },
-      body: args.extension,
+      body: args.extensionPayload,
     });
-    return resp as unknown as ExtensionResponse;
   }
 
-  async getExtension(args: SingleExtension): Promise<ExtensionResponse> {
-    const url = `${this.baseURL}/${args.savedViewId}/extensions/${args.extensionName}`;
-
-    const resp = await callITwinApi({
-      url: url,
+  async getExtension(args: SingleExtensionParams): Promise<ExtensionResponse> {
+    return this.queryITwinApi({
+      requestParams: args,
+      createUrl: () => `${this.baseUrl}/${args.savedViewId}/extensions/${args.extensionName}`,
       method: "GET",
-      getAccessToken: this.getAccessToken,
-      signal: args.signal,
-      headers: {
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        ...args.headers,
-      },
     });
-    return resp as unknown as ExtensionResponse;
   }
 
-  async getAllExtensions(args: RequestBySavedViewId): Promise<ExtensionListResponse> {
-    const url = `${this.baseURL}/${args.savedViewId}/extensions/`;
-
-    const resp = await callITwinApi({
-      url: url,
+  async getAllExtensions(args: GetExtensionsParams): Promise<ExtensionListResponse> {
+    return this.queryITwinApi({
+      requestParams: args,
+      createUrl: () => `${this.baseUrl}/${args.savedViewId}/extensions/`,
       method: "GET",
-      getAccessToken: this.getAccessToken,
-      signal: args.signal,
-      headers: {
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        ...args.headers,
-      },
     });
-    return resp as unknown as ExtensionListResponse;
   }
 
-  async deleteExtension(args: SingleExtension): Promise<void> {
-    const url = `${this.baseURL}/${args.savedViewId}/extensions/${args.extensionName}`;
-
-    await callITwinApi({
-      url: url,
+  async deleteExtension(args: SingleExtensionParams): Promise<void> {
+    return this.queryITwinApi({
+      requestParams: args,
+      createUrl: () => `${this.baseUrl}/${args.savedViewId}/extensions/${args.extensionName}`,
       method: "DELETE",
-      getAccessToken: this.getAccessToken,
-      signal: args.signal,
-      headers: {
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        ...args.headers,
-      },
     });
   }
 }

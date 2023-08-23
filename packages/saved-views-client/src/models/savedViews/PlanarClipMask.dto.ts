@@ -3,8 +3,7 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 
-/** The different modes by which a PlanarClipMaskSettings collects the geometry used to mask a model.
- */
+/** The different modes by which a PlanarClipMaskSettings collects the geometry used to mask a model. */
 export enum PlanarClipMaskMode {
   /** No masking. */
   None = 0,
@@ -23,7 +22,8 @@ export enum PlanarClipMaskMode {
   ExcludeElements = 5,
 }
 
-/** The default priority values for a PlanarClipMaskSettings, based on model type. Models with a lower priority are masked by models with a higher priority.
+/**
+ * The default priority values for a PlanarClipMaskSettings, based on model type. Models with a lower priority are masked by models with a higher priority.
  * The default can be overridden by PlanarClipMaskSettings.priority.
  */
 export enum PlanarClipMaskPriority {
@@ -37,8 +37,7 @@ export enum PlanarClipMaskPriority {
   DesignModel = 2048,
 }
 
-/** JSON representation of a PlanarClipMaskSettings.
- */
+/** JSON representation of a PlanarClipMaskSettings. */
 export interface PlanarClipMaskProps {
   /** Controls how the mask geometry is collected */
   mode: PlanarClipMaskMode;
@@ -49,8 +48,7 @@ export interface PlanarClipMaskProps {
   invert?: boolean;
 }
 
-/** A PlanarClipMaskProps associated with a specific reality model.
- */
+/** A PlanarClipMaskProps associated with a specific reality model. */
 export interface DisplayStylePlanarClipMaskProps extends PlanarClipMaskProps {
   modelId?: string;
 }

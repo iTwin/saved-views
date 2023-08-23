@@ -4,17 +4,11 @@
 *--------------------------------------------------------------------------------------------*/
 import { Link } from "./Links.dto";
 
-/**
- * Image metadata model for restful get Image operation.
- */
+/** Image metadata model for restful get Image operation. */
 export type ImageResponse = Link;
 
-/**
- * Image Input model for create/update
- */
+/** Image Input model for create/update */
 export interface ImageUpdate {
-  /**
-   * Base 64 encoded image string.
-   */
+  /** Base 64 encoded image string. */
   image: string;
 }

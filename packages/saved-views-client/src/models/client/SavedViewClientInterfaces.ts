@@ -7,7 +7,7 @@ import { SavedViewListResponse } from "../savedViews/SavedViewListResponse.dto";
 import { SavedViewResponse } from "../savedViews/SavedViewResponse.dto";
 import { SavedViewUpdate } from "../savedViews/SavedViewUpdate.dto";
 import { PreferOptions } from "../Prefer";
-import { CommonRequestArgs } from "./CommonClientInterfaces";
+import { CommonRequestParams } from "./CommonClientInterfaces";
 import { ImageResponse, ImageUpdate } from "../Image.dto";
 import { ImageSize } from "../ImageSize";
 import { ExtensionListResponse, ExtensionResponse, ExtensionsUpdate } from "../Extension.dto";
@@ -15,12 +15,13 @@ import { GroupCreate, GroupListResponse, GroupResponse, GroupUpdate } from "../G
 import { TagCreate, TagListResponse, TagResponse, TagUpdate } from "../Tag.dto";
 
 
-export interface RequestBySavedViewId extends CommonRequestArgs {
+export interface GetExtensionsParams extends CommonRequestParams {
   savedViewId: string;
 }
 
-export interface SingleSavedView extends RequestBySavedViewId {
-  /** affects the granularity of the data returned
+export interface SingleSavedViewParams extends GetExtensionsParams {
+  /**
+   * affects the granularity of the data returned
    *  ONLY for get requests will be ignored for PUT POST DELETE
    *  MINIMAL = "return=minimal", least info
    *  REPRESENTATION = "return=representation" most info
@@ -28,7 +29,7 @@ export interface SingleSavedView extends RequestBySavedViewId {
   prefer?: PreferOptions;
 }
 
-export interface GetSavedViews extends CommonRequestArgs {
+export interface GetSavedViewsParams extends CommonRequestParams {
   iTwinId: string;
   iModelId?: string;
   groupId?: string;
@@ -36,101 +37,104 @@ export interface GetSavedViews extends CommonRequestArgs {
   top?: string;
   /** optional param for skip of page*/
   skip?: string;
-  /** affects the granularity of the data returned
+  /**
+   * affects the granularity of the data returned
    *  MINIMAL = "return=minimal", least info
    *  REPRESENTATION = "return=representation" most info
   */
   prefer?: PreferOptions;
 }
 
-export interface CreateSavedView extends CommonRequestArgs {
-  savedViewPayload: SavedViewCreate & Record<string, unknown>;
+export interface CreateSavedViewParams extends CommonRequestParams {
+  savedViewPayload: SavedViewCreate;
 }
 
-export interface UpdateSavedView extends SingleSavedView {
-  savedViewPayload: SavedViewUpdate & Record<string, unknown>;
+export interface UpdateSavedViewParams extends SingleSavedViewParams {
+  savedViewPayload: SavedViewUpdate;
 }
 
-export interface GetImage extends RequestBySavedViewId {
+export interface GetImageParams extends GetExtensionsParams {
   size: ImageSize;
 }
 
-export interface UpdateImage extends RequestBySavedViewId {
-  imagePayload: ImageUpdate & Record<string, unknown>;
+export interface UpdateImageParams extends GetExtensionsParams {
+  imagePayload: ImageUpdate;
 }
 
-export interface GetGroups extends CommonRequestArgs {
+export interface GetGroupsParams extends CommonRequestParams {
   iTwinId: string;
   iModelId?: string;
 }
 
-export interface SingleGroup extends CommonRequestArgs {
+export interface SingleGroupParams extends CommonRequestParams {
   groupId: string;
 }
 
-export interface CreateGroup extends CommonRequestArgs {
-  groupPayload: GroupCreate & Record<string, unknown>;
+export interface CreateGroupParams extends CommonRequestParams {
+  groupPayload: GroupCreate;
 }
 
-export interface UpdateGroup extends SingleGroup {
-  groupPayload: GroupUpdate & Record<string, unknown>;
+export interface UpdateGroupParams extends SingleGroupParams {
+  groupPayload: GroupUpdate;
 }
 
-export interface CreateExtension extends RequestBySavedViewId {
-  /** extension to be created
-   * Extensions allow a saved view to be enhanced with custom data. The extensions have to be defined in a proprietary .JSON schema file. For now, only three extensions are available:
+export interface CreateExtensionParams extends GetExtensionsParams {
+  /**
+   * extension to be created
+   * Extensions allow a saved view to be enhanced with custom data. The extensions have to be defined in a proprietary .JSON schema file.
+   * For now, only three extensions are available:
    * 1. PerModelCategoryVisibility
    * 2. EmphasizeElements
    * 3. VisibilityOverride
   */
-  extension: ExtensionsUpdate & Record<string, unknown>;
+  extensionPayload: ExtensionsUpdate;
 }
 
-export interface SingleExtension extends RequestBySavedViewId {
+export interface SingleExtensionParams extends GetExtensionsParams {
   extensionName: string;
 }
 
-export interface GetTags extends CommonRequestArgs {
+export interface GetTagsParams extends CommonRequestParams {
   iTwinId: string;
 
   iModelId?: string;
 }
-export interface UpdateTag extends SingleTag {
-  tagPayload: TagUpdate & Record<string, unknown>;
+export interface UpdateTagParams extends SingleTagParams {
+  tagPayload: TagUpdate;
 }
 
-export interface CreateTag extends CommonRequestArgs {
-  tagPayload: TagCreate & Record<string, unknown>;
+export interface CreateTagParams extends CommonRequestParams {
+  tagPayload: TagCreate;
 }
 
-export interface SingleTag extends CommonRequestArgs {
+export interface SingleTagParams extends CommonRequestParams {
   tagId: string;
 }
 
 export interface SaveViewsClient {
-  getSavedView(args: SingleSavedView): Promise<SavedViewResponse>;
-  getAllSavedViews(args: GetSavedViews): Promise<SavedViewListResponse>;
-  createSavedView(args: CreateSavedView): Promise<SavedViewResponse>;
-  updateSavedView(args: UpdateSavedView): Promise<SavedViewResponse>;
-  deleteSavedView(args: SingleSavedView): Promise<void>;
+  getSavedView(args: SingleSavedViewParams): Promise<SavedViewResponse>;
+  getAllSavedViews(args: GetSavedViewsParams): Promise<SavedViewListResponse>;
+  createSavedView(args: CreateSavedViewParams): Promise<SavedViewResponse>;
+  updateSavedView(args: UpdateSavedViewParams): Promise<SavedViewResponse>;
+  deleteSavedView(args: SingleSavedViewParams): Promise<void>;
 
-  getImage(args: GetImage): Promise<ImageResponse>;
-  updateImage(args: UpdateImage): Promise<ImageResponse>;
+  getImage(args: GetImageParams): Promise<ImageResponse>;
+  updateImage(args: UpdateImageParams): Promise<ImageResponse>;
 
-  getGroup(args: SingleGroup): Promise<GroupResponse>;
-  getAllGroups(args: GetGroups): Promise<GroupListResponse>;
-  createGroup(args: CreateGroup): Promise<GroupResponse>;
-  updateGroup(args: UpdateGroup): Promise<GroupResponse>;
-  deleteGroup(args: SingleGroup): Promise<void>;
+  getGroup(args: SingleGroupParams): Promise<GroupResponse>;
+  getAllGroups(args: GetGroupsParams): Promise<GroupListResponse>;
+  createGroup(args: CreateGroupParams): Promise<GroupResponse>;
+  updateGroup(args: UpdateGroupParams): Promise<GroupResponse>;
+  deleteGroup(args: SingleGroupParams): Promise<void>;
 
-  createExtension(args: CreateExtension): Promise<ExtensionResponse>;
-  getExtension(args: SingleExtension): Promise<ExtensionResponse>;
-  getAllExtensions(args: RequestBySavedViewId): Promise<ExtensionListResponse>;
-  deleteExtension(args: SingleExtension): Promise<void>;
+  createExtension(args: CreateExtensionParams): Promise<ExtensionResponse>;
+  getExtension(args: SingleExtensionParams): Promise<ExtensionResponse>;
+  getAllExtensions(args: GetExtensionsParams): Promise<ExtensionListResponse>;
+  deleteExtension(args: SingleExtensionParams): Promise<void>;
 
-  createTag(args: CreateTag): Promise<TagResponse>;
-  getTag(args: SingleTag): Promise<TagResponse>;
-  getAllTags(args: GetTags): Promise<TagListResponse>;
-  deleteTag(args: SingleTag): Promise<void>;
-  updateTag(args: UpdateTag): Promise<TagResponse>;
+  createTag(args: CreateTagParams): Promise<TagResponse>;
+  getTag(args: SingleTagParams): Promise<TagResponse>;
+  getAllTags(args: GetTagsParams): Promise<TagListResponse>;
+  deleteTag(args: SingleTagParams): Promise<void>;
+  updateTag(args: UpdateTagParams): Promise<TagResponse>;
 }

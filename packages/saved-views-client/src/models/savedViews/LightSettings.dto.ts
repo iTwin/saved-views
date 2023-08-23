@@ -4,13 +4,13 @@
 *--------------------------------------------------------------------------------------------*/
 import { RgbColorProps } from "./RgbColor.dto";
 
-/** JSON representation of SolarShadowSettings.
- */
+/** JSON representation of SolarShadowSettings. */
 export interface SolarShadowSettingsProps {
   color?: RgbColorProps;
 }
 
-/** Wire format for the solar directional light associated with a LightSettingsProps.
+/**
+ * Wire format for the solar directional light associated with a LightSettingsProps.
  * The light is colored white and oriented in any direction in world coordinates.
  * It will cast shadows if it is above the world XY plane and if the shadows view flag is enabled for the view.
  * By default, the solar light is only applied when shadows are enabled, but can be set to be applied unconditionally.
@@ -22,7 +22,8 @@ export interface SolarLightProps {
   timePoint?: number;
 }
 
-/** Wire format for a pair of hemisphere lights associated with a LightSettingsProps.
+/**
+ * Wire format for a pair of hemisphere lights associated with a LightSettingsProps.
  * Hemisphere lights are oriented in opposite directions along the world Z axis. Each has its own color; they share one intensity.
  * They are often used to simulate outdoor reflection of light from the ground and sky, so the colors often match the ground and sky colors
  * of the SkyBox.
@@ -33,7 +34,8 @@ export interface HemisphereLightsProps {
   intensity?: number;
 }
 
-/** Wire format for the ambient light associated with a LightSettingsProps.
+/**
+ * Wire format for the ambient light associated with a LightSettingsProps.
  * Ambient light applies equally to all surfaces in the scene.
  */
 export interface AmbientLightProps {
@@ -41,8 +43,7 @@ export interface AmbientLightProps {
   intensity?: number;
 }
 
-/** JSON representation of a FresnelSettings.
- */
+/** JSON representation of a FresnelSettings. */
 export interface FresnelSettingsProps {
   intensity?: number;
   invert?: boolean;

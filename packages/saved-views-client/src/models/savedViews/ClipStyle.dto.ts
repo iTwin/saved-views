@@ -1,14 +1,13 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import { LinePixels, FeatureAppearanceProps } from "./FeatureAppearance.dto";
 import { RgbColorProps } from "./RgbColor.dto";
 import { ViewFlagOverrides } from "./ViewFlags.dto";
 
 export interface HiddenLineStyleProps {
-  /**
-   * This JSON representation is awkward, but it must match that used in the db.
+  /** This JSON representation is awkward, but it must match that used in the db.
    * If the JSON came from the db then all members are present and:
    *  - color is overridden only if overrideColor = true.
    *  - width is overridden only if width != 0
@@ -18,21 +17,20 @@ export interface HiddenLineStyleProps {
    * To make this work for both scenarios, the rules are:
    *  - color is overridden if color != undefined and overrideColor != false
    *  - width is overridden if width != undefined and width != 0
-   *  - pattern is overridden if pattern != undefined and pattern != LinePixels.Invalid
-   */
-  // Original name: ovrColor
+   *  - pattern is overridden if pattern != undefined and pattern != LinePixels.Invalid */
   overrideColor?: boolean;
   color?: RgbColorProps;
   pattern?: LinePixels;
-  /** If defined, the width of the edges in pixels. If undefined (or 0), edges are drawn using the element's line width.
-   */
+  /** If defined, the width of the edges in pixels.
+   * If undefined (or 0), edges are drawn using the element's line width. */
   width?: number;
 }
 
+/** Describes the settings for hidden lines. */
 export interface HiddenLineSettingsProps {
   visible?: HiddenLineStyleProps;
   hidden?: HiddenLineStyleProps;
-  // Original name: transThreshold
+  /** Original name: transThreshold */
   transparencyThreshold?: number;
 }
 
@@ -45,9 +43,7 @@ export interface CutStyleProps {
   appearance?: FeatureAppearanceProps;
 }
 
-/**
- * Wire format describing a ClipStyle.
- */
+/** Wire format describing a ClipStyle. */
 export interface ClipStyleProps {
   produceCutGeometry?: boolean;
   cutStyle?: CutStyleProps;

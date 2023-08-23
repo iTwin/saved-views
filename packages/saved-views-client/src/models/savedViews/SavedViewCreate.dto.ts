@@ -4,12 +4,10 @@
 *--------------------------------------------------------------------------------------------*/
 
 import { DeprecatedProperty } from "../DeprecatedProperty.dto";
-import { ExtensionSavedViewCreate } from "../extensions/ExtensionSavedViewCreate.dto";
+import { ExtensionSavedViewCreate } from "../Extension.dto";
 import { View } from "./View.dto";
 
-/**
- * Saved View Create for both 3D and 2D.
- */
+/** Saved View Create for both 3D and 2D. */
 export interface SavedViewCreate extends DeprecatedProperty {
   iTwinId?: string;
   iModelId?: string;

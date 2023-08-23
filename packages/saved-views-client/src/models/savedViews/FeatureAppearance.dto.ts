@@ -4,8 +4,10 @@
 *--------------------------------------------------------------------------------------------*/
 import { RgbColorProps } from "./RgbColor.dto";
 
-/** Enumerates the available patterns for drawing patterned lines.
- * Each is a 32-bit pattern in which each bit specifies the on- or off-state of a pixel along the line. The pattern repeats along the length of the entire line.
+/**
+ * Enumerates the available patterns for drawing patterned lines.
+ * Each is a 32-bit pattern in which each bit specifies the on- or off-state of a pixel along the line.
+ * The pattern repeats along the length of the entire line.
  */
 export enum LinePixels {
   /** A solid line. */
@@ -34,9 +36,7 @@ export enum LinePixels {
   Invalid = -1,
 }
 
-/**
- * Properties used to initialize a Feature Appearance
- */
+/** Properties used to initialize a Feature Appearance */
 export interface FeatureAppearanceProps {
   rgb?: RgbColorProps;
   weight?: number;
@@ -47,9 +47,7 @@ export interface FeatureAppearanceProps {
   emphasized?: true | undefined;
 }
 
-/**
- * A FeatureAppearanceProps applied to a specific model to override its appearance within the context of a DisplayStyle.
- */
+/** A FeatureAppearanceProps applied to a specific model to override its appearance within the context of a DisplayStyle. */
 export interface DisplayStyleModelAppearanceProps
   extends FeatureAppearanceProps {
   modelId?: string;

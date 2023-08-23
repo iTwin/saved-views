@@ -6,67 +6,46 @@ import { CommonMetadata } from "./CommonMetadata.dto";
 import { DeprecatedProperty } from "./DeprecatedProperty.dto";
 import { Link, ResourceLinks } from "./Links.dto";
 
-/**
- * Tag model which used in saved view.
- */
+/** Tag model which used in saved view. */
 export interface SavedViewTag {
   id: string;
   displayName: string;
 }
 
-/**
- * Tag Input model for create/update
- */
+/** Tag Input model for create/update */
 export interface TagUpdate {
-  /**
-   * Tag Name.
-   */
-
+  /** Tag Name. */
   displayName?: string;
 }
 
-/**
- * Tag response model following APIM structure.
- */
+/** Tag response model following APIM structure. */
 export interface TagResponse {
   tag: Tag;
 }
 
-/**
- * Tag list response model for restful get all tags operations.
- */
+/** Tag list response model for restful get all tags operations. */
 export interface TagListResponse {
   tags: Tag[];
   _links: TagListLinks;
 }
 
-/**
- * Tag links object
- */
+/** Tag links object */
 export type TagLinks = ResourceLinks;
 
-/**
- * Tag list links object
- */
+/** Tag list links object */
 export interface TagListLinks {
   self: Link;
 }
 
-/**
- * Tag Input model for create/update
- */
+/** Tag Input model for create/update */
 export interface TagCreate extends DeprecatedProperty {
   iTwinId?: string;
   iModelId?: string;
-  /**
-   * Tag Name.
-   */
+  /** Tag Name. */
   displayName: string;
 }
 
-/**
- * Tag Metadata Input model for get
- */
+/** Tag Metadata Input model for get */
 export interface Tag extends CommonMetadata {
   _links: TagLinks;
 }

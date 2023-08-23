@@ -3,16 +3,12 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 
-/**
- * Link properties.
- */
+/** Link properties. */
 export interface Link {
   href: string;
 }
 
-/**
- * Resource links object
- */
+/** Resource links object */
 export interface ResourceLinks {
   iTwin?: Link;
   project?: Link;

@@ -3,8 +3,10 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 
-/** Enumerates the available basic rendering modes, as part of a DisplayStyle's ViewFlags.
- * The rendering mode broadly affects various aspects of the display style - in particular, whether and how surfaces and their edges are drawn.
+/**
+ * Enumerates the available basic rendering modes, as part of a DisplayStyle's ViewFlags.
+ * The rendering mode broadly affects various aspects of the display style - in particular,
+ * whether and how surfaces and their edges are drawn.
  */
 export enum RenderMode {
   /** Renders only the edges of surfaces, with exceptions for planar regions based on their FillFlags.
@@ -33,9 +35,7 @@ export enum RenderMode {
   HiddenLine = 3,
 }
 
-/**
- * Another view flag representation that sadly is used in display style props for overriding
- */
+/** Another view flag representation that sadly is used in display style props for overriding */
 export interface ViewFlagOverrides {
   renderMode?: RenderMode;
   dimensions?: boolean;
@@ -56,17 +56,13 @@ export interface ViewFlagOverrides {
   monochrome?: boolean;
   backgroundMap?: boolean;
   ambientOcclusion?: boolean;
-  /** If true, overlay surfaces with wiremesh to reveal their triangulation.
-   */
+  /** If true, overlay surfaces with wiremesh to reveal their triangulation. */
   wiremesh?: boolean;
-  /** In RenderMode.SmoothShade, whether to apply lighting to surfaces.
-   */
+  /** In RenderMode.SmoothShade, whether to apply lighting to surfaces. */
   lighting?: boolean;
 }
 
-/**
- * JSON representation of ViewFlags
- */
+/** JSON representation of ViewFlags */
 export interface ViewFlagProps {
   // Original name: noConstruct
   noConstructions?: boolean;

@@ -17,8 +17,7 @@ export interface SubCategoryAppearanceProps {
   transparencyFill?: number;
 }
 
-/** Describes the SubCategoryOverrides applied to a SubCategory by a DisplayStyle.
- */
+/** Describes the SubCategoryOverrides applied to a SubCategory by a DisplayStyle. */
 export interface DisplayStyleSubCategoryProps
   extends SubCategoryAppearanceProps {
   /** The Id of the SubCategory whose appearance is to be overridden. */

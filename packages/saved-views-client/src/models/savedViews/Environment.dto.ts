@@ -4,9 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 import { RgbColorProps } from "./RgbColor.dto";
 
-/**
- * Supported types of SkyBox images.
- */
+/** Supported types of SkyBox images. */
 export enum SkyBoxImageType {
   /** No image, indicating a SkyGradient should be displayed. */
   None = 0,
@@ -18,7 +16,8 @@ export enum SkyBoxImageType {
   Cube = 3,
 }
 
-/** JSON representation of the six images used by a SkyCube.
+/**
+ * JSON representation of the six images used by a SkyCube.
  * Each property specifies the image for a face of the cube as either an image URL, or the Id of a Texture element.
  * Each image must be square and have the same dimensions as all the other images.
  */
@@ -31,17 +30,13 @@ export interface SkyCubeProps {
   left: string;
 }
 
-/**
- * JSON representation of the image used for a SkySphere.
- */
+/** JSON representation of the image used for a SkySphere. */
 export interface SkySphereImageProps {
   type: SkyBoxImageType.Spherical;
   texture: string;
 }
 
-/**
- * JSON representation of the images used for a SkyCube.
- */
+/** JSON representation of the images used for a SkyCube. */
 export interface SkyCubeImageProps {
   type: SkyBoxImageType.Cube;
   textures: SkyCubeProps;
@@ -77,14 +72,14 @@ export interface SkyBoxProps {
   nadirColor?: RgbColorProps;
   skyExponent?: number;
   groundExponent?: number;
-  /** The image(s), if any, to be mapped to the surfaces of the sphere or cube. If undefined, the skybox will be displayed as a gradient instead.
+  /**
+   * The image(s), if any, to be mapped to the surfaces of the sphere or cube.
+   * If undefined, the skybox will be displayed as a gradient instead.
    */
   image?: SkyBoxImageProps;
 }
 
-/**
- * JSON representation of a GroundPlane.
- */
+/** JSON representation of a GroundPlane. */
 export interface GroundPlaneProps {
   display?: boolean;
   elevation?: number;
@@ -92,9 +87,7 @@ export interface GroundPlaneProps {
   belowColor?: RgbColorProps;
 }
 
-/**
- * JSON representation of an Environment.
- */
+/** JSON representation of an Environment. */
 export interface EnvironmentProps {
   ground?: GroundPlaneProps;
   sky?: SkyBoxProps;

@@ -3,8 +3,7 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 
-/** Wire format describing PlanProjectionSettings.
- */
+/** Wire format describing PlanProjectionSettings. */
 export interface PlanProjectionSettingsProps {
   elevation?: number;
   transparency?: number;

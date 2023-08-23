@@ -19,9 +19,7 @@ import { RgbColorProps } from "./RgbColor.dto";
 import { DisplayStyleSubCategoryProps } from "./SubCategory.dto";
 import { ViewFlagProps } from "./ViewFlags.dto";
 
-/**
- * Describes the style in which monochrome color is applied by a DisplayStyleSettings.
- */
+/** Describes the style in which monochrome color is applied by a DisplayStyleSettings. */
 export enum MonochromeMode {
   /** The color of the geometry is replaced with the monochrome color. e.g., if monochrome color is white, the geometry will be white. */
   Flat = 0,
@@ -32,9 +30,7 @@ export enum MonochromeMode {
   Scaled = 1,
 }
 
-/**
- * JSON representation of the display style settings
- */
+/** JSON representation of the display style settings */
 export interface DisplayStyleSettingsProps {
   viewflags?: ViewFlagProps;
   backgroundColor?: RgbColorProps;
@@ -58,9 +54,7 @@ export interface DisplayStyleSettingsProps {
   planarClipOverrides?: DisplayStylePlanarClipMaskProps[];
 }
 
-/**
- * JSON representation of settings associated with a DisplayStyle3dProps.
- */
+/** JSON representation of settings associated with a DisplayStyle3dProps. */
 export interface DisplayStyle3dSettingsProps extends DisplayStyleSettingsProps {
   environment?: EnvironmentProps;
   // Original name: ao
