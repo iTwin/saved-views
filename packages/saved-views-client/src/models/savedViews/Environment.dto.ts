@@ -4,18 +4,6 @@
 *--------------------------------------------------------------------------------------------*/
 import { RgbColorProps } from "./RgbColor.dto";
 
-/** Supported types of SkyBox images. */
-export enum SkyBoxImageType {
-  /** No image, indicating a SkyGradient should be displayed. */
-  None = 0,
-  /** A single image mapped to the surface of a sphere.
-   */
-  Spherical = 1,
-  /** Six images mapped to the faces of a cube.
-   */
-  Cube = 3,
-}
-
 /**
  * JSON representation of the six images used by a SkyCube.
  * Each property specifies the image for a face of the cube as either an image URL, or the Id of a Texture element.
@@ -28,18 +16,6 @@ export interface SkyCubeProps {
   bottom: string;
   right: string;
   left: string;
-}
-
-/** JSON representation of the image used for a SkySphere. */
-export interface SkySphereImageProps {
-  type: SkyBoxImageType.Spherical;
-  texture: string;
-}
-
-/** JSON representation of the images used for a SkyCube. */
-export interface SkyCubeImageProps {
-  type: SkyBoxImageType.Cube;
-  textures: SkyCubeProps;
 }
 
 export interface SkyBoxImageProps {

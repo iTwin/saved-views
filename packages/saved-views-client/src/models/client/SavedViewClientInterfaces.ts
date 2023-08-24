@@ -46,11 +46,11 @@ export interface GetSavedViewsParams extends CommonRequestParams {
 }
 
 export interface CreateSavedViewParams extends CommonRequestParams {
-  savedViewPayload: SavedViewCreate;
+  body: SavedViewCreate;
 }
 
 export interface UpdateSavedViewParams extends SingleSavedViewParams {
-  savedViewPayload: SavedViewUpdate;
+  body: SavedViewUpdate;
 }
 
 export interface GetImageParams extends GetExtensionsParams {
@@ -58,7 +58,7 @@ export interface GetImageParams extends GetExtensionsParams {
 }
 
 export interface UpdateImageParams extends GetExtensionsParams {
-  imagePayload: ImageUpdate;
+  body: ImageUpdate;
 }
 
 export interface GetGroupsParams extends CommonRequestParams {
@@ -71,11 +71,11 @@ export interface SingleGroupParams extends CommonRequestParams {
 }
 
 export interface CreateGroupParams extends CommonRequestParams {
-  groupPayload: GroupCreate;
+  body: GroupCreate;
 }
 
 export interface UpdateGroupParams extends SingleGroupParams {
-  groupPayload: GroupUpdate;
+  body: GroupUpdate;
 }
 
 export interface CreateExtensionParams extends GetExtensionsParams {
@@ -87,7 +87,7 @@ export interface CreateExtensionParams extends GetExtensionsParams {
    * 2. EmphasizeElements
    * 3. VisibilityOverride
   */
-  extensionPayload: ExtensionsUpdate;
+  body: ExtensionsUpdate;
 }
 
 export interface SingleExtensionParams extends GetExtensionsParams {
@@ -100,11 +100,11 @@ export interface GetTagsParams extends CommonRequestParams {
   iModelId?: string;
 }
 export interface UpdateTagParams extends SingleTagParams {
-  tagPayload: TagUpdate;
+  body: TagUpdate;
 }
 
 export interface CreateTagParams extends CommonRequestParams {
-  tagPayload: TagCreate;
+  body: TagCreate;
 }
 
 export interface SingleTagParams extends CommonRequestParams {

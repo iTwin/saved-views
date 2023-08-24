@@ -6,8 +6,7 @@ import { SavedViewResponse, SavedViewListResponse, TagListResponse, TagResponse,
 import { PreferOptions } from "../models/Prefer";
 import { CommonRequestParams } from "../models/client/CommonClientInterfaces";
 import { SingleSavedViewParams, GetSavedViewsParams, CreateSavedViewParams, UpdateSavedViewParams, CreateTagParams, SingleTagParams, UpdateTagParams, GetImageParams, UpdateImageParams, CreateGroupParams, SingleGroupParams, UpdateGroupParams, CreateExtensionParams, SingleExtensionParams, GetExtensionsParams, SaveViewsClient, GetTagsParams, GetGroupsParams } from "../models/client/SavedViewClientInterfaces";
-import { CallITwinApiParams, callITwinApi } from "./ApiUtils";
-import * as _ from "lodash";
+import { callITwinApi } from "./ApiUtils";
 
 export interface CommonClientArgs {
   /** url that conforms to pattern https://{...}api.bentley.com/savedviews */
@@ -15,11 +14,11 @@ export interface CommonClientArgs {
   /** function for getting auth token */
   getAccessToken: () => Promise<string>;
 }
-interface QueryParams<RequestParams extends CommonRequestParams, BodyType extends object> {
-  requestParams: RequestParams;
-  createUrl: () => string;
+interface QueryParams {
+  requestParams: CommonRequestParams;
+  url: string;
   method: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
-  body?: BodyType;
+  body?: object | undefined;
 }
 /**
  * This is client is used to access all services(image groups extensions ...) associated with savedViews.
@@ -41,11 +40,9 @@ export class ITwinSavedViewsClient implements SaveViewsClient {
     this.getAccessToken = args.getAccessToken;
   }
 
-  private async queryITwinApi<ReturnType, RequestParams extends CommonRequestParams, BodyType extends object>
-    (queyParams: QueryParams<RequestParams, BodyType>) {
-    
-    const params: CallITwinApiParams<BodyType> = {
-      url: queyParams.createUrl(),
+  private async queryITwinApi<ReturnType>(queyParams: QueryParams) {
+    const resp = await callITwinApi({
+      url: queyParams.url,
       method: queyParams.method,
       getAccessToken: this.getAccessToken,
       signal: queyParams.requestParams.signal,
@@ -54,44 +51,39 @@ export class ITwinSavedViewsClient implements SaveViewsClient {
         ...queyParams.requestParams.headers,
       },
       body: queyParams.body,
-    };
-    if (!params.body) {
-      delete params.body;
-    }
-    const resp = await callITwinApi(params);
+    });
     return resp as unknown as ReturnType;
   }
 
-  private addHeadersToHeaders<RequestParams extends CommonRequestParams>(args: RequestParams, headers: object[]) {
-    const argsCopy = _.cloneDeep(args); // Maintain Initial Integrity of Args Object Using Copy On Write Pattern
-    const headersToAdd = headers.reduce((result, currentObject) => {
-      return { ...result, ...currentObject };
-    }, {});
-    argsCopy.headers = { ...argsCopy.headers, ...headersToAdd };
-    return argsCopy;
-  }
-
   async getSavedView(args: SingleSavedViewParams): Promise<SavedViewResponse> {
-    const argsCopy = this.addHeadersToHeaders(args, [{ prefer: args.prefer ? args.prefer : PreferOptions.MINIMAL }]);
     return this.queryITwinApi({
-      requestParams: argsCopy,
-      createUrl: () => `${this.baseUrl}/${argsCopy.savedViewId}`,
+      requestParams: {
+        ...args,
+        headers: {
+          prefer: args.prefer ?? PreferOptions.MINIMAL,
+          ...args.headers,
+        },
+      },
+      url: `${this.baseUrl}/${args.savedViewId}`,
       method: "GET",
     });
   }
 
   async getAllSavedViews(args: GetSavedViewsParams): Promise<SavedViewListResponse> {
-    const argsCopy = this.addHeadersToHeaders(args, [{ prefer: args.prefer ? args.prefer : PreferOptions.MINIMAL }]);
-    const createUrl = () => {
-      const iModelId = argsCopy.iModelId ? `&iModelId=${argsCopy.iModelId}` : "";
-      const groupId = args.groupId ? `&groupId=${args.groupId}` : "";
-      const top = args.top ? `&$top=${args.top}` : "";
-      const skip = args.skip ? `&$skip=${args.skip}` : "";
-      return `${this.baseUrl}/?iTwinId=${args.iTwinId}${iModelId}${groupId}${top}${skip}`;
-    };
+    const iModelId = args.iModelId ? `&iModelId=${args.iModelId}` : "";
+    const groupId = args.groupId ? `&groupId=${args.groupId}` : "";
+    const top = args.top ? `&$top=${args.top}` : "";
+    const skip = args.skip ? `&$skip=${args.skip}` : "";
+    const url = `${this.baseUrl}/?iTwinId=${args.iTwinId}${iModelId}${groupId}${top}${skip}`;
     return this.queryITwinApi({
-      requestParams: argsCopy,
-      createUrl: createUrl,
+      requestParams: {
+        ...args,
+        headers: {
+          prefer: args.prefer ?? PreferOptions.MINIMAL,
+          ...args.headers,
+        },
+      },
+      url: url,
       method: "GET",
     });
   }
@@ -99,25 +91,25 @@ export class ITwinSavedViewsClient implements SaveViewsClient {
   async createSavedView(args: CreateSavedViewParams): Promise<SavedViewResponse> {
     return this.queryITwinApi({
       requestParams: args,
-      createUrl: () => `${this.baseUrl}/`,
+      url: `${this.baseUrl}/`,
       method: "POST",
-      body: args.savedViewPayload,
+      body: args.body,
     });
   }
 
   async updateSavedView(args: UpdateSavedViewParams): Promise<SavedViewResponse> {
     return this.queryITwinApi({
       requestParams: args,
-      createUrl: () => `${this.baseUrl}/${args.savedViewId}`,
+      url: `${this.baseUrl}/${args.savedViewId}`,
       method: "PATCH",
-      body: args.savedViewPayload,
+      body: args.body,
     });
   }
 
   async deleteSavedView(args: SingleSavedViewParams): Promise<void> {
     return this.queryITwinApi({
       requestParams: args,
-      createUrl: () => `${this.baseUrl}/${args.savedViewId}`,
+      url: `${this.baseUrl}/${args.savedViewId}`,
       method: "DELETE",
     });
   }
@@ -125,27 +117,26 @@ export class ITwinSavedViewsClient implements SaveViewsClient {
   async createTag(args: CreateTagParams): Promise<TagResponse> {
     return this.queryITwinApi({
       requestParams: args,
-      createUrl: () => `${this.baseUrl}/tags`,
+      url: `${this.baseUrl}/tags`,
       method: "POST",
-      body: args.tagPayload,
+      body: args.body,
     });
   }
 
   async getTag(args: SingleTagParams): Promise<TagResponse> {
     return this.queryITwinApi({
       requestParams: args,
-      createUrl: () => `${this.baseUrl}/tags/${args.tagId}`,
+      url: `${this.baseUrl}/tags/${args.tagId}`,
       method: "GET",
     });
   }
 
   async getAllTags(args: GetTagsParams): Promise<TagListResponse> {
+    const iModelId = args.iModelId ? `&iModelId=${args.iModelId}` : "";
+    const url = `${this.baseUrl}/tags/?iTwinId=${args.iTwinId}${iModelId}`;
     return this.queryITwinApi({
       requestParams: args,
-      createUrl: () => {
-        const iModelId = args.iModelId ? `&iModelId=${args.iModelId}` : "";
-        return `${this.baseUrl}/tags/?iTwinId=${args.iTwinId}${iModelId}`;
-      },
+      url: url,
       method: "GET",
     });
   }
@@ -153,7 +144,7 @@ export class ITwinSavedViewsClient implements SaveViewsClient {
   async deleteTag(args: SingleTagParams): Promise<void> {
     return this.queryITwinApi({
       requestParams: args,
-      createUrl: () => `${this.baseUrl}/tags/${args.tagId}`,
+      url: `${this.baseUrl}/tags/${args.tagId}`,
       method: "DELETE",
     });
   }
@@ -161,16 +152,16 @@ export class ITwinSavedViewsClient implements SaveViewsClient {
   async updateTag(args: UpdateTagParams): Promise<TagResponse> {
     return this.queryITwinApi({
       requestParams: args,
-      createUrl: () => `${this.baseUrl}/tags/${args.tagId}`,
+      url: `${this.baseUrl}/tags/${args.tagId}`,
       method: "PATCH",
-      body: args.tagPayload,
+      body: args.body,
     });
   }
 
   async getImage(args: GetImageParams): Promise<ImageResponse> {
     return this.queryITwinApi({
       requestParams: args,
-      createUrl: () => `${this.baseUrl}/${args.savedViewId}/image?size=${args.size}`,
+      url: `${this.baseUrl}/${args.savedViewId}/image?size=${args.size}`,
       method: "GET",
     });
   }
@@ -178,27 +169,26 @@ export class ITwinSavedViewsClient implements SaveViewsClient {
   async updateImage(args: UpdateImageParams): Promise<ImageResponse> {
     return this.queryITwinApi({
       requestParams: args,
-      createUrl: () => `${this.baseUrl}/${args.savedViewId}/image`,
+      url: `${this.baseUrl}/${args.savedViewId}/image`,
       method: "PUT",
-      body: args.imagePayload,
+      body: args.body,
     });
   }
 
   async getGroup(args: SingleGroupParams): Promise<GroupResponse> {
     return this.queryITwinApi({
       requestParams: args,
-      createUrl: () => `${this.baseUrl}/groups/${args.groupId}`,
+      url: `${this.baseUrl}/groups/${args.groupId}`,
       method: "GET",
     });
   }
 
   async getAllGroups(args: GetGroupsParams): Promise<GroupListResponse> {
+    const iModelId = args.iModelId ? `&iModelId=${args.iModelId}` : "";
+    const url = `${this.baseUrl}/groups/?iTwinId=${args.iTwinId}${iModelId}`;
     return this.queryITwinApi({
       requestParams: args,
-      createUrl: () => {
-        const iModelId = args.iModelId ? `&iModelId=${args.iModelId}` : "";
-        return `${this.baseUrl}/groups/?iTwinId=${args.iTwinId}${iModelId}`;
-      },
+      url: url,
       method: "GET",
     });
   }
@@ -206,25 +196,25 @@ export class ITwinSavedViewsClient implements SaveViewsClient {
   async createGroup(args: CreateGroupParams): Promise<GroupResponse> {
     return this.queryITwinApi({
       requestParams: args,
-      createUrl: () => `${this.baseUrl}/groups/`,
+      url: `${this.baseUrl}/groups/`,
       method: "POST",
-      body: args.groupPayload,
+      body: args.body,
     });
   }
 
   async updateGroup(args: UpdateGroupParams): Promise<GroupResponse> {
     return this.queryITwinApi({
       requestParams: args,
-      createUrl: () => `${this.baseUrl}/groups/${args.groupId}`,
+      url: `${this.baseUrl}/groups/${args.groupId}`,
       method: "PATCH",
-      body: args.groupPayload,
+      body: args.body,
     });
   }
 
   async deleteGroup(args: SingleGroupParams): Promise<void> {
     return this.queryITwinApi({
       requestParams: args,
-      createUrl: () => `${this.baseUrl}/groups/${args.groupId}`,
+      url: `${this.baseUrl}/groups/${args.groupId}`,
       method: "DELETE",
     });
   }
@@ -232,16 +222,16 @@ export class ITwinSavedViewsClient implements SaveViewsClient {
   async createExtension(args: CreateExtensionParams): Promise<ExtensionResponse> {
     return this.queryITwinApi({
       requestParams: args,
-      createUrl: () => `${this.baseUrl}/${args.savedViewId}/extensions/`,
+      url: `${this.baseUrl}/${args.savedViewId}/extensions/`,
       method: "PUT",
-      body: args.extensionPayload,
+      body: args.body,
     });
   }
 
   async getExtension(args: SingleExtensionParams): Promise<ExtensionResponse> {
     return this.queryITwinApi({
       requestParams: args,
-      createUrl: () => `${this.baseUrl}/${args.savedViewId}/extensions/${args.extensionName}`,
+      url: `${this.baseUrl}/${args.savedViewId}/extensions/${args.extensionName}`,
       method: "GET",
     });
   }
@@ -249,7 +239,7 @@ export class ITwinSavedViewsClient implements SaveViewsClient {
   async getAllExtensions(args: GetExtensionsParams): Promise<ExtensionListResponse> {
     return this.queryITwinApi({
       requestParams: args,
-      createUrl: () => `${this.baseUrl}/${args.savedViewId}/extensions/`,
+      url: `${this.baseUrl}/${args.savedViewId}/extensions/`,
       method: "GET",
     });
   }
@@ -257,7 +247,7 @@ export class ITwinSavedViewsClient implements SaveViewsClient {
   async deleteExtension(args: SingleExtensionParams): Promise<void> {
     return this.queryITwinApi({
       requestParams: args,
-      createUrl: () => `${this.baseUrl}/${args.savedViewId}/extensions/${args.extensionName}`,
+      url: `${this.baseUrl}/${args.savedViewId}/extensions/${args.extensionName}`,
       method: "DELETE",
     });
   }

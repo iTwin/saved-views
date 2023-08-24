@@ -4,6 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 
 export interface CommonRequestParams {
-  signal?: AbortSignal | undefined;
-  headers?: Record<string, string> | undefined;
+  signal?: AbortSignal;
+  headers?: Record<string, string>;
+  body?: object;
 }

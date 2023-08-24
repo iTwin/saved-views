@@ -25,8 +25,6 @@ export * from "./models/savedViews/PlanarClipMask.dto";
 export * from "./models/savedViews/RgbColor.dto";
 export * from "./models/savedViews/SavedView.dto";
 export * from "./models/savedViews/SavedViewCreate.dto";
-export * from "./models/savedViews/SavedViewItwinSchemas.dto";
-export * from "./models/savedViews/SavedViewLinks.dto";
 export * from "./models/savedViews/SavedViewListResponse.dto";
 export * from "./models/savedViews/SavedViewResponse.dto";
 export * from "./models/savedViews/SavedViewUpdate.dto";

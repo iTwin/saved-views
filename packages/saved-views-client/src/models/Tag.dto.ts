@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 import { CommonMetadata } from "./CommonMetadata.dto";
 import { DeprecatedProperty } from "./DeprecatedProperty.dto";
-import { Link, ResourceLinks } from "./Links.dto";
+import { HalLinks } from "./Links.dto";
 
 /** Tag model which used in saved view. */
 export interface SavedViewTag {
@@ -26,15 +26,7 @@ export interface TagResponse {
 /** Tag list response model for restful get all tags operations. */
 export interface TagListResponse {
   tags: Tag[];
-  _links: TagListLinks;
-}
-
-/** Tag links object */
-export type TagLinks = ResourceLinks;
-
-/** Tag list links object */
-export interface TagListLinks {
-  self: Link;
+  _links: HalLinks<["self"]>;
 }
 
 /** Tag Input model for create/update */
@@ -47,5 +39,5 @@ export interface TagCreate extends DeprecatedProperty {
 
 /** Tag Metadata Input model for get */
 export interface Tag extends CommonMetadata {
-  _links: TagLinks;
+  _links: HalLinks<["savedView", "iTwin" ?, "project" ?, "iModel" ?, "creator" ?]>;
 }

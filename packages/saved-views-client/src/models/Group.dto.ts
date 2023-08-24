@@ -3,12 +3,12 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import { DeprecatedProperty } from "./DeprecatedProperty.dto";
-import { Link, ResourceLinks } from "./Links.dto";
+import { HalLinks } from "./Links.dto";
 import { SharableMetadata } from "./SharableMetadata.dto";
 
 /** Group model for restful get Group operations following APIM standards. */
 export interface Group extends SharableMetadata {
-  _links: GroupLinks;
+  _links: HalLinks<["savedView", "iTwin"?, "project"?, "iModel"?, "creator"?]>;
 }
 
 /** Group Input model for update */
@@ -25,17 +25,7 @@ export interface GroupResponse {
 /** Group list response model for restful get all Groups operations. */
 export interface GroupListResponse {
   groups: Group[];
-  _links: GroupListLinks;
-}
-
-/** Group links object */
-export interface GroupLinks extends ResourceLinks {
-  savedViews: Link;
-}
-
-/** Group list links object */
-export interface GroupListLinks {
-  self: Link;
+  _links: HalLinks<["self"]>;
 }
 
 /** Group Input model for create */

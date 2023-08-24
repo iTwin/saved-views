@@ -3,15 +3,6 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 
-/** Link properties. */
-export interface Link {
-  href: string;
-}
-
-/** Resource links object */
-export interface ResourceLinks {
-  iTwin?: Link;
-  project?: Link;
-  imodel?: Link;
-  creator: Link;
-}
+export type HalLinks<T extends Array<string | undefined>> = {
+  [K in keyof T as T[K] & string]: { href: string; };
+};

@@ -4,8 +4,6 @@
 *--------------------------------------------------------------------------------------------*/
 import { RgbColorProps } from "./RgbColor.dto";
 
-export type SubLayerId = string | number;
-
 /**
  * JSON representation of the settings associated with a map sublayer included within a MapLayerProps.
  * A map sub layer represents a set of objects within the layer that can be controlled separately.  These
@@ -30,12 +28,6 @@ export interface CommonMapLayerProps {
   transparentBackground?: boolean;
 }
 
-/** stores key-value pair to be added to all requests made involving map layer. */
-export interface MapLayerKey {
-  key: string;
-  value: string;
-}
-
 /** JSON representation of an ImageMapLayerSettings. */
 export interface ImageMapLayerProps extends CommonMapLayerProps {
   url: string;
@@ -49,9 +41,6 @@ export enum BackgroundMapType {
   Aerial = 2,
   Hybrid = 3,
 }
-
-/** Enumerates a set of supported BackgroundMapProviders that can provide map imagery. */
-export type BackgroundMapProviderName = "BingProvider" | "MapBoxProvider";
 
 /** JSON representation of a BackgroundMapProvider. */
 export interface BackgroundMapProviderProps {
@@ -68,8 +57,6 @@ export interface BaseMapLayerProps extends ImageMapLayerProps {
 export interface ModelMapLayerProps extends CommonMapLayerProps {
   modelId: string;
 }
-
-export type MapLayerProps = ImageMapLayerProps | ModelMapLayerProps;
 
 /** The JSON representation of the map imagery.  Map imagery include the specification for the base layer (which was originally
  * represented by BackgroundMapProps.providerName  && BackgroundMapProps.providerData) and additional map layers.

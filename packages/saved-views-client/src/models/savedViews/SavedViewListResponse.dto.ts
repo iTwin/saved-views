@@ -2,11 +2,8 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
+import { HalLinks } from "../Links.dto";
 import { SavedView } from "./SavedView.dto";
-
-type HalLinks<T extends Array<string | undefined>> = {
-  [K in keyof T as T[K] & string]: { href: string; };
-};
 
 /** Saved view list response model for restful get all saved views operations. */
 export interface SavedViewListResponse {

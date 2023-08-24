@@ -2,14 +2,14 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { Link } from "./Links.dto";
+import { HalLinks } from "./Links.dto";
 
 /** Extension metadata model for restful get extension operations following Apim standards. */
 export interface Extension extends ExtensionBase {
   markdownUrl: string;
   schemaUrl: string;
   data: string;
-  _links: ExtensionLinks;
+  _links: HalLinks<["savedView", "iTwin"?, "project"?, "prev"?, "iModel"?, "self"?]>;
 }
 
 export interface ExtensionBase {
@@ -23,7 +23,7 @@ export interface ExtensionsUpdate {
 }
 
 /** Extensions metadata model for restful get Extensions operation. */
-export type ExtensionsResponse = Link;
+export type ExtensionsResponse = HalLinks<["href"]>;
 
 /** Extension data for savedViewCreate */
 export interface ExtensionSavedViewCreate extends ExtensionBase {
@@ -38,7 +38,7 @@ export interface ExtensionResponse {
 }
 
 /** Extension metadata model for restful get extension operations following Apim standards. */
-export interface ExtensionMin extends Link, ExtensionBase { }
+export interface ExtensionMin extends HalLinks<["href"]>, ExtensionBase { }
 
 /** Extension list response model for restful get all Extensions operations. */
 export interface ExtensionListResponse {
@@ -46,15 +46,6 @@ export interface ExtensionListResponse {
 }
 
 /** Saved view metadata model for restful get saved view operations following Apim standards. */
-export interface ExtensionListItem extends Link {
+export interface ExtensionListItem extends HalLinks<["href"]> {
   extensionName: string;
-}
-
-/** Extension links object */
-export interface ExtensionLinks {
-  iTwin?: Link;
-  project?: Link;
-  imodel?: Link;
-  savedView: Link;
-  self?: Link;
 }
