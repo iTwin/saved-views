@@ -2,29 +2,36 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { SavedViewResponse, SavedViewListResponse, TagListResponse, TagResponse, ImageResponse, GroupListResponse, GroupResponse, ExtensionListResponse, ExtensionResponse } from "..";
 import { PreferOptions } from "../models/Prefer";
 import { CommonRequestParams } from "../models/client/CommonClientInterfaces";
-import { SingleSavedViewParams, GetSavedViewsParams, CreateSavedViewParams, UpdateSavedViewParams, CreateTagParams, SingleTagParams, UpdateTagParams, GetImageParams, UpdateImageParams, CreateGroupParams, SingleGroupParams, UpdateGroupParams, CreateExtensionParams, SingleExtensionParams, GetExtensionsParams, SaveViewsClient, GetTagsParams, GetGroupsParams } from "../models/client/SavedViewClientInterfaces";
+import {
+  SingleSavedViewParams, GetSavedViewsParams, CreateSavedViewParams, UpdateSavedViewParams, CreateTagParams, SingleTagParams,
+  UpdateTagParams, GetImageParams, UpdateImageParams, CreateGroupParams, SingleGroupParams, UpdateGroupParams, CreateExtensionParams,
+  SingleExtensionParams, GetExtensionsParams, SaveViewsClient, GetTagsParams, GetGroupsParams, ExtensionListResponse, ExtensionResponse,
+  GroupListResponse, GroupResponse, ImageResponse, SavedViewListResponse, SavedViewResponse, TagListResponse, TagResponse,
+} from "../models/client/SavedViewClientInterfaces";
 import { callITwinApi } from "./ApiUtils";
 
-export interface CommonClientArgs {
-  /** url that conforms to pattern https://{...}api.bentley.com/savedviews */
-  baseUrl: string;
+export interface ITwinSavedViewsClientParams {
+  /** optional url for targeting services  */
+  baseUrl?: string;
   /** function for getting auth token */
   getAccessToken: () => Promise<string>;
 }
+
 interface QueryParams {
   requestParams: CommonRequestParams;
   url: string;
   method: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
   body?: object | undefined;
 }
+
 /**
  * This is client is used to access all services(image groups extensions ...) associated with savedViews.
  *
  * Usage Example
- * const savedViewsClient = new ITwinSavedViewsClient(...)
+ * const savedViewsClient = new ITwinSavedViewsClient({baseUrl,accessToken})
+ * if baseURL undefined defaults to https://api.bentley.com/savedviews
  * savedViewsClient.getSavedView(...)
  * savedViewsClient.getTag(..)
  * saveViewsClient.getExtension(...)
@@ -35,8 +42,8 @@ export class ITwinSavedViewsClient implements SaveViewsClient {
   private readonly baseUrl;
   private readonly getAccessToken: () => Promise<string>;
 
-  constructor(args: CommonClientArgs) {
-    this.baseUrl = args.baseUrl;
+  constructor(args: ITwinSavedViewsClientParams) {
+    this.baseUrl = args.baseUrl ?? "https://api.bentley.com/savedviews";
     this.getAccessToken = args.getAccessToken;
   }
 

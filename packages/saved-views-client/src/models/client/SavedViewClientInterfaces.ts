@@ -2,30 +2,29 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { SavedViewCreate } from "../savedViews/SavedViewCreate.dto";
-import { SavedViewListResponse } from "../savedViews/SavedViewListResponse.dto";
-import { SavedViewResponse } from "../savedViews/SavedViewResponse.dto";
-import { SavedViewUpdate } from "../savedViews/SavedViewUpdate.dto";
 import { PreferOptions } from "../Prefer";
 import { CommonRequestParams } from "./CommonClientInterfaces";
-import { ImageResponse, ImageUpdate } from "../Image.dto";
 import { ImageSize } from "../ImageSize";
-import { ExtensionListResponse, ExtensionResponse, ExtensionsUpdate } from "../Extension.dto";
-import { GroupCreate, GroupListResponse, GroupResponse, GroupUpdate } from "../Group.dto";
-import { TagCreate, TagListResponse, TagResponse, TagUpdate } from "../Tag.dto";
-
+import { Extension, ExtensionListItem, ExtensionMin, ExtensionSavedViewCreate } from "../Extension.dto";
+import { Group } from "../Group.dto";
+import { Tag } from "../Tag.dto";
+import { HalLinks } from "../Links.dto";
+import { SavedViewWithData } from "../savedViews/SavedViewWithData.dto";
+import { SavedView } from "../savedViews/SavedView.dto";
+import { View } from "../..";
 
 export interface GetExtensionsParams extends CommonRequestParams {
   savedViewId: string;
 }
 
-export interface SingleSavedViewParams extends GetExtensionsParams {
+export interface SingleSavedViewParams extends CommonRequestParams {
   /**
    * affects the granularity of the data returned
    *  ONLY for get requests will be ignored for PUT POST DELETE
    *  MINIMAL = "return=minimal", least info
    *  REPRESENTATION = "return=representation" most info
   */
+  savedViewId: string;
   prefer?: PreferOptions;
 }
 
@@ -46,20 +45,53 @@ export interface GetSavedViewsParams extends CommonRequestParams {
 }
 
 export interface CreateSavedViewParams extends CommonRequestParams {
-  body: SavedViewCreate;
+  body: {
+    iTwinId?: string;
+    iModelId?: string;
+    id?: string;
+    savedViewData: View;
+    groupId?: string;
+    category?: string;
+    displayName: string;
+    shared?: boolean;
+    tagIds?: string[];
+    extensions?: ExtensionSavedViewCreate[];
+  };
 }
 
-export interface UpdateSavedViewParams extends SingleSavedViewParams {
-  body: SavedViewUpdate;
+export interface UpdateSavedViewParams extends CommonRequestParams {
+  savedViewId: string;
+  body: {
+    savedViewData?: View;
+    groupId?: string;
+    displayName?: string;
+    shared?: boolean;
+    tagIds?: string[];
+    extensions?: ExtensionMin[];
+    category?: string;
+  };
 }
 
-export interface GetImageParams extends GetExtensionsParams {
+export interface SavedViewResponse {
+  savedView: SavedViewWithData;
+}
+
+export interface SavedViewListResponse {
+  savedViews: SavedView[];
+  _links: HalLinks<["self", "prev"?, "next"?]>;
+}
+
+export interface GetImageParams extends CommonRequestParams {
   size: ImageSize;
+  savedViewId: string;
 }
 
-export interface UpdateImageParams extends GetExtensionsParams {
-  body: ImageUpdate;
+export interface UpdateImageParams {
+  body: { image: string; };
+  savedViewId: string;
 }
+
+export type ImageResponse = HalLinks<["href"]>;
 
 export interface GetGroupsParams extends CommonRequestParams {
   iTwinId: string;
@@ -71,14 +103,32 @@ export interface SingleGroupParams extends CommonRequestParams {
 }
 
 export interface CreateGroupParams extends CommonRequestParams {
-  body: GroupCreate;
+  body: {
+    iTwinId?: string;
+    iModelId?: string;
+    displayName: string;
+    shared?: boolean;
+  };
 }
 
-export interface UpdateGroupParams extends SingleGroupParams {
-  body: GroupUpdate;
+export interface UpdateGroupParams extends CommonRequestParams {
+  groupId: string;
+  body: {
+    displayName?: string;
+    shared?: boolean;
+  };
 }
 
-export interface CreateExtensionParams extends GetExtensionsParams {
+export interface GroupResponse {
+  group: Group;
+}
+
+export interface GroupListResponse {
+  groups: Group[];
+  _links: HalLinks<["self"]>;
+}
+
+export interface CreateExtensionParams extends CommonRequestParams {
   /**
    * extension to be created
    * Extensions allow a saved view to be enhanced with custom data. The extensions have to be defined in a proprietary .JSON schema file.
@@ -87,28 +137,54 @@ export interface CreateExtensionParams extends GetExtensionsParams {
    * 2. EmphasizeElements
    * 3. VisibilityOverride
   */
-  body: ExtensionsUpdate;
+  savedViewId: string;
+  body: {
+    extensionName: string;
+    data: string;
+  };
 }
 
-export interface SingleExtensionParams extends GetExtensionsParams {
+export interface SingleExtensionParams extends CommonRequestParams {
+  savedViewId: string;
   extensionName: string;
+}
+
+export interface ExtensionListResponse {
+  extensions: ExtensionListItem[];
+}
+
+export interface ExtensionResponse {
+  extension: Extension;
 }
 
 export interface GetTagsParams extends CommonRequestParams {
   iTwinId: string;
-
   iModelId?: string;
 }
-export interface UpdateTagParams extends SingleTagParams {
-  body: TagUpdate;
+export interface UpdateTagParams extends CommonRequestParams {
+  tagId: string;
+  body: { displayName?: string; };
 }
 
 export interface CreateTagParams extends CommonRequestParams {
-  body: TagCreate;
+  body: {
+    iTwinId?: string;
+    iModelId?: string;
+    displayName: string;
+  };
 }
 
 export interface SingleTagParams extends CommonRequestParams {
   tagId: string;
+}
+
+export interface TagResponse {
+  tag: Tag;
+}
+
+export interface TagListResponse {
+  tags: Tag[];
+  _links: HalLinks<["self"]>;
 }
 
 export interface SaveViewsClient {

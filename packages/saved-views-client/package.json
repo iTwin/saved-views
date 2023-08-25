@@ -35,9 +35,7 @@
     "test": "vitest",
     "test:cover": "vitest run --coverage",
     "test:watch": "vitest watch",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint \"src/**/*.+(ts|tsx|js|jsx)\"",
-    "lint-and-fix": "eslint \"src/**/*.+(ts|tsx|js|jsx)\" --fix"
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/uuid": "^9.0.2",

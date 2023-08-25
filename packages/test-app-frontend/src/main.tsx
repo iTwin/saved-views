@@ -10,4 +10,4 @@ import "@bentley/icons-generic-webfont/dist/bentley-icons-generic-webfont.css";
 import "@itwin/itwinui-layouts-css/styles.css";
 import "./index.css";
 
-render(<BrowserRouter><App /></BrowserRouter>, document.getElementById("root") as HTMLElement); // render is deprecated
+render(<BrowserRouter><App /></BrowserRouter>, document.getElementById("root") as HTMLElement);

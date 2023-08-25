@@ -4,12 +4,10 @@
 *--------------------------------------------------------------------------------------------*/
 
 export * from "./models/CommonMetadata.dto";
-export * from "./models/DeprecatedProperty.dto";
 export * from "./models/Links.dto";
 export * from "./models/SharableMetadata.dto";
 export * from "./models/Extension.dto";
 export * from "./models/Group.dto";
-export * from "./models/Image.dto";
 export * from "./models/savedViews/AmbientOcclusionProps.dto";
 export * from "./models/savedViews/BackgroundMapProps.dto";
 export * from "./models/savedViews/ClipStyle.dto";
@@ -24,10 +22,6 @@ export * from "./models/savedViews/PlanProjectionSettings.dto";
 export * from "./models/savedViews/PlanarClipMask.dto";
 export * from "./models/savedViews/RgbColor.dto";
 export * from "./models/savedViews/SavedView.dto";
-export * from "./models/savedViews/SavedViewCreate.dto";
-export * from "./models/savedViews/SavedViewListResponse.dto";
-export * from "./models/savedViews/SavedViewResponse.dto";
-export * from "./models/savedViews/SavedViewUpdate.dto";
 export * from "./models/savedViews/SavedViewWithData.dto";
 export * from "./models/savedViews/SubCategory.dto";
 export * from "./models/savedViews/TerrainProps.dto";
