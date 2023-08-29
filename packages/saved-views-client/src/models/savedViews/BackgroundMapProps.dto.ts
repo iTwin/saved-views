@@ -2,8 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { PlanarClipMaskProps } from "./PlanarClipMask.dto";
-import { TerrainProps } from "./TerrainProps.dto";
+import { PlanarClipMaskProps } from "./PlanarClipMask.dto.js";
+import { TerrainProps } from "./TerrainProps.dto.js";
 
 /** Describes the projection of the background map. */
 export enum GlobeMode {

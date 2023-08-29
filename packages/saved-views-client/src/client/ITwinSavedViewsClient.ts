@@ -2,15 +2,32 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { PreferOptions } from "../models/Prefer";
-import { CommonRequestParams } from "../models/client/CommonClientInterfaces";
+import { PreferOptions } from "../models/Prefer.js";
+import { CommonRequestParams } from "../models/client/CommonClientInterfaces.js";
 import {
-  SingleSavedViewParams, GetSavedViewsParams, CreateSavedViewParams, UpdateSavedViewParams, CreateTagParams, SingleTagParams,
-  UpdateTagParams, GetImageParams, UpdateImageParams, CreateGroupParams, SingleGroupParams, UpdateGroupParams, CreateExtensionParams,
-  SingleExtensionParams, GetExtensionsParams, SaveViewsClient, GetTagsParams, GetGroupsParams, ExtensionListResponse, ExtensionResponse,
-  GroupListResponse, GroupResponse, ImageResponse, SavedViewListResponse, SavedViewResponse, TagListResponse, TagResponse,
-} from "../models/client/SavedViewClientInterfaces";
-import { callITwinApi } from "./ApiUtils";
+  CreateExtensionParams,
+  CreateGroupParams,
+  CreateSavedViewParams,
+  CreateTagParams,
+  ExtensionListResponse, ExtensionResponse,
+  GetExtensionsParams,
+  GetGroupsParams,
+  GetImageParams,
+  GetSavedViewsParams,
+  GetTagsParams,
+  GroupListResponse, GroupResponse, ImageResponse, SavedViewListResponse, SavedViewResponse,
+  SavedViewsClient,
+  SingleExtensionParams,
+  SingleGroupParams,
+  SingleSavedViewParams,
+  SingleTagParams,
+  TagListResponse, TagResponse,
+  UpdateGroupParams,
+  UpdateImageParams,
+  UpdateSavedViewParams,
+  UpdateTagParams,
+} from "../models/client/SavedViewClientInterfaces.js";
+import { callITwinApi } from "./ApiUtils.js";
 
 export interface ITwinSavedViewsClientParams {
   /** optional url for targeting services  */
@@ -38,7 +55,7 @@ interface QueryParams {
  * saveViewsClient.getImage(...)
  * saveViewsClient.getGroup(...)
 */
-export class ITwinSavedViewsClient implements SaveViewsClient {
+export class ITwinSavedViewsClient implements SavedViewsClient {
   private readonly baseUrl;
   private readonly getAccessToken: () => Promise<string>;
 

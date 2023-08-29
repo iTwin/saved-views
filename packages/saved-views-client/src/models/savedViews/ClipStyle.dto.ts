@@ -2,9 +2,9 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { LinePixels, FeatureAppearanceProps } from "./FeatureAppearance.dto";
-import { RgbColorProps } from "./RgbColor.dto";
-import { ViewFlagOverrides } from "./ViewFlags.dto";
+import { FeatureAppearanceProps, LinePixels } from "./FeatureAppearance.dto.js";
+import { RgbColorProps } from "./RgbColor.dto.js";
+import { ViewFlagOverrides } from "./ViewFlags.dto.js";
 
 export interface HiddenLineStyleProps {
   /** This JSON representation is awkward, but it must match that used in the db.

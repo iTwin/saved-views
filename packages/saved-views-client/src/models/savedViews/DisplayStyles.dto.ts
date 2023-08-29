@@ -2,22 +2,22 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { AmbientOcclusionProps } from "./AmbientOcclusionProps.dto";
-import { BackgroundMapProps } from "./BackgroundMapProps.dto";
-import { ClipStyleProps } from "./ClipStyle.dto";
-import { ContextRealityModelProps } from "./ContextRealityModel.dto";
-import { EnvironmentProps } from "./Environment.dto";
-import { DisplayStyleModelAppearanceProps } from "./FeatureAppearance.dto";
+import { AmbientOcclusionProps } from "./AmbientOcclusionProps.dto.js";
+import { BackgroundMapProps } from "./BackgroundMapProps.dto.js";
+import { ClipStyleProps } from "./ClipStyle.dto.js";
+import { ContextRealityModelProps } from "./ContextRealityModel.dto.js";
+import { EnvironmentProps } from "./Environment.dto.js";
+import { DisplayStyleModelAppearanceProps } from "./FeatureAppearance.dto.js";
 import {
   LightSettingsProps,
   SolarShadowSettingsProps,
-} from "./LightSettings.dto";
-import { MapImageryProps } from "./MapImagery.dto";
-import { DisplayStylePlanarClipMaskProps } from "./PlanarClipMask.dto";
-import { PlanProjectionSettingsProps } from "./PlanProjectionSettings.dto";
-import { RgbColorProps } from "./RgbColor.dto";
-import { DisplayStyleSubCategoryProps } from "./SubCategory.dto";
-import { ViewFlagProps } from "./ViewFlags.dto";
+} from "./LightSettings.dto.js";
+import { MapImageryProps } from "./MapImagery.dto.js";
+import { DisplayStylePlanarClipMaskProps } from "./PlanarClipMask.dto.js";
+import { PlanProjectionSettingsProps } from "./PlanProjectionSettings.dto.js";
+import { RgbColorProps } from "./RgbColor.dto.js";
+import { DisplayStyleSubCategoryProps } from "./SubCategory.dto.js";
+import { ViewFlagProps } from "./ViewFlags.dto.js";
 
 /** Describes the style in which monochrome color is applied by a DisplayStyleSettings. */
 export enum MonochromeMode {

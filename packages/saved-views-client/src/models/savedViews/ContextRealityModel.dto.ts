@@ -2,8 +2,8 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { FeatureAppearanceProps } from "./FeatureAppearance.dto";
-import { PlanarClipMaskProps } from "./PlanarClipMask.dto";
+import { FeatureAppearanceProps } from "./FeatureAppearance.dto.js";
+import { PlanarClipMaskProps } from "./PlanarClipMask.dto.js";
 
 /**
  * Key used by RealityDataSource to identify provider and reality data format.

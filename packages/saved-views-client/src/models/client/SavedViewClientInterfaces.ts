@@ -2,16 +2,22 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { PreferOptions } from "../Prefer";
-import { CommonRequestParams } from "./CommonClientInterfaces";
-import { ImageSize } from "../ImageSize";
-import { Extension, ExtensionListItem, ExtensionMin, ExtensionSavedViewCreate } from "../Extension.dto";
-import { Group } from "../Group.dto";
+import { Extension, ExtensionListItem, ExtensionMin, ExtensionSavedViewCreate } from "../Extension.dto.js";
+import { Group } from "../Group.dto.js";
+import { ImageSize } from "../ImageSize.js";
+import { HalLinks } from "../Links.dto.js";
+import { PreferOptions } from "../Prefer.js";
 import { Tag } from "../Tag.dto";
-import { HalLinks } from "../Links.dto";
-import { SavedViewWithData } from "../savedViews/SavedViewWithData.dto";
-import { SavedView } from "../savedViews/SavedView.dto";
-import { View } from "../..";
+import { SavedView } from "../savedViews/SavedView.dto.js";
+import { SavedViewWithData } from "../savedViews/SavedViewWithData.dto.js";
+import { View } from "../savedViews/View.dto.js";
+
+
+export interface CommonRequestParams {
+  signal?: AbortSignal;
+  headers?: Record<string, string>;
+  body?: object;
+}
 
 export interface GetExtensionsParams extends CommonRequestParams {
   savedViewId: string;
@@ -187,7 +193,7 @@ export interface TagListResponse {
   _links: HalLinks<["self"]>;
 }
 
-export interface SaveViewsClient {
+export interface SavedViewsClient {
   getSavedView(args: SingleSavedViewParams): Promise<SavedViewResponse>;
   getAllSavedViews(args: GetSavedViewsParams): Promise<SavedViewListResponse>;
   createSavedView(args: CreateSavedViewParams): Promise<SavedViewResponse>;

@@ -3,13 +3,13 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import {
-  ClipPrimitiveShapeProps,
   ClipPrimitivePlaneProps,
-} from "./ClipVectors.dto";
+  ClipPrimitiveShapeProps,
+} from "./ClipVectors.dto.js";
 import {
   DisplayStyle3dSettingsProps,
   DisplayStyleSettingsProps,
-} from "./DisplayStyles.dto";
+} from "./DisplayStyles.dto.js";
 
 /** Representation of the 3d orientation of an object in space. */
 export interface ViewYawPitchRoll {

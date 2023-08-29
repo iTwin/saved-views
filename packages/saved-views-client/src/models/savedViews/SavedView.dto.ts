@@ -2,10 +2,10 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { Extension, ExtensionMin } from "../Extension.dto";
-import { HalLinks } from "../Links.dto";
-import { SharableMetadata } from "../SharableMetadata.dto";
-import { SavedViewTag } from "../Tag.dto";
+import { Extension, ExtensionMin } from "../Extension.dto.js";
+import { HalLinks } from "../Links.dto.js";
+import { SharableMetadata } from "../SharableMetadata.dto.js";
+import { SavedViewTag } from "../Tag.dto.js";
 
 /** Saved view metadata model for restful get saved view operations following Apim standards. */
 export interface SavedView extends SharableMetadata {
