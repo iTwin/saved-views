@@ -2,14 +2,56 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import {
-  ClipPrimitivePlaneProps,
-  ClipPrimitiveShapeProps,
-} from "./ClipVectors.js";
+import { SharableMetadata } from "../CommonMetadata.js";
+import { Extension, ExtensionMin } from "../Extension.js";
+import { HalLinks } from "../Links.js";
+import { SavedViewTag } from "../Tag.js";
 import {
   DisplayStyle3dSettingsProps,
   DisplayStyleSettingsProps,
 } from "./DisplayStyles.js";
+
+
+/**
+ * Wire format describing a ClipPlane.
+ * If either normal or dist are omitted, defaults to a normal of Vector3d.unitZ and a distance of zero.
+ */
+export interface ClipPlaneProps {
+  normal?: [x: number, y: number, z: number];
+  distance?: number;
+  invisible?: boolean;
+  interior?: boolean;
+}
+
+/** Contains the set of clip planes used to clip the view. */
+export interface PlanesProps {
+  clips: ClipPlaneProps[][];
+  invisible?: boolean;
+}
+
+/** Contains the shape/polygon used to clip the view. */
+export interface ShapeProps {
+  points: number[][];
+  transform: [
+    [qx: number, qy: number, qz: number, ax: number],
+    [qx: number, qy: number, qz: number, ax: number],
+    [qx: number, qy: number, qz: number, ax: number],
+  ];
+  zLow?: number;
+  zHigh?: number;
+  mask?: boolean;
+  invisible?: boolean;
+}
+
+/** A clip primitive made of a set planes. */
+export interface ClipPrimitivePlaneProps {
+  planes: PlanesProps;
+}
+
+/** A clip primitive made of a shape. */
+export interface ClipPrimitiveShapeProps {
+  shape: ShapeProps;
+}
 
 /** Representation of the 3d orientation of an object in space. */
 export interface ViewYawPitchRoll {
@@ -107,4 +149,17 @@ export interface View {
 export interface ViewWithLegacy extends View {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   legacyView?: unknown;
+}
+
+/** Saved view metadata model for restful get saved view operations following Apim standards. */
+export interface SavedView extends SharableMetadata {
+  tags?: SavedViewTag[];
+  extensions?: Extension[] | ExtensionMin[];
+  category?: string;
+  _links: HalLinks<["savedView", "image", "thumbnail", "iTwin"?, "project"?, "iModel"?, "creator"?, "group"?]>;
+}
+
+/** Saved view metadata model for restful get saved view operations following Apim standards. */
+export interface SavedViewWithData extends SavedView {
+  savedViewData: ViewWithLegacy;
 }

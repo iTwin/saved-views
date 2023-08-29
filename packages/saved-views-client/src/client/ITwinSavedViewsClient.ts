@@ -2,7 +2,6 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { PreferOptions } from "../models/Prefer.js";
 import {
   CommonRequestParams,
   CreateExtensionParams,
@@ -15,7 +14,7 @@ import {
   GetImageParams,
   GetSavedViewsParams,
   GetTagsParams,
-  GroupListResponse, GroupResponse, ImageResponse, SavedViewListResponse, SavedViewResponse,
+  GroupListResponse, GroupResponse, ImageResponse, PreferOptions, SavedViewListResponse, SavedViewResponse,
   SavedViewsClient,
   SingleExtensionParams,
   SingleGroupParams,

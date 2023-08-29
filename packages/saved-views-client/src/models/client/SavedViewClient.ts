@@ -4,19 +4,26 @@
 *--------------------------------------------------------------------------------------------*/
 import { Extension, ExtensionListItem, ExtensionMin, ExtensionSavedViewCreate } from "../Extension.js";
 import { Group } from "../Group.js";
-import { ImageSize } from "../ImageSize.js";
 import { HalLinks } from "../Links.js";
-import { PreferOptions } from "../Prefer.js";
 import { Tag } from "../Tag.js";
-import { SavedView } from "../savedViews/SavedView.js";
-import { SavedViewWithData } from "../savedViews/SavedViewWithData.js";
-import { View } from "../savedViews/View.js";
-
+import { SavedView, SavedViewWithData, View } from "../savedViews/View.js";
 
 export interface CommonRequestParams {
   signal?: AbortSignal;
   headers?: Record<string, string>;
   body?: object;
+}
+
+/** Image Size enum for request. */
+export enum ImageSize {
+  FULL = "full",
+  THUMBNAIL = "thumbnail",
+}
+
+/** Prefer enum for request. */
+export enum PreferOptions {
+  MINIMAL = "return=minimal",
+  REPRESENTATION = "return=representation",
 }
 
 export interface GetExtensionsParams extends CommonRequestParams {
