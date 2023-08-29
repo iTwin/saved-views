@@ -5,11 +5,11 @@
 import {
   ClipPrimitivePlaneProps,
   ClipPrimitiveShapeProps,
-} from "./ClipVectors.dto.js";
+} from "./ClipVectors.js";
 import {
   DisplayStyle3dSettingsProps,
   DisplayStyleSettingsProps,
-} from "./DisplayStyles.dto.js";
+} from "./DisplayStyles.js";
 
 /** Representation of the 3d orientation of an object in space. */
 export interface ViewYawPitchRoll {

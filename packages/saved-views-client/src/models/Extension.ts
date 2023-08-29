@@ -2,7 +2,7 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { HalLinks } from "./Links.dto.js";
+import { HalLinks } from "./Links.js";
 
 /** Extension metadata model for restful get extension operations following Apim standards. */
 export interface Extension extends ExtensionBase {

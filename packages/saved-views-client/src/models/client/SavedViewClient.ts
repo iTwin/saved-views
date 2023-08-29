@@ -2,15 +2,15 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { Extension, ExtensionListItem, ExtensionMin, ExtensionSavedViewCreate } from "../Extension.dto.js";
-import { Group } from "../Group.dto.js";
+import { Extension, ExtensionListItem, ExtensionMin, ExtensionSavedViewCreate } from "../Extension.js";
+import { Group } from "../Group.js";
 import { ImageSize } from "../ImageSize.js";
-import { HalLinks } from "../Links.dto.js";
+import { HalLinks } from "../Links.js";
 import { PreferOptions } from "../Prefer.js";
-import { Tag } from "../Tag.dto";
-import { SavedView } from "../savedViews/SavedView.dto.js";
-import { SavedViewWithData } from "../savedViews/SavedViewWithData.dto.js";
-import { View } from "../savedViews/View.dto.js";
+import { Tag } from "../Tag.js";
+import { SavedView } from "../savedViews/SavedView.js";
+import { SavedViewWithData } from "../savedViews/SavedViewWithData.js";
+import { View } from "../savedViews/View.js";
 
 
 export interface CommonRequestParams {

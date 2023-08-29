@@ -2,22 +2,22 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { AmbientOcclusionProps } from "./AmbientOcclusionProps.dto.js";
-import { BackgroundMapProps } from "./BackgroundMapProps.dto.js";
-import { ClipStyleProps } from "./ClipStyle.dto.js";
-import { ContextRealityModelProps } from "./ContextRealityModel.dto.js";
-import { EnvironmentProps } from "./Environment.dto.js";
-import { DisplayStyleModelAppearanceProps } from "./FeatureAppearance.dto.js";
+import { AmbientOcclusionProps } from "./AmbientOcclusionProps.js";
+import { BackgroundMapProps } from "./BackgroundMapProps.js";
+import { ClipStyleProps } from "./ClipStyle.js";
+import { ContextRealityModelProps } from "./ContextRealityModel.js";
+import { EnvironmentProps } from "./Environment.js";
+import { DisplayStyleModelAppearanceProps } from "./FeatureAppearance.js";
 import {
   LightSettingsProps,
   SolarShadowSettingsProps,
-} from "./LightSettings.dto.js";
-import { MapImageryProps } from "./MapImagery.dto.js";
-import { DisplayStylePlanarClipMaskProps } from "./PlanarClipMask.dto.js";
-import { PlanProjectionSettingsProps } from "./PlanProjectionSettings.dto.js";
-import { RgbColorProps } from "./RgbColor.dto.js";
-import { DisplayStyleSubCategoryProps } from "./SubCategory.dto.js";
-import { ViewFlagProps } from "./ViewFlags.dto.js";
+} from "./LightSettings.js";
+import { MapImageryProps } from "./MapImagery.js";
+import { DisplayStylePlanarClipMaskProps } from "./PlanarClipMask.js";
+import { PlanProjectionSettingsProps } from "./PlanProjectionSettings.js";
+import { RgbColorProps } from "./RgbColor.js";
+import { DisplayStyleSubCategoryProps } from "./SubCategory.js";
+import { ViewFlagProps } from "./ViewFlags.js";
 
 /** Describes the style in which monochrome color is applied by a DisplayStyleSettings. */
 export enum MonochromeMode {

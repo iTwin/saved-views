@@ -3,8 +3,8 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import { PreferOptions } from "../models/Prefer.js";
-import { CommonRequestParams } from "../models/client/CommonClientInterfaces.js";
 import {
+  CommonRequestParams,
   CreateExtensionParams,
   CreateGroupParams,
   CreateSavedViewParams,
@@ -26,7 +26,7 @@ import {
   UpdateImageParams,
   UpdateSavedViewParams,
   UpdateTagParams,
-} from "../models/client/SavedViewClientInterfaces.js";
+} from "../models/client/SavedViewClient.js";
 import { callITwinApi } from "./ApiUtils.js";
 
 export interface ITwinSavedViewsClientParams {
