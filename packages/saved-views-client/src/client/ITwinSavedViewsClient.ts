@@ -8,7 +8,7 @@ import {
   GetTagsParams, GroupListResponse, GroupResponse, ImageResponse, PreferOptions, SavedViewListResponse,
   SavedViewResponse, SavedViewsClient, SingleExtensionParams, SingleGroupParams, SingleSavedViewParams, SingleTagParams,
   TagListResponse, TagResponse, UpdateGroupParams, UpdateImageParams, UpdateSavedViewParams, UpdateTagParams
-} from "../models/client/SavedViewClient.js";
+} from "./SavedViewClient.js";
 import { callITwinApi } from "./ApiUtils.js";
 
 export interface ITwinSavedViewsClientParams {
@@ -29,7 +29,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     this.getAccessToken = args.getAccessToken;
   }
 
-  private async queryITwinApi<ReturnType>(queyParams: QueryParams):Promise<ReturnType> {
+  private async queryITwinApi<ReturnType>(queyParams: QueryParams): Promise<ReturnType> {
     return callITwinApi({
       url: queyParams.url,
       method: queyParams.method,
@@ -40,7 +40,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
         ...queyParams.requestParams.headers,
       },
       body: queyParams.body,
-    }) as ReturnType
+    }) as ReturnType;
   }
 
   async getSavedView(args: SingleSavedViewParams): Promise<SavedViewResponse> {

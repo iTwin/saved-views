@@ -2,11 +2,11 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { Extension, ExtensionListItem, ExtensionMin, ExtensionSavedViewCreate } from "../Extension.js";
-import { Group } from "../Group.js";
-import { HalLinks } from "../Links.js";
-import { Tag } from "../Tag.js";
-import { SavedView, SavedViewWithData, View } from "../savedViews/View.js";
+import { Extension, ExtensionListItem, ExtensionMin, ExtensionSavedViewCreate } from "../models/Extension.js";
+import { Group } from "../models/Group.js";
+import { HalLinks } from "../models/Links.js";
+import { Tag } from "../models/Tag.js";
+import { SavedView, SavedViewWithData, View } from "../models/savedViews/View.js";
 
 export interface CommonRequestParams {
   signal?: AbortSignal;
