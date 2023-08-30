@@ -146,7 +146,6 @@ export interface View {
 
 /** Minimum saved view structure including possible legacy data from product setting service. */
 export interface ViewWithLegacy extends View {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   legacyView?: unknown;
 }
 
