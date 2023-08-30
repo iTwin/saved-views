@@ -3,57 +3,23 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import {
-  CommonRequestParams,
-  CreateExtensionParams,
-  CreateGroupParams,
-  CreateSavedViewParams,
-  CreateTagParams,
-  ExtensionListResponse, ExtensionResponse,
-  GetExtensionsParams,
-  GetGroupsParams,
-  GetImageParams,
-  GetSavedViewsParams,
-  GetTagsParams,
-  GroupListResponse, GroupResponse, ImageResponse, PreferOptions, SavedViewListResponse, SavedViewResponse,
-  SavedViewsClient,
-  SingleExtensionParams,
-  SingleGroupParams,
-  SingleSavedViewParams,
-  SingleTagParams,
-  TagListResponse, TagResponse,
-  UpdateGroupParams,
-  UpdateImageParams,
-  UpdateSavedViewParams,
-  UpdateTagParams,
+  CommonRequestParams, CreateExtensionParams, CreateGroupParams, CreateSavedViewParams, CreateTagParams,
+  ExtensionListResponse, ExtensionResponse, GetExtensionsParams, GetGroupsParams, GetImageParams, GetSavedViewsParams,
+  GetTagsParams, GroupListResponse, GroupResponse, ImageResponse, PreferOptions, SavedViewListResponse,
+  SavedViewResponse, SavedViewsClient, SingleExtensionParams, SingleGroupParams, SingleSavedViewParams, SingleTagParams,
+  TagListResponse, TagResponse, UpdateGroupParams, UpdateImageParams, UpdateSavedViewParams, UpdateTagParams
 } from "../models/client/SavedViewClient.js";
 import { callITwinApi } from "./ApiUtils.js";
 
 export interface ITwinSavedViewsClientParams {
-  /** optional url for targeting services  */
+  /** @default "https://api.bentley.com/savedviews"  */
   baseUrl?: string;
-  /** function for getting auth token */
   getAccessToken: () => Promise<string>;
 }
 
-interface QueryParams {
-  requestParams: CommonRequestParams;
-  url: string;
-  method: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
-  body?: object | undefined;
-}
-
 /**
- * This is client is used to access all services(image groups extensions ...) associated with savedViews.
- *
- * Usage Example
- * const savedViewsClient = new ITwinSavedViewsClient({baseUrl,accessToken})
- * if baseURL undefined defaults to https://api.bentley.com/savedviews
- * savedViewsClient.getSavedView(...)
- * savedViewsClient.getTag(..)
- * saveViewsClient.getExtension(...)
- * saveViewsClient.getImage(...)
- * saveViewsClient.getGroup(...)
-*/
+ * {@linkcode SavedViewsClient} implementation that calls iTwin APIs.
+ */
 export class ITwinSavedViewsClient implements SavedViewsClient {
   private readonly baseUrl;
   private readonly getAccessToken: () => Promise<string>;
@@ -63,8 +29,8 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     this.getAccessToken = args.getAccessToken;
   }
 
-  private async queryITwinApi<ReturnType>(queyParams: QueryParams) {
-    const resp = await callITwinApi({
+  private async queryITwinApi<ReturnType>(queyParams: QueryParams):Promise<ReturnType> {
+    return callITwinApi({
       url: queyParams.url,
       method: queyParams.method,
       getAccessToken: this.getAccessToken,
@@ -74,8 +40,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
         ...queyParams.requestParams.headers,
       },
       body: queyParams.body,
-    });
-    return resp as unknown as ReturnType;
+    }) as ReturnType
   }
 
   async getSavedView(args: SingleSavedViewParams): Promise<SavedViewResponse> {
@@ -274,4 +239,11 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       method: "DELETE",
     });
   }
+}
+
+interface QueryParams {
+  requestParams: CommonRequestParams;
+  url: string;
+  method: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
+  body?: object | undefined;
 }
