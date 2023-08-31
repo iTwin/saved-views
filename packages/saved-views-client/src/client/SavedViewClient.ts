@@ -6,7 +6,7 @@ import { Extension, ExtensionListItem, ExtensionMin, ExtensionSavedViewCreate } 
 import { Group } from "../models/Group.js";
 import { HalLinks } from "../models/Links.js";
 import { Tag } from "../models/Tag.js";
-import { SavedView, SavedViewWithData, View } from "../models/savedViews/View.js";
+import { SavedViewWithDataMinimal, SavedViewWithDataRepresentation, View } from "../models/savedViews/View.js";
 
 export interface CommonRequestParams {
   signal?: AbortSignal;
@@ -37,7 +37,6 @@ export interface SingleSavedViewParams extends CommonRequestParams {
    *  REPRESENTATION = "return=representation" most info
   */
   savedViewId: string;
-  prefer?: PreferOptions;
 }
 
 export interface GetSavedViewsParams extends CommonRequestParams {
@@ -48,12 +47,6 @@ export interface GetSavedViewsParams extends CommonRequestParams {
   top?: string;
   /** optional param for skip of page*/
   skip?: string;
-  /**
-   * affects the granularity of the data returned
-   *  MINIMAL = "return=minimal", least info
-   *  REPRESENTATION = "return=representation" most info
-  */
-  prefer?: PreferOptions;
 }
 
 export interface CreateSavedViewParams extends CommonRequestParams {
@@ -80,12 +73,21 @@ export interface UpdateSavedViewParams extends CommonRequestParams {
   category?: string;
 }
 
-export interface SavedViewResponse {
-  savedView: SavedViewWithData;
+export interface SavedViewRepresentationResponse {
+  savedView: SavedViewWithDataRepresentation;
 }
 
-export interface SavedViewListResponse {
-  savedViews: SavedView[];
+export interface SavedViewMinimalResponse {
+  savedView: SavedViewWithDataMinimal;
+}
+
+export interface SavedViewListMinimalResponse {
+  savedViews: SavedViewWithDataMinimal[];
+  _links: HalLinks<["self", "prev"?, "next"?]>;
+}
+
+export interface SavedViewListRepresentationResponse {
+  savedViews: SavedViewWithDataRepresentation[];
   _links: HalLinks<["self", "prev"?, "next"?]>;
 }
 
@@ -188,10 +190,12 @@ export interface TagListResponse {
 }
 
 export interface SavedViewsClient {
-  getSavedView(args: SingleSavedViewParams): Promise<SavedViewResponse>;
-  getAllSavedViews(args: GetSavedViewsParams): Promise<SavedViewListResponse>;
-  createSavedView(args: CreateSavedViewParams): Promise<SavedViewResponse>;
-  updateSavedView(args: UpdateSavedViewParams): Promise<SavedViewResponse>;
+  getSavedViewMinimal(args: SingleSavedViewParams): Promise<SavedViewMinimalResponse>;
+  getSavedViewRepresentation(args: SingleSavedViewParams): Promise<SavedViewRepresentationResponse>;
+  getAllSavedViewsRepresentation(args: GetSavedViewsParams): Promise<SavedViewListRepresentationResponse>;
+  getAllSavedViewsMinimal(args: GetSavedViewsParams): Promise<SavedViewListMinimalResponse>;
+  createSavedView(args: CreateSavedViewParams): Promise<SavedViewMinimalResponse>;
+  updateSavedView(args: UpdateSavedViewParams): Promise<SavedViewMinimalResponse>;
   deleteSavedView(args: SingleSavedViewParams): Promise<void>;
 
   getImage(args: GetImageParams): Promise<ImageResponse>;

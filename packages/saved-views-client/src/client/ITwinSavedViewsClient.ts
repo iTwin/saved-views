@@ -6,9 +6,10 @@
 import {
   CommonRequestParams, CreateExtensionParams, CreateGroupParams, CreateSavedViewParams, CreateTagParams,
   ExtensionListResponse, ExtensionResponse, GetExtensionsParams, GetGroupsParams, GetImageParams, GetSavedViewsParams,
-  GetTagsParams, GroupListResponse, GroupResponse, ImageResponse, PreferOptions, SavedViewListResponse,
-  SavedViewResponse, SavedViewsClient, SingleExtensionParams, SingleGroupParams, SingleSavedViewParams, SingleTagParams,
-  TagListResponse, TagResponse, UpdateGroupParams, UpdateImageParams, UpdateSavedViewParams, UpdateTagParams,
+  GetTagsParams, GroupListResponse, GroupResponse, ImageResponse, PreferOptions, SavedViewListMinimalResponse,
+  SavedViewListRepresentationResponse, SavedViewMinimalResponse, SavedViewRepresentationResponse, SavedViewsClient,
+  SingleExtensionParams, SingleGroupParams, SingleSavedViewParams, SingleTagParams, TagListResponse,
+  TagResponse, UpdateGroupParams, UpdateImageParams, UpdateSavedViewParams, UpdateTagParams,
 } from "./SavedViewClient.js";
 import { callITwinApi } from "./ApiUtils.js";
 
@@ -30,7 +31,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     this.getAccessToken = args.getAccessToken;
   }
 
-  private createBodyFromArgs(args: Record<string,any>) { // is there a way to get around using any here ?
+  private createBodyFromArgs(args: Record<string, any>) { // is there a way to get around using any here ?
     const keysToIgnore = ["headers", "signal", "prefer"];
     return Object.keys(args).filter((key) => !keysToIgnore.includes(key)).reduce((result, key) => {
       result[key] = args[key];
@@ -52,12 +53,12 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     }) as ReturnType;
   }
 
-  async getSavedView(args: SingleSavedViewParams): Promise<SavedViewResponse> {
+  async getSavedViewRepresentation(args: SingleSavedViewParams): Promise<SavedViewRepresentationResponse> {
     return this.queryITwinApi({
       requestParams: {
         ...args,
         headers: {
-          prefer: args.prefer ?? PreferOptions.MINIMAL,
+          prefer: PreferOptions.REPRESENTATION,
           ...args.headers,
         },
       },
@@ -66,7 +67,21 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     });
   }
 
-  async getAllSavedViews(args: GetSavedViewsParams): Promise<SavedViewListResponse> {
+  async getSavedViewMinimal(args: SingleSavedViewParams): Promise<SavedViewMinimalResponse> {
+    return this.queryITwinApi({
+      requestParams: {
+        ...args,
+        headers: {
+          prefer: PreferOptions.MINIMAL,
+          ...args.headers,
+        },
+      },
+      url: `${this.baseUrl}/${args.savedViewId}`,
+      method: "GET",
+    });
+  }
+
+  async getAllSavedViewsRepresentation(args: GetSavedViewsParams): Promise<SavedViewListRepresentationResponse> {
     const iModelId = args.iModelId ? `&iModelId=${args.iModelId}` : "";
     const groupId = args.groupId ? `&groupId=${args.groupId}` : "";
     const top = args.top ? `&$top=${args.top}` : "";
@@ -76,7 +91,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       requestParams: {
         ...args,
         headers: {
-          prefer: args.prefer ?? PreferOptions.MINIMAL,
+          prefer: PreferOptions.REPRESENTATION,
           ...args.headers,
         },
       },
@@ -85,7 +100,26 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     });
   }
 
-  async createSavedView(args: CreateSavedViewParams): Promise<SavedViewResponse> {
+  async getAllSavedViewsMinimal(args: GetSavedViewsParams): Promise<SavedViewListMinimalResponse> {
+    const iModelId = args.iModelId ? `&iModelId=${args.iModelId}` : "";
+    const groupId = args.groupId ? `&groupId=${args.groupId}` : "";
+    const top = args.top ? `&$top=${args.top}` : "";
+    const skip = args.skip ? `&$skip=${args.skip}` : "";
+    const url = `${this.baseUrl}/?iTwinId=${args.iTwinId}${iModelId}${groupId}${top}${skip}`;
+    return this.queryITwinApi({
+      requestParams: {
+        ...args,
+        headers: {
+          prefer: PreferOptions.MINIMAL,
+          ...args.headers,
+        },
+      },
+      url: url,
+      method: "GET",
+    });
+  }
+
+  async createSavedView(args: CreateSavedViewParams): Promise<SavedViewMinimalResponse> {
     return this.queryITwinApi({
       requestParams: args,
       url: `${this.baseUrl}/`,
@@ -94,7 +128,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     });
   }
 
-  async updateSavedView(args: UpdateSavedViewParams): Promise<SavedViewResponse> {
+  async updateSavedView(args: UpdateSavedViewParams): Promise<SavedViewMinimalResponse> {
     return this.queryITwinApi({
       requestParams: args,
       url: `${this.baseUrl}/${args.savedViewId}`,

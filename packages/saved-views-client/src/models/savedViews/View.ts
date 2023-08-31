@@ -152,8 +152,6 @@ export interface ViewWithLegacy extends View {
 /** Saved view metadata model for restful get saved view operations following Apim standards. */
 export interface SavedView {
   tags?: SavedViewTag[];
-  extensions?: Extension[] | ExtensionMin[];
-  category?: string;
   _links: HalLinks<["savedView", "image", "thumbnail", "iTwin"?, "project"?, "iModel"?, "creator"?, "group"?]>;
   id: string;
   displayName: string;
@@ -161,6 +159,13 @@ export interface SavedView {
 }
 
 /** Saved view metadata model for restful get saved view operations following Apim standards. */
-export interface SavedViewWithData extends SavedView {
+export interface SavedViewWithDataRepresentation extends SavedView {
   savedViewData: ViewWithLegacy;
+  extensions?: Extension[];
+}
+
+/** Saved view metadata model for restful get saved view operations following Apim standards. */
+export interface SavedViewWithDataMinimal extends SavedView {
+  savedViewData: ViewWithLegacy;
+  extensions?: ExtensionMin[];
 }
