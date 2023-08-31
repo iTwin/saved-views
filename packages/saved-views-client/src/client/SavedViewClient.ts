@@ -94,7 +94,7 @@ export interface GetImageParams extends CommonRequestParams {
   savedViewId: string;
 }
 
-export interface UpdateImageParams {
+export interface UpdateImageParams extends CommonRequestParams {
   image: string;
   savedViewId: string;
 }
