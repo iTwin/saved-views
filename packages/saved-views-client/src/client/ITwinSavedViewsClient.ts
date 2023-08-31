@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /*---------------------------------------------------------------------------------------------
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
@@ -7,7 +8,7 @@ import {
   ExtensionListResponse, ExtensionResponse, GetExtensionsParams, GetGroupsParams, GetImageParams, GetSavedViewsParams,
   GetTagsParams, GroupListResponse, GroupResponse, ImageResponse, PreferOptions, SavedViewListResponse,
   SavedViewResponse, SavedViewsClient, SingleExtensionParams, SingleGroupParams, SingleSavedViewParams, SingleTagParams,
-  TagListResponse, TagResponse, UpdateGroupParams, UpdateImageParams, UpdateSavedViewParams, UpdateTagParams
+  TagListResponse, TagResponse, UpdateGroupParams, UpdateImageParams, UpdateSavedViewParams, UpdateTagParams,
 } from "./SavedViewClient.js";
 import { callITwinApi } from "./ApiUtils.js";
 
@@ -27,6 +28,14 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   constructor(args: ITwinSavedViewsClientParams) {
     this.baseUrl = args.baseUrl ?? "https://api.bentley.com/savedviews";
     this.getAccessToken = args.getAccessToken;
+  }
+
+  private createBodyFromArgs(args: Record<string,any>) { // is there a way to get around using any here ?
+    const keysToIgnore = ["headers", "signal", "prefer"];
+    return Object.keys(args).filter((key) => !keysToIgnore.includes(key)).reduce((result, key) => {
+      result[key] = args[key];
+      return result;
+    }, {} as Record<string, any>);
   }
 
   private async queryITwinApi<ReturnType>(queyParams: QueryParams): Promise<ReturnType> {
@@ -81,7 +90,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       requestParams: args,
       url: `${this.baseUrl}/`,
       method: "POST",
-      body: args.body,
+      body: this.createBodyFromArgs(args as Record<string, any>),
     });
   }
 
@@ -90,7 +99,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       requestParams: args,
       url: `${this.baseUrl}/${args.savedViewId}`,
       method: "PATCH",
-      body: args.body,
+      body: this.createBodyFromArgs(args as Record<string, any>),
     });
   }
 
@@ -107,7 +116,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       requestParams: args,
       url: `${this.baseUrl}/tags`,
       method: "POST",
-      body: args.body,
+      body: this.createBodyFromArgs(args as Record<string, any>),
     });
   }
 
@@ -142,7 +151,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       requestParams: args,
       url: `${this.baseUrl}/tags/${args.tagId}`,
       method: "PATCH",
-      body: args.body,
+      body: this.createBodyFromArgs(args as Record<string, any>),
     });
   }
 
@@ -159,7 +168,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       requestParams: args,
       url: `${this.baseUrl}/${args.savedViewId}/image`,
       method: "PUT",
-      body: args.body,
+      body: this.createBodyFromArgs(args as Record<string, any>),
     });
   }
 
@@ -186,7 +195,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       requestParams: args,
       url: `${this.baseUrl}/groups/`,
       method: "POST",
-      body: args.body,
+      body: this.createBodyFromArgs(args as Record<string, any>),
     });
   }
 
@@ -195,7 +204,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       requestParams: args,
       url: `${this.baseUrl}/groups/${args.groupId}`,
       method: "PATCH",
-      body: args.body,
+      body: this.createBodyFromArgs(args as Record<string, any>),
     });
   }
 
@@ -212,7 +221,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       requestParams: args,
       url: `${this.baseUrl}/${args.savedViewId}/extensions/`,
       method: "PUT",
-      body: args.body,
+      body: this.createBodyFromArgs(args as Record<string, any>),
     });
   }
 

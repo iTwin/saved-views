@@ -11,7 +11,6 @@ import { SavedView, SavedViewWithData, View } from "../models/savedViews/View.js
 export interface CommonRequestParams {
   signal?: AbortSignal;
   headers?: Record<string, string>;
-  body?: object;
 }
 
 /** Image Size enum for request. */
@@ -58,31 +57,27 @@ export interface GetSavedViewsParams extends CommonRequestParams {
 }
 
 export interface CreateSavedViewParams extends CommonRequestParams {
-  body: {
-    iTwinId?: string;
-    iModelId?: string;
-    id?: string;
-    savedViewData: View;
-    groupId?: string;
-    category?: string;
-    displayName: string;
-    shared?: boolean;
-    tagIds?: string[];
-    extensions?: ExtensionSavedViewCreate[];
-  };
+  iTwinId?: string;
+  iModelId?: string;
+  id?: string;
+  savedViewData: View;
+  groupId?: string;
+  category?: string;
+  displayName: string;
+  shared?: boolean;
+  tagIds?: string[];
+  extensions?: ExtensionSavedViewCreate[];
 }
 
 export interface UpdateSavedViewParams extends CommonRequestParams {
   savedViewId: string;
-  body: {
-    savedViewData?: View;
-    groupId?: string;
-    displayName?: string;
-    shared?: boolean;
-    tagIds?: string[];
-    extensions?: ExtensionMin[];
-    category?: string;
-  };
+  savedViewData?: View;
+  groupId?: string;
+  displayName?: string;
+  shared?: boolean;
+  tagIds?: string[];
+  extensions?: ExtensionMin[];
+  category?: string;
 }
 
 export interface SavedViewResponse {
@@ -100,7 +95,7 @@ export interface GetImageParams extends CommonRequestParams {
 }
 
 export interface UpdateImageParams {
-  body: { image: string; };
+  image: string;
   savedViewId: string;
 }
 
@@ -116,20 +111,16 @@ export interface SingleGroupParams extends CommonRequestParams {
 }
 
 export interface CreateGroupParams extends CommonRequestParams {
-  body: {
-    iTwinId?: string;
-    iModelId?: string;
-    displayName: string;
-    shared?: boolean;
-  };
+  iTwinId?: string;
+  iModelId?: string;
+  displayName: string;
+  shared?: boolean;
 }
 
 export interface UpdateGroupParams extends CommonRequestParams {
   groupId: string;
-  body: {
-    displayName?: string;
-    shared?: boolean;
-  };
+  displayName?: string;
+  shared?: boolean;
 }
 
 export interface GroupResponse {
@@ -151,10 +142,8 @@ export interface CreateExtensionParams extends CommonRequestParams {
    * 3. VisibilityOverride
   */
   savedViewId: string;
-  body: {
-    extensionName: string;
-    data: string;
-  };
+  extensionName: string;
+  data: string;
 }
 
 export interface SingleExtensionParams extends CommonRequestParams {
@@ -176,15 +165,13 @@ export interface GetTagsParams extends CommonRequestParams {
 }
 export interface UpdateTagParams extends CommonRequestParams {
   tagId: string;
-  body: { displayName?: string; };
+  displayName?: string;
 }
 
 export interface CreateTagParams extends CommonRequestParams {
-  body: {
-    iTwinId?: string;
-    iModelId?: string;
-    displayName: string;
-  };
+  iTwinId?: string;
+  iModelId?: string;
+  displayName: string;
 }
 
 export interface SingleTagParams extends CommonRequestParams {
