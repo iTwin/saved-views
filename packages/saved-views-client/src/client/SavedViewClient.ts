@@ -10,19 +10,12 @@ import { SavedViewWithDataMinimal, SavedViewWithDataRepresentation, View } from 
 
 export interface CommonRequestParams {
   signal?: AbortSignal;
-  headers?: Record<string, string>;
 }
 
 /** Image Size enum for request. */
 export enum ImageSize {
-  FULL = "full",
-  THUMBNAIL = "thumbnail",
-}
-
-/** Prefer enum for request. */
-export enum PreferOptions {
-  MINIMAL = "return=minimal",
-  REPRESENTATION = "return=representation",
+  Full = "full",
+  Thumbnail = "thumbnail",
 }
 
 export interface GetExtensionsParams extends CommonRequestParams {
@@ -47,7 +40,6 @@ export interface CreateSavedViewParams extends CommonRequestParams {
   id?: string;
   savedViewData: View;
   groupId?: string;
-  category?: string;
   displayName: string;
   shared?: boolean;
   tagIds?: string[];
@@ -62,7 +54,6 @@ export interface UpdateSavedViewParams extends CommonRequestParams {
   shared?: boolean;
   tagIds?: string[];
   extensions?: ExtensionMin[];
-  category?: string;
 }
 
 export interface SavedViewRepresentationResponse {
@@ -105,7 +96,7 @@ export interface SingleGroupParams extends CommonRequestParams {
 }
 
 export interface CreateGroupParams extends CommonRequestParams {
-  iTwinId?: string;
+  iTwinId: string;
   iModelId?: string;
   displayName: string;
   shared?: boolean;
@@ -183,7 +174,7 @@ export interface SavedViewsClient {
   deleteSavedView(args: SingleSavedViewParams): Promise<void>;
 
   getImage(args: GetImageParams): Promise<ImageResponse>;
-  updateImage(args: UpdateImageParams): Promise<ImageResponse>;
+  updateImage(args: UpdateImageParams): Promise<void>;
 
   getGroup(args: SingleGroupParams): Promise<GroupResponse>;
   getAllGroups(args: GetGroupsParams): Promise<GroupListResponse>;

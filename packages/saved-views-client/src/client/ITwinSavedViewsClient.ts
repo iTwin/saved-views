@@ -6,7 +6,7 @@
 import {
   CommonRequestParams, CreateExtensionParams, CreateGroupParams, CreateSavedViewParams, CreateTagParams,
   ExtensionListResponse, ExtensionResponse, GetExtensionsParams, GetGroupsParams, GetImageParams, GetSavedViewsParams,
-  GetTagsParams, GroupListResponse, GroupResponse, ImageResponse, PreferOptions, SavedViewListMinimalResponse,
+  GetTagsParams, GroupListResponse, GroupResponse, ImageResponse, SavedViewListMinimalResponse,
   SavedViewListRepresentationResponse, SavedViewMinimalResponse, SavedViewRepresentationResponse, SavedViewsClient,
   SingleExtensionParams, SingleGroupParams, SingleSavedViewParams, SingleTagParams, TagListResponse,
   TagResponse, UpdateGroupParams, UpdateImageParams, UpdateSavedViewParams, UpdateTagParams,
@@ -45,7 +45,6 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       signal: queyParams.requestParams.signal,
       headers: {
         Accept: "application/vnd.bentley.itwin-platform.v1+json",
-        ...queyParams.requestParams.headers,
       },
       body: queyParams.body,
     }) as ReturnType;
@@ -56,8 +55,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       requestParams: {
         ...args,
         headers: {
-          prefer: PreferOptions.REPRESENTATION,
-          ...args.headers,
+          prefer: PreferOptions.Representation,
         },
       },
       url: `${this.baseUrl}/${args.savedViewId}`,
@@ -70,8 +68,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       requestParams: {
         ...args,
         headers: {
-          prefer: PreferOptions.MINIMAL,
-          ...args.headers,
+          prefer: PreferOptions.Minimal,
         },
       },
       url: `${this.baseUrl}/${args.savedViewId}`,
@@ -89,8 +86,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       requestParams: {
         ...args,
         headers: {
-          prefer: PreferOptions.REPRESENTATION,
-          ...args.headers,
+          prefer: PreferOptions.Representation,
         },
       },
       url: url,
@@ -108,8 +104,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       requestParams: {
         ...args,
         headers: {
-          prefer: PreferOptions.MINIMAL,
-          ...args.headers,
+          prefer: PreferOptions.Minimal,
         },
       },
       url: url,
@@ -282,9 +277,25 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   }
 }
 
+/** Prefer enum for request. */
+export enum PreferOptions {
+/**
+ * affects the granularity of the data returned
+ *  ONLY for get requests will be ignored for PUT POST DELETE
+ *  MINIMAL = "return=minimal", least info
+ *  REPRESENTATION = "return=representation" most info
+*/
+  Minimal = "return=minimal",
+  Representation = "return=representation",
+}
+
 interface QueryParams {
-  requestParams: CommonRequestParams;
+  requestParams: RequestParams;
   url: string;
   method: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
   body?: object | undefined;
+}
+
+interface RequestParams extends CommonRequestParams {
+  headers?: Record<string, string>;
 }
