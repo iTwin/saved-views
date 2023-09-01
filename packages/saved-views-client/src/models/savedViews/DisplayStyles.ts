@@ -44,7 +44,7 @@ export enum RenderMode {
   HiddenLine = 3,
 }
 
-/** Another view flag representation that sadly is used in display style props for overriding */
+/** Another view flag representation that sadly is used in display style props for overriding. */
 export interface ViewFlagOverrides {
   renderMode?: RenderMode;
   dimensions?: boolean;
@@ -71,7 +71,7 @@ export interface ViewFlagOverrides {
   lighting?: boolean;
 }
 
-/** JSON representation of ViewFlags */
+/** JSON representation of ViewFlags. */
 export interface ViewFlagProps {
   // Original name: noConstruct
   noConstructions?: boolean;
@@ -115,9 +115,8 @@ export interface SubCategoryAppearanceProps {
 }
 
 /** Describes the SubCategoryOverrides applied to a SubCategory by a DisplayStyle. */
-export interface DisplayStyleSubCategoryProps
-  extends SubCategoryAppearanceProps {
-  /** The Id of the SubCategory whose appearance is to be overridden. */
+export interface DisplayStyleSubCategoryProps extends SubCategoryAppearanceProps {
+  /** Id of the SubCategory whose appearance is to be overridden. */
   subCategory?: string;
 }
 
