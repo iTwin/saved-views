@@ -127,14 +127,6 @@ export interface GroupListResponse {
 }
 
 export interface CreateExtensionParams extends CommonRequestParams {
-  /**
-   * extension to be created
-   * Extensions allow a saved view to be enhanced with custom data. The extensions have to be defined in a proprietary .JSON schema file.
-   * For now, only three extensions are available:
-   * 1. PerModelCategoryVisibility
-   * 2. EmphasizeElements
-   * 3. VisibilityOverride
-  */
   savedViewId: string;
   extensionName: string;
   data: string;
