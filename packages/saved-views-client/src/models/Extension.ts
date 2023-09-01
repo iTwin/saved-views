@@ -23,7 +23,6 @@ export interface ExtensionSavedViewCreate extends ExtensionBase {
   data: string;
 }
 
-/** Extension metadata model for restful get extension operations following Apim standards. */
 export interface ExtensionMin extends HalLinks<["href"]>, ExtensionBase { }
 
 /** Saved view metadata model for restful get saved view operations following Apim standards. */
