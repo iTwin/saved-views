@@ -4,7 +4,6 @@
 *--------------------------------------------------------------------------------------------*/
 import { HalLinks } from "./Links.js";
 
-/** Group model for restful get Group operations following APIM standards. */
 export interface Group {
   _links: HalLinks<["savedView", "iTwin"?, "project"?, "iModel"?, "creator"?]>;
   id: string;
