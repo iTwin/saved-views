@@ -619,22 +619,24 @@ export enum MonochromeMode {
    * will be white.
    */
   Flat = 0,
-  /** The color of surfaces is computed as normal, then scaled to a shade of the monochrome color based on the surface color's intensity.
-   * For example, if the monochrome color is white, this results in a greyscale effect.
-   * Geometry other than surfaces is treated the same as MonochromeMode.Flat.
+  /**
+   * The color of surfaces is computed as normal, then scaled to a shade of the monochrome color based on the surface
+   * color's intensity. For example, if the monochrome color is white, this results in a greyscale effect. Geometry
+   * other than surfaces is treated the same as {@linkcode MonochromeMode.Flat}.
    */
   Scaled = 1,
 }
 
-/** JSON representation of the display style settings */
+/** JSON representation of the display style settings. */
 export interface DisplayStyleSettingsProps {
   viewflags?: ViewFlagProps;
   backgroundColor?: RgbColorProps;
   monochromeColor?: RgbColorProps;
   monochromeMode?: MonochromeMode;
   renderTimeline?: string;
-  /** The point in time reflected by the view, in UNIX seconds.
-   * This identifies a point on the timeline of the style's RenderSchedule.Script, if any; it may also affect display of four-dimensional reality models.
+  /**
+   * The point in time reflected by the view, in UNIX seconds. This identifies a point on the timeline of the style's
+   * RenderSchedule.Script, if any; it may also affect display of four-dimensional reality models.
    */
   timePoint?: number;
   // Original name: subCategoryOvr
