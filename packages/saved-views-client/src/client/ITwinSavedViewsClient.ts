@@ -19,9 +19,7 @@ export interface ITwinSavedViewsClientParams {
   getAccessToken: () => Promise<string>;
 }
 
-/**
- * {@linkcode SavedViewsClient} implementation that calls iTwin APIs.
- */
+/** {@linkcode SavedViewsClient} implementation that calls iTwin APIs. */
 export class ITwinSavedViewsClient implements SavedViewsClient {
   private readonly baseUrl;
   private readonly getAccessToken: () => Promise<string>;
