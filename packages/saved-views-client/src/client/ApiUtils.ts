@@ -13,7 +13,7 @@ export interface CallITwinApiParams {
 }
 
 export async function callITwinApi(
-  args: CallITwinApiParams
+  args: CallITwinApiParams,
 ): Promise<Record<string, unknown>> {
   const response = await fetch(args.url, {
     method: args.method,
@@ -34,14 +34,14 @@ export async function callITwinApi(
 
 async function throwBadResponseCodeError(
   response: Response,
-  errorMessage: string
+  errorMessage: string,
 ): Promise<never> {
   let error: unknown;
   try {
     error = (await response.json()).error;
   } catch {
     throw new Error(
-      `${errorMessage} Unexpected response status code: ${response.status} ${response.statusText}.`
+      `${errorMessage} Unexpected response status code: ${response.status} ${response.statusText}.`,
     );
   }
 

@@ -65,7 +65,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   }
 
   private async queryITwinApi<ReturnType>(
-    queyParams: QueryParams
+    queyParams: QueryParams,
   ): Promise<ReturnType> {
     return callITwinApi({
       url: queyParams.url,
@@ -80,7 +80,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   }
 
   async getSavedViewRepresentation(
-    args: SingleSavedViewParams
+    args: SingleSavedViewParams,
   ): Promise<SavedViewRepresentationResponse> {
     return this.queryITwinApi({
       requestParams: {
@@ -95,7 +95,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   }
 
   async getSavedViewMinimal(
-    args: SingleSavedViewParams
+    args: SingleSavedViewParams,
   ): Promise<SavedViewMinimalResponse> {
     return this.queryITwinApi({
       requestParams: {
@@ -110,7 +110,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   }
 
   async getAllSavedViewsRepresentation(
-    args: GetSavedViewsParams
+    args: GetSavedViewsParams,
   ): Promise<SavedViewListRepresentationResponse> {
     const iModelId = args.iModelId ? `&iModelId=${args.iModelId}` : "";
     const groupId = args.groupId ? `&groupId=${args.groupId}` : "";
@@ -130,7 +130,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   }
 
   async getAllSavedViewsMinimal(
-    args: GetSavedViewsParams
+    args: GetSavedViewsParams,
   ): Promise<SavedViewListMinimalResponse> {
     const iModelId = args.iModelId ? `&iModelId=${args.iModelId}` : "";
     const groupId = args.groupId ? `&groupId=${args.groupId}` : "";
@@ -150,7 +150,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   }
 
   async createSavedView(
-    args: CreateSavedViewParams
+    args: CreateSavedViewParams,
   ): Promise<SavedViewMinimalResponse> {
     return this.queryITwinApi({
       requestParams: args,
@@ -161,7 +161,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   }
 
   async updateSavedView(
-    args: UpdateSavedViewParams
+    args: UpdateSavedViewParams,
   ): Promise<SavedViewMinimalResponse> {
     return this.queryITwinApi({
       requestParams: args,
@@ -285,7 +285,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   }
 
   async createExtension(
-    args: CreateExtensionParams
+    args: CreateExtensionParams,
   ): Promise<ExtensionResponse> {
     return this.queryITwinApi({
       requestParams: args,
@@ -304,7 +304,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   }
 
   async getAllExtensions(
-    args: GetExtensionsParams
+    args: GetExtensionsParams,
   ): Promise<ExtensionListResponse> {
     return this.queryITwinApi({
       requestParams: args,
