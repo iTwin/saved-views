@@ -5,15 +5,12 @@
 import { Extension, ExtensionMin } from "../Extension.js";
 import { HalLinks } from "../Links.js";
 import { SavedViewTag } from "../Tag.js";
-import {
-  DisplayStyle3dSettingsProps,
-  DisplayStyleSettingsProps,
-} from "./DisplayStyles.js";
+import { DisplayStyle3dSettingsProps, DisplayStyleSettingsProps } from "./DisplayStyles.js";
 
 
 /**
- * Wire format describing a ClipPlane.
- * If either normal or dist are omitted, defaults to a normal of Vector3d.unitZ and a distance of zero.
+ * Wire format describing a ClipPlane. If either normal or dist are omitted, defaults to a normal of Vector3d.unitZ and
+ * a distance of zero.
  */
 export interface ClipPlaneProps {
   normal?: [x: number, y: number, z: number];
@@ -59,38 +56,25 @@ export interface ViewYawPitchRoll {
   roll?: number;
 }
 
-/** Required camera information */
+/** Required camera information. */
 export interface ViewCamera {
   lens: number;
   focusDist: number;
   eye: [x: number, y: number, z: number];
 }
 
-/** List of explicitly enabled/disabled Id64Strings, used for Categories and Models */
+/** List of explicitly enabled/disabled Id64Strings, used for Categories and Models. */
 export interface ViewVisibilityList {
   enabled?: string[];
   disabled?: string[];
 }
 
-/** View */
 export interface SavedViewBase {
-  /**
-   * Origin. (Array of numbers representing x and y)
-   * @type {[number, number] | [number, number, number]}
-   * @memberof View
-   */
+  /** Origin, represented as an array of x and y coordinates. */
   origin: [number, number] | [number, number, number];
-  /**
-   * List of categories that should be displayed or hidden on that view
-   * @type {ViewVisibilityList}
-   * @memberof View
-   */
+  /** List of categories that should be displayed or hidden on that view. */
   categories?: ViewVisibilityList;
-  /**
-   * Array of clip vectors in the view.
-   * @type {Array<ClipPrimitivePlaneProps | ClipPrimitiveShapeProps>}
-   * @memberof View
-   */
+  /** Array of clip vectors in the view. */
   clipVectors?: Array<ClipPrimitivePlaneProps | ClipPrimitiveShapeProps>;
 }
 
@@ -164,7 +148,6 @@ export interface SavedViewWithDataRepresentation extends SavedView {
   extensions?: Extension[];
 }
 
-/** Saved view metadata model for restful get saved view operations following Apim standards. */
 export interface SavedViewWithDataMinimal extends SavedView {
   savedViewData: ViewWithLegacy;
   extensions?: ExtensionMin[];
