@@ -15,7 +15,6 @@ export interface ExtensionBase {
   extensionName: string;
 }
 
-/** Extensions metadata model for restful get Extensions operation. */
 export type ExtensionsResponse = HalLinks<["href"]>;
 
 /** Extension data for savedViewCreate */
