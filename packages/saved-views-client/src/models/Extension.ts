@@ -17,7 +17,6 @@ export interface ExtensionBase {
 
 export type ExtensionsResponse = HalLinks<["href"]>;
 
-/** Extension data for savedViewCreate */
 export interface ExtensionSavedViewCreate extends ExtensionBase {
   markdownUrl?: string;
   schemaUrl?: string;
