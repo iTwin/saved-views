@@ -30,12 +30,6 @@ export interface GetExtensionsParams extends CommonRequestParams {
 }
 
 export interface SingleSavedViewParams extends CommonRequestParams {
-  /**
-   * affects the granularity of the data returned
-   *  ONLY for get requests will be ignored for PUT POST DELETE
-   *  MINIMAL = "return=minimal", least info
-   *  REPRESENTATION = "return=representation" most info
-  */
   savedViewId: string;
 }
 
