@@ -614,7 +614,10 @@ export interface AmbientOcclusionProps {
 
 /** Describes the style in which monochrome color is applied by a DisplayStyleSettings. */
 export enum MonochromeMode {
-  /** The color of the geometry is replaced with the monochrome color. e.g., if monochrome color is white, the geometry will be white. */
+  /**
+   * The color of the geometry is replaced with the monochrome color. e.g., if monochrome color is white, the geometry
+   * will be white.
+   */
   Flat = 0,
   /** The color of surfaces is computed as normal, then scaled to a shade of the monochrome color based on the surface color's intensity.
    * For example, if the monochrome color is white, this results in a greyscale effect.
