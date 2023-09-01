@@ -11,9 +11,8 @@ export interface RgbColorProps {
 }
 
 /**
- * Enumerates the available basic rendering modes, as part of a DisplayStyle's ViewFlags.
- * The rendering mode broadly affects various aspects of the display style - in particular,
- * whether and how surfaces and their edges are drawn.
+ * Enumerates the available basic rendering modes, as part of a DisplayStyle's ViewFlags. The rendering mode broadly
+ * affects various aspects of the display style - in particular, whether and how surfaces and their edges are drawn.
  */
 export enum RenderMode {
   /** Renders only the edges of surfaces, with exceptions for planar regions based on their FillFlags.
