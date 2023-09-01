@@ -263,10 +263,10 @@ export interface SolarShadowSettingsProps {
 }
 
 /**
- * Wire format for the solar directional light associated with a LightSettingsProps.
- * The light is colored white and oriented in any direction in world coordinates.
- * It will cast shadows if it is above the world XY plane and if the shadows view flag is enabled for the view.
- * By default, the solar light is only applied when shadows are enabled, but can be set to be applied unconditionally.
+ * Wire format for the solar directional light associated with a {@linkcode LightSettingsProps}. The light is colored
+ * white and oriented in any direction in world coordinates. It will cast shadows if it is above the world XY plane and
+ * if the shadows view flag is enabled for the view. By default, the solar light is only applied when shadows are
+ * enabled, but can be set to be applied unconditionally.
  */
 export interface SolarLightProps {
   intensity?: number;
@@ -276,10 +276,10 @@ export interface SolarLightProps {
 }
 
 /**
- * Wire format for a pair of hemisphere lights associated with a LightSettingsProps.
- * Hemisphere lights are oriented in opposite directions along the world Z axis. Each has its own color; they share one intensity.
- * They are often used to simulate outdoor reflection of light from the ground and sky, so the colors often match the ground and sky colors
- * of the SkyBox.
+ * Wire format for a pair of hemisphere lights associated with a {@linkcode LightSettingsProps}. Hemisphere lights are
+ * oriented in opposite directions along the world Z axis. Each has its own color; they share one intensity. They are
+ * often used to simulate outdoor reflection of light from the ground and sky, so the colors often match the ground and
+ * sky colors of the SkyBox.
  */
 export interface HemisphereLightsProps {
   upperColor?: RgbColorProps;
@@ -288,8 +288,8 @@ export interface HemisphereLightsProps {
 }
 
 /**
- * Wire format for the ambient light associated with a LightSettingsProps.
- * Ambient light applies equally to all surfaces in the scene.
+ * Wire format for the ambient light associated with a {@linkcode LightSettingsProps}. Ambient light applies equally to
+ * all surfaces in the scene.
  */
 export interface AmbientLightProps {
   color?: RgbColorProps;
@@ -306,12 +306,16 @@ export interface PortraitProps {
   intensity?: number;
 }
 
-/** Wire format for a LightSettings describing lighting for a 3d scene.
- * 3d lighting provides the following lights, all of which are optional:
+/**
+ * Wire format for a LightSettings describing lighting for a 3D scene. 3D lighting provides the following lights, all of
+ * which are optional:
  *  - A second directional light. Color: white.
- *    - This can be a solar shadow-casting light, or (when shadows are disabled) a roughly overhead light oriented in view space.
- *  - A pair of hemisphere lights pointing in opposite directions along the world Z axis. Each has its own customizable color.
+ *    - This can be a solar shadow-casting light, or (when shadows are disabled) a roughly overhead light oriented in
+ *      view space.
+ *  - A pair of hemisphere lights pointing in opposite directions along the world Z axis. Each has its own customizable
+ *    color.
  *  - An ambient light of any color applied equally to all surfaces.
+ *
  * Specular intensity of all lights is controlled separately.
  */
 export interface LightSettingsProps {
@@ -326,9 +330,8 @@ export interface LightSettingsProps {
 }
 
 /**
- * Enumerates the available patterns for drawing patterned lines.
- * Each is a 32-bit pattern in which each bit specifies the on- or off-state of a pixel along the line.
- * The pattern repeats along the length of the entire line.
+ * Enumerates the available patterns for drawing patterned lines. Each is a 32-bit pattern in which each bit specifies
+ * the on- or off-state of a pixel along the line. The pattern repeats along the length of the entire line.
  */
 export enum LinePixels {
   /** A solid line. */
@@ -357,7 +360,7 @@ export enum LinePixels {
   Invalid = -1,
 }
 
-/** Properties used to initialize a Feature Appearance */
+/** Properties used to initialize a Feature Appearance. */
 export interface FeatureAppearanceProps {
   rgb?: RgbColorProps;
   weight?: number;
@@ -368,16 +371,18 @@ export interface FeatureAppearanceProps {
   emphasized?: true | undefined;
 }
 
-/** A FeatureAppearanceProps applied to a specific model to override its appearance within the context of a DisplayStyle. */
-export interface DisplayStyleModelAppearanceProps
-  extends FeatureAppearanceProps {
+/**
+ * A {@linkcode FeatureAppearanceProps} applied to a specific model to override its appearance within the context of a
+ * DisplayStyle.
+ */
+export interface DisplayStyleModelAppearanceProps extends FeatureAppearanceProps {
   modelId?: string;
 }
 
 /**
- * JSON representation of the six images used by a SkyCube.
- * Each property specifies the image for a face of the cube as either an image URL, or the Id of a Texture element.
- * Each image must be square and have the same dimensions as all the other images.
+ * JSON representation of the six images used by a SkyCube. Each property specifies the image for a face of the cube as
+ * either an image URL, or the Id of a Texture element. Each image must be square and have the same dimensions as all
+ * the other images.
  */
 export interface SkyCubeProps {
   front: string;
@@ -419,8 +424,8 @@ export interface SkyBoxProps {
   skyExponent?: number;
   groundExponent?: number;
   /**
-   * The image(s), if any, to be mapped to the surfaces of the sphere or cube.
-   * If undefined, the skybox will be displayed as a gradient instead.
+   * The image(s), if any, to be mapped to the surfaces of the sphere or cube. When undefined, the skybox will be
+   * displayed as a gradient instead.
    */
   image?: SkyBoxImageProps;
 }
@@ -441,8 +446,8 @@ export interface EnvironmentProps {
 
 
 /**
- * Key used by RealityDataSource to identify provider and reality data format.
- * This key identifies one and only one reality data source on the provider.
+ * Key used by RealityDataSource to identify provider and reality data format. This key identifies one and only one
+ * reality data source on the provider.
  */
 export interface RealityDataSourceKey {
   provider: string;
@@ -452,8 +457,8 @@ export interface RealityDataSourceKey {
 }
 
 /**
- * Describes how a SpatialClassifier affects the display of interfaceified geometry - that is, geometry intersecting
- * the interfaceifier.
+ * Describes how a SpatialClassifier affects the display of interfaceified geometry - that is, geometry intersecting the
+ * interfaceifier.
  */
 export enum SpatialClassifierInsideDisplay {
   /** The geometry is not displayed. */
@@ -469,8 +474,8 @@ export enum SpatialClassifierInsideDisplay {
 }
 
 /**
- * Describes how a SpatialClassifier affects the display of uninterfaceified geometry - that is, geometry not intersecting
- * the interfaceifier.
+ * Describes how a SpatialClassifier affects the display of uninterfaceified geometry - that is, geometry not
+ * intersecting the interfaceifier.
  */
 export enum SpatialClassifierOutsideDisplay {
   /** The geometry is not displayed. */
