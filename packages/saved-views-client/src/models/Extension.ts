@@ -4,7 +4,6 @@
 *--------------------------------------------------------------------------------------------*/
 import { HalLinks } from "./Links.js";
 
-/** Extension metadata model for restful get extension operations following Apim standards. */
 export interface Extension extends ExtensionBase {
   markdownUrl: string;
   schemaUrl: string;
