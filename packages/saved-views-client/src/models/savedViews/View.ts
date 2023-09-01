@@ -1,12 +1,14 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import { Extension, ExtensionMin } from "../Extension.js";
 import { HalLinks } from "../Links.js";
 import { SavedViewTag } from "../Tag.js";
-import { DisplayStyle3dSettingsProps, DisplayStyleSettingsProps } from "./DisplayStyles.js";
-
+import {
+  DisplayStyle3dSettingsProps,
+  DisplayStyleSettingsProps,
+} from "./DisplayStyles.js";
 
 /**
  * Wire format describing a ClipPlane. If either normal or dist are omitted, defaults to a normal of Vector3d.unitZ and
@@ -79,7 +81,7 @@ export interface SavedViewBase {
 }
 
 /** Minimum required information saved for a 3D saved view. */
-export interface ViewItwin3d extends SavedViewBase {
+export interface ViewITwin3d extends SavedViewBase {
   origin: [x: number, y: number, z: number];
   extents: [x: number, y: number, z: number];
   angles?: ViewYawPitchRoll;
@@ -89,7 +91,7 @@ export interface ViewItwin3d extends SavedViewBase {
 }
 
 /** Minimum required information saved for a 2d saved view (Used by Sheet and Drawings). */
-export interface ViewItwin2d extends SavedViewBase {
+export interface ViewITwin2d extends SavedViewBase {
   baseModelId: string;
   origin: [x: number, y: number];
   delta: [x: number, y: number];
@@ -98,7 +100,7 @@ export interface ViewItwin2d extends SavedViewBase {
 }
 
 /** Minimum required information saved for a Sheet saved view. */
-export interface ViewItwinSheet extends ViewItwin2d {
+export interface ViewITwinSheet extends ViewITwin2d {
   width?: number;
   height?: number;
   scale?: number;
@@ -107,7 +109,7 @@ export interface ViewItwinSheet extends ViewItwin2d {
 }
 
 /** Minimum required information saved for a Drawing saved view. */
-export interface ViewItwinDrawing extends ViewItwin2d {
+export interface ViewITwinDrawing extends ViewITwin2d {
   spatialView?: string;
   displaySpatialView?: boolean;
   drawingToSpatialTransform?: [
@@ -123,9 +125,9 @@ export interface ViewItwinDrawing extends ViewItwin2d {
 
 /** Minimum Saved View structure so every application can have something to work with. */
 export interface View {
-  itwin3dView?: ViewItwin3d;
-  itwinSheetView?: ViewItwinSheet;
-  itwinDrawingView?: ViewItwinDrawing;
+  ITwin3dView?: ViewITwin3d;
+  ITwinSheetView?: ViewITwinSheet;
+  ITwinDrawingView?: ViewITwinDrawing;
 }
 
 /** Minimum saved view structure including possible legacy data from product setting service. */
@@ -135,7 +137,18 @@ export interface ViewWithLegacy extends View {
 
 export interface SavedView {
   tags?: SavedViewTag[];
-  _links: HalLinks<["savedView", "image", "thumbnail", "iTwin"?, "project"?, "iModel"?, "creator"?, "group"?]>;
+  _links: HalLinks<
+    [
+      "savedView",
+      "image",
+      "thumbnail",
+      "ITwin"?,
+      "project"?,
+      "iModel"?,
+      "creator"?,
+      "group"?,
+    ]
+  >;
   id: string;
   displayName: string;
   shared: boolean;

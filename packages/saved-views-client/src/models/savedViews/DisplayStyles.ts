@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 
 /** JSON representation of an RGB color, with each component in the range [0, 255]. */
 export interface RgbColorProps {
@@ -115,7 +115,8 @@ export interface SubCategoryAppearanceProps {
 }
 
 /** Describes the SubCategoryOverrides applied to a SubCategory by a DisplayStyle. */
-export interface DisplayStyleSubCategoryProps extends SubCategoryAppearanceProps {
+export interface DisplayStyleSubCategoryProps
+  extends SubCategoryAppearanceProps {
   /** Id of the SubCategory whose appearance is to be overridden. */
   subCategory?: string;
 }
@@ -125,9 +126,11 @@ export interface PlanProjectionSettingsProps {
   elevation?: number;
   transparency?: number;
   overlay?: boolean;
-  /** If defined and true, subcategory display priority is used to specify the draw order of portions of the model. Geometry belonging to a subcategory with a higher priority
-   * value is drawn on top of coincident geometry belonging to a subcategory with a lower priority value. The priorities can be modified at display time using
-   * are drawn as part of the same layer.
+  /**
+   * If defined and true, subcategory display priority is used to specify the draw order of portions of the model.
+   * Geometry belonging to a subcategory with a higher priority value is drawn on top of coincident geometry
+   * belonging to a subcategory with a lower priority value.
+   * The priorities can be modified at display time using are drawn as part of the same layer.
    */
   enforceDisplayPriority?: boolean;
 }
@@ -375,7 +378,8 @@ export interface FeatureAppearanceProps {
  * A {@linkcode FeatureAppearanceProps} applied to a specific model to override its appearance within the context of a
  * DisplayStyle.
  */
-export interface DisplayStyleModelAppearanceProps extends FeatureAppearanceProps {
+export interface DisplayStyleModelAppearanceProps
+  extends FeatureAppearanceProps {
   modelId?: string;
 }
 
@@ -398,7 +402,8 @@ export interface SkyBoxImageProps {
   textures?: SkyCubeProps;
 }
 
-/** JSON representation of a SkyBox that can be drawn as the background of a ViewState3d.
+/**
+ * JSON representation of a SkyBox that can be drawn as the background of a ViewState3d.
  * An object of this type can describe one of several types of sky box:
  *  - A cube with a texture image mapped to each face; or
  *  - A sphere with a single texture image mapped to its surface; or
@@ -444,7 +449,6 @@ export interface EnvironmentProps {
   sky?: SkyBoxProps;
 }
 
-
 /**
  * Key used by RealityDataSource to identify provider and reality data format. This key identifies one and only one
  * reality data source on the provider.
@@ -453,7 +457,7 @@ export interface RealityDataSourceKey {
   provider: string;
   format: string;
   id: string;
-  iTwinId?: string;
+  ITwinId?: string;
 }
 
 /**
@@ -514,7 +518,6 @@ export interface ContextRealityModelProps {
   appearanceOverrides?: FeatureAppearanceProps;
 }
 
-
 export interface HiddenLineStyleProps {
   /** This JSON representation is awkward, but it must match that used in the db.
    * If the JSON came from the db then all members are present and:
@@ -560,7 +563,6 @@ export interface ClipStyleProps {
   outsideColor?: RgbColorProps;
 }
 
-
 /** Correction modes for terrain height */
 export enum TerrainHeightOriginMode {
   /** Height value indicates the geodetic height of the IModel origin (also referred to as ellipsoidal or GPS height) */
@@ -599,7 +601,6 @@ export interface BackgroundMapProps {
   nonLocatable?: boolean;
   planarClipMask?: PlanarClipMaskProps;
 }
-
 
 export interface AmbientOcclusionProps {
   bias?: number;
@@ -659,5 +660,5 @@ export interface DisplayStyle3dSettingsProps extends DisplayStyleSettingsProps {
   ambientOcclusion?: AmbientOcclusionProps;
   solarShadows?: SolarShadowSettingsProps;
   lights?: LightSettingsProps;
-  planProjections?: { [modelId: string]: PlanProjectionSettingsProps; };
+  planProjections?: { [modelId: string]: PlanProjectionSettingsProps };
 }

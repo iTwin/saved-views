@@ -1,12 +1,21 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
-import { Extension, ExtensionListItem, ExtensionMin, ExtensionSavedViewCreate } from "../models/Extension.js";
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import {
+  Extension,
+  ExtensionListItem,
+  ExtensionMin,
+  ExtensionSavedViewCreate,
+} from "../models/Extension.js";
 import { Group } from "../models/Group.js";
 import { HalLinks } from "../models/Links.js";
 import { Tag } from "../models/Tag.js";
-import { SavedViewWithDataMinimal, SavedViewWithDataRepresentation, View } from "../models/savedViews/View.js";
+import {
+  SavedViewWithDataMinimal,
+  SavedViewWithDataRepresentation,
+  View,
+} from "../models/savedViews/View.js";
 
 export interface CommonRequestParams {
   signal?: AbortSignal;
@@ -27,7 +36,7 @@ export interface SingleSavedViewParams extends CommonRequestParams {
 }
 
 export interface GetSavedViewsParams extends CommonRequestParams {
-  iTwinId: string;
+  ITwinId: string;
   iModelId?: string;
   groupId?: string;
   top?: string;
@@ -35,7 +44,7 @@ export interface GetSavedViewsParams extends CommonRequestParams {
 }
 
 export interface CreateSavedViewParams extends CommonRequestParams {
-  iTwinId?: string;
+  ITwinId?: string;
   iModelId?: string;
   id?: string;
   savedViewData: View;
@@ -84,10 +93,12 @@ export interface UpdateImageParams extends CommonRequestParams {
   savedViewId: string;
 }
 
-export type ImageResponse = HalLinks<["href"]>;
+export interface ImageResponse {
+  href: string;
+}
 
 export interface GetGroupsParams extends CommonRequestParams {
-  iTwinId: string;
+  ITwinId: string;
   iModelId?: string;
 }
 
@@ -96,7 +107,7 @@ export interface SingleGroupParams extends CommonRequestParams {
 }
 
 export interface CreateGroupParams extends CommonRequestParams {
-  iTwinId: string;
+  ITwinId: string;
   iModelId?: string;
   displayName: string;
   shared?: boolean;
@@ -137,7 +148,7 @@ export interface ExtensionResponse {
 }
 
 export interface GetTagsParams extends CommonRequestParams {
-  iTwinId: string;
+  ITwinId: string;
   iModelId?: string;
 }
 export interface UpdateTagParams extends CommonRequestParams {
@@ -146,7 +157,7 @@ export interface UpdateTagParams extends CommonRequestParams {
 }
 
 export interface CreateTagParams extends CommonRequestParams {
-  iTwinId?: string;
+  ITwinId?: string;
   iModelId?: string;
   displayName: string;
 }
@@ -165,12 +176,24 @@ export interface TagListResponse {
 }
 
 export interface SavedViewsClient {
-  getSavedViewMinimal(args: SingleSavedViewParams): Promise<SavedViewMinimalResponse>;
-  getSavedViewRepresentation(args: SingleSavedViewParams): Promise<SavedViewRepresentationResponse>;
-  getAllSavedViewsRepresentation(args: GetSavedViewsParams): Promise<SavedViewListRepresentationResponse>;
-  getAllSavedViewsMinimal(args: GetSavedViewsParams): Promise<SavedViewListMinimalResponse>;
-  createSavedView(args: CreateSavedViewParams): Promise<SavedViewMinimalResponse>;
-  updateSavedView(args: UpdateSavedViewParams): Promise<SavedViewMinimalResponse>;
+  getSavedViewMinimal(
+    args: SingleSavedViewParams
+  ): Promise<SavedViewMinimalResponse>;
+  getSavedViewRepresentation(
+    args: SingleSavedViewParams
+  ): Promise<SavedViewRepresentationResponse>;
+  getAllSavedViewsRepresentation(
+    args: GetSavedViewsParams
+  ): Promise<SavedViewListRepresentationResponse>;
+  getAllSavedViewsMinimal(
+    args: GetSavedViewsParams
+  ): Promise<SavedViewListMinimalResponse>;
+  createSavedView(
+    args: CreateSavedViewParams
+  ): Promise<SavedViewMinimalResponse>;
+  updateSavedView(
+    args: UpdateSavedViewParams
+  ): Promise<SavedViewMinimalResponse>;
   deleteSavedView(args: SingleSavedViewParams): Promise<void>;
 
   getImage(args: GetImageParams): Promise<ImageResponse>;

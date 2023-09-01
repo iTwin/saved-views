@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 
 export interface CallITwinApiParams {
-  method: "GET"|"POST"|"PATCH"|"PUT"|"DELETE";
+  method: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
   url: string;
   getAccessToken: () => Promise<string>;
   signal?: AbortSignal | undefined;
@@ -12,22 +12,21 @@ export interface CallITwinApiParams {
   body?: object | undefined;
 }
 
-export async function callITwinApi(args: CallITwinApiParams): Promise<Record<string, unknown>> {
-  const response = await fetch(
-    args.url,
-    {
-      method: args.method,
-      headers: {
-        ...args.headers,
-        Authorization: await args.getAccessToken(),
-      },
-      body: args.body && JSON.stringify(args.body),
-      signal: args.signal,
+export async function callITwinApi(
+  args: CallITwinApiParams
+): Promise<Record<string, unknown>> {
+  const response = await fetch(args.url, {
+    method: args.method,
+    headers: {
+      ...args.headers,
+      Authorization: await args.getAccessToken(),
     },
-  );
+    body: args.body && JSON.stringify(args.body),
+    signal: args.signal,
+  });
 
   if (!response.ok) {
-    await throwBadResponseCodeError(response, "iTwin API request failed.");
+    await throwBadResponseCodeError(response, "ITwin API request failed.");
   }
 
   return response.json();
@@ -35,13 +34,15 @@ export async function callITwinApi(args: CallITwinApiParams): Promise<Record<str
 
 async function throwBadResponseCodeError(
   response: Response,
-  errorMessage: string,
+  errorMessage: string
 ): Promise<never> {
   let error: unknown;
   try {
     error = (await response.json()).error;
   } catch {
-    throw new Error(`${errorMessage} Unexpected response status code: ${response.status} ${response.statusText}.`);
+    throw new Error(
+      `${errorMessage} Unexpected response status code: ${response.status} ${response.statusText}.`
+    );
   }
 
   throw error;
