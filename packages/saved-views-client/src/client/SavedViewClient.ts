@@ -37,9 +37,7 @@ export interface GetSavedViewsParams extends CommonRequestParams {
   iTwinId: string;
   iModelId?: string;
   groupId?: string;
-  /** optional param for top of page */
   top?: string;
-  /** optional param for skip of page*/
   skip?: string;
 }
 
