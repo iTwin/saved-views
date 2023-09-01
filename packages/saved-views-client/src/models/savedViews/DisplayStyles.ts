@@ -15,26 +15,29 @@ export interface RgbColorProps {
  * affects various aspects of the display style - in particular, whether and how surfaces and their edges are drawn.
  */
 export enum RenderMode {
-  /** Renders only the edges of surfaces, with exceptions for planar regions based on their FillFlags.
-   * Lighting (and by extension, shadows) is not applied.
-   * HiddenLine.Settings are not applied - edges use the elements' width, style, and color.
-   * ViewFlags.hiddenEdges is ignored - hidden edges are never displayed in wireframe mode.
+  /**
+   * Renders only the edges of surfaces, with exceptions for planar regions based on their FillFlags. Lighting
+   * (and by extension, shadows) is not applied. HiddenLine.Settings are not applied - edges use the elements' width,
+   * style, and color. ViewFlags.hiddenEdges is ignored - hidden edges are never displayed in wireframe mode.
    */
   Wireframe = 0,
-  /** By default, renders surfaces without their edges.
-   * Lighting and shadows can be applied using ViewFlags.lighting and ViewFlags.shadows.
-   * Edges can be enabled using ViewFlags.visibleEdges and ViewFlags.hiddenEdges, and their appearance customized using HiddenLine.Settings.
-   * Surfaces can be drawn with transparency, based on ViewFlags.transparency.
+  /**
+   * By default, renders surfaces without their edges. Lighting and shadows can be applied using ViewFlags.lighting and
+   * ViewFlags.shadows. Edges can be enabled using ViewFlags.visibleEdges and ViewFlags.hiddenEdges, and their
+   * appearance customized using HiddenLine.Settings. Surfaces can be drawn with transparency, based on
+   * ViewFlags.transparency.
    */
   SmoothShade = 6,
-  /** Renders surfaces and their edges. By default, edges are drawn in white; this can be overridden using HiddenLine.Settings.
-   * All surfaces are rendered opaque. If a surface's transparency is below that specified by HiddenLine.Settings.transparencyThreshold, it is not rendered.
-   * Materials and textures are not applied - surfaces are drawn in their actual colors.
-   * ViewFlags.visibleEdges is ignored - visible edges are always drawn. Hidden edges can be enabled using ViewFlags.hiddenEdges.
-   * Lighting (and by extension, shadows) is not applied.
+  /**
+   * Renders surfaces and their edges. By default, edges are drawn in white; this can be overridden using
+   * HiddenLine.Settings. All surfaces are rendered opaque. If a surface's transparency is below that specified by
+   * HiddenLine.Settings.transparencyThreshold, it is not rendered. Materials and textures are not applied - surfaces
+   * are drawn in their actual colors. ViewFlags.visibleEdges is ignored - visible edges are always drawn. Hidden edges
+   * can be enabled using ViewFlags.hiddenEdges. Lighting (and by extension, shadows) is not applied.
    */
   SolidFill = 4,
-  /** Identical to RenderMode.SolidFill, except:
+  /**
+   * Identical to RenderMode.SolidFill, except:
    *  - Surfaces are drawn using the DisplayStyle's background color.
    *  - Edges are drawn using their surface's colors; this can be overridden using HiddenLine.Settings.
    */
