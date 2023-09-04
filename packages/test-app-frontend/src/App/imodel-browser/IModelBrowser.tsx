@@ -106,7 +106,7 @@ export function IModelTile(props: IModelTileProps): ReactElement {
       description={props.description ?? <Text isSkeleton />}
       thumbnail={thumbnail ?? <div ref={divRef} id="imodel-thumbnail-placeholder" />}
       isActionable
-      onClick={() => navigate(`/open-imodel/${props.iTwinId}/${props.iModelId}`)}
+      onClick={() => navigate(`/itwinjs/open-imodel/${props.iTwinId}/${props.iModelId}`)}
     />
   );
 }

@@ -1,0 +1,12 @@
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+
+.svr-searchable-submenu-item {
+  width: calc(10 * var(--iui-size-l));
+}
+
+.svr-semibold {
+  font-weight: "var(--iui-font-weight-semibold)";
+}

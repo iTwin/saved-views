@@ -2,7 +2,7 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { AppNotificationManager, ConfigurableUiContent, UiFramework } from "@itwin/appui-react";
+import { AppNotificationManager, UiFramework } from "@itwin/appui-react";
 import { Id64 } from "@itwin/core-bentley";
 import {
   AuthorizationClient, BentleyCloudRpcManager, BentleyCloudRpcParams, IModelReadRpcInterface, IModelTileRpcInterface,
@@ -13,13 +13,14 @@ import { UiCore } from "@itwin/core-react";
 import { FrontendIModelsAccess } from "@itwin/imodels-access-frontend";
 import { IModelsClient } from "@itwin/imodels-client-management";
 import { PageLayout } from "@itwin/itwinui-layouts-react";
-import { toaster } from "@itwin/itwinui-react";
-import { ReactElement, useEffect, useState } from "react";
-import { AbstractTagClient, Group, GroupUpdate, IGroupClient, ISavedViewsClient, ITagClient, ReadOnlyTag, SavedViewBase, SavedViewBaseSetting, SavedViewBaseUpdate, SavedViewsManager, SavedViewsWidget, Tag } from "@itwin/saved-views-react";
+import { Button, MenuItem, toaster } from "@itwin/itwinui-react";
+import {
+  ITwinSavedViewsClient, SavedViewOptions, SavedViewsFolderWidget, useSavedViews,
+} from "@itwin/saved-views-react";
+import { ReactElement, useEffect, useMemo, useState } from "react";
 
 import { applyUrlPrefix } from "../../environment";
 import { LoadingScreen } from "../common/LoadingScreen";
-import { UIFramework } from "./AppUI/UiFramework";
 
 export interface ITwinJsAppProps {
   iTwinId: string;
@@ -62,6 +63,15 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
     [iModel],
   );
 
+  const client = useMemo(
+    () => new ITwinSavedViewsClient({
+      getAccessToken: () => props.authorizationClient.getAccessToken(),
+      baseUrl: "https://qa-api.bentley.com/savedviews",
+    }),
+    [props.authorizationClient],
+  );
+  const savedViews = useSavedViews({ iTwinId: props.iTwinId, iModelId: props.iModelId, client });
+
   if (loadingState === "opening-imodel") {
     return <LoadingScreen>Opening iModel...</LoadingScreen>;
   }
@@ -74,12 +84,44 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
     return <LoadingScreen>Creating ViewState...</LoadingScreen>;
   }
 
+  if (!savedViews) {
+    return <LoadingScreen>Loading saved views...</LoadingScreen>;
+  }
+
+  const groups = [...savedViews.groups.values()];
+  const tags = [...savedViews.tags.values()];
+
   return (
     <PageLayout.Content>
-      <UIFramework>
-        <SavedViewsWidget iModelConnection={iModel} />
-        <ConfigurableUiContent />
-      </UIFramework>
+      <Button onClick={() => savedViews.createSavedView("0 Saved View Name")}>Create saved view</Button>
+      <Button onClick={() => savedViews.createGroup("0 Group")}>Create group</Button>
+      <SavedViewsFolderWidget
+        savedViews={savedViews.savedViews}
+        groups={savedViews.groups}
+        tags={savedViews.tags}
+        actions={{
+          renameSavedView: savedViews.renameSavedView,
+          renameGroup: savedViews.renameGroup,
+          deleteGroup: savedViews.deleteGroup,
+        }}
+        editable
+        options={(savedView) => [
+          <SavedViewOptions.MoveToGroup
+            key="move"
+            groups={groups}
+            moveToGroup={savedViews.moveToGroup}
+            moveToNewGroup={savedViews.moveToNewGroup}
+          />,
+          <SavedViewOptions.ManageTags
+            key="tags"
+            tags={tags}
+            addTag={savedViews.addTag}
+            addNewTag={savedViews.addNewTag}
+            removeTag={savedViews.removeTag}
+          />,
+          <MenuItem key="delete" onClick={() => savedViews.deleteSavedView(savedView.id)}>Delete</MenuItem>,
+        ]}
+      />
     </PageLayout.Content >
   );
 }
@@ -106,16 +148,6 @@ export async function initializeITwinJsApp(_authorizationClient: AuthorizationCl
 
   BentleyCloudRpcManager.initializeClient(rpcParams, [IModelReadRpcInterface, IModelTileRpcInterface]);
   await Promise.all([UiCore.initialize(IModelApp.localization), UiFramework.initialize(undefined)]);
-
-  await SavedViewsManager.initialize(
-    IModelApp.localization as ITwinLocalization,
-    {
-      userId: "userId",
-      groupClient: new MockGroupClient(),
-      savedViewsClient: new MockSavedViewsClient(),
-      tagClient: new MockTagClient(),
-    },
-  );
 }
 
 function useIModel(
@@ -174,108 +206,4 @@ async function getStoredViewState(iModel: IModelConnection): Promise<ViewState |
   }
 
   return viewId ? iModel.views.load(viewId) : undefined;
-}
-
-class MockGroupClient implements IGroupClient {
-  public async createGroup(_iModelConnection: IModelConnection, group: Group): Promise<Group> {
-    return group;
-  }
-
-  public async updateGroup(_: IModelConnection, updatedGroup: GroupUpdate, oldGroup: Group): Promise<Group> {
-    return { ...oldGroup, name: updatedGroup.name ?? oldGroup.name };
-  }
-
-  public async deleteGroup(): Promise<void> { }
-
-  public async shareGroup(_iModelConnection: IModelConnection, group: Group): Promise<Group> {
-    return group;
-  }
-
-  public async getGroups(): Promise<Group[]> {
-    return [];
-  }
-
-  public async getGroup(id: string): Promise<Group> {
-    return { id, name: "group", shared: false, userId: "userId" };
-  }
-}
-
-const categorySelectorProps = { classFullName: "", model: "", code: { spec: "", scope: "" }, categories: [] };
-
-class MockSavedViewsClient implements ISavedViewsClient {
-  public async getViewSetting(id: string): Promise<SavedViewBaseSetting> {
-    return { id, name: "savedView", shared: false, thumbnailId: "thumbnailId", categorySelectorProps };
-  }
-
-  public async getView(id: string): Promise<SavedViewBase> {
-    return { id, name: "savedView", shared: false, categorySelectorProps };
-  }
-
-  public async createSavedView(_iModelConnection: IModelConnection, savedView: SavedViewBase): Promise<SavedViewBase> {
-    return savedView;
-  }
-
-  public async createSavedViewByIds(
-    _projectId: string,
-    _iModelId: string | undefined,
-    savedView: SavedViewBase,
-  ): Promise<SavedViewBase> {
-    return savedView;
-  }
-
-  public async updateSavedView(
-    _iModelConnection: IModelConnection,
-    updatedView: SavedViewBaseUpdate,
-    oldView: SavedViewBase,
-  ): Promise<SavedViewBase> {
-    return { ...oldView, ...updatedView };
-  }
-
-  public async deleteSavedView(): Promise<void> { }
-
-  public async deleteSavedViewByIds(): Promise<void> { }
-
-  public async shareView(_iModelConnection: IModelConnection, view: SavedViewBase): Promise<SavedViewBase> {
-    return view;
-  }
-
-  public async getSavedViews(): Promise<SavedViewBase[]> {
-    return [];
-  }
-
-  public async getSavedViewsFromIds(): Promise<SavedViewBase[]> {
-    return [];
-  }
-}
-
-class MockTagClient extends AbstractTagClient implements ITagClient {
-  public override async getTagsOnModel(): Promise<Tag[]> {
-    return [];
-  }
-
-  public override async updateTagsOnModel(
-    _iModelConnection: IModelConnection,
-    _currentTags: Tag[],
-    newTags: Tag[],
-  ): Promise<Tag[]> {
-    return newTags;
-  }
-
-  public async deleteTag(): Promise<void> { }
-
-  public async createTag(_iModelConnection: IModelConnection, tag: Tag): Promise<ReadOnlyTag> {
-    return { ...tag, id: "tagId", links: { creator: { href: "" } } };
-  }
-
-  public async updateTag(_tagId: string, updatedTag: Tag): Promise<Tag> {
-    return updatedTag;
-  }
-
-  public async getTags(): Promise<Tag[]> {
-    return [];
-  }
-
-  public async getTag(tagId: string): Promise<Tag> {
-    return { name: tagId, createdByUserId: "userId" };
-  }
 }
