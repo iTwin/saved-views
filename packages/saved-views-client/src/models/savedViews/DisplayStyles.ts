@@ -130,7 +130,7 @@ export interface PlanProjectionSettingsProps {
    * If defined and true, subcategory display priority is used to specify the draw order of portions of the model.
    * Geometry belonging to a subcategory with a higher priority value is drawn on top of coincident geometry
    * belonging to a subcategory with a lower priority value.
-   * The priorities can be modified at display time using are drawn as part of the same layer.
+   * The priorities can be modified at display time.
    */
   enforceDisplayPriority?: boolean;
 }
@@ -414,7 +414,7 @@ export interface SkyBoxImageProps {
  * For a two-color gradient, the gradient transitions smoothly from the nadir color at the bottom of the sphere to the zenith color at the top of the sphere.
  * The sky and ground colors are unused, as are the sky and ground exponents.
  *
- * smoothly from the ground color at the equator to the nadir color at the bottom, and the upper half transitions from the sky color at the equator to the zenith color at
+ * Displayed smoothly from the ground color at the equator to the nadir color at the bottom, and the upper half transitions from the sky color at the equator to the zenith color at
  * the top of the sphere.
  *
  * The color and exponent properties are unused if one or more texture images are supplied.

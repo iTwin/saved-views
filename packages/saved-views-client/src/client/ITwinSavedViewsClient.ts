@@ -4,7 +4,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import {
-  CommonRequestParams,
   CreateExtensionParams,
   CreateGroupParams,
   CreateSavedViewParams,
@@ -53,17 +52,6 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     this.getAccessToken = args.getAccessToken;
   }
 
-  private createBodyFromArgs(args: Record<string, any>) {
-    // is there a way to get around using any here ?
-    const keysToIgnore = ["headers", "signal", "prefer"];
-    return Object.keys(args)
-      .filter((key) => !keysToIgnore.includes(key))
-      .reduce((result, key) => {
-        result[key] = args[key];
-        return result;
-      }, {} as Record<string, any>);
-  }
-
   private async queryITwinApi<ReturnType>(
     queyParams: QueryParams,
   ): Promise<ReturnType> {
@@ -71,9 +59,10 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       url: queyParams.url,
       method: queyParams.method,
       getAccessToken: this.getAccessToken,
-      signal: queyParams.requestParams.signal,
+      signal: queyParams.signal,
       headers: {
         Accept: "application/vnd.bentley.ITwin-platform.v1+json",
+        ...queyParams.headers,
       },
       body: queyParams.body,
     }) as ReturnType;
@@ -83,11 +72,9 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     args: SingleSavedViewParams,
   ): Promise<SavedViewRepresentationResponse> {
     return this.queryITwinApi({
-      requestParams: {
-        ...args,
-        headers: {
-          prefer: PreferOptions.Representation,
-        },
+      signal: args.signal,
+      headers: {
+        prefer: PreferOptions.Representation,
       },
       url: `${this.baseUrl}/${args.savedViewId}`,
       method: "GET",
@@ -98,11 +85,9 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     args: SingleSavedViewParams,
   ): Promise<SavedViewMinimalResponse> {
     return this.queryITwinApi({
-      requestParams: {
-        ...args,
-        headers: {
-          prefer: PreferOptions.Minimal,
-        },
+      signal: args.signal,
+      headers: {
+        prefer: PreferOptions.Minimal,
       },
       url: `${this.baseUrl}/${args.savedViewId}`,
       method: "GET",
@@ -118,11 +103,9 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     const skip = args.skip ? `&$skip=${args.skip}` : "";
     const url = `${this.baseUrl}/?ITwinId=${args.ITwinId}${iModelId}${groupId}${top}${skip}`;
     return this.queryITwinApi({
-      requestParams: {
-        ...args,
-        headers: {
-          prefer: PreferOptions.Representation,
-        },
+      signal: args.signal,
+      headers: {
+        prefer: PreferOptions.Representation,
       },
       url: url,
       method: "GET",
@@ -138,11 +121,9 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     const skip = args.skip ? `&$skip=${args.skip}` : "";
     const url = `${this.baseUrl}/?ITwinId=${args.ITwinId}${iModelId}${groupId}${top}${skip}`;
     return this.queryITwinApi({
-      requestParams: {
-        ...args,
-        headers: {
-          prefer: PreferOptions.Minimal,
-        },
+      signal: args.signal,
+      headers: {
+        prefer: PreferOptions.Minimal,
       },
       url: url,
       method: "GET",
@@ -152,45 +133,48 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   async createSavedView(
     args: CreateSavedViewParams,
   ): Promise<SavedViewMinimalResponse> {
+    const { signal, ...body } = args;
     return this.queryITwinApi({
-      requestParams: args,
+      signal: signal,
       url: `${this.baseUrl}/`,
       method: "POST",
-      body: this.createBodyFromArgs(args as Record<string, any>),
+      body: body,
     });
   }
 
   async updateSavedView(
     args: UpdateSavedViewParams,
   ): Promise<SavedViewMinimalResponse> {
+    const { savedViewId, signal, ...body } = args;
     return this.queryITwinApi({
-      requestParams: args,
-      url: `${this.baseUrl}/${args.savedViewId}`,
+      signal,
+      url: `${this.baseUrl}/${savedViewId}`,
       method: "PATCH",
-      body: this.createBodyFromArgs(args as Record<string, any>),
+      body: body,
     });
   }
 
   async deleteSavedView(args: SingleSavedViewParams): Promise<void> {
     return this.queryITwinApi({
-      requestParams: args,
+      signal: args.signal,
       url: `${this.baseUrl}/${args.savedViewId}`,
       method: "DELETE",
     });
   }
 
   async createTag(args: CreateTagParams): Promise<TagResponse> {
+    const { signal, ...body } = args;
     return this.queryITwinApi({
-      requestParams: args,
+      signal,
       url: `${this.baseUrl}/tags`,
       method: "POST",
-      body: this.createBodyFromArgs(args as Record<string, any>),
+      body: body,
     });
   }
 
   async getTag(args: SingleTagParams): Promise<TagResponse> {
     return this.queryITwinApi({
-      requestParams: args,
+      signal: args.signal,
       url: `${this.baseUrl}/tags/${args.tagId}`,
       method: "GET",
     });
@@ -200,7 +184,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     const iModelId = args.iModelId ? `&iModelId=${args.iModelId}` : "";
     const url = `${this.baseUrl}/tags/?ITwinId=${args.ITwinId}${iModelId}`;
     return this.queryITwinApi({
-      requestParams: args,
+      signal: args.signal,
       url: url,
       method: "GET",
     });
@@ -208,41 +192,43 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
 
   async deleteTag(args: SingleTagParams): Promise<void> {
     return this.queryITwinApi({
-      requestParams: args,
+      signal: args.signal,
       url: `${this.baseUrl}/tags/${args.tagId}`,
       method: "DELETE",
     });
   }
 
   async updateTag(args: UpdateTagParams): Promise<TagResponse> {
+    const { tagId, signal, ...body } = args;
     return this.queryITwinApi({
-      requestParams: args,
-      url: `${this.baseUrl}/tags/${args.tagId}`,
+      signal,
+      url: `${this.baseUrl}/tags/${tagId}`,
       method: "PATCH",
-      body: this.createBodyFromArgs(args as Record<string, any>),
+      body: body,
     });
   }
 
   async getImage(args: GetImageParams): Promise<ImageResponse> {
     return this.queryITwinApi({
-      requestParams: args,
+      signal: args.signal,
       url: `${this.baseUrl}/${args.savedViewId}/image?size=${args.size}`,
       method: "GET",
     });
   }
 
   async updateImage(args: UpdateImageParams): Promise<void> {
+    const { savedViewId, signal, ...body } = args;
     return this.queryITwinApi({
-      requestParams: args,
+      signal: signal,
       url: `${this.baseUrl}/${args.savedViewId}/image`,
       method: "PUT",
-      body: this.createBodyFromArgs(args as Record<string, any>),
+      body: body,
     });
   }
 
   async getGroup(args: SingleGroupParams): Promise<GroupResponse> {
     return this.queryITwinApi({
-      requestParams: args,
+      signal: args.signal,
       url: `${this.baseUrl}/groups/${args.groupId}`,
       method: "GET",
     });
@@ -252,33 +238,35 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     const iModelId = args.iModelId ? `&iModelId=${args.iModelId}` : "";
     const url = `${this.baseUrl}/groups/?ITwinId=${args.ITwinId}${iModelId}`;
     return this.queryITwinApi({
-      requestParams: args,
+      signal: args.signal,
       url: url,
       method: "GET",
     });
   }
 
   async createGroup(args: CreateGroupParams): Promise<GroupResponse> {
+    const { signal, ...body } = args;
     return this.queryITwinApi({
-      requestParams: args,
+      signal,
       url: `${this.baseUrl}/groups/`,
       method: "POST",
-      body: this.createBodyFromArgs(args as Record<string, any>),
+      body: body,
     });
   }
 
   async updateGroup(args: UpdateGroupParams): Promise<GroupResponse> {
+    const { groupId, signal, ...body } = args;
     return this.queryITwinApi({
-      requestParams: args,
-      url: `${this.baseUrl}/groups/${args.groupId}`,
+      signal: signal,
+      url: `${this.baseUrl}/groups/${groupId}`,
       method: "PATCH",
-      body: this.createBodyFromArgs(args as Record<string, any>),
+      body: body,
     });
   }
 
   async deleteGroup(args: SingleGroupParams): Promise<void> {
     return this.queryITwinApi({
-      requestParams: args,
+      signal: args.signal,
       url: `${this.baseUrl}/groups/${args.groupId}`,
       method: "DELETE",
     });
@@ -287,17 +275,18 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   async createExtension(
     args: CreateExtensionParams,
   ): Promise<ExtensionResponse> {
+    const { savedViewId, signal, ...body } = args;
     return this.queryITwinApi({
-      requestParams: args,
-      url: `${this.baseUrl}/${args.savedViewId}/extensions/`,
+      signal,
+      url: `${this.baseUrl}/${savedViewId}/extensions/`,
       method: "PUT",
-      body: this.createBodyFromArgs(args as Record<string, any>),
+      body: body,
     });
   }
 
   async getExtension(args: SingleExtensionParams): Promise<ExtensionResponse> {
     return this.queryITwinApi({
-      requestParams: args,
+      signal: args.signal,
       url: `${this.baseUrl}/${args.savedViewId}/extensions/${args.extensionName}`,
       method: "GET",
     });
@@ -307,7 +296,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     args: GetExtensionsParams,
   ): Promise<ExtensionListResponse> {
     return this.queryITwinApi({
-      requestParams: args,
+      signal: args.signal,
       url: `${this.baseUrl}/${args.savedViewId}/extensions/`,
       method: "GET",
     });
@@ -315,7 +304,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
 
   async deleteExtension(args: SingleExtensionParams): Promise<void> {
     return this.queryITwinApi({
-      requestParams: args,
+      signal: args.signal,
       url: `${this.baseUrl}/${args.savedViewId}/extensions/${args.extensionName}`,
       method: "DELETE",
     });
@@ -335,12 +324,11 @@ export enum PreferOptions {
 }
 
 interface QueryParams {
-  requestParams: RequestParams;
+  signal?: AbortSignal | undefined,
+  headers?: {
+    prefer?: PreferOptions;
+  };
   url: string;
   method: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
   body?: object | undefined;
-}
-
-interface RequestParams extends CommonRequestParams {
-  headers?: Record<string, string>;
 }
