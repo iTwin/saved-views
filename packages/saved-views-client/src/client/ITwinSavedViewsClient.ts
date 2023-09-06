@@ -65,7 +65,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     });
   }
 
-  async getAllSavedViewsRepresentation(args: GetSavedViewsParams, ): Promise<SavedViewListRepresentationResponse> {
+  async getAllSavedViewsRepresentation(args: GetSavedViewsParams ): Promise<SavedViewListRepresentationResponse> {
     const iModelId = args.iModelId ? `&iModelId=${args.iModelId}` : "";
     const groupId = args.groupId ? `&groupId=${args.groupId}` : "";
     const top = args.top ? `&$top=${args.top}` : "";
