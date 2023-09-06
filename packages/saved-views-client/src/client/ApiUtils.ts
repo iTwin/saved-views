@@ -32,10 +32,7 @@ export async function callITwinApi(
   return response.json();
 }
 
-async function throwBadResponseCodeError(
-  response: Response,
-  errorMessage: string,
-): Promise<never> {
+async function throwBadResponseCodeError(response: Response, errorMessage: string): Promise<never> {
   let error: unknown;
   try {
     error = (await response.json()).error;

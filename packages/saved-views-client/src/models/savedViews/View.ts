@@ -5,10 +5,7 @@
 import { Extension, ExtensionMin } from "../Extension.js";
 import { HalLinks } from "../Links.js";
 import { SavedViewTag } from "../Tag.js";
-import {
-  DisplayStyle3dSettingsProps,
-  DisplayStyleSettingsProps,
-} from "./DisplayStyles.js";
+import { DisplayStyle3dSettingsProps, DisplayStyleSettingsProps } from "./DisplayStyles.js";
 
 /**
  * Wire format describing a ClipPlane. If either normal or dist are omitted, defaults to a normal of Vector3d.unitZ and
@@ -137,18 +134,7 @@ export interface ViewWithLegacy extends View {
 
 export interface SavedView {
   tags?: SavedViewTag[];
-  _links: HalLinks<
-    [
-      "savedView",
-      "image",
-      "thumbnail",
-      "iTwin"?,
-      "project"?,
-      "iModel"?,
-      "creator"?,
-      "group"?,
-    ]
-  >;
+  _links: HalLinks<["savedView", "image", "thumbnail", "iTwin"?, "project"?, "iModel"?, "creator"?, "group"?]>;
   id: string;
   displayName: string;
   shared: boolean;

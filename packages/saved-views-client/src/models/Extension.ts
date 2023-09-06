@@ -9,9 +9,7 @@ export interface Extension {
   markdownUrl: string;
   schemaUrl: string;
   data: string;
-  _links: HalLinks<
-    ["savedView", "iTwin"?, "project"?, "prev"?, "iModel"?, "self"?]
-  >;
+  _links: HalLinks<["savedView", "iTwin"?, "project"?, "prev"?, "iModel"?, "self"?]>;
 }
 
 export interface ExtensionsResponse {

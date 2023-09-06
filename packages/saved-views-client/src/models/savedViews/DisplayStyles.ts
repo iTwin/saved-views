@@ -161,8 +161,8 @@ export enum PlanarClipMaskMode {
 }
 
 /**
- * The default priority values for a PlanarClipMaskSettings, based on model type. Models with a lower priority are masked by models with a higher priority.
- * The default can be overridden by PlanarClipMaskSettings.priority.
+ * The default priority values for a PlanarClipMaskSettings, based on model type. Models with a lower priority are
+ * masked by models with a higher priority. The default can be overridden by PlanarClipMaskSettings.priority.
  */
 export enum PlanarClipMaskPriority {
   /** Background map. */
@@ -409,13 +409,14 @@ export interface SkyBoxImageProps {
  *  - A sphere with a single texture image mapped to its surface; or
  *  - A sphere with a two- or four-color vertical Gradient mapped to its surface.
  *
- * Whether cuboid or spherical, the skybox is drawn as if the viewer and the contents of the view are contained within its interior.
+ * Whether cuboid or spherical, the skybox is drawn as if the viewer and the contents of the view are contained within
+ * its interior.
  *
- * For a two-color gradient, the gradient transitions smoothly from the nadir color at the bottom of the sphere to the zenith color at the top of the sphere.
- * The sky and ground colors are unused, as are the sky and ground exponents.
+ * For a two-color gradient, the gradient transitions smoothly from the nadir color at the bottom of the sphere to the
+ * zenith color at the top of the sphere. The sky and ground colors are unused, as are the sky and ground exponents.
  *
- * Displayed smoothly from the ground color at the equator to the nadir color at the bottom, and the upper half transitions from the sky color at the equator to the zenith color at
- * the top of the sphere.
+ * Displayed smoothly from the ground color at the equator to the nadir color at the bottom, and the upper half
+ * transitions from the sky color at the equator to the zenith color at the top of the sphere.
  *
  * The color and exponent properties are unused if one or more texture images are supplied.
  */
