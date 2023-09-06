@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /*---------------------------------------------------------------------------------------------
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
@@ -273,7 +272,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
 }
 
 /** Prefer enum for request. */
-export enum PreferOptions {
+enum PreferOptions {
   /**
    * affects the granularity of the data returned
    *  ONLY for get requests will be ignored for PUT POST DELETE
