@@ -37,7 +37,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       getAccessToken: this.getAccessToken,
       signal: queyParams.signal,
       headers: {
-        Accept: "application/vnd.bentley.ITwin-platform.v1+json",
+        Accept: "application/vnd.bentley.itwin-platform.v1+json",
         ...queyParams.headers,
       },
       body: queyParams.body,
@@ -158,7 +158,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
 
   async getAllTags(args: GetTagsParams): Promise<TagListResponse> {
     const iModelId = args.iModelId ? `&iModelId=${args.iModelId}` : "";
-    const url = `${this.baseUrl}/tags/?ITwinId=${args.iTwinId}${iModelId}`;
+    const url = `${this.baseUrl}/tags/?iTwinId=${args.iTwinId}${iModelId}`;
     return this.queryITwinApi({
       signal: args.signal,
       url: url,
@@ -212,7 +212,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
 
   async getAllGroups(args: GetGroupsParams): Promise<GroupListResponse> {
     const iModelId = args.iModelId ? `&iModelId=${args.iModelId}` : "";
-    const url = `${this.baseUrl}/groups/?ITwinId=${args.iTwinId}${iModelId}`;
+    const url = `${this.baseUrl}/groups/?iTwinId=${args.iTwinId}${iModelId}`;
     return this.queryITwinApi({
       signal: args.signal,
       url: url,

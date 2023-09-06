@@ -26,7 +26,7 @@ export async function callITwinApi(
   });
 
   if (!response.ok) {
-    await throwBadResponseCodeError(response, "ITwin API request failed.");
+    await throwBadResponseCodeError(response, "iTwin API request failed.");
   }
 
   return response.json();
