@@ -2,20 +2,11 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import {
-  Extension,
-  ExtensionListItem,
-  ExtensionMin,
-  ExtensionSavedViewCreate,
-} from "../models/Extension.js";
+import { Extension, ExtensionListItem, ExtensionMin, ExtensionSavedViewCreate } from "../models/Extension.js";
 import { Group } from "../models/Group.js";
 import { HalLinks } from "../models/Links.js";
 import { Tag } from "../models/Tag.js";
-import {
-  SavedViewWithDataMinimal,
-  SavedViewWithDataRepresentation,
-  View,
-} from "../models/savedViews/View.js";
+import { SavedViewWithDataMinimal, SavedViewWithDataRepresentation, View } from "../models/savedViews/View.js";
 
 export interface CommonRequestParams {
   signal?: AbortSignal;
@@ -176,24 +167,12 @@ export interface TagListResponse {
 }
 
 export interface SavedViewsClient {
-  getSavedViewMinimal(
-    args: SingleSavedViewParams
-  ): Promise<SavedViewMinimalResponse>;
-  getSavedViewRepresentation(
-    args: SingleSavedViewParams
-  ): Promise<SavedViewRepresentationResponse>;
-  getAllSavedViewsRepresentation(
-    args: GetSavedViewsParams
-  ): Promise<SavedViewListRepresentationResponse>;
-  getAllSavedViewsMinimal(
-    args: GetSavedViewsParams
-  ): Promise<SavedViewListMinimalResponse>;
-  createSavedView(
-    args: CreateSavedViewParams
-  ): Promise<SavedViewMinimalResponse>;
-  updateSavedView(
-    args: UpdateSavedViewParams
-  ): Promise<SavedViewMinimalResponse>;
+  getSavedViewMinimal(args: SingleSavedViewParams): Promise<SavedViewMinimalResponse>;
+  getSavedViewRepresentation(args: SingleSavedViewParams): Promise<SavedViewRepresentationResponse>;
+  getAllSavedViewsRepresentation(args: GetSavedViewsParams): Promise<SavedViewListRepresentationResponse>;
+  getAllSavedViewsMinimal(args: GetSavedViewsParams): Promise<SavedViewListMinimalResponse>;
+  createSavedView(args: CreateSavedViewParams): Promise<SavedViewMinimalResponse>;
+  updateSavedView(args: UpdateSavedViewParams): Promise<SavedViewMinimalResponse>;
   deleteSavedView(args: SingleSavedViewParams): Promise<void>;
 
   getImage(args: GetImageParams): Promise<ImageResponse>;
