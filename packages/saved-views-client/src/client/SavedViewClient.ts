@@ -8,14 +8,38 @@ import { HalLinks } from "../models/Links.js";
 import { Tag } from "../models/Tag.js";
 import { SavedViewWithDataMinimal, SavedViewWithDataRepresentation, View } from "../models/savedViews/View.js";
 
-export interface CommonRequestParams {
-  signal?: AbortSignal;
+export interface SavedViewsClient {
+  getSavedViewMinimal(args: SingleSavedViewParams): Promise<SavedViewMinimalResponse>;
+  getSavedViewRepresentation(args: SingleSavedViewParams): Promise<SavedViewRepresentationResponse>;
+  getAllSavedViewsRepresentation(args: GetSavedViewsParams): Promise<SavedViewListRepresentationResponse>;
+  getAllSavedViewsMinimal(args: GetSavedViewsParams): Promise<SavedViewListMinimalResponse>;
+  createSavedView(args: CreateSavedViewParams): Promise<SavedViewMinimalResponse>;
+  updateSavedView(args: UpdateSavedViewParams): Promise<SavedViewMinimalResponse>;
+  deleteSavedView(args: SingleSavedViewParams): Promise<void>;
+
+  getImage(args: GetImageParams): Promise<ImageResponse>;
+  updateImage(args: UpdateImageParams): Promise<void>;
+
+  getGroup(args: SingleGroupParams): Promise<GroupResponse>;
+  getAllGroups(args: GetGroupsParams): Promise<GroupListResponse>;
+  createGroup(args: CreateGroupParams): Promise<GroupResponse>;
+  updateGroup(args: UpdateGroupParams): Promise<GroupResponse>;
+  deleteGroup(args: SingleGroupParams): Promise<void>;
+
+  createExtension(args: CreateExtensionParams): Promise<ExtensionResponse>;
+  getExtension(args: SingleExtensionParams): Promise<ExtensionResponse>;
+  getAllExtensions(args: GetExtensionsParams): Promise<ExtensionListResponse>;
+  deleteExtension(args: SingleExtensionParams): Promise<void>;
+
+  createTag(args: CreateTagParams): Promise<TagResponse>;
+  getTag(args: SingleTagParams): Promise<TagResponse>;
+  getAllTags(args: GetTagsParams): Promise<TagListResponse>;
+  deleteTag(args: SingleTagParams): Promise<void>;
+  updateTag(args: UpdateTagParams): Promise<TagResponse>;
 }
 
-/** Image Size enum for request. */
-export enum ImageSize {
-  Full = "full",
-  Thumbnail = "thumbnail",
+export interface CommonRequestParams {
+  signal?: AbortSignal;
 }
 
 export interface GetExtensionsParams extends CommonRequestParams {
@@ -72,6 +96,12 @@ export interface SavedViewListMinimalResponse {
 export interface SavedViewListRepresentationResponse {
   savedViews: SavedViewWithDataRepresentation[];
   _links: HalLinks<["self", "prev"?, "next"?]>;
+}
+
+/** Image Size enum for request. */
+export enum ImageSize {
+  Full = "full",
+  Thumbnail = "thumbnail",
 }
 
 export interface GetImageParams extends CommonRequestParams {
@@ -164,34 +194,4 @@ export interface TagResponse {
 export interface TagListResponse {
   tags: Tag[];
   _links: HalLinks<["self"]>;
-}
-
-export interface SavedViewsClient {
-  getSavedViewMinimal(args: SingleSavedViewParams): Promise<SavedViewMinimalResponse>;
-  getSavedViewRepresentation(args: SingleSavedViewParams): Promise<SavedViewRepresentationResponse>;
-  getAllSavedViewsRepresentation(args: GetSavedViewsParams): Promise<SavedViewListRepresentationResponse>;
-  getAllSavedViewsMinimal(args: GetSavedViewsParams): Promise<SavedViewListMinimalResponse>;
-  createSavedView(args: CreateSavedViewParams): Promise<SavedViewMinimalResponse>;
-  updateSavedView(args: UpdateSavedViewParams): Promise<SavedViewMinimalResponse>;
-  deleteSavedView(args: SingleSavedViewParams): Promise<void>;
-
-  getImage(args: GetImageParams): Promise<ImageResponse>;
-  updateImage(args: UpdateImageParams): Promise<void>;
-
-  getGroup(args: SingleGroupParams): Promise<GroupResponse>;
-  getAllGroups(args: GetGroupsParams): Promise<GroupListResponse>;
-  createGroup(args: CreateGroupParams): Promise<GroupResponse>;
-  updateGroup(args: UpdateGroupParams): Promise<GroupResponse>;
-  deleteGroup(args: SingleGroupParams): Promise<void>;
-
-  createExtension(args: CreateExtensionParams): Promise<ExtensionResponse>;
-  getExtension(args: SingleExtensionParams): Promise<ExtensionResponse>;
-  getAllExtensions(args: GetExtensionsParams): Promise<ExtensionListResponse>;
-  deleteExtension(args: SingleExtensionParams): Promise<void>;
-
-  createTag(args: CreateTagParams): Promise<TagResponse>;
-  getTag(args: SingleTagParams): Promise<TagResponse>;
-  getAllTags(args: GetTagsParams): Promise<TagListResponse>;
-  deleteTag(args: SingleTagParams): Promise<void>;
-  updateTag(args: UpdateTagParams): Promise<TagResponse>;
 }

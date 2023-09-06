@@ -12,12 +12,6 @@ import {
   UpdateSavedViewParams, UpdateTagParams,
 } from "./SavedViewClient.js";
 
-export interface ITwinSavedViewsClientParams {
-  /** @default "https://api.bentley.com/savedviews"  */
-  baseUrl?: string;
-  getAccessToken: () => Promise<string>;
-}
-
 /** {@linkcode SavedViewsClient} implementation that calls iTwin APIs. */
 export class ITwinSavedViewsClient implements SavedViewsClient {
   private readonly baseUrl;
@@ -269,6 +263,12 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       method: "DELETE",
     });
   }
+}
+
+export interface ITwinSavedViewsClientParams {
+  /** @default "https://api.bentley.com/savedviews"  */
+  baseUrl?: string;
+  getAccessToken: () => Promise<string>;
 }
 
 /** Prefer enum for request. */
