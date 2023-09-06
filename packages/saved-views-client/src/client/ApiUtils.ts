@@ -12,9 +12,7 @@ export interface CallITwinApiParams {
   body?: object | undefined;
 }
 
-export async function callITwinApi(
-  args: CallITwinApiParams,
-): Promise<Record<string, unknown>> {
+export async function callITwinApi(args: CallITwinApiParams): Promise<Record<string, unknown>> {
   const response = await fetch(args.url, {
     method: args.method,
     headers: {
