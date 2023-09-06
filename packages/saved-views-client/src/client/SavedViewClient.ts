@@ -36,7 +36,7 @@ export interface SingleSavedViewParams extends CommonRequestParams {
 }
 
 export interface GetSavedViewsParams extends CommonRequestParams {
-  ITwinId: string;
+  iTwinId: string;
   iModelId?: string;
   groupId?: string;
   top?: string;
@@ -44,7 +44,7 @@ export interface GetSavedViewsParams extends CommonRequestParams {
 }
 
 export interface CreateSavedViewParams extends CommonRequestParams {
-  ITwinId?: string;
+  iTwinId?: string;
   iModelId?: string;
   id?: string;
   savedViewData: View;
@@ -98,7 +98,7 @@ export interface ImageResponse {
 }
 
 export interface GetGroupsParams extends CommonRequestParams {
-  ITwinId: string;
+  iTwinId: string;
   iModelId?: string;
 }
 
@@ -107,7 +107,7 @@ export interface SingleGroupParams extends CommonRequestParams {
 }
 
 export interface CreateGroupParams extends CommonRequestParams {
-  ITwinId: string;
+  iTwinId: string;
   iModelId?: string;
   displayName: string;
   shared?: boolean;
@@ -148,7 +148,7 @@ export interface ExtensionResponse {
 }
 
 export interface GetTagsParams extends CommonRequestParams {
-  ITwinId: string;
+  iTwinId: string;
   iModelId?: string;
 }
 export interface UpdateTagParams extends CommonRequestParams {
@@ -157,7 +157,7 @@ export interface UpdateTagParams extends CommonRequestParams {
 }
 
 export interface CreateTagParams extends CommonRequestParams {
-  ITwinId?: string;
+  iTwinId?: string;
   iModelId?: string;
   displayName: string;
 }

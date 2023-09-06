@@ -125,9 +125,9 @@ export interface ViewITwinDrawing extends ViewITwin2d {
 
 /** Minimum Saved View structure so every application can have something to work with. */
 export interface View {
-  ITwin3dView?: ViewITwin3d;
-  ITwinSheetView?: ViewITwinSheet;
-  ITwinDrawingView?: ViewITwinDrawing;
+  iTwin3dView?: ViewITwin3d;
+  iTwinSheetView?: ViewITwinSheet;
+  iTwinDrawingView?: ViewITwinDrawing;
 }
 
 /** Minimum saved view structure including possible legacy data from product setting service. */
@@ -142,7 +142,7 @@ export interface SavedView {
       "savedView",
       "image",
       "thumbnail",
-      "ITwin"?,
+      "iTwin"?,
       "project"?,
       "iModel"?,
       "creator"?,

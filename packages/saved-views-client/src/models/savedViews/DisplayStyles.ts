@@ -457,7 +457,7 @@ export interface RealityDataSourceKey {
   provider: string;
   format: string;
   id: string;
-  ITwinId?: string;
+  iTwinId?: string;
 }
 
 /**

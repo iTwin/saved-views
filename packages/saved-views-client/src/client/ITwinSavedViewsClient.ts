@@ -3,38 +3,14 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import {
-  CreateExtensionParams,
-  CreateGroupParams,
-  CreateSavedViewParams,
-  CreateTagParams,
-  ExtensionListResponse,
-  ExtensionResponse,
-  GetExtensionsParams,
-  GetGroupsParams,
-  GetImageParams,
-  GetSavedViewsParams,
-  GetTagsParams,
-  GroupListResponse,
-  GroupResponse,
-  ImageResponse,
-  SavedViewListMinimalResponse,
-  SavedViewListRepresentationResponse,
-  SavedViewMinimalResponse,
-  SavedViewRepresentationResponse,
-  SavedViewsClient,
-  SingleExtensionParams,
-  SingleGroupParams,
-  SingleSavedViewParams,
-  SingleTagParams,
-  TagListResponse,
-  TagResponse,
-  UpdateGroupParams,
-  UpdateImageParams,
-  UpdateSavedViewParams,
-  UpdateTagParams,
-} from "./SavedViewClient.js";
 import { callITwinApi } from "./ApiUtils.js";
+import { CreateExtensionParams, CreateGroupParams, CreateSavedViewParams, CreateTagParams, ExtensionListResponse,
+  ExtensionResponse, GetExtensionsParams, GetGroupsParams, GetImageParams, GetSavedViewsParams, GetTagsParams,
+  GroupListResponse, GroupResponse, ImageResponse, SavedViewListMinimalResponse,
+  SavedViewListRepresentationResponse, SavedViewMinimalResponse, SavedViewRepresentationResponse, SavedViewsClient,
+  SingleExtensionParams, SingleGroupParams, SingleSavedViewParams, SingleTagParams, TagListResponse,
+  TagResponse, UpdateGroupParams, UpdateImageParams, UpdateSavedViewParams, UpdateTagParams,
+} from "./SavedViewClient.js";
 
 export interface ITwinSavedViewsClientParams {
   /** @default "https://api.bentley.com/savedviews"  */
@@ -42,7 +18,7 @@ export interface ITwinSavedViewsClientParams {
   getAccessToken: () => Promise<string>;
 }
 
-/** {@linkcode SavedViewsClient} implementation that calls ITwin APIs. */
+/** {@linkcode SavedViewsClient} implementation that calls iTwin APIs. */
 export class ITwinSavedViewsClient implements SavedViewsClient {
   private readonly baseUrl;
   private readonly getAccessToken: () => Promise<string>;
@@ -101,7 +77,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     const groupId = args.groupId ? `&groupId=${args.groupId}` : "";
     const top = args.top ? `&$top=${args.top}` : "";
     const skip = args.skip ? `&$skip=${args.skip}` : "";
-    const url = `${this.baseUrl}/?ITwinId=${args.ITwinId}${iModelId}${groupId}${top}${skip}`;
+    const url = `${this.baseUrl}/?iTwinId=${args.iTwinId}${iModelId}${groupId}${top}${skip}`;
     return this.queryITwinApi({
       signal: args.signal,
       headers: {
@@ -119,7 +95,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     const groupId = args.groupId ? `&groupId=${args.groupId}` : "";
     const top = args.top ? `&$top=${args.top}` : "";
     const skip = args.skip ? `&$skip=${args.skip}` : "";
-    const url = `${this.baseUrl}/?ITwinId=${args.ITwinId}${iModelId}${groupId}${top}${skip}`;
+    const url = `${this.baseUrl}/?ITwinId=${args.iTwinId}${iModelId}${groupId}${top}${skip}`;
     return this.queryITwinApi({
       signal: args.signal,
       headers: {
@@ -182,7 +158,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
 
   async getAllTags(args: GetTagsParams): Promise<TagListResponse> {
     const iModelId = args.iModelId ? `&iModelId=${args.iModelId}` : "";
-    const url = `${this.baseUrl}/tags/?ITwinId=${args.ITwinId}${iModelId}`;
+    const url = `${this.baseUrl}/tags/?ITwinId=${args.iTwinId}${iModelId}`;
     return this.queryITwinApi({
       signal: args.signal,
       url: url,
@@ -220,7 +196,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     const { savedViewId, signal, ...body } = args;
     return this.queryITwinApi({
       signal: signal,
-      url: `${this.baseUrl}/${args.savedViewId}/image`,
+      url: `${this.baseUrl}/${savedViewId}/image`,
       method: "PUT",
       body: body,
     });
@@ -236,7 +212,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
 
   async getAllGroups(args: GetGroupsParams): Promise<GroupListResponse> {
     const iModelId = args.iModelId ? `&iModelId=${args.iModelId}` : "";
-    const url = `${this.baseUrl}/groups/?ITwinId=${args.ITwinId}${iModelId}`;
+    const url = `${this.baseUrl}/groups/?ITwinId=${args.iTwinId}${iModelId}`;
     return this.queryITwinApi({
       signal: args.signal,
       url: url,
@@ -324,7 +300,7 @@ export enum PreferOptions {
 }
 
 interface QueryParams {
-  signal?: AbortSignal | undefined,
+  signal?: AbortSignal | undefined;
   headers?: {
     prefer?: PreferOptions;
   };

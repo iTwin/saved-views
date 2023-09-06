@@ -10,7 +10,7 @@ export interface Extension {
   schemaUrl: string;
   data: string;
   _links: HalLinks<
-    ["savedView", "ITwin"?, "project"?, "prev"?, "iModel"?, "self"?]
+    ["savedView", "iTwin"?, "project"?, "prev"?, "iModel"?, "self"?]
   >;
 }
 
