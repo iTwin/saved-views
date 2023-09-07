@@ -4,22 +4,22 @@
  *--------------------------------------------------------------------------------------------*/
 
 export interface CallITwinApiParams {
-  method: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
   url: string;
+  method: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
   getAccessToken: () => Promise<string>;
-  signal?: AbortSignal | undefined;
-  headers?: Record<string, string> | undefined;
   body?: object | undefined;
+  headers?: Record<string, string> | undefined;
+  signal?: AbortSignal | undefined;
 }
 
 export async function callITwinApi(args: CallITwinApiParams): Promise<Record<string, unknown>> {
   const response = await fetch(args.url, {
     method: args.method,
+    body: args.body && JSON.stringify(args.body),
     headers: {
       ...args.headers,
       Authorization: await args.getAccessToken(),
     },
-    body: args.body && JSON.stringify(args.body),
     signal: args.signal,
   });
 

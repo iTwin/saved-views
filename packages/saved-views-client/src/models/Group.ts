@@ -5,8 +5,8 @@
 import { HalLinks } from "./Links.js";
 
 export interface Group {
-  _links: HalLinks<["savedView", "iTwin"?, "project"?, "iModel"?, "creator"?]>;
   id: string;
   displayName: string;
   shared: boolean;
+  _links: HalLinks<["savedView", "iTwin"?, "project"?, "iModel"?, "creator"?]>;
 }

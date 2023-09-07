@@ -12,7 +12,7 @@ export interface SavedViewTag {
 
 /** Tag Metadata Input model for get */
 export interface Tag {
-  _links: HalLinks<["savedView", "iTwin"?, "project"?, "iModel"?, "creator"?]>;
   id: string;
   displayName: string;
+  _links: HalLinks<["savedView", "iTwin"?, "project"?, "iModel"?, "creator"?]>;
 }

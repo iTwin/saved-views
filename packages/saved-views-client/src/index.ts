@@ -4,8 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 export * from "./client/ITwinSavedViewsClient.js";
+export * from "./models/savedViews/View.js";
 export * from "./models/Extension.js";
 export * from "./models/Group.js";
 export * from "./models/Links.js";
 export * from "./models/Tag.js";
-export * from "./models/savedViews/View.js";

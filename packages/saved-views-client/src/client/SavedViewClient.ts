@@ -11,8 +11,8 @@ import { SavedViewWithDataMinimal, SavedViewWithDataRepresentation, View } from 
 export interface SavedViewsClient {
   getSavedViewMinimal(args: SingleSavedViewParams): Promise<SavedViewMinimalResponse>;
   getSavedViewRepresentation(args: SingleSavedViewParams): Promise<SavedViewRepresentationResponse>;
-  getAllSavedViewsRepresentation(args: GetSavedViewsParams): Promise<SavedViewListRepresentationResponse>;
   getAllSavedViewsMinimal(args: GetSavedViewsParams): Promise<SavedViewListMinimalResponse>;
+  getAllSavedViewsRepresentation(args: GetSavedViewsParams): Promise<SavedViewListRepresentationResponse>;
   createSavedView(args: CreateSavedViewParams): Promise<SavedViewMinimalResponse>;
   updateSavedView(args: UpdateSavedViewParams): Promise<SavedViewMinimalResponse>;
   deleteSavedView(args: SingleSavedViewParams): Promise<void>;
@@ -26,24 +26,16 @@ export interface SavedViewsClient {
   updateGroup(args: UpdateGroupParams): Promise<GroupResponse>;
   deleteGroup(args: SingleGroupParams): Promise<void>;
 
-  createExtension(args: CreateExtensionParams): Promise<ExtensionResponse>;
   getExtension(args: SingleExtensionParams): Promise<ExtensionResponse>;
   getAllExtensions(args: GetExtensionsParams): Promise<ExtensionListResponse>;
+  createExtension(args: CreateExtensionParams): Promise<ExtensionResponse>;
   deleteExtension(args: SingleExtensionParams): Promise<void>;
 
-  createTag(args: CreateTagParams): Promise<TagResponse>;
   getTag(args: SingleTagParams): Promise<TagResponse>;
   getAllTags(args: GetTagsParams): Promise<TagListResponse>;
+  createTag(args: CreateTagParams): Promise<TagResponse>;
   deleteTag(args: SingleTagParams): Promise<void>;
   updateTag(args: UpdateTagParams): Promise<TagResponse>;
-}
-
-export interface CommonRequestParams {
-  signal?: AbortSignal;
-}
-
-export interface GetExtensionsParams extends CommonRequestParams {
-  savedViewId: string;
 }
 
 export interface SingleSavedViewParams extends CommonRequestParams {
@@ -80,14 +72,13 @@ export interface UpdateSavedViewParams extends CommonRequestParams {
   extensions?: ExtensionMin[];
 }
 
-export interface SavedViewRepresentationResponse {
-  savedView: SavedViewWithDataRepresentation;
-}
-
 export interface SavedViewMinimalResponse {
   savedView: SavedViewWithDataMinimal;
 }
 
+export interface SavedViewRepresentationResponse {
+  savedView: SavedViewWithDataRepresentation;
+}
 export interface SavedViewListMinimalResponse {
   savedViews: SavedViewWithDataMinimal[];
   _links: HalLinks<["self", "prev"?, "next"?]>;
@@ -96,12 +87,6 @@ export interface SavedViewListMinimalResponse {
 export interface SavedViewListRepresentationResponse {
   savedViews: SavedViewWithDataRepresentation[];
   _links: HalLinks<["self", "prev"?, "next"?]>;
-}
-
-/** Image Size enum for request. */
-export enum ImageSize {
-  Full = "full",
-  Thumbnail = "thumbnail",
 }
 
 export interface GetImageParams extends CommonRequestParams {
@@ -118,13 +103,19 @@ export interface ImageResponse {
   href: string;
 }
 
-export interface GetGroupsParams extends CommonRequestParams {
-  iTwinId: string;
-  iModelId?: string;
+/** Image Size enum for request. */
+export enum ImageSize {
+  Full = "full",
+  Thumbnail = "thumbnail",
 }
 
 export interface SingleGroupParams extends CommonRequestParams {
   groupId: string;
+}
+
+export interface GetGroupsParams extends CommonRequestParams {
+  iTwinId: string;
+  iModelId?: string;
 }
 
 export interface CreateGroupParams extends CommonRequestParams {
@@ -149,23 +140,30 @@ export interface GroupListResponse {
   _links: HalLinks<["self"]>;
 }
 
+export interface SingleExtensionParams extends CommonRequestParams {
+  savedViewId: string;
+  extensionName: string;
+}
+
+export interface GetExtensionsParams extends CommonRequestParams {
+  savedViewId: string;
+}
+
 export interface CreateExtensionParams extends CommonRequestParams {
   savedViewId: string;
   extensionName: string;
   data: string;
 }
-
-export interface SingleExtensionParams extends CommonRequestParams {
-  savedViewId: string;
-  extensionName: string;
+export interface ExtensionResponse {
+  extension: Extension;
 }
 
 export interface ExtensionListResponse {
   extensions: ExtensionListItem[];
 }
 
-export interface ExtensionResponse {
-  extension: Extension;
+export interface SingleTagParams extends CommonRequestParams {
+  tagId: string;
 }
 
 export interface GetTagsParams extends CommonRequestParams {
@@ -183,10 +181,6 @@ export interface CreateTagParams extends CommonRequestParams {
   displayName: string;
 }
 
-export interface SingleTagParams extends CommonRequestParams {
-  tagId: string;
-}
-
 export interface TagResponse {
   tag: Tag;
 }
@@ -194,4 +188,8 @@ export interface TagResponse {
 export interface TagListResponse {
   tags: Tag[];
   _links: HalLinks<["self"]>;
+}
+
+export interface CommonRequestParams {
+  signal?: AbortSignal;
 }

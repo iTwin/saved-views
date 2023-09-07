@@ -18,17 +18,17 @@ export interface ExtensionsResponse {
 
 export interface ExtensionSavedViewCreate {
   extensionName: string;
+  data: string;
   markdownUrl?: string;
   schemaUrl?: string;
-  data: string;
 }
 
 export interface ExtensionMin  {
-  href: string;
   extensionName: string;
+  href: string;
 }
 
 export interface ExtensionListItem {
-  href: string;
   extensionName: string;
+  href: string;
 }
