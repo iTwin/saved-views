@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { callITwinApi } from "./ApiUtils.js";
+import { ITwinApiHelper } from "./ApiUtils.js";
 import {
   CreateExtensionParams, CreateGroupParams, CreateSavedViewParams, CreateTagParams, ExtensionListResponse,
   ExtensionResponse, GetExtensionsParams, GetGroupsParams, GetImageParams, GetSavedViewsParams, GetTagsParams,
@@ -11,6 +11,12 @@ import {
   SingleSavedViewParams, SingleTagParams, TagListResponse, TagResponse, UpdateGroupParams, UpdateImageParams,
   UpdateSavedViewParams, UpdateTagParams,
 } from "./SavedViewClient.js";
+
+export interface ITwinSavedViewsClientParams {
+  /** @default "https://api.bentley.com/savedviews"  */
+  baseUrl?: string;
+  getAccessToken: () => Promise<string>;
+}
 
 /** {@linkcode SavedViewsClient} implementation that calls iTwin APIs. */
 export class ITwinSavedViewsClient implements SavedViewsClient {
@@ -23,11 +29,10 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   }
 
   private async queryITwinApi<ReturnType>(queyParams: QueryParams): Promise<ReturnType> {
-    return callITwinApi({
+    return ITwinApiHelper.callITwinApi({
       url: queyParams.url,
       method: queyParams.method,
       headers: {
-        Accept: "application/vnd.bentley.itwin-platform.v1+json",
         ...queyParams.headers,
       },
       body: queyParams.body,
@@ -265,14 +270,8 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   }
 }
 
-export interface ITwinSavedViewsClientParams {
-  /** @default "https://api.bentley.com/savedviews"  */
-  baseUrl?: string;
-  getAccessToken: () => Promise<string>;
-}
-
 /** Prefer enum for request. */
-enum PreferOptions {
+export enum PreferOptions {
   /**
    * affects the granularity of the data returned
    *  ONLY for get requests will be ignored for PUT POST DELETE

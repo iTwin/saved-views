@@ -12,7 +12,13 @@ export interface CallITwinApiParams {
   signal?: AbortSignal | undefined;
 }
 
-export async function callITwinApi(args: CallITwinApiParams): Promise<Record<string, unknown>> {
+// made into object for mocking purposes, maybe better way of doing
+// @todo ask robert
+export const ITwinApiHelper = {
+  callITwinApi,
+}
+
+ async function callITwinApi(args: CallITwinApiParams): Promise<Record<string, unknown>> {
   const response = await fetch(args.url, {
     method: args.method,
     body: args.body && JSON.stringify(args.body),
