@@ -24,11 +24,6 @@ const systemUnderTest: ITwinSavedViewsClient = new ITwinSavedViewsClient({
   getAccessToken: getAccessToken,
 });
 
-const confirmURL = (url: string, urlParams: string[]) => {
-  expect(url.startsWith(baseUrl)).toBe(true);
-  urlParams.forEach((urlParam) => { expect(url.includes(urlParam)).toBe(true); });
-};
-
 const callITwinApiTestRunner = async (expectedQueryArgs: TestQueryParams, funcUnderTest: () => Promise<void>) => {
   const spy = vi.spyOn(ITwinApiHelper, "callITwinApi");
   spy.mockImplementation(verifyCallITwinApiInfo(expectedQueryArgs));
@@ -45,6 +40,11 @@ const verifyCallITwinApiInfo = (queryArgs: TestQueryParams) => {
     expect(await callITwinApiArgs.getAccessToken()).toBe(authToken);
     return {} as any;
   };
+};
+
+const confirmURL = (url: string, urlParams: string[]) => {
+  expect(url.startsWith(baseUrl)).toBe(true);
+  urlParams.forEach((urlParam) => { expect(url.includes(urlParam)).toBe(true); });
 };
 
 describe("ITwinSavedViewsClient tests for callITwinApi information transference", () => {
