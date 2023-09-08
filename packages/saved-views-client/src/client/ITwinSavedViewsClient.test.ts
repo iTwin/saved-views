@@ -28,8 +28,9 @@ const systemUnderTest: ITwinSavedViewsClient = new ITwinSavedViewsClient({
   getAccessToken: getAccessToken,
 });
 
-const callITwinApiTestRunner = async (expectedQueryArgs: TestQueryParams, funcUnderTest: () => Promise<void>, mockFetchFunc: (args: any) => Promise<any>) => {
-  global.fetch = vi.fn(() => { return mockFetchFunc(expectedQueryArgs); });
+const callITwinApiTestRunner = async (
+  expectedQueryArgs: TestQueryParams, funcUnderTest: () => Promise<void>, mockFunc: (args: any) => Promise<any>) => {
+  global.fetch = vi.fn(() => { return mockFunc(expectedQueryArgs); });
   await funcUnderTest();
 };
 
