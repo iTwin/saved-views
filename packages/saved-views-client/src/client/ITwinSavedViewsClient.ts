@@ -68,7 +68,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     const groupId = args.groupId ? `&groupId=${args.groupId}` : "";
     const top = args.top ? `&$top=${args.top}` : "";
     const skip = args.skip ? `&$skip=${args.skip}` : "";
-    const url = `${this.baseUrl}/?ITwinId=${args.iTwinId}${iModelId}${groupId}${top}${skip}`;
+    const url = `${this.baseUrl}/?iTwinId=${args.iTwinId}${iModelId}${groupId}${top}${skip}`;
     return this.queryITwinApi({
       url: url,
       method: "GET",
