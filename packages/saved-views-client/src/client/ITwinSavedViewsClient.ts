@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { ITwinApiHelper } from "./ApiUtils.js";
+import { callITwinApi } from "./ApiUtils.js";
 import {
   CreateExtensionParams, CreateGroupParams, CreateSavedViewParams, CreateTagParams, ExtensionListResponse,
   ExtensionResponse, GetExtensionsParams, GetGroupsParams, GetImageParams, GetSavedViewsParams, GetTagsParams,
@@ -29,7 +29,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   }
 
   private async queryITwinApi<ReturnType>(queyParams: QueryParams): Promise<ReturnType> {
-    return ITwinApiHelper.callITwinApi({
+    return callITwinApi({
       url: queyParams.url,
       method: queyParams.method,
       headers: {

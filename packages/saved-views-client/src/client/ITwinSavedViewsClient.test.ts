@@ -1,5 +1,9 @@
+/*---------------------------------------------------------------------------------------------
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import { describe, expect, it, vi } from "vitest";
-import { CallITwinApiParams, ITwinApiHelper } from "./ApiUtils";
+import { CallITwinApiParams } from "./ApiUtils";
 import { ITwinSavedViewsClient, PreferOptions } from "./ITwinSavedViewsClient";
 import { ImageSize } from "./SavedViewClient";
 
@@ -24,10 +28,23 @@ const systemUnderTest: ITwinSavedViewsClient = new ITwinSavedViewsClient({
   getAccessToken: getAccessToken,
 });
 
-const callITwinApiTestRunner = async (expectedQueryArgs: TestQueryParams, funcUnderTest: () => Promise<void>) => {
-  const spy = vi.spyOn(ITwinApiHelper, "callITwinApi");
-  spy.mockImplementation(verifyCallITwinApiInfo(expectedQueryArgs));
+const callITwinApiTestRunner = async (expectedQueryArgs: TestQueryParams, funcUnderTest: () => Promise<void>, mockFetchFunc: (args: any) => Promise<any>) => {
+  global.fetch = vi.fn(() => { return mockFetchFunc(expectedQueryArgs); });
   await funcUnderTest();
+};
+
+const checkIfFetchIsReceivingExpectedParams = (expectedQueryArgs: TestQueryParams) => {
+  verifyCallITwinApiInfo(expectedQueryArgs);
+  return ({ ok: true, json: () => { } }) as any;
+};
+
+const createFailedRequest = () => {
+  return ({
+    ok: false,
+    json: () => { },
+    status: 500,
+    statusText: "Test",
+  }) as any;
 };
 
 const verifyCallITwinApiInfo = (queryArgs: TestQueryParams) => {
@@ -66,7 +83,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
         savedViewId: savedViewId,
         signal: new AbortSignal(),
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
   });
 
   it("getSavedViewRepresentation", async () => {
@@ -86,7 +103,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
         savedViewId: savedViewId,
         signal: new AbortSignal(),
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
   });
 
   it("getAllSavedViewsMinimal", async () => {
@@ -109,7 +126,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
       await systemUnderTest.getAllSavedViewsMinimal({
         iTwinId, iModelId, groupId, top, skip, signal: new AbortSignal(),
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
   });
 
   it("getAllSavedViewsRepresentation", async () => {
@@ -132,7 +149,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
       await systemUnderTest.getAllSavedViewsRepresentation({
         iTwinId, iModelId, groupId, top, skip, signal: new AbortSignal(),
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
   });
 
   it("createSavedView", async () => {
@@ -153,7 +170,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
         savedViewData: {},
         displayName: "Test View",
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
   });
 
   it("updateSavedView", async () => {
@@ -180,7 +197,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
         ...body,
         signal: new AbortSignal(),
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
   });
 
   it("deleteSavedView", async () => {
@@ -197,7 +214,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
         savedViewId,
         signal: new AbortSignal(),
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
   });
 
   it("getImage", async () => {
@@ -215,7 +232,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
         savedViewId: savedViewId,
         signal: new AbortSignal(),
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
   });
 
   it("updateImage", async () => {
@@ -236,7 +253,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
         savedViewId: savedViewId,
         signal: new AbortSignal(),
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
   });
 
   it("getGroup", async () => {
@@ -253,7 +270,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
         groupId,
         signal: new AbortSignal(),
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
   });
 
   it("getAllGroups", async () => {
@@ -272,7 +289,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
         iModelId,
         signal: new AbortSignal(),
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
   });
 
   it("createGroup", async () => {
@@ -295,7 +312,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
         ...body,
         signal: new AbortSignal(),
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
   });
 
   it("createGroup", async () => {
@@ -318,7 +335,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
         groupId,
         signal: new AbortSignal(),
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
   });
 
   it("deleteGroup", async () => {
@@ -335,7 +352,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
         groupId,
         signal: new AbortSignal(),
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
   });
 
   it("getExtension", async () => {
@@ -354,7 +371,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
         extensionName,
         signal: new AbortSignal(),
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
   });
 
   it("getExtension", async () => {
@@ -373,7 +390,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
         extensionName,
         signal: new AbortSignal(),
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
   });
 
   it("getAllExtensions", async () => {
@@ -390,7 +407,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
         savedViewId,
         signal: new AbortSignal(),
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
   });
 
   it("createExtension", async () => {
@@ -414,7 +431,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
         ...body,
         signal: new AbortSignal(),
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
   });
 
   it("deleteExtension", async () => {
@@ -433,7 +450,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
         extensionName,
         signal: new AbortSignal(),
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
   });
 
   it("getTag", async () => {
@@ -450,7 +467,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
         tagId,
         signal: new AbortSignal(),
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
   });
 
   it("getAllTags", async () => {
@@ -469,7 +486,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
         iModelId,
         signal: new AbortSignal(),
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
   });
 
   it("createTag", async () => {
@@ -491,7 +508,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
         ...body,
         signal: new AbortSignal(),
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
   });
 
   it("updateTag", async () => {
@@ -513,7 +530,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
         ...body,
         signal: new AbortSignal(),
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
   });
 
   it("deleteTag", async () => {
@@ -530,6 +547,30 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
         tagId,
         signal: new AbortSignal(),
       });
-    });
+    }, checkIfFetchIsReceivingExpectedParams);
+  });
+
+  it("run failed request and check error output", async () => {
+    const savedViewId = "savedViewComboId";
+    const expectedQueryParams: TestQueryParams = {
+      urlParams: [savedViewId],
+      method: "GET",
+      headers: {
+        prefer: PreferOptions.Minimal,
+      },
+      body: undefined,
+      signal: new AbortSignal(),
+    };
+
+    try {
+      await callITwinApiTestRunner(expectedQueryParams, async () => {
+        await systemUnderTest.getSavedViewMinimal({
+          savedViewId: savedViewId,
+          signal: new AbortSignal(),
+        });
+      }, createFailedRequest);
+    } catch (error:any) {
+      expect(error.message).toBe("iTwin API request failed. Unexpected response status code: 500 Test.");
+    }
   });
 });
