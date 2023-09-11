@@ -259,7 +259,7 @@ class SavedViewItemContextMenu extends ContextMenu<Props> {
       }
 
       const cache = IModelConnectionCache.getSavedViewCache(iModelConnection);
-      cache!
+      cache
         .updateSavedView(iModelConnection, updatedData, this.props.savedView)
         .catch(() => {
           showError();
@@ -302,7 +302,7 @@ class SavedViewItemContextMenu extends ContextMenu<Props> {
       }
     }
     const cache = IModelConnectionCache.getSavedViewCache(iModelConnection);
-    cache!.deleteSavedView(iModelConnection, this.props.savedView).catch(() => {
+    cache.deleteSavedView(iModelConnection, this.props.savedView).catch(() => {
       showError();
     });
     SavedViewsManager.usageTracking?.trackDeleteUsage?.();

@@ -46,8 +46,9 @@ const mapState = (rootState: any) => {
     const someSavedViewsMatchFilter = allViews.some(
       (s) => SavedViewUtil.getFilteredViews(s, state.searchFilter, state.searchTags).length !== 0,
     );
-    const someDesktopViewsMatchFilter
-      = SavedViewUtil.getFilteredViews(allDesktopViews!, state.searchFilter, state.searchTags).length !== 0;
+    const someDesktopViewsMatchFilter = allDesktopViews
+      ? SavedViewUtil.getFilteredViews(allDesktopViews, state.searchFilter, state.searchTags).length !== 0
+      : [];
     noResultsFromFiltering = !someDesktopViewsMatchFilter && !someSavedViewsMatchFilter;
   }
 

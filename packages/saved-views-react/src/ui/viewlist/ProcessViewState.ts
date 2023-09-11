@@ -229,7 +229,7 @@ export const applyView = async (
 
   const client = IModelConnectionCache.getSavedViewCache(iModelConnection);
   const viewState = isSavedView
-    ? await client!.getViewState(
+    ? await client.getViewState(
       iModelConnection,
       view as SavedViewBase,
       SavedViewsManager.onViewSourceNotFound,
@@ -250,7 +250,7 @@ export const applyView = async (
     );
 
     if (isSavedView === true) {
-      connection!.selectionSet.emptyAll();
+      connection.selectionSet.emptyAll();
     }
 
     // Track application of saved view
@@ -272,7 +272,7 @@ export const applyDefaultSavedView = async (
     return undefined;
   }
   const cache = IModelConnectionCache.getSavedViewCache(connection);
-  const views = await cache!.getSavedViews(connection);
+  const views = await cache.getSavedViews(connection);
   const defaultView: SavedViewBase | undefined = views.find((view) => {
     if (view.id === viewId) {
       return view;
@@ -296,7 +296,7 @@ export const applyDefaultSavedView = async (
     if (savedViewState) {
       UiFramework.setDefaultViewState(savedViewState);
       const savedViewSetting = await SavedViewsManager.savedViewsClient.getViewSetting(
-        viewId!,
+        viewId,
         iTwinId,
         iModelId,
         SavedViewsManager.viewSettingsNamespace,

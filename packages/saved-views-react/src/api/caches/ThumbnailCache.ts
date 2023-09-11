@@ -20,12 +20,16 @@ export class ThumbnailCache {
     iModelConnection: IModelConnection | undefined,
     viewProps: ViewDefinitionProps,
   ) {
-    if (ThumbnailCache._thumbnails.has(viewProps.id!.toString())) {
-      return ThumbnailCache._thumbnails.get(viewProps.id!.toString());
+    if (!viewProps.id) {
+      return undefined;
+    }
+
+    if (ThumbnailCache._thumbnails.has(viewProps.id)) {
+      return ThumbnailCache._thumbnails.get(viewProps.id);
     } else if (iModelConnection) {
       let thumbnail: ThumbnailProps | undefined;
       try {
-        thumbnail = await iModelConnection.views.getThumbnail(viewProps.id!);
+        thumbnail = await iModelConnection.views.getThumbnail(viewProps.id);
       } catch {
         if (!thumbnail) {
           // tslint:disable-next-line:no-console
@@ -38,9 +42,10 @@ export class ThumbnailCache {
 
       // There are cases where the file may not have a thumbnail for the view
       // Set even if undefined so that we avoid querying over and over again
-      ThumbnailCache._thumbnails.set(viewProps.id!.toString(), thumbnail);
+      ThumbnailCache._thumbnails.set(viewProps.id, thumbnail);
       return thumbnail;
     }
+
     return undefined;
   }
 }

@@ -92,7 +92,7 @@ export class SavedViewsCache {
     }
 
     return (
-      this._cache!.filter((value: SavedViewBase) => view.id === value.id)
+      this._cache.filter((value) => view.id === value.id)
         .length !== 0
     );
   }
@@ -290,9 +290,11 @@ export class SavedViewsCache {
     savedView: SavedViewBase,
     onSourceNotFound?: () => void,
   ) {
-    if (this._viewStateCache.has(savedView.id)) {
-      return this._viewStateCache.get(savedView.id)!.clone();
+    const existingViewState = this._viewStateCache.get(savedView.id);
+    if (existingViewState) {
+      return existingViewState.clone();
     }
+
     const viewState = await SavedViewUtil.createViewState(iModel, savedView, onSourceNotFound);
     if (viewState) {
       this._viewStateCache.set(savedView.id, viewState);

@@ -15,6 +15,7 @@ import { IModelsClient } from "@itwin/imodels-client-management";
 import { PageLayout } from "@itwin/itwinui-layouts-react";
 import { toaster } from "@itwin/itwinui-react";
 import { ReactElement, useEffect, useState } from "react";
+import { AbstractTagClient, Group, GroupUpdate, IGroupClient, ISavedViewsClient, ITagClient, ReadOnlyTag, SavedViewBase, SavedViewBaseSetting, SavedViewBaseUpdate, SavedViewsManager, SavedViewsWidget, Tag } from "@itwin/saved-views-react";
 
 import { applyUrlPrefix } from "../../environment";
 import { LoadingScreen } from "../common/LoadingScreen";
@@ -76,6 +77,7 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
   return (
     <PageLayout.Content>
       <UIFramework>
+        <SavedViewsWidget iModelConnection={iModel} />
         <ConfigurableUiContent />
       </UIFramework>
     </PageLayout.Content >
@@ -104,6 +106,16 @@ export async function initializeITwinJsApp(_authorizationClient: AuthorizationCl
 
   BentleyCloudRpcManager.initializeClient(rpcParams, [IModelReadRpcInterface, IModelTileRpcInterface]);
   await Promise.all([UiCore.initialize(IModelApp.localization), UiFramework.initialize(undefined)]);
+
+  await SavedViewsManager.initialize(
+    IModelApp.localization as ITwinLocalization,
+    {
+      userId: "userId",
+      groupClient: new MockGroupClient(),
+      savedViewsClient: new MockSavedViewsClient(),
+      tagClient: new MockTagClient(),
+    },
+  );
 }
 
 function useIModel(
@@ -162,4 +174,108 @@ async function getStoredViewState(iModel: IModelConnection): Promise<ViewState |
   }
 
   return viewId ? iModel.views.load(viewId) : undefined;
+}
+
+class MockGroupClient implements IGroupClient {
+  public async createGroup(_iModelConnection: IModelConnection, group: Group): Promise<Group> {
+    return group;
+  }
+
+  public async updateGroup(_: IModelConnection, updatedGroup: GroupUpdate, oldGroup: Group): Promise<Group> {
+    return { ...oldGroup, name: updatedGroup.name ?? oldGroup.name };
+  }
+
+  public async deleteGroup(): Promise<void> { }
+
+  public async shareGroup(_iModelConnection: IModelConnection, group: Group): Promise<Group> {
+    return group;
+  }
+
+  public async getGroups(): Promise<Group[]> {
+    return [];
+  }
+
+  public async getGroup(id: string): Promise<Group> {
+    return { id, name: "group", shared: false, userId: "userId" };
+  }
+}
+
+const categorySelectorProps = { classFullName: "", model: "", code: { spec: "", scope: "" }, categories: [] };
+
+class MockSavedViewsClient implements ISavedViewsClient {
+  public async getViewSetting(id: string): Promise<SavedViewBaseSetting> {
+    return { id, name: "savedView", shared: false, thumbnailId: "thumbnailId", categorySelectorProps };
+  }
+
+  public async getView(id: string): Promise<SavedViewBase> {
+    return { id, name: "savedView", shared: false, categorySelectorProps };
+  }
+
+  public async createSavedView(_iModelConnection: IModelConnection, savedView: SavedViewBase): Promise<SavedViewBase> {
+    return savedView;
+  }
+
+  public async createSavedViewByIds(
+    _projectId: string,
+    _iModelId: string | undefined,
+    savedView: SavedViewBase,
+  ): Promise<SavedViewBase> {
+    return savedView;
+  }
+
+  public async updateSavedView(
+    _iModelConnection: IModelConnection,
+    updatedView: SavedViewBaseUpdate,
+    oldView: SavedViewBase,
+  ): Promise<SavedViewBase> {
+    return { ...oldView, ...updatedView };
+  }
+
+  public async deleteSavedView(): Promise<void> { }
+
+  public async deleteSavedViewByIds(): Promise<void> { }
+
+  public async shareView(_iModelConnection: IModelConnection, view: SavedViewBase): Promise<SavedViewBase> {
+    return view;
+  }
+
+  public async getSavedViews(): Promise<SavedViewBase[]> {
+    return [];
+  }
+
+  public async getSavedViewsFromIds(): Promise<SavedViewBase[]> {
+    return [];
+  }
+}
+
+class MockTagClient extends AbstractTagClient implements ITagClient {
+  public override async getTagsOnModel(): Promise<Tag[]> {
+    return [];
+  }
+
+  public override async updateTagsOnModel(
+    _iModelConnection: IModelConnection,
+    _currentTags: Tag[],
+    newTags: Tag[],
+  ): Promise<Tag[]> {
+    return newTags;
+  }
+
+  public async deleteTag(): Promise<void> { }
+
+  public async createTag(_iModelConnection: IModelConnection, tag: Tag): Promise<ReadOnlyTag> {
+    return { ...tag, id: "tagId", links: { creator: { href: "" } } };
+  }
+
+  public async updateTag(_tagId: string, updatedTag: Tag): Promise<Tag> {
+    return updatedTag;
+  }
+
+  public async getTags(): Promise<Tag[]> {
+    return [];
+  }
+
+  public async getTag(tagId: string): Promise<Tag> {
+    return { name: tagId, createdByUserId: "userId" };
+  }
 }

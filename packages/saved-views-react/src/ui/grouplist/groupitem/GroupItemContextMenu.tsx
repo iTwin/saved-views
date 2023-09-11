@@ -77,7 +77,7 @@ class GroupItemContextMenu extends ContextMenu<Props> {
     }
     if (
       this.props.group.shared &&
-      this.props.group.userId !== this.props.userId! &&
+      this.props.group.userId !== this.props.userId &&
       SavedViewsManager.flags.savedViewsPublicShare
     ) {
       // Allow user to delete the group if they have imodel_manage (admin) permission
@@ -171,8 +171,8 @@ class GroupItemContextMenu extends ContextMenu<Props> {
       return;
     }
 
-    const groupCache = IModelConnectionCache.getGroupCache(iModelConnection!);
-    const viewCache = IModelConnectionCache.getSavedViewCache(iModelConnection!);
+    const groupCache = IModelConnectionCache.getGroupCache(iModelConnection);
+    const viewCache = IModelConnectionCache.getSavedViewCache(iModelConnection);
 
     if (!groupCache || !viewCache) {
       SavedViewUtil.showError("GroupItemContextMenu", "groups.error_shareGroup_brief", "groups.error_shareGroup");
@@ -187,12 +187,12 @@ class GroupItemContextMenu extends ContextMenu<Props> {
         if (v.shared === share) {
           return undefined;
         } else {
-          return viewCache!.shareView(iModelConnection!, v, share);
+          return viewCache.shareView(iModelConnection, v, share);
         }
       })
       .filter((p) => p !== undefined);
 
-    groupCache!
+    groupCache
       .shareGroup(iModelConnection, this.props.group, share)
       .catch(() => {
         SavedViewUtil.showError("GroupItemContextMenu", "groups.error_shareGroup_brief", "groups.error_shareGroup");
@@ -213,22 +213,21 @@ class GroupItemContextMenu extends ContextMenu<Props> {
       return;
     }
 
-    const viewsCache =
-      IModelConnectionCache.getSavedViewCache(iModelConnection);
-    const viewsInDeletedGroup = await viewsCache!.getSavedViewsForGroup(iModelConnection!, this.props.group.id);
-    const groupCache = IModelConnectionCache.getGroupCache(iModelConnection!);
+    const viewsCache = IModelConnectionCache.getSavedViewCache(iModelConnection);
+    const viewsInDeletedGroup = await viewsCache.getSavedViewsForGroup(iModelConnection, this.props.group.id);
+    const groupCache = IModelConnectionCache.getGroupCache(iModelConnection);
 
     const promises = viewsInDeletedGroup.map(async (v: SavedViewBase) => {
       const updated: SavedViewBaseUpdate = {
         groupId: SavedViewsManager.ungroupedId,
         id: v.id,
       };
-      return viewsCache!.updateSavedView(iModelConnection!, updated, v);
+      return viewsCache.updateSavedView(iModelConnection, updated, v);
     });
 
     Promise.all(promises)
       .then(async () => {
-        return groupCache!.deleteGroup(iModelConnection, this.props.group);
+        return groupCache.deleteGroup(iModelConnection, this.props.group);
       })
       .catch((e) => {
         SavedViewUtil.showError(

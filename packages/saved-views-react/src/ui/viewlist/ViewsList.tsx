@@ -125,11 +125,14 @@ class ViewsList extends React.PureComponent<Props, ViewsListState> {
     this.setState({ selected: view });
 
     const iModelConnection = this.props.iModel;
+    if (!iModelConnection) {
+      throw new Error("iModelConnection is undefined");
+    }
 
-    const client = IModelConnectionCache.getSavedViewCache(iModelConnection!);
+    const client = IModelConnectionCache.getSavedViewCache(iModelConnection);
     if (client) {
       const viewState = await client.getViewState(
-        iModelConnection!,
+        iModelConnection,
         view,
         SavedViewsManager.onViewSourceNotFound,
         this.props.turnOnModelsCategoriesNotHidden,
@@ -137,7 +140,7 @@ class ViewsList extends React.PureComponent<Props, ViewsListState> {
       );
       if (viewState) {
         await processViewStateSelected(
-          iModelConnection!,
+          iModelConnection,
           viewState,
           this.props.want2dViews ?? false,
           this.props.applyCameraOnly,
@@ -169,10 +172,13 @@ class ViewsList extends React.PureComponent<Props, ViewsListState> {
     this.setState({ selected: view });
 
     const iModelConnection = this.props.iModel;
+    if (!iModelConnection) {
+      throw new Error("iModelConnection is undefined");
+    }
 
-    const viewState = await iModelConnection!.views.load(view.id);
+    const viewState = await iModelConnection.views.load(view.id);
     await processViewStateSelected(
-      iModelConnection!,
+      iModelConnection,
       viewState,
       this.props.want2dViews ?? false,
       this.props.applyCameraOnly,
@@ -251,6 +257,7 @@ class ViewsList extends React.PureComponent<Props, ViewsListState> {
     const names = [...nameToViewItem.keys()].sort((a, b) => a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase()));
 
     for (const name of names) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       views.push(nameToViewItem.get(name)!);
     }
 

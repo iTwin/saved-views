@@ -52,9 +52,6 @@ export interface SavedViewsInitializationOptions {
   setMapElevation?: (vp: Viewport) => Promise<void>;
   onViewSourceNotFound?: () => void;
   savedViewsStateKey?: string;
-  // Due to changes in 3.0 we can no longer use the IModelApp.settings to access the ConnectSettingsClient,
-  // therefore we must create the client ourselves and to do that we need to know the application id to create it with
-  applicationIds: string[];
   defaultViewSettingsNamespace?: string;
   defaultViewIdClient?: IDefaultViewIdClient;
   extensionHandlers?: ExtensionHandler[];
@@ -267,9 +264,6 @@ export class SavedViewsManager {
     SavedViewsManager._trackEvent(name, properties);
   };
 
-  /** optional list of application ids to use when querying settings, overriding the iModelApp applicationId */
-  private static _applicationIds?: string[];
-
   /** @internal */
   public static get packageName(): string {
     return "saved-views";
@@ -408,14 +402,6 @@ export class SavedViewsManager {
     this._forcedViewFlags = forcedViewFlags;
   }
 
-  /** optional list of application ids to use when querying settings, overriding the iModelApp applicationId */
-  public static get applicationIds(): string[] {
-    if (!this._applicationIds) {
-      throw new Error("Application Id(s) required!");
-    }
-    return this._applicationIds;
-  }
-
   public static getAccessToken(): Promise<AccessToken> {
     if (!SavedViewsManager._getAccessToken) {
       throw new Error("AccessToken not found!");
@@ -501,7 +487,6 @@ export class SavedViewsManager {
       SavedViewsManager._savedViewsStateKeyInStore = options.savedViewsStateKey;
     }
 
-    SavedViewsManager._applicationIds = options.applicationIds;
     SavedViewsManager._getAccessToken = options.getAccessToken ?? IModelApp.getAccessToken.bind(IModelApp);
     SavedViewsManager._extensionHandlers = options.extensionHandlers ?? [];
 

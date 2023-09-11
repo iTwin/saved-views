@@ -14,7 +14,7 @@ import {
   imageBufferToCanvas, type IModelConnection, type ViewState, type Viewport,
 } from "@itwin/core-frontend";
 import { Point2d } from "@itwin/core-geometry";
-import matcher from "matcher";
+import * as matcher from "matcher";
 
 import { ModelCategoryOverrideProvider } from "../../ui/viewlist/ModelCategoryOverrideProvider";
 import { SavedViewEvents, SavedViewsManager } from "../SavedViewsManager";
@@ -398,7 +398,7 @@ export class SavedViewUtil {
   }
 
   public static showError(component: string, briefKey: string, detailedKey: string, error?: Error) {
-    if (!SavedViewsManager.state!.displayErrors) {
+    if (!SavedViewsManager.state?.displayErrors) {
       return;
     }
 
@@ -414,7 +414,7 @@ export class SavedViewUtil {
   }
 
   public static showSuccess(component: string, briefKey: string, detailedKey?: string) {
-    if (!SavedViewsManager.state!.displaySuccess) {
+    if (!SavedViewsManager.state?.displaySuccess) {
       return;
     }
 

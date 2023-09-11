@@ -7,35 +7,10 @@ import { type IModelConnection } from "@itwin/core-frontend";
 import { type Group, type GroupUpdate } from "../utilities/SavedViewTypes";
 
 export interface IGroupClient {
-  createGroup(
-    iModelConnection: IModelConnection,
-    group: Group,
-    applicationIds?: string[]
-  ): Promise<Group>;
-  updateGroup(
-    iModelConnection: IModelConnection,
-    updatedGroup: GroupUpdate,
-    oldGroup: Group,
-    applicationIds?: string[]
-  ): Promise<Group>;
-  deleteGroup(
-    iModelConnection: IModelConnection,
-    group: Group,
-    applicationIds?: string[]
-  ): Promise<void>;
-  shareGroup(
-    iModelConnection: IModelConnection,
-    group: Group,
-    shared: boolean,
-    applicationIds?: string[]
-  ): Promise<Group>;
-  getGroups(
-    iModelConnection: IModelConnection,
-    applicationIds?: string[]
-  ): Promise<Group[]>;
-  getGroup(
-    id: string,
-    projectId?: string,
-    iModelId?: string | undefined
-  ): Promise<Group>;
+  createGroup(iModelConnection: IModelConnection, group: Group): Promise<Group>;
+  updateGroup(iModelConnection: IModelConnection, updatedGroup: GroupUpdate, oldGroup: Group): Promise<Group>;
+  deleteGroup(iModelConnection: IModelConnection, group: Group): Promise<void>;
+  shareGroup(iModelConnection: IModelConnection, group: Group, shared: boolean): Promise<Group>;
+  getGroups(iModelConnection: IModelConnection): Promise<Group[]>;
+  getGroup(id: string, projectId?: string, iModelId?: string | undefined): Promise<Group>;
 }

@@ -87,11 +87,14 @@ export class MoveViewsDialog extends React.Component<
     };
 
     const iModelConnection = this.props.connection;
+    if (!iModelConnection) {
+      throw new Error("iModelConnection is undefined");
+    }
 
-    const imodelCache = IModelConnectionCache.getSavedViewCache(iModelConnection!);
+    const imodelCache = IModelConnectionCache.getSavedViewCache(iModelConnection);
 
     const promises = this.props.views.map((s) =>
-      imodelCache!.updateSavedView(iModelConnection!, { groupId: this.state.choice!, id: s.id }, s),
+      imodelCache.updateSavedView(iModelConnection, { groupId: this.state.choice, id: s.id }, s),
     );
 
     Promise.all(promises).catch((e) => {
