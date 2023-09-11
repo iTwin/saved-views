@@ -9,7 +9,7 @@ npm install @itwin/saved-views-client
 ```
 
 ## Example
-```
+```TypeScript
 import { ITwinSavedViewsClient } from "@itwin/saved-views-client";
 
 const iTwinSavedViewsClient = new ITwinSavedViewsClient({
