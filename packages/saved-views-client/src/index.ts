@@ -4,6 +4,7 @@
  *--------------------------------------------------------------------------------------------*/
 
 export * from "./client/ITwinSavedViewsClient.js";
+export * from "./client/SavedViewsClient.js";
 export * from "./models/savedViews/View.js";
 export * from "./models/Extension.js";
 export * from "./models/Group.js";

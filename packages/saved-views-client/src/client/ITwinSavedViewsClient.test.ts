@@ -5,7 +5,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { CallITwinApiParams } from "./ApiUtils";
 import { ITwinSavedViewsClient, PreferOptions } from "./ITwinSavedViewsClient";
-import { ImageSize } from "./SavedViewClient";
+import { ImageSize } from "./SavedViewsClient";
 
 interface TestQueryParams {
   urlParams: string[];
@@ -570,7 +570,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
           signal: new AbortSignal(),
         });
       }, createFailedRequest);
-    } catch (error:any) {
+    } catch (error: any) {
       expect(error.message).toBe("iTwin API request failed. Unexpected response status code: 500 Test.");
     }
   });

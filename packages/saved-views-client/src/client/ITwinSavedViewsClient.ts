@@ -10,7 +10,7 @@ import {
   SavedViewMinimalResponse, SavedViewRepresentationResponse, SavedViewsClient, SingleExtensionParams, SingleGroupParams,
   SingleSavedViewParams, SingleTagParams, TagListResponse, TagResponse, UpdateGroupParams, UpdateImageParams,
   UpdateSavedViewParams, UpdateTagParams,
-} from "./SavedViewClient.js";
+} from "./SavedViewsClient.js";
 
 export interface ITwinSavedViewsClientParams {
   /** @default "https://api.bentley.com/savedviews"  */

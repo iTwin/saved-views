@@ -12,10 +12,6 @@ export interface Extension {
   _links: HalLinks<["savedView", "iTwin"?, "project"?, "prev"?, "iModel"?, "self"?]>;
 }
 
-export interface ExtensionsResponse {
-  href: string;
-}
-
 export interface ExtensionSavedViewCreate {
   extensionName: string;
   data: string;

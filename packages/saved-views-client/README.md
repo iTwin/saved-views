@@ -20,7 +20,6 @@ const iTwinSavedViewsClient = new ITwinSavedViewsClient({
 const res = await iTwinSavedViewsClient.getSavedViewMinimal({
   savedViewId:"ID",
 })
-
 ```
 
 ## Contributing
