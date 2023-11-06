@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
- * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
- * See LICENSE.md in the project root for license terms and full copyright notice.
- *--------------------------------------------------------------------------------------------*/
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import { Extension, ExtensionMin } from "../Extension.js";
 import { HalLinks } from "../Links.js";
 import { SavedViewTag } from "../Tag.js";
@@ -92,16 +92,11 @@ export interface ClipPlaneProps {
 }
 
 /** Minimum saved view structure including possible legacy data from product setting service. */
-export interface ViewWithLegacy extends View {
-  legacyView?: unknown;
-}
+export type ViewWithLegacy = View & { legacyView: unknown; };
 
 /** Minimum Saved View structure so every application can have something to work with. */
-export interface View {
-  iTwin3dView?: ViewITwin3d;
-  iTwinSheetView?: ViewITwinSheet;
-  iTwinDrawingView?: ViewITwinDrawing;
-}
+export type View = { itwin3dView: ViewITwin3d; } | { itwinSheetView: ViewITwinSheet; }
+  | { itwinDrawingView: ViewITwinDrawing; };
 
 /** Minimum required information saved for a 3D saved view. */
 export interface ViewITwin3d extends SavedViewBase {
@@ -149,5 +144,5 @@ export interface SavedView {
   displayName: string;
   shared: boolean;
   tags?: SavedViewTag[];
-  _links: HalLinks<["savedView", "image", "thumbnail", "iTwin"?, "project"?, "iModel"?, "creator"?, "group"?]>;
+  _links: HalLinks<["image", "thumbnail", "iTwin"?, "project"?, "imodel"?, "creator"?, "group"?]>;
 }
