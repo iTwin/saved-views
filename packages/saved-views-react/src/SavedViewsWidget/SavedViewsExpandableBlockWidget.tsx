@@ -17,6 +17,7 @@ interface SavedViewsExpandableBlockWidgetProps {
   tags: Map<string, SavedViewTag>;
   actions?: SavedViewsActions | undefined;
   editable?: boolean | undefined;
+  options?: ((savedView: SavedView) => ReactNode[]) | undefined;
 }
 
 export function SavedViewsExpandableBlockWidget(props: SavedViewsExpandableBlockWidgetProps): ReactElement {
@@ -29,6 +30,7 @@ export function SavedViewsExpandableBlockWidget(props: SavedViewsExpandableBlock
         groups={props.groups}
         tags={props.tags}
         editable={props.editable}
+        options={props.options}
         expanded
       />
       {
@@ -41,6 +43,7 @@ export function SavedViewsExpandableBlockWidget(props: SavedViewsExpandableBlock
             tags={props.tags}
             actions={props.actions}
             editable={props.editable}
+            options={props.options}
           />,
         )
       }

@@ -3,13 +3,28 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import { Button, Surface } from "@itwin/itwinui-react";
-import { SavedViewsExpandableBlockWidget, SavedViewsFolderWidget } from "@itwin/saved-views-react";
+import { SavedViewsExpandableBlockWidget, SavedViewsFolderWidget, createTileOptions } from "@itwin/saved-views-react";
 import { ReactElement } from "react";
 
 import { useSavedViewData } from "../useSavedViewData.js";
 
 export function SavedViewsExpandableBlockWidgetDemo(): ReactElement {
   const { state: { savedViews, groups, tags, editing }, actions, setEditing } = useSavedViewData();
+
+  const options = createTileOptions({
+    renameSavedView: true,
+    groupActions: actions.moveToGroup && {
+      groups: [...groups.values()],
+      moveToGroup: actions.moveToGroup,
+      moveToNewGroup: actions.moveToNewGroup,
+    },
+    tagActions: actions.addTag && actions.removeTag && {
+      tags: [...tags.values()],
+      addTag: actions.addTag,
+      addNewTag: actions.addNewTag,
+      removeTag: actions.removeTag,
+    }
+  });
 
   return (
     <div style={{ display: "grid", alignContent: "start", gap: "var(--iui-size-s)" }}>
@@ -20,6 +35,7 @@ export function SavedViewsExpandableBlockWidgetDemo(): ReactElement {
           tags={tags}
           editable={editing}
           actions={actions}
+          options={() => options}
         />
         {
           editing &&
@@ -47,26 +63,31 @@ export function SavedViewsExpandableBlockWidgetDemo(): ReactElement {
 }
 
 export function SavedViewsFolderWidgetDemo(): ReactElement {
-  const { state: { savedViews, groups, tags, editing }, actions, setEditing } = useSavedViewData();
+  const { state: { savedViews, groups, tags }, actions } = useSavedViewData();
+
+  const options = createTileOptions({
+    renameSavedView: true,
+    groupActions: actions.moveToGroup && {
+      groups: [...groups.values()],
+      moveToGroup: actions.moveToGroup,
+      moveToNewGroup: actions.moveToNewGroup,
+    },
+    tagActions: actions.addTag && actions.removeTag && {
+      tags: [...tags.values()],
+      addTag: actions.addTag,
+      addNewTag: actions.addNewTag,
+      removeTag: actions.removeTag,
+    }
+  });
 
   return (
     <div style={{ display: "grid", alignContent: "start", gap: "var(--iui-size-s)" }}>
-      {
-        editing
-          ? (
-            <div>
-              <Button styleType="high-visibility" onClick={() => setEditing(false)}>Save changes</Button>
-              <Button onClick={() => setEditing(false)}>Cancel</Button>
-            </div>
-          )
-          : <Button onClick={() => setEditing(true)}>Edit</Button>
-      }
       <SavedViewsFolderWidget
         savedViews={savedViews}
         groups={groups}
         tags={tags}
-        editable={editing}
         actions={actions}
+        options={() => options}
       />
     </div>
   );
