@@ -46,6 +46,10 @@ export function useSavedViewsContext(): SavedViewsContext {
 
 function replaceStringsRecursively(source: Record<string, unknown>, destination: Record<string, unknown>): void {
   for (const key in source) {
+    if (!Object.hasOwnProperty.call(destination, key)) {
+      return;
+    }
+
     if (typeof source[key] === "string") {
       destination[key] = source[key];
     } else {
