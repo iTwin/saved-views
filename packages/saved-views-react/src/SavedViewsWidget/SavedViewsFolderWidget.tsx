@@ -203,16 +203,13 @@ function SavedViewsGroupScreen(props: SavedViewsGroupScreenProps): ReactElement 
           <IconButton onClick={() => props.setActiveGroup(undefined)}><SvgHome /></IconButton>
           <DropdownButton
             dropdownMenuProps={{ appendTo: "parent" }}
-            menuItems={(close) => [
-              <div key="0" style={{ overflow: "auto", height: "calc(15 * var(--iui-size-l))" }}>{
-                groups.map(
-                  (group) =>
-                    <MenuItem key={group.id} onClick={() => { close(); props.setActiveGroup(group.id); }}>
-                      {group.displayName}
-                    </MenuItem>,
-                )}
-              </div>,
-            ]}
+            menuItems={(close) =>
+              groups.map((group) =>
+                <MenuItem key={group.id} onClick={() => { close(); props.setActiveGroup(group.id); }}>
+                  {group.displayName}
+                </MenuItem>,
+              )
+            }
           >
             {props.activeGroup.displayName}
           </DropdownButton>
