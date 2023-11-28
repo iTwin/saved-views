@@ -25,7 +25,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
 
   public async getSavedViewInfo(args: GetSavedViewInfoParams): Promise<SavedViewInfo> {
     const [{ savedViews }, { groups }, { tags }] = await Promise.all([
-      this.client.getAllSavedViewsRepresentation(args),
+      this.client.getAllSavedViewsMinimal(args),
       this.client.getAllGroups(args),
       this.client.getAllTags(args),
     ]);
