@@ -23,7 +23,7 @@ export function SavedViewsExpandableBlockWidgetDemo(): ReactElement {
       addTag: actions.addTag,
       addNewTag: actions.addNewTag,
       removeTag: actions.removeTag,
-    }
+    },
   });
 
   return (
@@ -77,7 +77,7 @@ export function SavedViewsFolderWidgetDemo(): ReactElement {
       addTag: actions.addTag,
       addNewTag: actions.addNewTag,
       removeTag: actions.removeTag,
-    }
+    },
   });
 
   return (
