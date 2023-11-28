@@ -489,12 +489,20 @@ export interface DisplayStyleModelAppearanceProps
   modelId?: string;
 }
 
+/** Wire format describing a ClipIntersectionStyle. */
+export interface ClipIntersectionStyleProps {
+  color?: RgbColorProps;
+  width?: number;
+}
+
 /** Wire format describing a ClipStyle. */
 export interface ClipStyleProps {
   produceCutGeometry?: boolean;
   cutStyle?: CutStyleProps;
   insideColor?: RgbColorProps;
   outsideColor?: RgbColorProps;
+  colorizeIntersection?: boolean;
+  intersectionStyle?: ClipIntersectionStyleProps;
 }
 
 /**
