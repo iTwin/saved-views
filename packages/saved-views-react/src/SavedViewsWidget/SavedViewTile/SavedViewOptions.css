@@ -8,5 +8,5 @@
 }
 
 .svr-semibold {
-  font-weight: "var(--iui-font-weight-semibold)";
+  font-weight: var(--iui-font-weight-semibold);
 }
