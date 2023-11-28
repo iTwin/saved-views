@@ -3,9 +3,10 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import { describe, expect, it, vi } from "vitest";
+
 import { View } from "../models/savedViews/View.js";
-import { CallITwinApiParams } from "./ApiUtils";
-import { ITwinSavedViewsClient, PreferOptions } from "./ITwinSavedViewsClient";
+import { CallITwinApiParams } from "./ApiUtils.js";
+import { ITwinSavedViewsClient, PreferOptions } from "./ITwinSavedViewsClient.js";
 
 interface TestQueryParams {
   urlParams: string[];
