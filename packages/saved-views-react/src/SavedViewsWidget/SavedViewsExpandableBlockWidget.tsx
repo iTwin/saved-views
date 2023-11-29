@@ -201,6 +201,7 @@ export function BorderlessExpandableBlock(props: BorderlessExpandableBlockProps)
           isExpanded={expanded}
           onToggle={handleExpanded}
         >
+          {undefined}
         </ExpandableBlock>
       </StickyHeader>
       {expanded && props.children}
