@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
- * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
- * See LICENSE.md in the project root for license terms and full copyright notice.
- *--------------------------------------------------------------------------------------------*/
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import { Extension, ExtensionListItem, ExtensionMin, ExtensionSavedViewCreate } from "../models/Extension.js";
 import { Group } from "../models/Group.js";
 import { HalLinks } from "../models/Links.js";
@@ -43,7 +43,7 @@ export interface SingleSavedViewParams extends CommonRequestParams {
 }
 
 export interface GetSavedViewsParams extends CommonRequestParams {
-  iTwinId: string;
+  iTwinId?: string;
   iModelId?: string;
   groupId?: string;
   top?: string;
@@ -51,9 +51,8 @@ export interface GetSavedViewsParams extends CommonRequestParams {
 }
 
 export interface CreateSavedViewParams extends CommonRequestParams {
-  iTwinId?: string;
+  iTwinId: string;
   iModelId?: string;
-  id?: string;
   savedViewData: View;
   groupId?: string;
   displayName: string;
@@ -104,10 +103,7 @@ export interface ImageResponse {
 }
 
 /** Image Size enum for request. */
-export enum ImageSize {
-  Full = "full",
-  Thumbnail = "thumbnail",
-}
+export type ImageSize = "full" | "thumbnail";
 
 export interface SingleGroupParams extends CommonRequestParams {
   groupId: string;

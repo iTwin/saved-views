@@ -7,6 +7,9 @@
     "declaration": true,
     "esModuleInterop": true,
     "outDir": "./lib/esm",
+    "paths": {
+      "@itwin/saved-views-client": [ "../saved-views-client/src/index.ts" ],
+    },
   },
   "include": [ "src" ],
   "references": [ { "path": "./tsconfig.node.json" } ],
