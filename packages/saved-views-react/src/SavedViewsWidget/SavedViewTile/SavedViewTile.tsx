@@ -9,12 +9,17 @@ import {
   type ReactElement, type ReactNode,
 } from "react";
 
+// import { useNavigate } from "react-router-dom";
+
 import { useSavedViewsContext } from "../../SavedViewsContext.js";
 import { trimInputString } from "../../utils.js";
 import type { SavedView, SavedViewTag } from "../SavedView.js";
 import { SavedViewTileContext, SavedViewTileContextProvider } from "./SavedViewTileContext.js";
 
 import "./SavedViewTile.css";
+// import { UiFramework } from "@itwin/appui-react";
+// import { ViewportComponent } from "@itwin/imodel-components-react";
+// import { ViewState } from "@itwin/core-frontend";
 
 interface SavedViewTileProps {
   /** A Saved View that is being represented by the tile. */
@@ -44,6 +49,17 @@ interface SavedViewTileProps {
    * <SavedViewTile savedView={savedView} onRename={handleRename} editable />
    */
   onRename?: ((savedViewId: string, newName: string) => void) | undefined;
+
+  /**
+   * Renders the iModel with the saved view onto the screen
+   */
+  // onClick?:  ((savedViewId: string) => void) | undefined;
+
+  /**
+   * Renders the iModel with the saved view onto the screen
+   */
+  onRenderSelectedView?: ((selectedViewId: string) => void) | undefined;
+
 }
 
 /**
@@ -160,9 +176,21 @@ export function SavedViewTile(props: SavedViewTileProps): ReactElement {
         leftIcon={<TileIconContainer style={{ placeSelf: "start" }} icons={props.leftIcons} />}
         rightIcon={<TileIconContainer style={{ placeSelf: "start end" }} icons={rightIcons} />}
         isActionable={!props.editable && !editingName}
+        onClick={renderSavedView(props.onRenderSelectedView, props.savedView.id)}
       />
     </SavedViewTileContextProvider>
   );
+}
+
+function renderSavedView(onRenderSelectedView: ((selectedView: string) => void) | undefined, savedViewId: string) {
+  if (onRenderSelectedView) {
+    return () => onRenderSelectedView(savedViewId)
+  } else {
+    // alert("No view renderer defined");
+    console.log("No view renderer defined");
+    return () => {};
+  }
+
 }
 
 function isOverflowing(element: HTMLElement): boolean {

@@ -21,6 +21,7 @@ import { ReactElement, useEffect, useMemo, useState } from "react";
 
 import { applyUrlPrefix } from "../../environment";
 import { LoadingScreen } from "../common/LoadingScreen";
+import { useNavigate } from "react-router-dom";
 
 export interface ITwinJsAppProps {
   iTwinId: string;
@@ -29,8 +30,10 @@ export interface ITwinJsAppProps {
 }
 
 export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
-  type LoadingState = "opening-imodel" | "opening-viewstate" | "creating-viewstate" | "loaded";
+  type LoadingState = "opening-imodel" | "opening-viewstate" | "creating-viewstate" | "loaded" | "rendering-imodel" | "rendered";
   const [loadingState, setLoadingState] = useState<LoadingState>("opening-imodel");
+  // const [selectedViewState, setSelectedViewState] = useState<ViewState>();
+  const [selectedViewId, setSelectedViewId] = useState<string>();
   const iModel = useIModel(props.iTwinId, props.iModelId, props.authorizationClient);
   useEffect(
     () => {
@@ -63,6 +66,23 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
     [iModel],
   );
 
+  useEffect(
+    () => {
+      if (!iModel) {
+        return;
+      }
+
+      // if (selectedViewState) {
+      if (selectedViewId && selectedViewId !== "") {
+        setLoadingState("rendering-imodel");
+        // renderSavedView(iModel, selectedViewState, props.iTwinId, props.iModelId);
+        renderSavedView(iModel, selectedViewId, props.iTwinId, props.iModelId);
+      }
+    },
+    // [selectedViewState],
+    [selectedViewId],
+  );
+
   const client = useMemo(
     () => new ITwinSavedViewsClient({
       getAccessToken: () => props.authorizationClient.getAccessToken(),
@@ -71,6 +91,10 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
     [props.authorizationClient],
   );
   const savedViews = useSavedViews({ iTwinId: props.iTwinId, iModelId: props.iModelId, client });
+
+  if (loadingState === "rendering-imodel") {
+    return <LoadingScreen>Opening View...</LoadingScreen>;
+  }
 
   if (loadingState === "opening-imodel") {
     return <LoadingScreen>Opening iModel...</LoadingScreen>;
@@ -104,7 +128,7 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
           renameGroup: savedViews.renameGroup,
           deleteGroup: savedViews.deleteGroup,
         }}
-        editable
+        onRenderSelectedView={setSelectedViewId}
         options={(savedView) => [
           <SavedViewOptions.MoveToGroup
             key="move"
@@ -124,6 +148,16 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
       />
     </PageLayout.Content >
   );
+}
+
+async function renderSavedView(iModel: IModelConnection, savedViewId: string, iTwinId: string, iModelId: string) {
+// function renderSavedView(iModel: IModelConnection, selectedViewState: string, iTwinId: string, iModelId: string) {
+
+  const viewState = await iModel.views.load(savedViewId);
+
+  const navigate = useNavigate();
+  // return navigate(`/itwinjs/open-imodel/${iTwinId}/${iModelId}/view`, {state: {iModel: iModel, savedViewId: savedViewId}})
+  return navigate(`/itwinjs/open-imodel/${iTwinId}/${iModelId}/view`, {state: {iModel: iModel, viewState: viewState}})
 }
 
 export async function initializeITwinJsApp(_authorizationClient: AuthorizationClient): Promise<void> {

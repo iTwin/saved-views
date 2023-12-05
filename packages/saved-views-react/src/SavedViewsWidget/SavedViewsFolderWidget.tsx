@@ -11,6 +11,7 @@ import { SavedViewGroupOptions } from "./SavedViewGroupTile/SavedViewGroupOption
 import { SavedViewGroupTile } from "./SavedViewGroupTile/SavedViewGroupTile.js";
 import { SavedViewTile } from "./SavedViewTile/SavedViewTile.js";
 import { BorderlessExpandableBlock, SavedViewTileGrid } from "./SavedViewsExpandableBlockWidget.js";
+import { ViewState } from "@itwin/core-frontend";
 
 interface SavedViewsFolderWidgetProps {
   savedViews: Map<string, SavedView>;
@@ -19,6 +20,8 @@ interface SavedViewsFolderWidgetProps {
   actions?: SavedViewsActions | undefined;
   editable?: boolean | undefined;
   options?: ((savedView: SavedView) => ReactNode[]) | undefined;
+  // onRenderSelectedView?: ((selectedView: ViewState) => void) | undefined;
+  onRenderSelectedView?: ((selectedViewId: string) => void) | undefined;
 }
 
 export function SavedViewsFolderWidget(props: SavedViewsFolderWidgetProps): ReactElement {
@@ -64,6 +67,7 @@ export function SavedViewsFolderWidget(props: SavedViewsFolderWidgetProps): Reac
         actions={props.actions}
         editable={props.editable}
         savedViewOptions={props.options}
+        onRenderSelectedView={props.onRenderSelectedView}
       />
     );
   }
@@ -100,6 +104,8 @@ interface SavedViewsHomeScreenProps {
   actions?: SavedViewsActions | undefined;
   editable?: boolean | undefined;
   savedViewOptions?: ((savedView: SavedView) => ReactNode[]) | undefined;
+  // onRenderSelectedView?: ((selectedView: ViewState) => void) | undefined;
+  onRenderSelectedView?: ((selectedViewId: string) => void) | undefined;
 }
 
 function SavedViewsHomeScreen(props: SavedViewsHomeScreenProps): ReactElement {
@@ -149,6 +155,7 @@ function SavedViewsHomeScreen(props: SavedViewsHomeScreenProps): ReactElement {
                 editable={props.editable}
                 onRename={props.actions?.renameSavedView}
                 options={props.savedViewOptions?.(savedView)}
+                onRenderSelectedView={props.onRenderSelectedView}
               />
           }
         </SavedViewTileGrid>
