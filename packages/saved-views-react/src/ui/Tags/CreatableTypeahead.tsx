@@ -11,7 +11,7 @@ import type { MenuProps } from "react-select/src/components/Menu";
 import "./Typeahead.module.scss";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function ThemedMenu(props: MenuProps<any>) {
+function ThemedMenu(props: MenuProps<any, false>) {
   return (
     <div
       className="typeaheadReactSelectWrapper"

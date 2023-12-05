@@ -1,18 +1,19 @@
 /*---------------------------------------------------------------------------------------------
- * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
- * See LICENSE.md in the project root for license terms and full copyright notice.
- *--------------------------------------------------------------------------------------------*/
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import { describe, expect, it, vi } from "vitest";
-import { CallITwinApiParams } from "./ApiUtils";
-import { ITwinSavedViewsClient, PreferOptions } from "./ITwinSavedViewsClient";
-import { ImageSize } from "./SavedViewsClient";
+
+import { View } from "../models/savedViews/View.js";
+import { CallITwinApiParams } from "./ApiUtils.js";
+import { ITwinSavedViewsClient, PreferOptions } from "./ITwinSavedViewsClient.js";
 
 interface TestQueryParams {
   urlParams: string[];
   method: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
   body?: object | undefined;
   headers?: {
-    prefer?: PreferOptions;
+    Prefer?: PreferOptions;
   };
   signal?: AbortSignal | undefined;
 }
@@ -73,7 +74,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
       urlParams: [savedViewId],
       method: "GET",
       headers: {
-        prefer: PreferOptions.Minimal,
+        Prefer: PreferOptions.Minimal,
       },
       body: undefined,
       signal: new AbortSignal(),
@@ -93,7 +94,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
       urlParams: [savedViewId],
       method: "GET",
       headers: {
-        prefer: PreferOptions.Representation,
+        Prefer: PreferOptions.Representation,
       },
       body: undefined,
       signal: new AbortSignal(),
@@ -117,7 +118,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
       urlParams: [iTwinId, iModelId, groupId, top, skip],
       method: "GET",
       headers: {
-        prefer: PreferOptions.Minimal,
+        Prefer: PreferOptions.Minimal,
       },
       body: undefined,
       signal: new AbortSignal(),
@@ -140,7 +141,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
       urlParams: [iTwinId, iModelId, groupId, top, skip],
       method: "GET",
       headers: {
-        prefer: PreferOptions.Representation,
+        Prefer: PreferOptions.Representation,
       },
       body: undefined,
       signal: new AbortSignal(),
@@ -167,8 +168,9 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
 
     await callITwinApiTestRunner(expectedQueryParams, async () => {
       await systemUnderTest.createSavedView({
+        iTwinId: "",
         signal: new AbortSignal(),
-        savedViewData: {},
+        savedViewData: {} as View,
         displayName: "Test View",
       });
     }, checkIfFetchIsReceivingExpectedParams);
@@ -177,7 +179,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
   it("updateSavedView", async () => {
     const savedViewId = "savedViewComboId";
     const body = {
-      savedViewData: {},
+      savedViewData: {} as View,
       groupId: "groupId",
       displayName: "displayName",
       shared: true,
@@ -221,7 +223,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
   it("getImage", async () => {
     const savedViewId = "savedViewComboId";
     const expectedQueryParams: TestQueryParams = {
-      urlParams: [savedViewId, ImageSize.Full],
+      urlParams: [savedViewId, "full"],
       method: "GET",
       headers: {},
       signal: new AbortSignal(),
@@ -229,7 +231,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
 
     await callITwinApiTestRunner(expectedQueryParams, async () => {
       await systemUnderTest.getImage({
-        size: ImageSize.Full,
+        size: "full",
         savedViewId: savedViewId,
         signal: new AbortSignal(),
       });
@@ -557,7 +559,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
       urlParams: [savedViewId],
       method: "GET",
       headers: {
-        prefer: PreferOptions.Minimal,
+        Prefer: PreferOptions.Minimal,
       },
       body: undefined,
       signal: new AbortSignal(),

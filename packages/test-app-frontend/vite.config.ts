@@ -28,6 +28,10 @@ export default defineConfig(() => ({
   resolve: {
     alias: [
       {
+        find: "@itwin/saved-views-client",
+        replacement: path.resolve(__dirname, "../saved-views-client/src/index.ts"),
+      },
+      {
         find: "@itwin/saved-views-react",
         replacement: path.resolve(__dirname, "../saved-views-react/src/index.ts"),
       },

@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
- * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
- * See LICENSE.md in the project root for license terms and full copyright notice.
- *--------------------------------------------------------------------------------------------*/
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 import { callITwinApi } from "./ApiUtils.js";
 import {
   CreateExtensionParams, CreateGroupParams, CreateSavedViewParams, CreateTagParams, ExtensionListResponse,
@@ -33,6 +33,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       url: queyParams.url,
       method: queyParams.method,
       headers: {
+        "Content-Type": "application/json",
         ...queyParams.headers,
       },
       body: queyParams.body,
@@ -46,7 +47,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       url: `${this.baseUrl}/${args.savedViewId}`,
       method: "GET",
       headers: {
-        prefer: PreferOptions.Minimal,
+        Prefer: PreferOptions.Minimal,
       },
       signal: args.signal,
     });
@@ -57,7 +58,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       url: `${this.baseUrl}/${args.savedViewId}`,
       method: "GET",
       headers: {
-        prefer: PreferOptions.Representation,
+        Prefer: PreferOptions.Representation,
       },
       signal: args.signal,
     });
@@ -68,28 +69,28 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     const groupId = args.groupId ? `&groupId=${args.groupId}` : "";
     const top = args.top ? `&$top=${args.top}` : "";
     const skip = args.skip ? `&$skip=${args.skip}` : "";
-    const url = `${this.baseUrl}/?iTwinId=${args.iTwinId}${iModelId}${groupId}${top}${skip}`;
     return this.queryITwinApi({
-      url: url,
+      url: `${this.baseUrl}/?iTwinId=${args.iTwinId}${iModelId}${groupId}${top}${skip}`,
       method: "GET",
       headers: {
-        prefer: PreferOptions.Minimal,
+        Prefer: PreferOptions.Minimal,
       },
       signal: args.signal,
     });
   }
 
   async getAllSavedViewsRepresentation(args: GetSavedViewsParams): Promise<SavedViewListRepresentationResponse> {
-    const iModelId = args.iModelId ? `&iModelId=${args.iModelId}` : "";
-    const groupId = args.groupId ? `&groupId=${args.groupId}` : "";
-    const top = args.top ? `&$top=${args.top}` : "";
-    const skip = args.skip ? `&$skip=${args.skip}` : "";
-    const url = `${this.baseUrl}/?iTwinId=${args.iTwinId}${iModelId}${groupId}${top}${skip}`;
+    const iTwinId = args.iTwinId && `iTwinId=${args.iTwinId}`;
+    const iModelId = args.iModelId && `iModelId=${args.iModelId}`;
+    const groupId = args.groupId && `groupId=${args.groupId}`;
+    const top = args.top && `$top=${args.top}`;
+    const skip = args.skip && `$skip=${args.skip}`;
+    const query = [iTwinId, iModelId, groupId, top, skip].filter((param) => param).join("&");
     return this.queryITwinApi({
-      url: url,
+      url: `${this.baseUrl}?${query}`,
       method: "GET",
       headers: {
-        prefer: PreferOptions.Representation,
+        Prefer: PreferOptions.Representation,
       },
       signal: args.signal,
     });
@@ -100,8 +101,8 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     return this.queryITwinApi({
       url: `${this.baseUrl}/`,
       method: "POST",
-      body: body,
-      signal: signal,
+      body,
+      signal,
     });
   }
 
@@ -110,7 +111,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     return this.queryITwinApi({
       url: `${this.baseUrl}/${savedViewId}`,
       method: "PATCH",
-      body: body,
+      body,
       signal,
     });
   }
@@ -136,8 +137,8 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     return this.queryITwinApi({
       url: `${this.baseUrl}/${savedViewId}/image`,
       method: "PUT",
-      body: body,
-      signal: signal,
+      body,
+      signal,
     });
   }
 
@@ -151,9 +152,8 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
 
   async getAllGroups(args: GetGroupsParams): Promise<GroupListResponse> {
     const iModelId = args.iModelId ? `&iModelId=${args.iModelId}` : "";
-    const url = `${this.baseUrl}/groups/?iTwinId=${args.iTwinId}${iModelId}`;
     return this.queryITwinApi({
-      url: url,
+      url: `${this.baseUrl}/groups/?iTwinId=${args.iTwinId}${iModelId}`,
       method: "GET",
       signal: args.signal,
     });
@@ -163,7 +163,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     const { signal, ...body } = args;
     return this.queryITwinApi({
       method: "POST",
-      body: body,
+      body,
       signal,
       url: `${this.baseUrl}/groups/`,
     });
@@ -174,8 +174,8 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     return this.queryITwinApi({
       url: `${this.baseUrl}/groups/${groupId}`,
       method: "PATCH",
-      body: body,
-      signal: signal,
+      body,
+      signal,
     });
   }
 
@@ -203,14 +203,12 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     });
   }
 
-  async createExtension(
-    args: CreateExtensionParams,
-  ): Promise<ExtensionResponse> {
+  async createExtension(args: CreateExtensionParams): Promise<ExtensionResponse> {
     const { savedViewId, signal, ...body } = args;
     return this.queryITwinApi({
       url: `${this.baseUrl}/${savedViewId}/extensions/`,
       method: "PUT",
-      body: body,
+      body,
       signal,
     });
   }
@@ -233,9 +231,8 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
 
   async getAllTags(args: GetTagsParams): Promise<TagListResponse> {
     const iModelId = args.iModelId ? `&iModelId=${args.iModelId}` : "";
-    const url = `${this.baseUrl}/tags/?iTwinId=${args.iTwinId}${iModelId}`;
     return this.queryITwinApi({
-      url: url,
+      url: `${this.baseUrl}/tags/?iTwinId=${args.iTwinId}${iModelId}`,
       method: "GET",
       signal: args.signal,
     });
@@ -246,7 +243,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     return this.queryITwinApi({
       url: `${this.baseUrl}/tags`,
       method: "POST",
-      body: body,
+      body,
       signal,
     });
   }
@@ -256,7 +253,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     return this.queryITwinApi({
       url: `${this.baseUrl}/tags/${tagId}`,
       method: "PATCH",
-      body: body,
+      body,
       signal,
     });
   }
@@ -270,14 +267,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   }
 }
 
-/** Prefer enum for request. */
 export enum PreferOptions {
-  /**
-   * affects the granularity of the data returned
-   *  ONLY for get requests will be ignored for PUT POST DELETE
-   *  MINIMAL = "return=minimal", least info
-   *  REPRESENTATION = "return=representation" most info
-   */
   Minimal = "return=minimal",
   Representation = "return=representation",
 }
@@ -287,7 +277,7 @@ interface QueryParams {
   method: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
   body?: object | undefined;
   headers?: {
-    prefer?: PreferOptions;
+    Prefer?: PreferOptions;
   };
   signal?: AbortSignal | undefined;
 }
