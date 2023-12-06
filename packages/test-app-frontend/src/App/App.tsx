@@ -94,7 +94,7 @@ function AppSidebar(): ReactElement {
             startIcon={<SvgPalette />}
             title="Components catalog"
             isActive={match?.params.tab === "components"}
-            onClick={() => navigate("components")}
+            onClick={() => navigate("/components")}
           >
             Components
           </SidenavButton>,
@@ -103,7 +103,7 @@ function AppSidebar(): ReactElement {
             startIcon={<SvgImodelHollow />}
             title="iTwin.js App"
             isActive={match?.params.tab === "itwinjs"}
-            onClick={() => navigate("itwinjs")}
+            onClick={() => navigate("/itwinjs")}
           >
             iTwin.js App
           </SidenavButton>,
