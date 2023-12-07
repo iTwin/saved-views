@@ -9,7 +9,7 @@ import {
   extractObject,
   extractSimpleArray,
   simpleTypeOf,
-} from "@bentley/itwin-saved-views-utilities";
+} from "./extractionUtilities";
 
 const isPoint = (val: unknown): val is [number, number, number] =>
   Array.isArray(val) &&

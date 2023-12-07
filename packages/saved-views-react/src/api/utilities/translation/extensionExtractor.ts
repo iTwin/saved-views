@@ -10,8 +10,9 @@ import {
   extractSimpleArray,
   extractString,
   simpleTypeOf,
-} from "@bentley/itwin-saved-views-utilities";
-import { type ModelCategoryOverrideProviderProps } from "@bentley/itwin-tools";
+} from "./extractionUtilities";
+
+// import { type ModelCategoryOverrideProviderProps } from "@bentley/itwin-tools";
 import { type EmphasizeElementsProps } from "@itwin/core-common";
 
 import { type PerModelCategoryVisibilityProps } from "../SavedViewTypes";
@@ -24,11 +25,11 @@ const appearanceOverrideEmphElemMappings: ExtractionFunc<void, void>[] = [
   extractSimpleArray(simpleTypeOf("string"), "ids"),
 ];
 
-/** Appearance Override type for VisibilityOverrides (ie ModelCategoryOverrideProviderProps) */
-const appearanceOverrideVisibOvrMappings: ExtractionFunc<void, void>[] = [
-  extractSimpleArray(simpleTypeOf("string"), "ids"),
-  extractObject(featureAppearanceMappings, "app"),
-];
+// /** Appearance Override type for VisibilityOverrides (ie ModelCategoryOverrideProviderProps) */
+// const appearanceOverrideVisibOvrMappings: ExtractionFunc<void, void>[] = [
+//   extractSimpleArray(simpleTypeOf("string"), "ids"),
+//   extractObject(featureAppearanceMappings, "app"),
+// ];
 
 const emphasizeElementsMapping: ExtractionFunc<void, void>[] = [
   extractSimpleArray(simpleTypeOf("string"), "neverDrawn"),
@@ -47,12 +48,12 @@ const perModelCategoryVisibilityMapping: ExtractionFunc<void, void>[] = [
   extractBoolean("visible"),
 ];
 
-const visibilityOverrideMapping: ExtractionFunc<void, void>[] = [
-  extractArray(appearanceOverrideVisibOvrMappings, "subCategoryOverrides"),
-  extractArray(appearanceOverrideVisibOvrMappings, "modelOverrides"),
-  extractObject(appearanceOverrideVisibOvrMappings, "catEmphasizeOverride"),
-  extractObject(appearanceOverrideVisibOvrMappings, "modelEmphasizeOverride"),
-];
+// const visibilityOverrideMapping: ExtractionFunc<void, void>[] = [
+//   extractArray(appearanceOverrideVisibOvrMappings, "subCategoryOverrides"),
+//   extractArray(appearanceOverrideVisibOvrMappings, "modelOverrides"),
+//   extractObject(appearanceOverrideVisibOvrMappings, "catEmphasizeOverride"),
+//   extractObject(appearanceOverrideVisibOvrMappings, "modelEmphasizeOverride"),
+// ];
 
 /**
  * Extracts the EmphasizeElementsProps from string data in an extension
@@ -99,23 +100,23 @@ export const extractPerModelCategoryVisibility = (
   return outputArray;
 };
 
-/**
- * Extracts the VisibilityOverrideProps (ie ModelCategoryOverrideProviderProps) from string data in an extension
- * @param extensionData
- */
-export const extractVisibilityOverride = (
-  extensionData: string
-): ModelCategoryOverrideProviderProps | undefined => {
-  const dataObj = JSON.parse(extensionData);
-  if (dataObj === undefined || dataObj.visibilityOverrideProps === undefined) {
-    return undefined;
-  }
+// /**
+//  * Extracts the VisibilityOverrideProps (ie ModelCategoryOverrideProviderProps) from string data in an extension
+//  * @param extensionData
+//  */
+// export const extractVisibilityOverride = (
+//   extensionData: string
+// ): ModelCategoryOverrideProviderProps | undefined => {
+//   const dataObj = JSON.parse(extensionData);
+//   if (dataObj === undefined || dataObj.visibilityOverrideProps === undefined) {
+//     return undefined;
+//   }
 
-  const output: ModelCategoryOverrideProviderProps = {};
-  applyExtraction(
-    dataObj.visibilityOverrideProps,
-    output,
-    visibilityOverrideMapping
-  );
-  return output;
-};
+//   const output: ModelCategoryOverrideProviderProps = {};
+//   applyExtraction(
+//     dataObj.visibilityOverrideProps,
+//     output,
+//     visibilityOverrideMapping
+//   );
+//   return output;
+// };

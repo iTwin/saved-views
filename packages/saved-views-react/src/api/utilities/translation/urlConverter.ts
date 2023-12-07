@@ -1,9 +1,6 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-import {
-  type BaseMapLayerProps,
-  type ImageMapLayerProps,
-  type View,
-} from "@bentley/itwin-saved-views-utilities";
+import { BaseMapLayerProps, ImageMapLayerProps } from "@itwin/core-common";
+import { ViewData, ViewDataITwinDrawing, ViewDataITwinSheet, ViewDataItwin3d,  } from "@itwin/saved-views-client";
 
 /**
  * Convert url that potentially contains restricted characters ('&' or '.') to use unrestricated substitute characters ('++and++' or '++dot++')
@@ -28,14 +25,13 @@ export const urlToLegacyUrl = (restrictedUrl: string): string => {
 };
 
 export const convertAllLegacyUrlsToUrls = (
-  // savedViewCreate: SavedViewCreate,
-  savedViewData: View,
+  savedViewData: ViewData,
   convert: (url: string) => string
 ): void => {
   const displayStyle =
-    savedViewData.itwin3dView?.displayStyle ??
-    savedViewData.itwinDrawingView?.displayStyle ??
-    savedViewData.itwinSheetView?.displayStyle;
+    (savedViewData as ViewDataItwin3d)?.itwin3dView.displayStyle ??
+    (savedViewData as ViewDataITwinDrawing)?.itwinDrawingView.displayStyle ??
+    (savedViewData as ViewDataITwinSheet)?.itwinSheetView.displayStyle;
   if (displayStyle === undefined) {
     return;
   }

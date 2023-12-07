@@ -1,8 +1,6 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 import {
   type ExtractionFunc,
-  type ViewItwin2d,
-  type ViewItwin3d,
   applyExtraction,
   extractArray,
   extractArrayConditionally,
@@ -22,10 +20,12 @@ import {
   extractStringOrNumberArray,
   isAnyColorFormat,
   simpleTypeOf,
-} from "@bentley/itwin-saved-views-utilities";
+} from "./extractionUtilities";
+
 import { type ViewState } from "@itwin/core-frontend";
 
 import { type SavedView, type SavedView2d } from "../SavedViewTypes";
+import { ViewITwin2d, ViewITwin3d } from "@itwin/saved-views-client";
 
 const viewFlagMappings: ExtractionFunc<void, void>[] = [
   extractNumber("renderMode"),
@@ -608,7 +608,7 @@ export const extractDisplayStyle = (data: object, viewState?: ViewState) => {
   let styles;
   const output: any = {};
   if ("displayStyle" in data) {
-    styles = (data as ViewItwin2d).displayStyle;
+    styles = (data as ViewITwin2d).displayStyle;
     applyExtraction(styles, output, displayStylesMapping);
   }
   if ("displayStyleProps" in data) {
@@ -633,7 +633,7 @@ export const extractDisplayStyle3d = (data: object) => {
   let styles;
   const output: any = {};
   if ("displayStyle" in data) {
-    styles = (data as ViewItwin3d).displayStyle;
+    styles = (data as ViewITwin3d).displayStyle;
     applyExtraction(styles, output, displayStyle3dMapping);
   }
   if ("displayStyleProps" in data) {
