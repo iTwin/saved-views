@@ -46,7 +46,7 @@ const extractTags = (creator: string, tags?: SavedViewTag[]) => {
 };
 
 /**
- * Transform a ViewItwinDrawing into a PSS SavedView if possible
+ * Transform a ViewDataITwinDrawing into a legacy SavedView if possible
  * @param savedViewRsp
  * @param iModelViewData
  * @returns SavedView2d
@@ -126,7 +126,7 @@ export function savedViewItwinDrawingToLegacyDrawingView(
 }
 
 /**
- * Transform a ViewItwinSheet into a PSS SavedView if possible
+ * Transform a ViewDataITwinSheet into a legacy SavedView if possible
  * @param savedViewRsp
  * @param seedSheetViewState
  * @returns SavedView2d
@@ -216,7 +216,7 @@ export function savedViewItwinSheetToLegacySheetSavedView(
 }
 
 /**
- * Transform a ViewItwin3d into a PSS SavedView if possible
+ * Transform a ViewDataItwin3d into a legacy SavedView if possible
  * @param savedViewRsp
  * @param seedSpatialViewState
  * @returns SavedView

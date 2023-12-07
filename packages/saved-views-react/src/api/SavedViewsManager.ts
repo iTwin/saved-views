@@ -78,8 +78,8 @@ export interface SavedViewFeatureFlags {
   /** If true, enables Copy Link context menu item on Saved View */
   copyLinkEnabled?: boolean;
   /**
-   * If true, shows dialog for case where saved view has too many emphasized elements to save
-   * currently the limit is 1mb for a view in pss, but a SaveViewBase object over 990000 bytes triggers the too large case
+   * If true, shows dialog for case where saved view has too many emphasized elements to save.
+   * Currently the limit is 1mb for a legacy view, but a SaveViewBase object over 990000 bytes triggers the too large case.
    * */
   handleTooManyEmphasizedElements?: boolean;
   /** If true, enables setting the hidden models and categories in the saved view */

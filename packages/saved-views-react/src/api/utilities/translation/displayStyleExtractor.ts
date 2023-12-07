@@ -599,7 +599,7 @@ const displayStyle3dLegacyMapping: ExtractionFunc<void, void>[] = [
 ];
 
 /**
- * Extracts the display style from a PSS view displayStyle field
+ * Extracts the display style from a legacy view displayStyle field
  * And transforms it into our schema
  * @param data
  * @param viewState
@@ -625,7 +625,7 @@ export const extractDisplayStyle = (data: object, viewState?: ViewState) => {
 };
 
 /**
- * Extracts the display style 3d from a PSS view displayStyle field
+ * Extracts the display style 3d from a legacy view displayStyle field
  * And transforms it into our schema
  * @param data
  */

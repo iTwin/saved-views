@@ -69,7 +69,7 @@ const clipVectorMappings: ExtractionFunc<void, void>[] = [
 ];
 
 /**
- * Extracts the clip vectors from a PSS View
+ * Extracts the clip vectors from a legacy view
  * @param input
  */
 export const extractClipVectors = (input: object) => {
