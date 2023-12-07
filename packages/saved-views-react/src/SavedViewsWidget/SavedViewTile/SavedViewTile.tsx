@@ -198,7 +198,6 @@ export function EditableTileName(props: EditableTileNameProps): ReactElement {
     const handleKeyDown = (ev: KeyboardEvent<HTMLInputElement>) => {
       if (ev.key === "Enter") {
         const value = (ev.target as HTMLInputElement).value;
-        actions.onEndEditing(value);
         handleEndEditing(value);
         return;
       }

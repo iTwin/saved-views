@@ -6,7 +6,8 @@ import { SvgChevronLeft, SvgHome } from "@itwin/itwinui-icons-react";
 import { Breadcrumbs, Button, DropdownButton, IconButton, MenuItem } from "@itwin/itwinui-react";
 import { useCallback, useMemo, useState, type ReactElement, type ReactNode } from "react";
 
-import type { SavedView, SavedViewGroup, SavedViewTag, SavedViewsActions } from "./SavedView.js";
+import type { SavedViewActions } from "../useSavedViews.js";
+import type { SavedView, SavedViewGroup, SavedViewTag } from "./SavedView.js";
 import { SavedViewGroupOptions } from "./SavedViewGroupTile/SavedViewGroupOptions.js";
 import { SavedViewGroupTile } from "./SavedViewGroupTile/SavedViewGroupTile.js";
 import { SavedViewTile } from "./SavedViewTile/SavedViewTile.js";
@@ -16,7 +17,7 @@ interface SavedViewsFolderWidgetProps {
   savedViews: Map<string, SavedView>;
   groups: Map<string, SavedViewGroup>;
   tags: Map<string, SavedViewTag>;
-  actions?: SavedViewsActions | undefined;
+  actions?: Partial<SavedViewActions> | undefined;
   editable?: boolean | undefined;
   options?: ((savedView: SavedView) => ReactNode[]) | undefined;
 }
@@ -97,7 +98,7 @@ interface SavedViewsHomeScreenProps {
   onGroupOpen: (groupId: string) => void;
   initialScrollTop: number;
   storeScrollOffset: (offset: number) => void;
-  actions?: SavedViewsActions | undefined;
+  actions?: Partial<SavedViewActions> | undefined;
   editable?: boolean | undefined;
   savedViewOptions?: ((savedView: SavedView) => ReactNode[]) | undefined;
 }
@@ -169,15 +170,13 @@ function SavedViewsHomeScreen(props: SavedViewsHomeScreenProps): ReactElement {
   );
 }
 
-
-
 interface SavedViewsGroupScreenProps {
   activeGroup: SavedViewGroup;
   groups: Map<string, SavedViewGroup>;
   tags: Map<string, SavedViewTag>;
   savedViews: SavedView[];
   setActiveGroup: (groupId: string | undefined) => void;
-  actions?: SavedViewsActions | undefined;
+  actions?: Partial<SavedViewActions> | undefined;
   editable?: boolean | undefined;
   options?: ((savedView: SavedView) => ReactNode[]) | undefined;
 }

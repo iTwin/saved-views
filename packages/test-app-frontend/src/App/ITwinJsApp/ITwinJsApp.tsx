@@ -13,11 +13,11 @@ import { UiCore } from "@itwin/core-react";
 import { FrontendIModelsAccess } from "@itwin/imodels-access-frontend";
 import { IModelsClient } from "@itwin/imodels-client-management";
 import { PageLayout } from "@itwin/itwinui-layouts-react";
-import { Button, MenuItem, toaster } from "@itwin/itwinui-react";
+import { Button, toaster } from "@itwin/itwinui-react";
 import {
-  ITwinSavedViewsClient, SavedViewOptions, SavedViewsFolderWidget, useSavedViews,
+  ITwinSavedViewsClient, SavedViewsFolderWidget, createTileOptions, useSavedViews,
 } from "@itwin/saved-views-react";
-import { ReactElement, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactElement } from "react";
 
 import { applyUrlPrefix } from "../../environment";
 import { LoadingScreen } from "../common/LoadingScreen";
@@ -70,7 +70,20 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
     }),
     [props.authorizationClient],
   );
-  const savedViews = useSavedViews({ iTwinId: props.iTwinId, iModelId: props.iModelId, client });
+
+  const [updatingSavedViews, setUpdatingSavedViews] = useState(false);
+  const savedViews = useSavedViews({
+    iTwinId: props.iTwinId,
+    iModelId: props.iModelId,
+    client,
+    onUpdateInProgress: () => setUpdatingSavedViews(true),
+    onUpdateComplete: () => setUpdatingSavedViews(false),
+    onUpdateError: (error) => {
+      toaster.negative("Failed to update saved views.");
+      // eslint-disable-next-line no-console
+      console.error(error);
+    }
+  });
 
   if (loadingState === "opening-imodel") {
     return <LoadingScreen>Opening iModel...</LoadingScreen>;
@@ -90,39 +103,54 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
 
   const groups = [...savedViews.groups.values()];
   const tags = [...savedViews.tags.values()];
+  const tileOptions = createTileOptions({
+    renameSavedView: true,
+    groupActions: {
+      groups,
+      moveToGroup: savedViews.actions.moveToGroup,
+      moveToNewGroup: savedViews.actions.moveToNewGroup,
+    },
+    tagActions: {
+      tags,
+      addTag: savedViews.actions.addTag,
+      addNewTag: savedViews.actions.addNewTag,
+      removeTag: savedViews.actions.removeTag,
+    },
+    deleteSavedView: savedViews.actions.deleteSavedView,
+  });
+
+  const handleCreateView = () => savedViews.actions.createSavedView(
+    "0 Saved View Name",
+    {
+      itwin3dView: {
+        origin: [0.0, 0.0, 0.0],
+        extents: [100.0, 100.0, 100.0],
+        angles: {
+          yaw: 90.0,
+          pitch: 90.0,
+          roll: 90.0,
+        },
+      },
+    },
+  );
 
   return (
-    <PageLayout.Content>
-      <Button onClick={() => savedViews.createSavedView("0 Saved View Name")}>Create saved view</Button>
-      <Button onClick={() => savedViews.createGroup("0 Group")}>Create group</Button>
+    <PageLayout.Content
+      style={{ display: "grid", grid: "auto minmax(0, 1fr) / 1fr", gap: "var(--iui-size-s)", height: "100%" }}
+    >
+      <div style={{ display: "flex", gap: "var(--iui-size-s)", paddingTop: "var(--iui-size-s)", alignItems: "center" }}>
+        <Button onClick={handleCreateView}>Create saved view</Button>
+        <Button onClick={() => savedViews.actions.createGroup("0 Group")}>Create group</Button>
+        {updatingSavedViews && "Updating saved views..."}
+      </div>
       <SavedViewsFolderWidget
         savedViews={savedViews.savedViews}
         groups={savedViews.groups}
         tags={savedViews.tags}
-        actions={{
-          renameSavedView: savedViews.renameSavedView,
-          renameGroup: savedViews.renameGroup,
-          deleteGroup: savedViews.deleteGroup,
-        }}
-        editable
-        options={(savedView) => [
-          <SavedViewOptions.MoveToGroup
-            key="move"
-            groups={groups}
-            moveToGroup={savedViews.moveToGroup}
-            moveToNewGroup={savedViews.moveToNewGroup}
-          />,
-          <SavedViewOptions.ManageTags
-            key="tags"
-            tags={tags}
-            addTag={savedViews.addTag}
-            addNewTag={savedViews.addNewTag}
-            removeTag={savedViews.removeTag}
-          />,
-          <MenuItem key="delete" onClick={() => savedViews.deleteSavedView(savedView.id)}>Delete</MenuItem>,
-        ]}
+        actions={savedViews.actions}
+        options={() => tileOptions}
       />
-    </PageLayout.Content >
+    </PageLayout.Content>
   );
 }
 

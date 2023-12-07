@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 import { SvgImodelHollow, SvgPalette, SvgUser } from "@itwin/itwinui-icons-react";
 import { PageLayout } from "@itwin/itwinui-layouts-react";
-import { Button, SidenavButton, SideNavigation, Surface, ThemeProvider } from "@itwin/itwinui-react";
+import { Button, SideNavigation, SidenavButton, Surface, ThemeProvider } from "@itwin/itwinui-react";
 import { PropsWithChildren, ReactElement, useEffect, useState } from "react";
 import { Navigate, Outlet, Route, Routes, useMatch, useNavigate, useParams } from "react-router-dom";
 
@@ -12,16 +12,17 @@ import { applyUrlPrefix, clientId } from "../environment";
 import { AppContext, appContext } from "./AppContext";
 import { AppHeader } from "./AppHeader";
 import {
-  AuthorizationState, createAuthorizationProvider, SignInCallback, SignInSilent, SignInSilentCallback, useAuthorization,
+  AuthorizationState, SignInCallback, SignInSilent, SignInSilentCallback, createAuthorizationProvider,
+  useAuthorization,
 } from "./Authorization";
+import { ComponentsCatalogRoutes } from "./ComponentsCatalog/ComponentsCatalog";
+import type { ITwinJsApp } from "./ITwinJsApp/ITwinJsApp";
 import { LoadingScreen } from "./common/LoadingScreen";
 import { ErrorPage } from "./errors/ErrorPage";
 import { IModelBrowser } from "./imodel-browser/IModelBrowser";
 import { ITwinBrowser } from "./imodel-browser/ITwinBrowser";
-import type { ITwinJsApp } from "./ITwinJsApp/ITwinJsApp";
 
 import "./App.css";
-import { ComponentsCatalogRoutes } from "./ComponentsCatalog/ComponentsCatalog";
 
 export function App(): ReactElement {
   const [appContextValue, setAppContextValue] = useState<AppContext>({

@@ -15,14 +15,14 @@ export interface SavedViewInfo {
 export interface SavedViewsClient {
   getSavedViewInfo: (args: GetSavedViewInfoParams) => Promise<SavedViewInfo>;
   getThumbnailUrl: (args: GetThumbnailUrlParams) => Promise<string | undefined>;
-  createSavedView: (args: CreateSavedViewParams) => Promise<void>;
-  updateSavedView: (args: UpdateSavedViewParams) => Promise<void>;
+  createSavedView: (args: CreateSavedViewParams) => Promise<SavedView>;
+  updateSavedView: (args: UpdateSavedViewParams) => Promise<SavedView>;
   deleteSavedView: (args: DeleteSavedViewParams) => Promise<void>;
   createGroup: (args: CreateGroupParams) => Promise<SavedViewGroup>;
-  updateGroup: (args: UpdateGroupParams) => Promise<void>;
+  updateGroup: (args: UpdateGroupParams) => Promise<SavedViewGroup>;
   deleteGroup: (args: DeleteGroupParams) => Promise<void>;
   createTag: (args: CreateTagParams) => Promise<SavedViewTag>;
-  updateTag: (args: UpdateTagParams) => Promise<void>;
+  updateTag: (args: UpdateTagParams) => Promise<SavedViewTag>;
   deleteTag: (args: DeleteTagParams) => Promise<void>;
 }
 
