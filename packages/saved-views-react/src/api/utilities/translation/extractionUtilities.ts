@@ -1,6 +1,6 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 import { ColorDef } from "@itwin/core-common";
-import { Rgba, RgbatColorProps } from "./RgbColor.dto";
+import { Rgba, RgbatColorProps } from "./RgbColor";
 
 /**
  * Returns a function that does a simple typeof check on a value
