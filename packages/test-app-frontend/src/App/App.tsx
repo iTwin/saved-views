@@ -77,11 +77,7 @@ function Main(): ReactElement {
             <Route index element={<ITwinBrowser />} />
             <Route path=":iTwinId" element={<IModelBrowser />} />
           </Route>
-          {/* <Route path="open-imodel/:iTwinId/:iModelId" element={<OpenIModel iTwinJsApp={iTwinJsApp} />} />
-          <Route path="open-imodel/:iTwinId/:iModelId/view" element={<ViewIModel iTwinJsApp={iTwinJsApp}/>} /> */}
-          <Route path="open-imodel/:iTwinId/:iModelId" element={<OpenIModel iTwinJsApp={iTwinJsApp} />}>
-            <Route path="view" element={<RenderIModel/>} />
-          </Route>
+          <Route path="open-imodel/:iTwinId/:iModelId" element={<OpenIModel iTwinJsApp={iTwinJsApp} />} />
         </Route>
       </Routes>
     </>

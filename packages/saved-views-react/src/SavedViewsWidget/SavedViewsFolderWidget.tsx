@@ -11,7 +11,6 @@ import { SavedViewGroupOptions } from "./SavedViewGroupTile/SavedViewGroupOption
 import { SavedViewGroupTile } from "./SavedViewGroupTile/SavedViewGroupTile.js";
 import { SavedViewTile } from "./SavedViewTile/SavedViewTile.js";
 import { BorderlessExpandableBlock, SavedViewTileGrid } from "./SavedViewsExpandableBlockWidget.js";
-import { ViewState } from "@itwin/core-frontend";
 
 interface SavedViewsFolderWidgetProps {
   savedViews: Map<string, SavedView>;
@@ -20,7 +19,6 @@ interface SavedViewsFolderWidgetProps {
   actions?: SavedViewsActions | undefined;
   editable?: boolean | undefined;
   options?: ((savedView: SavedView) => ReactNode[]) | undefined;
-  // onRenderSelectedView?: ((selectedView: ViewState) => void) | undefined;
   onRenderSelectedView?: ((selectedViewId: string) => void) | undefined;
 }
 
@@ -83,6 +81,7 @@ export function SavedViewsFolderWidget(props: SavedViewsFolderWidgetProps): Reac
       actions={props.actions}
       editable={props.editable}
       options={props.options}
+      onRenderSelectedView={props.onRenderSelectedView}
     />
   );
 }
@@ -104,7 +103,6 @@ interface SavedViewsHomeScreenProps {
   actions?: SavedViewsActions | undefined;
   editable?: boolean | undefined;
   savedViewOptions?: ((savedView: SavedView) => ReactNode[]) | undefined;
-  // onRenderSelectedView?: ((selectedView: ViewState) => void) | undefined;
   onRenderSelectedView?: ((selectedViewId: string) => void) | undefined;
 }
 
@@ -187,6 +185,7 @@ interface SavedViewsGroupScreenProps {
   actions?: SavedViewsActions | undefined;
   editable?: boolean | undefined;
   options?: ((savedView: SavedView) => ReactNode[]) | undefined;
+  onRenderSelectedView?: ((selectedViewId: string) => void) | undefined;
 }
 
 function SavedViewsGroupScreen(props: SavedViewsGroupScreenProps): ReactElement {
@@ -231,6 +230,7 @@ function SavedViewsGroupScreen(props: SavedViewsGroupScreenProps): ReactElement 
               tags={props.tags}
               editable={props.editable}
               options={props.options?.(savedView)}
+              onRenderSelectedView={props.onRenderSelectedView}
             />,
           )}
         </div>
