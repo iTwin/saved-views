@@ -17,7 +17,7 @@ const isPoint = (val: unknown): val is [number, number, number] =>
   val.every((num: unknown) => typeof num === "number");
 
 const isTransformRow = (
-  value: unknown
+  value: unknown,
 ): value is [number, number, number, number] =>
   Array.isArray(value) &&
   value.length === 4 &&
@@ -33,7 +33,7 @@ const clipPrimitiveShapeMappings: ExtractionFunc<void, void>[] = [
       extractBoolean("mask"),
       extractBoolean("invisible"),
     ],
-    "shape"
+    "shape",
   ),
 ];
 
@@ -47,7 +47,7 @@ const clipPlaneMappings: ExtractionFunc<void, void>[] = [
 const clipPrimitivePlaneMappings: ExtractionFunc<void, void>[] = [
   extractObject(
     [extractArray2d(clipPlaneMappings, "clips"), extractBoolean("invisible")],
-    "planes"
+    "planes",
   ),
 ];
 
@@ -64,7 +64,7 @@ const clipVectorMappings: ExtractionFunc<void, void>[] = [
       },
     ],
     "clip",
-    "clipVectors"
+    "clipVectors",
   ),
 ];
 
@@ -78,6 +78,7 @@ export const extractClipVectors = (input: object) => {
     return undefined;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const output: any = {};
   applyExtraction(viewDetails, output, clipVectorMappings);
   return output.clipVectors;

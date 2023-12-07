@@ -6,7 +6,7 @@ import { SvgImodelHollow, SvgPalette, SvgUser } from "@itwin/itwinui-icons-react
 import { PageLayout } from "@itwin/itwinui-layouts-react";
 import { Button, SidenavButton, SideNavigation, Surface, ThemeProvider } from "@itwin/itwinui-react";
 import { PropsWithChildren, ReactElement, useEffect, useState } from "react";
-import { Navigate, Outlet, Route, Routes, useLocation, useMatch, useNavigate, useParams } from "react-router-dom";
+import { Navigate, Outlet, Route, Routes, useMatch, useNavigate, useParams } from "react-router-dom";
 
 import { applyUrlPrefix, clientId } from "../environment";
 import { AppContext, appContext } from "./AppContext";
@@ -22,8 +22,6 @@ import type { ITwinJsApp } from "./ITwinJsApp/ITwinJsApp";
 
 import "./App.css";
 import { ComponentsCatalogRoutes } from "./ComponentsCatalog/ComponentsCatalog";
-import { IModelConnection } from "@itwin/core-frontend";
-import { ViewportComponent } from "@itwin/imodel-components-react";
 
 export function App(): ReactElement {
   const [appContextValue, setAppContextValue] = useState<AppContext>({
@@ -201,41 +199,3 @@ function OpenIModel(props: OpenIModelProps): ReactElement | null {
 
   return <props.iTwinJsApp iTwinId={iTwinId} iModelId={iModelId} authorizationClient={userAuthorizationClient} />;
 }
-
-function RenderIModel(): ReactElement | null {
-  const {state} = useLocation();
-
-  return <ViewportComponent
-    imodel={state.iModel}
-    viewState={state.viewState}
-  />
-}
-
-// function RenderIModelFromViewId(): ReactElement | null {
-//   // const { userAuthorizationClient } = useAuthorization();
-//   // const { iTwinId, iModelId } = useParams<{ iTwinId: string; iModelId: string; }>();
-//   // if (iTwinId === undefined || iModelId === undefined) {
-//   //   return null;
-//   // }
-
-//   const {state} = useLocation();
-
-//   // const iModel: IModelConnection = state.iModel;
-//   // iModel.views.load()
-
-//   //   // const iModel = UiFramework.getIModelConnection();
-//   //   // iModel?.views.load(savedView.id);
-//   //   // return <ViewportComponent
-//   //   //   imodel={UiFramework.getIModelConnection()!}
-//   //   // />
-
-//   const iModel: IModelConnection = state.iModel;
-//   const savedViewId: string = state.savedViewId;
-
-//   const viewState = async () => await iModel.views.load(savedViewId);
-
-//   return <ViewportComponent
-//     imodel={iModel}
-//     viewState={viewState}
-//   />
-// }

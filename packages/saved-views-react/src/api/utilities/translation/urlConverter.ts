@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/comma-dangle */
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 import { BaseMapLayerProps, ImageMapLayerProps } from "@itwin/core-common";
-import { ViewData, ViewDataITwinDrawing, ViewDataITwinSheet, ViewDataItwin3d,  } from "@itwin/saved-views-client";
+import { ViewData, ViewDataITwinDrawing, ViewDataITwinSheet, ViewDataItwin3d } from "@itwin/saved-views-client";
 
 /**
  * Convert url that potentially contains restricted characters ('&' or '.') to use unrestricated substitute characters ('++and++' or '++dot++')

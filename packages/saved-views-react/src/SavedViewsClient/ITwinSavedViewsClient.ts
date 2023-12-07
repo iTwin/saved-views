@@ -48,7 +48,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   public async getSingularSavedView(args: GetSingularSavedViewParams): Promise<SavedViewWithDataRepresentation> {
     const response = await this.client.getSavedViewRepresentation({
       savedViewId: args.savedViewId,
-      signal: args.signal
+      signal: args.signal,
     });
     return response.savedView;
   }

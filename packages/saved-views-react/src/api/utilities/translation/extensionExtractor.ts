@@ -60,7 +60,7 @@ const perModelCategoryVisibilityMapping: ExtractionFunc<void, void>[] = [
  * @param extensionData
  */
 export const extractEmphasizeElements = (
-  extensionData: string
+  extensionData: string,
 ): EmphasizeElementsProps | undefined => {
   const dataObj = JSON.parse(extensionData);
   if (dataObj === undefined || dataObj.emphasizeElementsProps === undefined) {
@@ -71,7 +71,7 @@ export const extractEmphasizeElements = (
   applyExtraction(
     dataObj.emphasizeElementsProps,
     output,
-    emphasizeElementsMapping
+    emphasizeElementsMapping,
   );
   return output;
 };
@@ -81,7 +81,7 @@ export const extractEmphasizeElements = (
  * @param extensionData
  */
 export const extractPerModelCategoryVisibility = (
-  extensionData: string
+  extensionData: string,
 ): PerModelCategoryVisibilityProps[] => {
   const dataObjArray = JSON.parse(extensionData);
   if (
@@ -93,6 +93,7 @@ export const extractPerModelCategoryVisibility = (
 
   const outputArray: PerModelCategoryVisibilityProps[] = [];
   for (const dataObj of dataObjArray.perModelCategoryVisibilityProps) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const output: any = {};
     applyExtraction(dataObj, output, perModelCategoryVisibilityMapping);
     outputArray.push(output);

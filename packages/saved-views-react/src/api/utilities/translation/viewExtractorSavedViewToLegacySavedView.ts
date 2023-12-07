@@ -9,15 +9,15 @@ import {
 } from "@itwin/core-frontend";
 import {
   SavedViewApiBase, SavedViewTag, SavedViewWithDataRepresentation, ViewDataItwin3d,
-  ViewDataITwinDrawing, ViewDataITwinSheet, ViewITwin3d
-} from '@itwin/saved-views-client';
+  ViewDataITwinDrawing, ViewDataITwinSheet, ViewITwin3d,
+} from "@itwin/saved-views-client";
 
 import {
-  SavedView as LegacySavedView, SavedView2d as LegacySavedView2d, Tag as LegacyTag
-} from '../SavedViewTypes';
-import { extractClipVectors } from './clipVectorsExtractor';
-import { extractDisplayStyle, extractDisplayStyle3d } from './displayStyleExtractor';
-import { convertAllLegacyUrlsToUrls, urlToLegacyUrl } from './urlConverter';
+  SavedView as LegacySavedView, SavedView2d as LegacySavedView2d, Tag as LegacyTag,
+} from "../SavedViewTypes";
+import { extractClipVectors } from "./clipVectorsExtractor";
+import { extractDisplayStyle, extractDisplayStyle3d } from "./displayStyleExtractor";
+import { convertAllLegacyUrlsToUrls, urlToLegacyUrl } from "./urlConverter";
 
 const UNGROUPED_ID = "-1";
 
@@ -53,7 +53,7 @@ const extractTags = (creator: string, tags?: SavedViewTag[]) => {
  */
 export function savedViewItwinDrawingToLegacyDrawingView(
   savedViewRsp: SavedViewWithDataRepresentation,
-  seedDrawingViewState: DrawingViewState
+  seedDrawingViewState: DrawingViewState,
 ): LegacySavedView2d {
   convertAllLegacyUrlsToUrls(savedViewRsp.savedViewData, urlToLegacyUrl);
   const iTwinDrawingView = (savedViewRsp.savedViewData as ViewDataITwinDrawing).itwinDrawingView;
@@ -133,7 +133,7 @@ export function savedViewItwinDrawingToLegacyDrawingView(
  */
 export function savedViewItwinSheetToLegacySheetSavedView(
   savedViewRsp: SavedViewWithDataRepresentation,
-  seedSheetViewState: SheetViewState
+  seedSheetViewState: SheetViewState,
 ): LegacySavedView2d {
   convertAllLegacyUrlsToUrls(savedViewRsp.savedViewData, urlToLegacyUrl);
   const itwinSheetView = (savedViewRsp.savedViewData as ViewDataITwinSheet).itwinSheetView;
@@ -223,7 +223,7 @@ export function savedViewItwinSheetToLegacySheetSavedView(
  */
 export function savedViewITwin3dToLegacy3dSavedView(
   savedViewRsp: SavedViewWithDataRepresentation,
-  seedSpatialViewState: SpatialViewState
+  seedSpatialViewState: SpatialViewState,
 ): LegacySavedView {
   convertAllLegacyUrlsToUrls(savedViewRsp.savedViewData, urlToLegacyUrl);
   const modelSelector = seedSpatialViewState.modelSelector;
@@ -243,6 +243,7 @@ export function savedViewITwin3dToLegacy3dSavedView(
       origin: itwin3dView.origin,
       extents: itwin3dView.extents,
       angles: itwin3dView.angles ?? {},
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       camera: itwin3dView.camera!,
       jsonProperties: {
         viewDetails: extractClipVectors(itwin3dView) ?? {},
@@ -298,7 +299,7 @@ export function savedViewITwin3dToLegacy3dSavedView(
  */
 function appendHiddenCategoriesToLegacyView(
   iTwinView: SavedViewApiBase,
-  legacyView: LegacySavedView | LegacySavedView2d
+  legacyView: LegacySavedView | LegacySavedView2d,
 ) {
   if (iTwinView.categories && iTwinView.categories.disabled) {
     legacyView.hiddenCategories = iTwinView.categories.disabled as Id64Array;
@@ -313,7 +314,7 @@ function appendHiddenCategoriesToLegacyView(
  */
 function appendHiddenModelsTo3dLegacySavedView(
   view: ViewITwin3d,
-  legacyView: LegacySavedView
+  legacyView: LegacySavedView,
 ) {
   if (view.models && view.models.disabled) {
     legacyView.hiddenModels = view.models?.disabled as Id64Array;
@@ -326,7 +327,7 @@ function appendHiddenModelsTo3dLegacySavedView(
  * @returns SavedViewWithData
  */
 export const cleanLegacyViewModelSelectorPropsModels = (
-  savedView: SavedViewWithDataRepresentation
+  savedView: SavedViewWithDataRepresentation,
 ) => {
   if ((savedView.savedViewData.legacyView as LegacySavedView)?.modelSelectorProps) {
     const savedViewCopy = _.cloneDeep(savedView);

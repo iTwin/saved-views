@@ -1,25 +1,25 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-import { IModelReadRpcInterface, ViewQueryParams, ViewStateProps } from '@itwin/core-common';
+import { IModelReadRpcInterface, ViewQueryParams, ViewStateProps } from "@itwin/core-common";
 import {
-  DrawingViewState, IModelConnection, SheetViewState, SpatialViewState, ViewState
-} from '@itwin/core-frontend';
+  DrawingViewState, IModelConnection, SheetViewState, SpatialViewState, ViewState,
+} from "@itwin/core-frontend";
 import {
   Extension, SavedViewWithDataRepresentation, ViewData, ViewDataItwin3d, ViewDataITwinDrawing,
-  ViewDataITwinSheet
-} from '@itwin/saved-views-client';
+  ViewDataITwinSheet,
+} from "@itwin/saved-views-client";
 
-import { ViewTypes } from '../../../SavedViewTypes.js';
+import { ViewTypes } from "../../../SavedViewTypes.js";
 import {
-  isDrawingSavedView, isSheetSavedView, isSpatialSavedView
-} from '../../clients/ISavedViewsClient.js';
+  isDrawingSavedView, isSheetSavedView, isSpatialSavedView,
+} from "../../clients/ISavedViewsClient.js";
 import {
   SavedView as LegacySavedView, SavedView2d as LegacySavedView2d,
-  SavedViewBase as LegacySavedViewBase
-} from '../SavedViewTypes.js';
+  SavedViewBase as LegacySavedViewBase,
+} from "../SavedViewTypes.js";
 import {
   cleanLegacyViewModelSelectorPropsModels, savedViewITwin3dToLegacy3dSavedView,
-  savedViewItwinDrawingToLegacyDrawingView, savedViewItwinSheetToLegacySheetSavedView
-} from './viewExtractorSavedViewToLegacySavedView.js';
+  savedViewItwinDrawingToLegacyDrawingView, savedViewItwinSheetToLegacySheetSavedView,
+} from "./viewExtractorSavedViewToLegacySavedView.js";
 
 /*
  * Converts a Saved View into an iTwin.js-style ViewState
@@ -73,7 +73,7 @@ async function translateSavedViewToLegacySavedView(
 
     const actual = savedViewITwin3dToLegacy3dSavedView(
       savedView,
-      iModelViewData as SpatialViewState
+      iModelViewData as SpatialViewState,
     );
     legacySavedView = actual;
   } else if (isSavedViewItwinDrawing(savedViewData)) {
@@ -83,7 +83,7 @@ async function translateSavedViewToLegacySavedView(
     );
     const actual = savedViewItwinDrawingToLegacyDrawingView(
       savedView,
-      iModelViewData as DrawingViewState
+      iModelViewData as DrawingViewState,
     );
     legacySavedView = actual;
   } else if (isSavedViewItwinSheet(savedViewData)) {
@@ -93,12 +93,12 @@ async function translateSavedViewToLegacySavedView(
     );
     const actual = savedViewItwinSheetToLegacySheetSavedView(
       savedView,
-      iModelViewData as SheetViewState
+      iModelViewData as SheetViewState,
     );
     legacySavedView = actual;
   } else {
     throw new Error(
-      "Could not translate itwin-saved-views API response to a SavedViewBaseSetting"
+      "Could not translate itwin-saved-views API response to a SavedViewBaseSetting",
     );
   }
 
@@ -130,9 +130,9 @@ async function fetchIModelViewData(viewClassName: ViewTypes, iModelConnection: I
   // }
   const viewId = await getDefaultViewIdFromClassName(
     iModelConnection,
-    viewClassName
+    viewClassName,
   );
-  let seedViewState = await iModelConnection.views.load(viewId);
+  const seedViewState = await iModelConnection.views.load(viewId);
   // this._seedViewStates.set(viewClassName, seedViewState);
   return seedViewState;
 }
@@ -141,7 +141,7 @@ async function fetchIModelViewData(viewClassName: ViewTypes, iModelConnection: I
 // method shared some implementation with getDefaultViewId
 async function getDefaultViewIdFromClassName(
   iModelConnection: IModelConnection,
-  savedViewType: ViewTypes
+  savedViewType: ViewTypes,
 ) {
   let viewFullName = undefined;
   switch (savedViewType) {
@@ -157,7 +157,6 @@ async function getDefaultViewIdFromClassName(
     default:
       throw new Error("Unrecognized View Type");
   }
-  // eslint-disable-next-line deprecation/deprecation
   const viewId = await iModelConnection.views.queryDefaultViewId();
   const params: ViewQueryParams = {};
   params.from = viewFullName;
@@ -167,7 +166,7 @@ async function getDefaultViewIdFromClassName(
   const viewProps =
     await IModelReadRpcInterface.getClient().queryElementProps(
       iModelConnection.getRpcProps(),
-      params
+      params,
     );
   if (viewProps.length === 0) {
     // Return the first view we can find

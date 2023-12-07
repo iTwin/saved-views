@@ -91,9 +91,10 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
 
       if (selectedViewId && selectedViewId !== "") {
         setLoadingState("rendering-imodel");
-        renderSavedView(iModel, selectedViewId, client);
+        void renderSavedView(iModel, selectedViewId, client);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [selectedViewId],
   );
 
@@ -128,6 +129,7 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
 
   if (selectedViewState) {
     return <ViewportComponent
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       imodel={iModel!}
       viewState={selectedViewState}
     />

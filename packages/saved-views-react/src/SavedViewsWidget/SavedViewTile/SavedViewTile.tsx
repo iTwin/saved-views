@@ -186,11 +186,8 @@ function renderSavedView(onRenderSelectedView: ((selectedView: string) => void) 
   if (onRenderSelectedView) {
     return () => onRenderSelectedView(savedViewId)
   } else {
-    // alert("No view renderer defined");
-    console.log("No view renderer defined");
     return () => {};
   }
-
 }
 
 function isOverflowing(element: HTMLElement): boolean {

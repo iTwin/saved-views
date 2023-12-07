@@ -72,7 +72,7 @@ export const isAnyColorFormat = (value: unknown) =>
 // BB GG RR are the color bits (BB =blue GG= green RR= red)
 // something that if fully one color would be FF or 1111 1111
 const mapColorsToBitShiftedEquivalent = (
-  color: RgbatColorProps
+  color: RgbatColorProps,
 ): RgbatColorProps => {
   const colorCodeRed = color.red; //0x 00 00 00 RR   Binary  0000 0000 0000 0000 0000 0000 RRRR RRRR
   const colorCodeGreen = color.green << 8; //0x 00 00 GG 00 Binary  0000 0000 0000 0000 GGGG GGGG 0000 0000
@@ -105,6 +105,7 @@ const transformSchemaColor = (value: RgbatColorProps) => {
       colorsBitShifted.red |
       colorsBitShifted.green |
       colorsBitShifted.blue |
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       color.transparency!
     );
   };
@@ -239,8 +240,9 @@ export const createExtractionFunc = (
   from: string,
   to: string,
   typeCheck?: (value: unknown) => boolean,
-  transform?: (value: unknown) => unknown
+  transform?: (value: unknown) => unknown,
 ) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (input: any, output: any) => {
     if (input[from] !== undefined && (!typeCheck || typeCheck(input[from]))) {
       output[to] = transform ? transform(input[from]) : input[from];
@@ -268,7 +270,7 @@ export type ExtractionFuncCreator = (
  */
 export const extractNumber = (
   from: string,
-  to?: string
+  to?: string,
 ): ExtractionFunc<void, void> => {
   return createExtractionFunc(from, to ?? from, simpleTypeOf("number"));
 };
@@ -282,7 +284,7 @@ export const extractNumber = (
  */
 export const extractBoolean = (
   from: string,
-  to?: string
+  to?: string,
 ): ExtractionFunc<void, void> => {
   return createExtractionFunc(from, to ?? from, simpleTypeOf("boolean"));
 };
@@ -295,12 +297,12 @@ export const extractBoolean = (
  */
 export const extractNumberOrBool = (
   from: string,
-  to?: string
+  to?: string,
 ): ExtractionFunc<void, void> => {
   return createExtractionFunc(
     from,
     to ?? from,
-    (value) => typeof value === "number" || typeof value === "boolean"
+    (value) => typeof value === "number" || typeof value === "boolean",
   );
 };
 
@@ -313,7 +315,7 @@ export const extractNumberOrBool = (
  */
 export const extractString = (
   from: string,
-  to?: string
+  to?: string,
 ): ExtractionFunc<void, void> => {
   return createExtractionFunc(from, to ?? from, simpleTypeOf("string"));
 };
@@ -326,12 +328,12 @@ export const extractString = (
  */
 export const extractStringOrNumber = (
   from: string,
-  to?: string
+  to?: string,
 ): ExtractionFunc<void, void> => {
   return createExtractionFunc(
     from,
     to ?? from,
-    (value: unknown) => typeof value === "number" || typeof value === "string"
+    (value: unknown) => typeof value === "number" || typeof value === "string",
   );
 };
 
@@ -344,7 +346,7 @@ export const extractStringOrNumber = (
  */
 export const extractStringOrArray = (
   from: string,
-  to?: string
+  to?: string,
 ): ExtractionFunc<void, void> => {
   return createExtractionFunc(
     from,
@@ -352,7 +354,7 @@ export const extractStringOrArray = (
     (value: unknown) =>
       typeof value === "string" ||
       (Array.isArray(value) &&
-        value.every((inner: unknown) => typeof inner === "string"))
+        value.every((inner: unknown) => typeof inner === "string")),
   );
 };
 
@@ -364,7 +366,7 @@ export const extractStringOrArray = (
  */
 export const extractStringOrNumberArray = (
   from: string,
-  to?: string
+  to?: string,
 ): ExtractionFunc<void, void> => {
   return createExtractionFunc(
     from,
@@ -372,8 +374,8 @@ export const extractStringOrNumberArray = (
     (value: unknown) =>
       Array.isArray(value) &&
       value.every(
-        (val: unknown) => typeof val === "number" || typeof val === "string"
-      )
+        (val: unknown) => typeof val === "number" || typeof val === "string",
+      ),
   );
 };
 
@@ -388,13 +390,13 @@ export const extractStringOrNumberArray = (
 export const extractSimpleArray = (
   typeCheck: (value: unknown) => boolean,
   from: string,
-  to?: string
+  to?: string,
 ): ExtractionFunc<void, void> => {
   return createExtractionFunc(
     from,
     to ?? from,
     (value: unknown) =>
-      Array.isArray(value) && value.every((val: unknown) => typeCheck(val))
+      Array.isArray(value) && value.every((val: unknown) => typeCheck(val)),
   );
 };
 
@@ -413,13 +415,13 @@ export const extractSimpleArray = (
  */
 export const extractColor = (
   from: string,
-  to?: string
+  to?: string,
 ): ExtractionFunc<void, void> => {
   return createExtractionFunc(
     from,
     to ?? from,
     isAnyColorFormat,
-    transformColor
+    transformColor,
   );
 };
 
@@ -438,13 +440,13 @@ export const extractColor = (
  */
 export const extractColorLegacy = (
   from: string,
-  to?: string
+  to?: string,
 ): ExtractionFunc<void, void> => {
   return createExtractionFunc(
     from,
     to ?? from,
     isAnyColorFormat,
-    transformColorLegacy
+    transformColorLegacy,
   );
 };
 
@@ -457,7 +459,7 @@ export const extractColorLegacy = (
  */
 export const extractRGB = (
   from: string,
-  to?: string
+  to?: string,
 ): ExtractionFunc<void, void> => {
   return createExtractionFunc(from, to ?? from, isAnyColorFormat, transformRGB);
 };
@@ -472,14 +474,15 @@ export const extractRGB = (
 export const extractObject = (
   extractionFuncs: ExtractionFunc<void, void>[],
   from: string,
-  to?: string
+  to?: string,
 ): ExtractionFunc<void, void> => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (input: any, output: any) => {
     const adjustedTo = to ?? from;
     if (input[from] !== undefined) {
       output[adjustedTo] = {};
       extractionFuncs.forEach((func: ExtractionFunc<void, void>) =>
-        func(input[from], output[adjustedTo])
+        func(input[from], output[adjustedTo]),
       );
     }
   };
@@ -505,8 +508,9 @@ export interface ConditionalExtractParams {
  * @param discriminator String to check for an accessor or function that determines whether or not a value is proper
  */
 const objectMatchesDiscriminator = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: any,
-  discriminator: string | ((value: unknown) => boolean)
+  discriminator: string | ((value: unknown) => boolean),
 ) => {
   if (typeof discriminator === "string") {
     return value[discriminator] !== undefined;
@@ -526,8 +530,9 @@ const objectMatchesDiscriminator = (
 export const extractConditionally = (
   params: ConditionalExtractParams[],
   from: string,
-  to?: string
+  to?: string,
 ): ExtractionFunc<void, void> => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (input: any, output: any) => {
     const adjustedTo = to ?? from;
     if (input[from] !== undefined) {
@@ -539,7 +544,7 @@ export const extractConditionally = (
           if (Array.isArray(param.mappings)) {
             // Apply each extraction func to the inner object
             param.mappings.forEach((func: ExtractionFunc<void, void>) =>
-              func(input[from], output[adjustedTo])
+              func(input[from], output[adjustedTo]),
             );
           } else {
             // Apply the extraction func to the object directly
@@ -559,8 +564,9 @@ export const extractConditionally = (
 export const extractArray = (
   extractionFunc: ExtractionFunc<void, void>[],
   from: string,
-  to?: string
+  to?: string,
 ) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (input: any, output: any) => {
     const adjustedTo = to ?? from;
     if (input[from] !== undefined && Array.isArray(input[from])) {
@@ -568,7 +574,7 @@ export const extractArray = (
       (input[from] as unknown[]).forEach((_: unknown, index: number) => {
         output[adjustedTo].push({});
         extractionFunc.forEach((func: ExtractionFunc<void, void>) =>
-          func(input[from][index], output[adjustedTo][index])
+          func(input[from][index], output[adjustedTo][index]),
         );
       });
     }
@@ -584,8 +590,9 @@ export const extractArray = (
 export const extractArray2d = (
   extractionFunc: ExtractionFunc<void, void>[],
   from: string,
-  to?: string
+  to?: string,
 ) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (input: any, output: any) => {
     if (
       Array.isArray(input[from]) &&
@@ -598,7 +605,7 @@ export const extractArray2d = (
         for (let j = 0; j < input[from][i].length; ++j) {
           output[adjustedTo][i].push({});
           extractionFunc.forEach((func: ExtractionFunc<void, void>) =>
-            func(input[from][i][j], output[adjustedTo][i][j])
+            func(input[from][i][j], output[adjustedTo][i][j]),
           );
         }
       }
@@ -614,8 +621,9 @@ export const extractArray2d = (
 export const extractArrayConditionally = (
   params: ConditionalExtractParams[],
   from: string,
-  to?: string
+  to?: string,
 ) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (input: any, output: any) => {
     const adjustedTo = to ?? from;
     if (input[from] !== undefined && Array.isArray(input[from])) {
@@ -630,12 +638,13 @@ export const extractArrayConditionally = (
             // If so, then apply the necessary extraction functions
             if (Array.isArray(param.mappings)) {
               param.mappings.forEach((func: ExtractionFunc<void, void>) =>
-                func(input[from][index], output[adjustedTo][index])
+                func(input[from][index], output[adjustedTo][index]),
               );
             } else {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               param.mappings(index as any, index as any)(
                 input[from],
-                output[adjustedTo]
+                output[adjustedTo],
               );
             }
           }
@@ -657,8 +666,9 @@ export const extractPlainTypedMap = (
   extractionFuncs: ExtractionFunc<void, void>[],
   isValidKey: (key: unknown) => boolean,
   from: string,
-  to?: string
+  to?: string,
 ) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (input: any, output: any) => {
     if (input[from] !== undefined) {
       const adjustedTo = to ?? from;
@@ -667,7 +677,7 @@ export const extractPlainTypedMap = (
         if (isValidKey(prop)) {
           output[adjustedTo][prop] = {};
           extractionFuncs.forEach((func: ExtractionFunc<void, void>) =>
-            func(input[from][prop], output[adjustedTo][prop])
+            func(input[from][prop], output[adjustedTo][prop]),
           );
         }
       }
@@ -683,11 +693,13 @@ export const extractPlainTypedMap = (
  * @param extractionFuncs Array of extraction functions
  */
 export const applyExtraction = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   input: any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   output: any,
-  extractionFuncs: ExtractionFunc<void, void>[]
+  extractionFuncs: ExtractionFunc<void, void>[],
 ) => {
   extractionFuncs.forEach((func: ExtractionFunc<void, void>) =>
-    func(input, output)
+    func(input, output),
   );
 };
