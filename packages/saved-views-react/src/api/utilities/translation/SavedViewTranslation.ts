@@ -62,6 +62,7 @@ async function translateSavedViewToLegacySavedView(
   let legacySavedView: LegacySavedView | LegacySavedView2d;
   if (savedViewData.legacyView) {
     savedView = cleanLegacyViewModelSelectorPropsModels(savedView);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     legacySavedView = savedViewData.legacyView as any;
     // legacySavedView.id = savedView.id; // Change legacy sv id to comboId
 
