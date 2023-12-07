@@ -75,9 +75,6 @@ importers:
       '@itwin/appui-layout-react':
         specifier: ^4.0.6
         version: 4.6.4(@itwin/appui-abstract@4.2.4)(@itwin/core-bentley@4.2.4)(@itwin/core-react@4.6.4)(@types/react@17.0.71)(react-dom@17.0.2)(react@17.0.2)
-      '@itwin/imodel-components-react':
-        specifier: ^4.3.0
-        version: 4.6.4(@itwin/appui-abstract@4.2.4)(@itwin/components-react@4.6.4)(@itwin/core-bentley@4.2.4)(@itwin/core-common@4.2.4)(@itwin/core-frontend@4.2.4)(@itwin/core-geometry@4.2.4)(@itwin/core-quantity@4.2.4)(@itwin/core-react@4.6.4)(react-dom@17.0.2)(react@17.0.2)
       '@itwin/itwinui-icons-react':
         specifier: ^2.4.0
         version: 2.4.0(react-dom@17.0.2)(react@17.0.2)
