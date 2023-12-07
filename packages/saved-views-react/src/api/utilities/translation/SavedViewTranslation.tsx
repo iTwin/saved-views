@@ -1,15 +1,38 @@
-import { IModelReadRpcInterface, ViewQueryParams, ViewStateProps } from "@itwin/core-common";
-import { DrawingViewState, IModelConnection, SheetViewState, SpatialViewState, ViewState } from "@itwin/core-frontend";
-import { Extension, SavedViewWithDataRepresentation, ViewData, ViewDataITwinDrawing, ViewDataITwinSheet, ViewDataItwin3d } from "@itwin/saved-views-client";
-import { cleanLegacyViewModelSelectorPropsModels, savedViewITwin3dToLegacy3dSavedView, savedViewItwinDrawingToLegacyDrawingView, savedViewItwinSheetToLegacySheetSavedView } from "./viewExtractorSavedViewToLegacySavedView.js";
-import { ViewTypes } from "../../../SavedViewTypes.js";
-import { SavedView as LegacySavedView, SavedView2d as LegacySavedView2d, SavedViewBase as LegacySavedViewBase } from "../SavedViewTypes.js";
-import { isDrawingSavedView, isSheetSavedView, isSpatialSavedView } from "../../clients/ISavedViewsClient.js";
+// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+import { IModelReadRpcInterface, ViewQueryParams, ViewStateProps } from '@itwin/core-common';
+import {
+  DrawingViewState, IModelConnection, SheetViewState, SpatialViewState, ViewState
+} from '@itwin/core-frontend';
+import {
+  Extension, SavedViewWithDataRepresentation, ViewData, ViewDataItwin3d, ViewDataITwinDrawing,
+  ViewDataITwinSheet
+} from '@itwin/saved-views-client';
 
+import { ViewTypes } from '../../../SavedViewTypes.js';
+import {
+  isDrawingSavedView, isSheetSavedView, isSpatialSavedView
+} from '../../clients/ISavedViewsClient.js';
+import {
+  SavedView as LegacySavedView, SavedView2d as LegacySavedView2d,
+  SavedViewBase as LegacySavedViewBase
+} from '../SavedViewTypes.js';
+import {
+  cleanLegacyViewModelSelectorPropsModels, savedViewITwin3dToLegacy3dSavedView,
+  savedViewItwinDrawingToLegacyDrawingView, savedViewItwinSheetToLegacySheetSavedView
+} from './viewExtractorSavedViewToLegacySavedView.js';
+
+/*
+ * Converts a Saved View into an iTwin.js-style ViewState
+ */
 export async function translateSavedViewIntoITwinJsViewState(savedView: SavedViewWithDataRepresentation, iModelConnection: IModelConnection): Promise<ViewState | undefined> {
 
-  // Doesn't have to be done this way, but for now...
-  // Converts views into legacy views, then converts the legacy view into an iTwin.js-style ViewState
+  /*
+   * This fucntion converts a saved view from the Saved View API into a legacy view,
+   * then converts the legacy view into an iTwin.js-style ViewState.
+   *
+   * Once legacy views are officially retired, a straight translation from Saved View to ViewState can be done instead
+   * (but code has not been created for that yet).
+   */
 
   // Translate into legacy view
   const legacySavedView: LegacySavedView | LegacySavedView2d = await translateSavedViewToLegacySavedView(savedView, iModelConnection);
@@ -114,52 +137,52 @@ async function fetchIModelViewData(viewClassName: ViewTypes, iModelConnection: I
   return seedViewState;
 }
 
-  // code is not D.R.Y but this decision was made to uphold existing contracts
-  // method shared some implementation with getDefaultViewId
+// code is not D.R.Y but this decision was made to uphold existing contracts
+// method shared some implementation with getDefaultViewId
 async function getDefaultViewIdFromClassName(
-    iModelConnection: IModelConnection,
-    savedViewType: ViewTypes
-  ) {
-    let viewFullName = undefined;
-    switch (savedViewType) {
-      case ViewTypes.ViewDefinition3d:
-        viewFullName = SpatialViewState.classFullName;
-        break;
-      case ViewTypes.DrawingViewDefinition:
-        viewFullName = DrawingViewState.classFullName;
-        break;
-      case ViewTypes.SheetViewDefinition:
-        viewFullName = SheetViewState.classFullName;
-        break;
-      default:
-        throw new Error("Unrecognized View Type");
-    }
-    // eslint-disable-next-line deprecation/deprecation
-    const viewId = await iModelConnection.views.queryDefaultViewId();
-    const params: ViewQueryParams = {};
-    params.from = viewFullName;
-    params.where = "ECInstanceId=" + viewId;
-
-    // Check validity of default view
-    const viewProps =
-      await IModelReadRpcInterface.getClient().queryElementProps(
-        iModelConnection.getRpcProps(),
-        params
-      );
-    if (viewProps.length === 0) {
-      // Return the first view we can find
-      const viewList = await iModelConnection.views.getViewList({
-        from: viewFullName,
-        wantPrivate: false,
-      });
-      if (viewList.length === 0) {
-        return "";
-      }
-      return viewList[0].id;
-    }
-
-    return viewId;
+  iModelConnection: IModelConnection,
+  savedViewType: ViewTypes
+) {
+  let viewFullName = undefined;
+  switch (savedViewType) {
+    case ViewTypes.ViewDefinition3d:
+      viewFullName = SpatialViewState.classFullName;
+      break;
+    case ViewTypes.DrawingViewDefinition:
+      viewFullName = DrawingViewState.classFullName;
+      break;
+    case ViewTypes.SheetViewDefinition:
+      viewFullName = SheetViewState.classFullName;
+      break;
+    default:
+      throw new Error("Unrecognized View Type");
   }
+  // eslint-disable-next-line deprecation/deprecation
+  const viewId = await iModelConnection.views.queryDefaultViewId();
+  const params: ViewQueryParams = {};
+  params.from = viewFullName;
+  params.where = "ECInstanceId=" + viewId;
+
+  // Check validity of default view
+  const viewProps =
+    await IModelReadRpcInterface.getClient().queryElementProps(
+      iModelConnection.getRpcProps(),
+      params
+    );
+  if (viewProps.length === 0) {
+    // Return the first view we can find
+    const viewList = await iModelConnection.views.getViewList({
+      from: viewFullName,
+      wantPrivate: false,
+    });
+    if (viewList.length === 0) {
+      return "";
+    }
+    return viewList[0].id;
+  }
+
+  return viewId;
+}
 
 /**
  * Creates a ViewState from a SavedView object returned by the SavedViewsClient
@@ -198,42 +221,41 @@ async function _createSpatialViewState(
 
 /** Creates a drawing view state from the data object */
 async function _createDrawingViewState(
-    iModelConnection: IModelConnection,
-    savedView: LegacySavedView2d,
-  ): Promise<DrawingViewState | undefined> {
-    const props: ViewStateProps = {
-      viewDefinitionProps: savedView.viewDefinitionProps,
-      categorySelectorProps: savedView.categorySelectorProps,
-      displayStyleProps: savedView.displayStyleProps,
-    };
-    const viewState = DrawingViewState.createFromProps(props, iModelConnection) as DrawingViewState;
-    await viewState.load();
-    return viewState;
-  }
+  iModelConnection: IModelConnection,
+  savedView: LegacySavedView2d,
+): Promise<DrawingViewState | undefined> {
+  const props: ViewStateProps = {
+    viewDefinitionProps: savedView.viewDefinitionProps,
+    categorySelectorProps: savedView.categorySelectorProps,
+    displayStyleProps: savedView.displayStyleProps,
+  };
+  const viewState = DrawingViewState.createFromProps(props, iModelConnection) as DrawingViewState;
+  await viewState.load();
+  return viewState;
+}
 
 /** Creates a sheet view state from the data object */
 async function _createSheetViewState(
-    iModelConnection: IModelConnection,
-    savedView: LegacySavedView2d,
-  ): Promise<SheetViewState | undefined> {
-    if (
-      savedView.sheetProps === undefined ||
-      savedView.sheetAttachments === undefined
-    ) {
-      return undefined;
-    }
-    const props: ViewStateProps = {
-      viewDefinitionProps: savedView.viewDefinitionProps,
-      categorySelectorProps: savedView.categorySelectorProps,
-      displayStyleProps: savedView.displayStyleProps,
-      sheetProps: savedView.sheetProps,
-      sheetAttachments: savedView.sheetAttachments,
-    };
-    const viewState = SheetViewState.createFromProps(props, iModelConnection);
-    await viewState.load();
-    return viewState;
+  iModelConnection: IModelConnection,
+  savedView: LegacySavedView2d,
+): Promise<SheetViewState | undefined> {
+  if (
+    savedView.sheetProps === undefined ||
+    savedView.sheetAttachments === undefined
+  ) {
+    return undefined;
   }
-
+  const props: ViewStateProps = {
+    viewDefinitionProps: savedView.viewDefinitionProps,
+    categorySelectorProps: savedView.categorySelectorProps,
+    displayStyleProps: savedView.displayStyleProps,
+    sheetProps: savedView.sheetProps,
+    sheetAttachments: savedView.sheetAttachments,
+  };
+  const viewState = SheetViewState.createFromProps(props, iModelConnection);
+  await viewState.load();
+  return viewState;
+}
 
 async function translateLegacySavedViewToITwinJsViewState(legacySavedView: LegacySavedView | LegacySavedView2d, iModelConnection: IModelConnection): Promise<ViewState | undefined> {
   return createViewState(iModelConnection, legacySavedView);
