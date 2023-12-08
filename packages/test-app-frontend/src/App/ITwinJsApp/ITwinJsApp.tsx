@@ -15,13 +15,12 @@ import { IModelsClient } from "@itwin/imodels-client-management";
 import { PageLayout } from "@itwin/itwinui-layouts-react";
 import { Button, MenuItem, toaster } from "@itwin/itwinui-react";
 import {
-  ITwinSavedViewsClient, SavedViewOptions, SavedViewsClient, SavedViewsFolderWidget, translateSavedViewIntoITwinJsViewState, useSavedViews,
+  ITwinSavedViewsClient, SavedViewOptions, SavedViewsFolderWidget, translateSavedViewIntoITwinJsViewState, useSavedViews,
 } from "@itwin/saved-views-react";
 import { ReactElement, useEffect, useMemo, useState } from "react";
 
 import { applyUrlPrefix } from "../../environment";
 import { LoadingScreen } from "../common/LoadingScreen";
-import { SavedViewWithDataRepresentation } from "@itwin/saved-views-client";
 import { ViewportComponent } from "@itwin/imodel-components-react";
 
 export interface ITwinJsAppProps {
@@ -33,7 +32,6 @@ export interface ITwinJsAppProps {
 export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
   type LoadingState = "opening-imodel" | "opening-viewstate" | "creating-viewstate" | "loaded" | "rendering-imodel" | "rendered";
   const [loadingState, setLoadingState] = useState<LoadingState>("opening-imodel");
-  const [selectedViewId, setSelectedViewId] = useState<string>();
   const [selectedViewState, setSelectedViewState] = useState<ViewState>();
   const iModel = useIModel(props.iTwinId, props.iModelId, props.authorizationClient);
   useEffect(
@@ -67,37 +65,6 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
     [iModel],
   );
 
-  useEffect(
-    () => {
-
-      async function renderSavedView(iModel: IModelConnection, savedViewId: string, client: SavedViewsClient) {
-
-          const savedViewResponse: SavedViewWithDataRepresentation = await client.getSingularSavedView({savedViewId});
-          // console.log({savedViewResponse});
-
-          const savedViewState = await translateSavedViewIntoITwinJsViewState(savedViewResponse, iModel);
-
-          setLoadingState("rendered");
-
-          setSelectedViewState(savedViewState);
-          // console.log({savedViewState});
-
-          return savedViewState;
-        }
-
-      if (!iModel) {
-        return;
-      }
-
-      if (selectedViewId && selectedViewId !== "") {
-        setLoadingState("rendering-imodel");
-        void renderSavedView(iModel, selectedViewId, client);
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [selectedViewId],
-  );
-
   const client = useMemo(
     () => new ITwinSavedViewsClient({
       getAccessToken: () => props.authorizationClient.getAccessToken(),
@@ -106,6 +73,16 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
     [props.authorizationClient],
   );
   const savedViews = useSavedViews({ iTwinId: props.iTwinId, iModelId: props.iModelId, client });
+
+  const handleTileClick = async (savedViewId: string) => {
+    setLoadingState("rendering-imodel");
+
+    const savedView = await client.getSingularSavedView({savedViewId});
+    const viewState = await translateSavedViewIntoITwinJsViewState(savedView, iModel!);
+
+    setLoadingState("rendered");
+    setSelectedViewState(viewState);
+  };
 
   if (loadingState === "rendering-imodel") {
     return <LoadingScreen>Opening View...</LoadingScreen>;
@@ -151,7 +128,7 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
           renameGroup: savedViews.renameGroup,
           deleteGroup: savedViews.deleteGroup,
         }}
-        onTileClick={setSelectedViewId}
+        onTileClick={handleTileClick}
         options={(savedView) => [
           <SavedViewOptions.MoveToGroup
             key="move"
