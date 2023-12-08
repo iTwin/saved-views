@@ -34,9 +34,13 @@ async function throwBadResponseCodeError(response: Response, errorMessage: strin
   let error: unknown;
   try {
     error = (await response.json()).error;
+    if (!error) {
+      throw 0;
+    }
   } catch {
+    const statusText = response.statusText ? ` ${response.statusText}` : "";
     throw new Error(
-      `${errorMessage} Unexpected response status code: ${response.status} ${response.statusText}.`,
+      `${errorMessage} Unexpected response status code: ${response.status}${statusText}.`,
     );
   }
 
