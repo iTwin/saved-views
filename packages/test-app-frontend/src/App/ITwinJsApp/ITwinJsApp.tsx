@@ -82,7 +82,7 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
       toaster.negative("Failed to update saved views.");
       // eslint-disable-next-line no-console
       console.error(error);
-    }
+    },
   });
 
   if (loadingState === "opening-imodel") {
