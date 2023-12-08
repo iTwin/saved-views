@@ -1,7 +1,7 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 import { IModelReadRpcInterface, ViewQueryParams, ViewStateProps } from "@itwin/core-common";
 import {
-  DrawingViewState, IModelConnection, SheetViewState, SpatialViewState, ViewState,
+  DrawingViewState, EmphasizeElements, IModelConnection, ScreenViewport, SheetViewState, SpatialViewState, ViewState, Viewport,
 } from "@itwin/core-frontend";
 import {
   Extension, SavedViewWithDataRepresentation, ViewData, ViewDataItwin3d, ViewDataITwinDrawing,
@@ -20,12 +20,17 @@ import {
   cleanLegacyViewModelSelectorPropsModels, savedViewITwin3dToLegacy3dSavedView,
   savedViewItwinDrawingToLegacyDrawingView, savedViewItwinSheetToLegacySheetSavedView,
 } from "./viewExtractorSavedViewToLegacySavedView.js";
+import { SavedViewsExtensionHandlers } from "./SavedViewsExtensionHandlers.js";
+import { applyHiddenModelsAndCategories } from "./ModelsAndCategoriesHelper.js";
+
+declare const isSavedViewItwin3d: (savedViewData: ViewData) => savedViewData is ViewDataItwin3d;
+declare const isSavedViewItwinSheet: (savedViewData: ViewData) => savedViewData is ViewDataITwinSheet;
+declare const isSavedViewItwinDrawing: (savedViewData: ViewData) => savedViewData is ViewDataITwinDrawing;
 
 /*
  * Converts a Saved View into an iTwin.js-style ViewState
  */
 export async function translateSavedViewIntoITwinJsViewState(savedView: SavedViewWithDataRepresentation, iModelConnection: IModelConnection): Promise<ViewState | undefined> {
-
   /*
    * This fucntion converts a saved view from the Saved View API into a legacy view,
    * then converts the legacy view into an iTwin.js-style ViewState.
@@ -42,10 +47,6 @@ export async function translateSavedViewIntoITwinJsViewState(savedView: SavedVie
 
   return viewState;
 }
-
-declare const isSavedViewItwin3d: (savedViewData: ViewData) => savedViewData is ViewDataItwin3d;
-declare const isSavedViewItwinSheet: (savedViewData: ViewData) => savedViewData is ViewDataITwinSheet;
-declare const isSavedViewItwinDrawing: (savedViewData: ViewData) => savedViewData is ViewDataITwinDrawing;
 
 /**
 * Convert the saved view response recieved from the itwin-saved-views API into a SavedViewBaseSetting
@@ -112,8 +113,7 @@ async function translateSavedViewToLegacySavedView(
   }
 
   return legacySavedView;
- }
-
+}
 
 /**
  * Grabs Seeded SavedView From IModel
@@ -258,5 +258,36 @@ async function _createSheetViewState(
 }
 
 async function translateLegacySavedViewToITwinJsViewState(legacySavedView: LegacySavedView | LegacySavedView2d, iModelConnection: IModelConnection): Promise<ViewState | undefined> {
-  return createViewState(iModelConnection, legacySavedView);
+  const viewState = await createViewState(iModelConnection, legacySavedView);
+
+  if (viewState) {
+    await applyHiddenModelsAndCategories(viewState, legacySavedView, iModelConnection);
+  }
+
+  return viewState;
+}
+
+async function applyExtensionOverrides(legacySavedView: LegacySavedViewBase, viewport: Viewport) {
+  // Clear the current if there's any (this should always happen, even if there are no extensions)
+  if (EmphasizeElements.get(viewport)) {
+    EmphasizeElements.clear(viewport);
+    viewport.isFadeOutActive = false;
+  }
+
+  const defaultHandlers = [
+    SavedViewsExtensionHandlers.EmphasizeElements,
+    SavedViewsExtensionHandlers.PerModelCategoryVisibility,
+    SavedViewsExtensionHandlers.VisibilityOverride,
+  ];
+
+  for (const extHandler of defaultHandlers) {
+    const extData = legacySavedView.extensions?.get(extHandler.extensionName);
+    if (extData) {
+      await extHandler.onViewApply(extData, viewport);
+    }
+  }
+}
+
+export async function applyExtensionsToViewport(viewport: ScreenViewport, legacySavedView: LegacySavedViewBase) {
+  await applyExtensionOverrides(legacySavedView, viewport);
 }

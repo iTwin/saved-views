@@ -15,13 +15,14 @@ import { IModelsClient } from "@itwin/imodels-client-management";
 import { PageLayout } from "@itwin/itwinui-layouts-react";
 import { Button, MenuItem, toaster } from "@itwin/itwinui-react";
 import {
-  ITwinSavedViewsClient, SavedViewOptions, SavedViewsFolderWidget, translateSavedViewIntoITwinJsViewState, useSavedViews,
+  ITwinSavedViewsClient, SavedViewBase as LegacySavedViewBase, SavedViewOptions, SavedViewsFolderWidget, applyExtensionsToViewport, translateSavedViewIntoITwinJsViewState, useSavedViews,
 } from "@itwin/saved-views-react";
 import { ReactElement, useEffect, useMemo, useState } from "react";
 
 import { applyUrlPrefix } from "../../environment";
 import { LoadingScreen } from "../common/LoadingScreen";
 import { ViewportComponent } from "@itwin/imodel-components-react";
+import { SavedViewWithDataRepresentation } from "@itwin/saved-views-client";
 
 export interface ITwinJsAppProps {
   iTwinId: string;
@@ -33,6 +34,7 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
   type LoadingState = "opening-imodel" | "opening-viewstate" | "creating-viewstate" | "loaded" | "rendering-imodel" | "rendered";
   const [loadingState, setLoadingState] = useState<LoadingState>("opening-imodel");
   const [selectedViewState, setSelectedViewState] = useState<ViewState>();
+  const [selectedSavedView, setSelectedSavedView] = useState<SavedViewWithDataRepresentation>();
   const iModel = useIModel(props.iTwinId, props.iModelId, props.authorizationClient);
   useEffect(
     () => {
@@ -75,11 +77,16 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
   const savedViews = useSavedViews({ iTwinId: props.iTwinId, iModelId: props.iModelId, client });
 
   const handleTileClick = async (savedViewId: string) => {
+    if (!iModel) {
+      return;
+    }
+
     setLoadingState("rendering-imodel");
 
     const savedView = await client.getSingularSavedView({savedViewId});
-    const viewState = await translateSavedViewIntoITwinJsViewState(savedView, iModel!);
+    setSelectedSavedView(savedView);
 
+    const viewState = await translateSavedViewIntoITwinJsViewState(savedView, iModel);
     setLoadingState("rendered");
     setSelectedViewState(viewState);
   };
@@ -104,11 +111,11 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
     return <LoadingScreen>Loading saved views...</LoadingScreen>;
   }
 
-  if (selectedViewState) {
+  if (selectedViewState && iModel) {
     return <ViewportComponent
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      imodel={iModel!}
+      imodel={iModel}
       viewState={selectedViewState}
+      viewportRef={(viewport) => applyExtensionsToViewport(viewport, selectedSavedView?.savedViewData.legacyView as LegacySavedViewBase)}
     />
   }
 
