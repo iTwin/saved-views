@@ -151,7 +151,7 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
           renameGroup: savedViews.renameGroup,
           deleteGroup: savedViews.deleteGroup,
         }}
-        onRenderSelectedView={setSelectedViewId}
+        onTileClick={setSelectedViewId}
         options={(savedView) => [
           <SavedViewOptions.MoveToGroup
             key="move"

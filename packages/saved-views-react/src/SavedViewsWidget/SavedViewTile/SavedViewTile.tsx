@@ -51,15 +51,9 @@ interface SavedViewTileProps {
   onRename?: ((savedViewId: string, newName: string) => void) | undefined;
 
   /**
-   * Renders the iModel with the saved view onto the screen
+   * Click handler meant for triggering the render of iModel onto the screen with the saved view applied
    */
-  // onClick?:  ((savedViewId: string) => void) | undefined;
-
-  /**
-   * Renders the iModel with the saved view onto the screen
-   */
-  onRenderSelectedView?: ((selectedViewId: string) => void) | undefined;
-
+  onClick?: ((selectedViewId: string) => void) | undefined;
 }
 
 /**
@@ -176,18 +170,10 @@ export function SavedViewTile(props: SavedViewTileProps): ReactElement {
         leftIcon={<TileIconContainer style={{ placeSelf: "start" }} icons={props.leftIcons} />}
         rightIcon={<TileIconContainer style={{ placeSelf: "start end" }} icons={rightIcons} />}
         isActionable={!props.editable && !editingName}
-        onClick={renderSavedView(props.onRenderSelectedView, props.savedView.id)}
+        onClick={() => props.onClick?.(props.savedView.id)}
       />
     </SavedViewTileContextProvider>
   );
-}
-
-function renderSavedView(onRenderSelectedView: ((selectedView: string) => void) | undefined, savedViewId: string) {
-  if (onRenderSelectedView) {
-    return () => onRenderSelectedView(savedViewId)
-  } else {
-    return () => {};
-  }
 }
 
 function isOverflowing(element: HTMLElement): boolean {
