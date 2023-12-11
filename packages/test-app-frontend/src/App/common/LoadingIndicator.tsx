@@ -2,8 +2,9 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
+import { ProgressRadial, Text } from "@itwin/itwinui-react";
 import { CSSProperties, ReactElement, ReactNode } from "react";
-import { Leading, ProgressRadial } from "@itwin/itwinui-react";
+
 import { VerticalStack } from "./VerticalStack";
 
 export interface LoadingIndicatorProps {
@@ -17,7 +18,7 @@ export function LoadingIndicator(props: LoadingIndicatorProps): ReactElement {
   return (
     <VerticalStack id={props.id} style={props.style}>
       <ProgressRadial size="large" indeterminate={true} />
-      <Leading>{props.children}</Leading>
+      <Text variant="leading">{props.children}</Text>
     </VerticalStack>
   );
 }

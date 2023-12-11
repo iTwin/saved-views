@@ -163,10 +163,10 @@ export function BorderlessExpandableBlock(props: BorderlessExpandableBlockProps)
           props.editable &&
           <DropdownMenu menuItems={
             (close) => [
-              <MenuItem key="edit" icon={<SvgEdit />} onClick={() => handleEditGroupClick(close)}>Edit</MenuItem>,
+              <MenuItem key="edit" startIcon={<SvgEdit />} onClick={() => handleEditGroupClick(close)}>Edit</MenuItem>,
               props.shared
-                ? <MenuItem key="unshare" icon={<SvgBlank />}>Unshare</MenuItem>
-                : <MenuItem key="share" icon={<SvgBlank />}>Share</MenuItem>,
+                ? <MenuItem key="unshare" startIcon={<SvgBlank />}>Unshare</MenuItem>
+                : <MenuItem key="share" startIcon={<SvgBlank />}>Share</MenuItem>,
             ]}
           >
             <IconButton styleType="borderless" size="small" onClick={handleGroupMenuClick}>

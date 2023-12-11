@@ -207,7 +207,6 @@ function SavedViewsGroupScreen(props: SavedViewsGroupScreenProps): ReactElement 
         <Breadcrumbs>
           <IconButton onClick={() => props.setActiveGroup(undefined)}><SvgHome /></IconButton>
           <DropdownButton
-            dropdownMenuProps={{ appendTo: "parent" }}
             menuItems={(close) =>
               groups.map((group) =>
                 <MenuItem key={group.id} onClick={() => { close(); props.setActiveGroup(group.id); }}>

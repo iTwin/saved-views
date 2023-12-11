@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 import { SvgDeveloper, SvgMoon, SvgSun } from "@itwin/itwinui-icons-react";
 import {
-  Button, DropdownMenu, Header, HeaderLogo, IconButton, MenuItem, UserIcon, getUserColor,
+  Avatar, Button, DropdownMenu, Header, HeaderLogo, IconButton, MenuItem, getUserColor,
 } from "@itwin/itwinui-react";
 import { ReactElement, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -53,15 +53,15 @@ export function AppHeader(): ReactElement {
     actions.push(<Button key="signin" styleType="borderless" onClick={signIn}>Sign In</Button>);
   }
 
-  const userIcon = (state === AuthorizationState.SignedIn && user !== undefined)
-    ? <HeaderUserIcon profile={user} signOut={signOut} />
-    : null;
+  if (state === AuthorizationState.SignedIn && user !== undefined) {
+    actions.push(<HeaderUserIcon key="user" profile={user} signOut={signOut} />);
+  }
+
 
   return (
     <Header
       appLogo={<HeaderLogo logo={<SvgDeveloper />} onClick={() => navigate("/")}>Saved Views Test App</HeaderLogo>}
       actions={actions}
-      userIcon={userIcon}
     />
   );
 }
@@ -84,7 +84,7 @@ function HeaderUserIcon(props: HeaderUserIconProps): ReactElement | null {
   return (
     <DropdownMenu menuItems={() => [<MenuItem key="signout" onClick={signOut}>Sign Out</MenuItem>]}>
       <IconButton styleType="borderless" title="Account Actions">
-        <UserIcon title={displayName} abbreviation={initials} backgroundColor={getUserColor(displayName)} />
+        <Avatar title={displayName} abbreviation={initials} backgroundColor={getUserColor(displayName)} />
       </IconButton>
     </DropdownMenu>
   );
