@@ -73,7 +73,7 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
   const client = useMemo(
     () => new ITwinSavedViewsClient({
       getAccessToken: () => props.authorizationClient.getAccessToken(),
-      baseUrl: "https://qa-api.bentley.com/savedviews",
+      baseUrl: applyUrlPrefix("https://api.bentley.com/savedviews"),
     }),
     [props.authorizationClient],
   );
