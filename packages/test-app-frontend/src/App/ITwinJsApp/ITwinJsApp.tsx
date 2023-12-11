@@ -24,6 +24,8 @@ import { LoadingScreen } from "../common/LoadingScreen";
 import { ViewportComponent } from "@itwin/imodel-components-react";
 import { SavedViewWithDataRepresentation } from "@itwin/saved-views-client";
 
+import "./ITwinJsApp.css";
+
 export interface ITwinJsAppProps {
   iTwinId: string;
   iModelId: string;
@@ -91,6 +93,12 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
     setSelectedViewState(viewState);
   };
 
+  const handleBackClick = () => {
+    setSelectedSavedView(undefined);
+    setSelectedViewState(undefined);
+    setLoadingState("loaded")
+  };
+
   if (loadingState === "rendering-imodel") {
     return <LoadingScreen>Opening View...</LoadingScreen>;
   }
@@ -112,11 +120,15 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
   }
 
   if (selectedViewState && iModel) {
-    return <ViewportComponent
-      imodel={iModel}
-      viewState={selectedViewState}
-      viewportRef={(viewport) => applyExtensionsToViewport(viewport, selectedSavedView?.savedViewData.legacyView as LegacySavedViewBase)}
-    />
+    return (
+      <PageLayout.Content>
+        <Button onClick={handleBackClick} className="viewport-back-button">Back</Button>
+        <ViewportComponent
+          imodel={iModel}
+          viewState={selectedViewState}
+          viewportRef={(viewport) => applyExtensionsToViewport(viewport, selectedSavedView?.savedViewData.legacyView as LegacySavedViewBase)}
+        />
+      </PageLayout.Content>)
   }
 
   const groups = [...savedViews.groups.values()];
