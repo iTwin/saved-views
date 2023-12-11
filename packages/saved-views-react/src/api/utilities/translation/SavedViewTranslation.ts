@@ -23,29 +23,30 @@ import {
 import { SavedViewsExtensionHandlers } from "./SavedViewsExtensionHandlers.js";
 import { applyHiddenModelsAndCategories } from "./ModelsAndCategoriesHelper.js";
 
-declare const isSavedViewItwin3d: (savedViewData: ViewData) => savedViewData is ViewDataItwin3d;
-declare const isSavedViewItwinSheet: (savedViewData: ViewData) => savedViewData is ViewDataITwinSheet;
-declare const isSavedViewItwinDrawing: (savedViewData: ViewData) => savedViewData is ViewDataITwinDrawing;
+function isSavedViewItwin3d(savedViewData: ViewData): savedViewData is ViewDataItwin3d {
+  return (savedViewData as ViewDataItwin3d).itwin3dView !== undefined;
+}
 
-/*
- * Converts a Saved View into an iTwin.js-style ViewState
- */
-export async function translateSavedViewIntoITwinJsViewState(savedView: SavedViewWithDataRepresentation, iModelConnection: IModelConnection): Promise<ViewState | undefined> {
-  /*
-   * This fucntion converts a saved view from the Saved View API into a legacy view,
-   * then converts the legacy view into an iTwin.js-style ViewState.
-   *
-   * Once legacy views are officially retired, a straight translation from Saved View to ViewState can be done instead
-   * (but code has not been created for that yet).
-   */
+function isSavedViewItwinSheet(savedViewData: ViewData): savedViewData is ViewDataITwinSheet {
+  return (savedViewData as ViewDataITwinSheet).itwinSheetView !== undefined;
+}
 
-  // Translate into legacy view
-  const legacySavedView: LegacySavedView | LegacySavedView2d = await translateSavedViewToLegacySavedView(savedView, iModelConnection);
+function isSavedViewItwinDrawing(savedViewData: ViewData): savedViewData is ViewDataITwinDrawing {
+  return (savedViewData as ViewDataITwinDrawing).itwinDrawingView !== undefined;
+}
 
-  // Translate into iTwin.js-style ViewState
-  const viewState = await translateLegacySavedViewToITwinJsViewState(legacySavedView, iModelConnection);
+function legacyViewFrom(legacySavedViewResponse: SavedViewWithDataRepresentation): LegacySavedViewBase {
+  return legacySavedViewResponse.savedViewData.legacyView as LegacySavedViewBase;
+}
 
-  return viewState;
+export async function translateSavedViewResponseToLegacySavedViewResponse(
+  savedViewResponse: SavedViewWithDataRepresentation,
+  iModelConnection: IModelConnection,
+ ): Promise<SavedViewWithDataRepresentation> {
+  const legacySavedView = await translateSavedViewToLegacySavedView(savedViewResponse, iModelConnection);
+  const legacySavedViewResponse = savedViewResponse;
+  legacySavedViewResponse.savedViewData.legacyView = legacySavedView;
+  return legacySavedViewResponse;
 }
 
 /**
@@ -57,10 +58,10 @@ export async function translateSavedViewIntoITwinJsViewState(savedView: SavedVie
 async function translateSavedViewToLegacySavedView(
   savedView: SavedViewWithDataRepresentation,
   iModelConnection: IModelConnection,
- ): Promise<LegacySavedView | LegacySavedView2d> {
+ ): Promise<LegacySavedViewBase> {
   const savedViewData = savedView.savedViewData;
   // If the legacy view already exists, use that; otherwise, use extraction code to get the legacy view
-  let legacySavedView: LegacySavedView | LegacySavedView2d;
+  let legacySavedView: LegacySavedViewBase;
   if (savedViewData.legacyView) {
     savedView = cleanLegacyViewModelSelectorPropsModels(savedView);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -257,7 +258,8 @@ async function _createSheetViewState(
   return viewState;
 }
 
-async function translateLegacySavedViewToITwinJsViewState(legacySavedView: LegacySavedView | LegacySavedView2d, iModelConnection: IModelConnection): Promise<ViewState | undefined> {
+export async function translateLegacySavedViewToITwinJsViewState(legacySavedViewResponse: SavedViewWithDataRepresentation, iModelConnection: IModelConnection): Promise<ViewState | undefined> {
+  const legacySavedView = legacyViewFrom(legacySavedViewResponse);
   const viewState = await createViewState(iModelConnection, legacySavedView);
 
   if (viewState) {
@@ -267,6 +269,9 @@ async function translateLegacySavedViewToITwinJsViewState(legacySavedView: Legac
   return viewState;
 }
 
+/*
+ * Apply overrides for the supplied viewport based on extension data. Only works with legacy-formatted extension data.
+ */
 async function applyExtensionOverrides(legacySavedView: LegacySavedViewBase, viewport: Viewport) {
   // Clear the current if there's any (this should always happen, even if there are no extensions)
   if (EmphasizeElements.get(viewport)) {
@@ -288,6 +293,13 @@ async function applyExtensionOverrides(legacySavedView: LegacySavedViewBase, vie
   }
 }
 
-export async function applyExtensionsToViewport(viewport: ScreenViewport, legacySavedView: LegacySavedViewBase) {
-  await applyExtensionOverrides(legacySavedView, viewport);
+/*
+ * Apply extension data (overrides) onto the supplied viewport. Only works with legacy-formatted extension data.
+ */
+export async function applyExtensionsToViewport(viewport: ScreenViewport, legacySavedViewResponse: SavedViewWithDataRepresentation | undefined) {
+  if (!legacySavedViewResponse) {
+    return;
+  }
+
+  await applyExtensionOverrides(legacyViewFrom(legacySavedViewResponse), viewport);
 }

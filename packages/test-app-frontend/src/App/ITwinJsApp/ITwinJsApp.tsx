@@ -7,7 +7,7 @@ import { Id64 } from "@itwin/core-bentley";
 import {
   AuthorizationClient, BentleyCloudRpcManager, BentleyCloudRpcParams, IModelReadRpcInterface, IModelTileRpcInterface,
 } from "@itwin/core-common";
-import { CheckpointConnection, IModelApp, IModelConnection, ViewCreator3d, ViewState } from "@itwin/core-frontend";
+import { CheckpointConnection, IModelApp, IModelConnection, ScreenViewport, ViewCreator3d, ViewState } from "@itwin/core-frontend";
 import { ITwinLocalization } from "@itwin/core-i18n";
 import { UiCore } from "@itwin/core-react";
 import { FrontendIModelsAccess } from "@itwin/imodels-access-frontend";
@@ -15,7 +15,7 @@ import { IModelsClient } from "@itwin/imodels-client-management";
 import { PageLayout } from "@itwin/itwinui-layouts-react";
 import { Button, MenuItem, toaster } from "@itwin/itwinui-react";
 import {
-  ITwinSavedViewsClient, SavedViewBase as LegacySavedViewBase, SavedViewOptions, SavedViewsFolderWidget, applyExtensionsToViewport, translateSavedViewIntoITwinJsViewState, useSavedViews,
+  ITwinSavedViewsClient, SavedViewOptions, SavedViewsFolderWidget, applyExtensionsToViewport, translateLegacySavedViewToITwinJsViewState, translateSavedViewResponseToLegacySavedViewResponse, useSavedViews,
 } from "@itwin/saved-views-react";
 import { ReactElement, useEffect, useMemo, useState } from "react";
 
@@ -78,25 +78,46 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
   );
   const savedViews = useSavedViews({ iTwinId: props.iTwinId, iModelId: props.iModelId, client });
 
+  /*
+   * Handle displaying the selected saved view onto the screen.
+   */
   const handleTileClick = async (savedViewId: string) => {
+    /*
+     * This function converts a saved view from the Saved View API into a legacy view,
+     * then converts the legacy view into an iTwin.js-style ViewState.
+     *
+     * Once legacy views are officially retired, a straight translation from Saved View to ViewState can be done instead
+     * (but code has not been created for that yet).
+     */
     if (!iModel) {
       return;
     }
-
     setLoadingState("rendering-imodel");
 
-    const savedView = await client.getSingularSavedView({savedViewId});
-    setSelectedSavedView(savedView);
+    // Get saved view from API
+    const savedViewResponse = await client.getSingularSavedView({savedViewId});
 
-    const viewState = await translateSavedViewIntoITwinJsViewState(savedView, iModel);
+    // Convert to legacy saved view
+    const legacySavedViewResponse = await translateSavedViewResponseToLegacySavedViewResponse(savedViewResponse, iModel);
+    setSelectedSavedView(legacySavedViewResponse);
+
+    // Translate into iTwin.js-style ViewState
+    const viewState = await translateLegacySavedViewToITwinJsViewState(legacySavedViewResponse, iModel);
     setLoadingState("rendered");
     setSelectedViewState(viewState);
+  };
+
+  /*
+   * Handle applying extension data onto viewport.
+   */
+  const handleViewportCreated = async (viewport: ScreenViewport) => {
+    await applyExtensionsToViewport(viewport, selectedSavedView);
   };
 
   const handleBackClick = () => {
     setSelectedSavedView(undefined);
     setSelectedViewState(undefined);
-    setLoadingState("loaded")
+    setLoadingState("loaded");
   };
 
   if (loadingState === "rendering-imodel") {
@@ -126,7 +147,7 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
         <ViewportComponent
           imodel={iModel}
           viewState={selectedViewState}
-          viewportRef={(viewport) => applyExtensionsToViewport(viewport, selectedSavedView?.savedViewData.legacyView as LegacySavedViewBase)}
+          viewportRef={(viewport) => handleViewportCreated(viewport)}
         />
       </PageLayout.Content>)
   }

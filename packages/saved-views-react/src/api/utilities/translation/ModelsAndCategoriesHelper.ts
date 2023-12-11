@@ -8,22 +8,21 @@ import {
   isSavedView3d,
 } from "../../clients/ISavedViewsClient.js";
 import {
-  SavedView as LegacySavedView, SavedView2d as LegacySavedView2d,
-  SavedViewBase as LegacySavedViewBase,
+  SavedView as LegacySavedView, SavedViewBase as LegacySavedViewBase,
 } from "../SavedViewTypes.js";
 import { Id64Array } from "@itwin/core-bentley";
 import { IModelQueryClient } from "../../clients/IModelQueryClient.js";
 
 
 
-function legacyViewHasValidHiddenModelsAndCategories(savedView:  LegacySavedView | LegacySavedView2d): boolean {
+function legacyViewHasValidHiddenModelsAndCategories(savedView: LegacySavedViewBase): boolean {
   if (isSavedView3d(savedView)) {
     return !!(savedView.hiddenCategories && savedView.hiddenModels);
   }
   return !!savedView.hiddenCategories;
 }
 
-export async function applyHiddenModelsAndCategories(viewState: ViewState, savedView: LegacySavedView | LegacySavedView2d, iModelConnection: IModelConnection): Promise<void> {
+export async function applyHiddenModelsAndCategories(viewState: ViewState, savedView: LegacySavedViewBase, iModelConnection: IModelConnection): Promise<void> {
   if (legacyViewHasValidHiddenModelsAndCategories(savedView)) {
     const visible = await getVisibleModelsAndCategories(savedView, iModelConnection);
     if (visible.categories) {
@@ -37,7 +36,7 @@ export async function applyHiddenModelsAndCategories(viewState: ViewState, saved
 }
 
 async function getVisibleModelsAndCategories(
-  savedView: LegacySavedView | LegacySavedView2d,
+  savedView: LegacySavedViewBase,
   iModelConnection: IModelConnection,
 ): Promise<{ models?: Id64Array; categories?: Id64Array; }> {
   return {
@@ -58,7 +57,7 @@ async function getVisibleModels(
 
 
 async function getVisibleCategories(
-  savedView: LegacySavedView | LegacySavedView2d,
+  savedView: LegacySavedViewBase,
   iModelConnection: IModelConnection,
 ): Promise<Id64Array | undefined> {
   const hiddenCategories = savedView.hiddenCategories;
