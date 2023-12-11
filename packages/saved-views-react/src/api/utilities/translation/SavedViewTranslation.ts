@@ -1,11 +1,13 @@
 // Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 import { IModelReadRpcInterface, ViewQueryParams, ViewStateProps } from "@itwin/core-common";
 import {
-  DrawingViewState, EmphasizeElements, IModelConnection, ScreenViewport, SheetViewState, SpatialViewState, ViewState, Viewport,
+  DrawingViewState, EmphasizeElements, IModelConnection, ScreenViewport, SheetViewState,
+  SpatialViewState, Viewport, ViewState,
 } from "@itwin/core-frontend";
 import {
   Extension, SavedViewWithDataRepresentation, ViewData, ViewDataItwin3d, ViewDataITwinDrawing,
-  ViewDataITwinSheet,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ViewDataITwinSheet, ViewDataWithLegacy,
 } from "@itwin/saved-views-client";
 
 import { ViewTypes } from "../../../SavedViewTypes.js";
@@ -16,29 +18,49 @@ import {
   SavedView as LegacySavedView, SavedView2d as LegacySavedView2d,
   SavedViewBase as LegacySavedViewBase,
 } from "../SavedViewTypes.js";
+import { applyHiddenModelsAndCategories } from "./ModelsAndCategoriesHelper.js";
+import { SavedViewsExtensionHandlers } from "./SavedViewsExtensionHandlers.js";
 import {
   cleanLegacyViewModelSelectorPropsModels, savedViewITwin3dToLegacy3dSavedView,
   savedViewItwinDrawingToLegacyDrawingView, savedViewItwinSheetToLegacySheetSavedView,
 } from "./viewExtractorSavedViewToLegacySavedView.js";
-import { SavedViewsExtensionHandlers } from "./SavedViewsExtensionHandlers.js";
-import { applyHiddenModelsAndCategories } from "./ModelsAndCategoriesHelper.js";
 
+/**
+ * Type-check for {@link ViewDataItwin3d}
+ */
 function isSavedViewItwin3d(savedViewData: ViewData): savedViewData is ViewDataItwin3d {
   return (savedViewData as ViewDataItwin3d).itwin3dView !== undefined;
 }
 
+/**
+ * Type-check for {@link ViewDataITwinSheet}
+ */
 function isSavedViewItwinSheet(savedViewData: ViewData): savedViewData is ViewDataITwinSheet {
   return (savedViewData as ViewDataITwinSheet).itwinSheetView !== undefined;
 }
 
+/**
+ * Type-check for {@link ViewDataITwinDrawing}
+ */
 function isSavedViewItwinDrawing(savedViewData: ViewData): savedViewData is ViewDataITwinDrawing {
   return (savedViewData as ViewDataITwinDrawing).itwinDrawingView !== undefined;
 }
 
+/**
+ * Extract the legacy saved view data from a legacy saved view response
+ * @param legacySavedViewResponse
+ * @returns SavedViewBase legacy view data
+ */
 function legacyViewFrom(legacySavedViewResponse: SavedViewWithDataRepresentation): LegacySavedViewBase {
   return legacySavedViewResponse.savedViewData.legacyView as LegacySavedViewBase;
 }
 
+/**
+ * Converts a saved view response to a saved view response that includes a legacy view.
+ * @param savedViewResponse A saved view response with or without a legacy view.
+ * @param iModelConnection The {@link IModelConnection} for the saved view; used to query for additional information.
+ * @returns A {@link SavedViewWithDataRepresentation} that contains legacy saved view data (i.e., {@link ViewDataWithLegacy.legacyView}).
+ */
 export async function translateSavedViewResponseToLegacySavedViewResponse(
   savedViewResponse: SavedViewWithDataRepresentation,
   iModelConnection: IModelConnection,
@@ -50,20 +72,49 @@ export async function translateSavedViewResponseToLegacySavedViewResponse(
 }
 
 /**
-* Convert the saved view response recieved from the itwin-saved-views API into a SavedViewBaseSetting
-* @param id
-* @param savedView
-* @returns Promise<SavedViewBase>
+ * Converts a legacy saved view (response) to an iTwin.js ViewState.
+ * @param legacySavedViewResponse A saved view response that includes a legacy view (i.e., {@link ViewDataWithLegacy.legacyView}).
+ * @param iModelConnection The {@link IModelConnection} for the saved view; used to query for additional information.
+ * @returns A {@link ViewState} with the saved view applied.
+ */
+export async function translateLegacySavedViewToITwinJsViewState(legacySavedViewResponse: SavedViewWithDataRepresentation, iModelConnection: IModelConnection): Promise<ViewState | undefined> {
+  const legacySavedView = legacyViewFrom(legacySavedViewResponse);
+  const viewState = await createViewState(iModelConnection, legacySavedView);
+
+  if (viewState) {
+    await applyHiddenModelsAndCategories(viewState, legacySavedView, iModelConnection);
+  }
+
+  return viewState;
+}
+
+/**
+ * Apply extension data (overrides) onto the supplied viewport. Only works with legacy-formatted extension data.
+ * @param viewport The {@link ScreenViewport} used to display the saved view and iModel.
+ * @param legacySavedViewResponse A saved view response that includes a legacy view (i.e., {@link ViewDataWithLegacy.legacyView}).
+ */
+export async function applyExtensionsToViewport(viewport: ScreenViewport, legacySavedViewResponse: SavedViewWithDataRepresentation | undefined) {
+  if (!legacySavedViewResponse) {
+    return;
+  }
+  await applyExtensionOverrides(legacyViewFrom(legacySavedViewResponse), viewport);
+}
+
+/**
+* Creates legacy saved view data from a saved view response.
+* @param savedViewResponse A saved view response with or without a legacy view.
+* @param iModelConnection The {@link IModelConnection} for the saved view; used to query for additional information.
+* @resolves The saved views formatted as a legacy SavedViewBase.
 */
 async function translateSavedViewToLegacySavedView(
-  savedView: SavedViewWithDataRepresentation,
+  savedViewResponse: SavedViewWithDataRepresentation,
   iModelConnection: IModelConnection,
  ): Promise<LegacySavedViewBase> {
-  const savedViewData = savedView.savedViewData;
+  const savedViewData = savedViewResponse.savedViewData;
   // If the legacy view already exists, use that; otherwise, use extraction code to get the legacy view
   let legacySavedView: LegacySavedViewBase;
   if (savedViewData.legacyView) {
-    savedView = cleanLegacyViewModelSelectorPropsModels(savedView);
+    savedViewResponse = cleanLegacyViewModelSelectorPropsModels(savedViewResponse);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     legacySavedView = savedViewData.legacyView as any;
     // legacySavedView.id = savedView.id; // Change legacy sv id to comboId
@@ -73,32 +124,34 @@ async function translateSavedViewToLegacySavedView(
       ViewTypes.ViewDefinition3d,
       iModelConnection,
     );
-
     const actual = savedViewITwin3dToLegacy3dSavedView(
-      savedView,
+      savedViewResponse,
       iModelViewData as SpatialViewState,
     );
     legacySavedView = actual;
+
   } else if (isSavedViewItwinDrawing(savedViewData)) {
     const iModelViewData = await fetchIModelViewData(
       ViewTypes.DrawingViewDefinition,
       iModelConnection,
     );
     const actual = savedViewItwinDrawingToLegacyDrawingView(
-      savedView,
+      savedViewResponse,
       iModelViewData as DrawingViewState,
     );
     legacySavedView = actual;
+
   } else if (isSavedViewItwinSheet(savedViewData)) {
     const iModelViewData = await fetchIModelViewData(
       ViewTypes.SheetViewDefinition,
       iModelConnection,
     );
     const actual = savedViewItwinSheetToLegacySheetSavedView(
-      savedView,
+      savedViewResponse,
       iModelViewData as SheetViewState,
     );
     legacySavedView = actual;
+
   } else {
     throw new Error(
       "Could not translate itwin-saved-views API response to a SavedViewBaseSetting",
@@ -107,7 +160,7 @@ async function translateSavedViewToLegacySavedView(
 
   // Append all extensions to the saved view
   legacySavedView.extensions = new Map<string, string>();
-  for (const ext of savedView.extensions as Extension[]) {
+  for (const ext of savedViewResponse.extensions as Extension[]) {
     if (ext.extensionName && ext.data) {
       legacySavedView.extensions.set(ext.extensionName, ext.data);
     }
@@ -122,25 +175,14 @@ async function translateSavedViewToLegacySavedView(
  * @returns iModelViewData
  */
 async function fetchIModelViewData(viewClassName: ViewTypes, iModelConnection: IModelConnection) {
-  // let seedViewState = this._seedViewStates.get(viewClassName);
-  // if (seedViewState) {
-  //   return seedViewState;
-  // }
-  // const iModelConnection = UiFramework.getIModelConnection();
-  // if (!iModelConnection) {
-  //   throw new Error("IModel Connection is invalid ");
-  // }
   const viewId = await getDefaultViewIdFromClassName(
     iModelConnection,
     viewClassName,
   );
   const seedViewState = await iModelConnection.views.load(viewId);
-  // this._seedViewStates.set(viewClassName, seedViewState);
   return seedViewState;
 }
 
-// code is not D.R.Y but this decision was made to uphold existing contracts
-// method shared some implementation with getDefaultViewId
 async function getDefaultViewIdFromClassName(
   iModelConnection: IModelConnection,
   savedViewType: ViewTypes,
@@ -258,19 +300,10 @@ async function _createSheetViewState(
   return viewState;
 }
 
-export async function translateLegacySavedViewToITwinJsViewState(legacySavedViewResponse: SavedViewWithDataRepresentation, iModelConnection: IModelConnection): Promise<ViewState | undefined> {
-  const legacySavedView = legacyViewFrom(legacySavedViewResponse);
-  const viewState = await createViewState(iModelConnection, legacySavedView);
-
-  if (viewState) {
-    await applyHiddenModelsAndCategories(viewState, legacySavedView, iModelConnection);
-  }
-
-  return viewState;
-}
-
-/*
- * Apply overrides for the supplied viewport based on extension data. Only works with legacy-formatted extension data.
+/**
+ * Apply overrides onto the supplied viewportbased on extension data. Only works with legacy-formatted extension data.
+ * @param legacySavedView A legacy saved view.
+ * @param viewport The {@link ScreenViewport} used to display the saved view and iModel.
  */
 async function applyExtensionOverrides(legacySavedView: LegacySavedViewBase, viewport: Viewport) {
   // Clear the current if there's any (this should always happen, even if there are no extensions)
@@ -291,15 +324,4 @@ async function applyExtensionOverrides(legacySavedView: LegacySavedViewBase, vie
       await extHandler.onViewApply(extData, viewport);
     }
   }
-}
-
-/*
- * Apply extension data (overrides) onto the supplied viewport. Only works with legacy-formatted extension data.
- */
-export async function applyExtensionsToViewport(viewport: ScreenViewport, legacySavedViewResponse: SavedViewWithDataRepresentation | undefined) {
-  if (!legacySavedViewResponse) {
-    return;
-  }
-
-  await applyExtensionOverrides(legacyViewFrom(legacySavedViewResponse), viewport);
 }

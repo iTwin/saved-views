@@ -15,7 +15,8 @@ import { IModelsClient } from "@itwin/imodels-client-management";
 import { PageLayout } from "@itwin/itwinui-layouts-react";
 import { Button, MenuItem, toaster } from "@itwin/itwinui-react";
 import {
-  ITwinSavedViewsClient, SavedViewOptions, SavedViewsFolderWidget, applyExtensionsToViewport, translateLegacySavedViewToITwinJsViewState, translateSavedViewResponseToLegacySavedViewResponse, useSavedViews,
+  ITwinSavedViewsClient, SavedViewOptions, SavedViewsFolderWidget, applyExtensionsToViewport, useSavedViews,
+  translateLegacySavedViewToITwinJsViewState, translateSavedViewResponseToLegacySavedViewResponse,
 } from "@itwin/saved-views-react";
 import { ReactElement, useEffect, useMemo, useState } from "react";
 
@@ -149,7 +150,8 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
           viewState={selectedViewState}
           viewportRef={(viewport) => handleViewportCreated(viewport)}
         />
-      </PageLayout.Content>)
+      </PageLayout.Content>
+    )
   }
 
   const groups = [...savedViews.groups.values()];
