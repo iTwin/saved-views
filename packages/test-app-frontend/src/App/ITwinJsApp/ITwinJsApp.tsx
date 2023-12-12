@@ -80,29 +80,32 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
   const savedViews = useSavedViews({ iTwinId: props.iTwinId, iModelId: props.iModelId, client });
 
   /*
-   * Handle displaying the selected saved view onto the screen.
-   */
+    * This function converts a saved view from the Saved View API into a legacy view,
+    * then converts the legacy view into an iTwin.js-style ViewState.
+    *
+    * Once legacy views are officially retired, a straight translation from Saved View to ViewState can be done instead
+    * (but code has not been created for that yet).
+    */
   const handleTileClick = async (savedViewId: string) => {
     if (!iModel) {
       return;
     }
     setLoadingState("rendering-imodel");
 
-    // Get saved view from API
     const savedViewResponse = await client.getSingularSavedView({savedViewId});
 
-    // Convert to legacy saved view
     const legacySavedViewResponse = await translateSavedViewResponseToLegacySavedViewResponse(savedViewResponse, iModel);
     setSelectedSavedView(legacySavedViewResponse);
 
-    // Translate into iTwin.js-style ViewState
     const viewState = await translateLegacySavedViewToITwinJsViewState(legacySavedViewResponse, iModel);
     setLoadingState("rendered");
     setSelectedViewState(viewState);
   };
 
   /*
-   * Handle applying extension data onto viewport.
+   * Apply extension data onto the viewport.
+   * Extension data from a saved view cannot be applied until after the viewport is created
+   * since it is applied to the viewport and not the viewstate.
    */
   const handleViewportCreated = async (viewport: ScreenViewport) => {
     await applyExtensionsToViewport(viewport, selectedSavedView);
