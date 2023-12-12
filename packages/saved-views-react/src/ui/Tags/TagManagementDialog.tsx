@@ -13,8 +13,7 @@ import { components, createFilter, type ActionMeta } from "react-select";
 
 import { SavedViewsManager } from "../../api/SavedViewsManager";
 import { IModelConnectionCache } from "../../api/caches/IModelConnectionCache";
-import type { Tag } from "../../api/types";
-import { isReadOnlyTag, type LegacySavedViewBase } from "../../api/utilities/SavedViewTypes";
+import { isReadOnlyTag, type LegacyTag, type LegacySavedViewBase } from "../../api/utilities/SavedViewTypes";
 import { type SavedViewsState } from "../../store/SavedViewsStateReducer";
 import { CreatableTypeahead } from "./CreatableTypeahead";
 import { Pill } from "./Pill";
@@ -48,9 +47,9 @@ function TagManagementDialog({
   userId,
   iModelConn,
 }: TagManagementDialogProps) {
-  const [tagsOnModel, setTagsOnModel] = useState<Tag[]>([]);
-  const [newTagsOnModel, setNewTagsOnModel] = useState<Tag[]>([]);
-  const [tagsOnSV, setTagsOnSV] = useState<Tag[]>(savedView.tags ?? []);
+  const [tagsOnModel, setTagsOnModel] = useState<LegacyTag[]>([]);
+  const [newTagsOnModel, setNewTagsOnModel] = useState<LegacyTag[]>([]);
+  const [tagsOnSV, setTagsOnSV] = useState<LegacyTag[]>(savedView.tags ?? []);
   const typeaheadRef = useRef<HTMLElement>(null);
   const [inputValue, setInputValue] = useState<string | null>(null);
 
@@ -88,10 +87,10 @@ function TagManagementDialog({
     }
   };
 
-  const isOptionSelected = (option: SelectOption<Tag>) =>
+  const isOptionSelected = (option: SelectOption<LegacyTag>) =>
     tagsOnSV.some((t) => t === option.value);
 
-  const onChange = (option: SelectOption<Tag>, action: ActionMeta<SelectOption<Tag>>) => {
+  const onChange = (option: SelectOption<LegacyTag>, action: ActionMeta<SelectOption<LegacyTag>>) => {
     switch (action.action) {
       case "set-value":
       case "select-option":
@@ -124,8 +123,8 @@ function TagManagementDialog({
   };
 
   const removeTagFromSV = (tagText: string) => {
-    const updatedTagsOnSV = tagsOnSV.filter((tag: Tag) => tag.name !== tagText);
-    const updatedNewTagsOnModel = newTagsOnModel.filter((tag: Tag) => tag.name !== tagText);
+    const updatedTagsOnSV = tagsOnSV.filter((tag: LegacyTag) => tag.name !== tagText);
+    const updatedNewTagsOnModel = newTagsOnModel.filter((tag: LegacyTag) => tag.name !== tagText);
     setNewTagsOnModel(updatedNewTagsOnModel);
     setTagsOnSV(updatedTagsOnSV);
   };

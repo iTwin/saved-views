@@ -31,7 +31,7 @@ export interface LegacySavedViewBaseUpdate {
   categorySelectorProps?: CategorySelectorProps;
   emphasizeElementsProps?: EmphasizeElementsProps; // Treated as an extension in Saved Views public API
   visibilityOverrideProps?: ModelCategoryOverrideProviderProps; // Treated as an extension in Saved Views public API
-  tags?: Tag[];
+  tags?: LegacyTag[];
   hiddenCategories?: Id64Array;
   extensions?: Map<string, string>; // Map of extension data with key of the extensionName
 }
@@ -48,7 +48,7 @@ export interface LegacySavedViewBase {
   categorySelectorProps: CategorySelectorProps;
   emphasizeElementsProps?: EmphasizeElementsProps; // Treated as an extension in Saved Views public API
   visibilityOverrideProps?: ModelCategoryOverrideProviderProps; // Treated as an extension in Saved Views public API
-  tags?: Tag[];
+  tags?: LegacyTag[];
   hiddenCategories?: Id64Array;
   extensions?: Map<string, string>; // Map of extension data with key of the extensionName
 }
@@ -97,7 +97,7 @@ export interface LegacySavedViewBaseSetting {
   categorySelectorProps: CategorySelectorProps;
   emphasizeElementsProps?: CleanEmphasizeElementsProps;
   visibilityOverrideProps?: ModelCategoryOverrideProviderProps;
-  tags?: Tag[];
+  tags?: LegacyTag[];
 }
 
 export interface GroupUpdate {
@@ -112,12 +112,12 @@ export interface LegacyGroup {
   userId: string;
 }
 
-export interface Tag {
+export interface LegacyTag {
   name: string;
   createdByUserId: string;
 }
 
-export interface ReadOnlyTag extends Tag {
+export interface ReadOnlyTag extends LegacyTag {
   id: string;
   links: TagLinks;
 }
@@ -125,7 +125,7 @@ export interface ReadOnlyTag extends Tag {
 /** Tag links object. */
 export type TagLinks = ResourceLinks;
 
-export function isReadOnlyTag(tag: Tag): tag is ReadOnlyTag {
+export function isReadOnlyTag(tag: LegacyTag): tag is ReadOnlyTag {
   return (
     (tag as ReadOnlyTag).id !== undefined &&
     (tag as ReadOnlyTag).links !== undefined

@@ -4,8 +4,8 @@
 *--------------------------------------------------------------------------------------------*/
 import { BeEvent } from "@itwin/core-bentley";
 
-import { type Tag } from "./utilities/SavedViewTypes";
+import { type LegacyTag } from "./utilities/SavedViewTypes";
 
 export class TagManager {
-  public static readonly onTagsChanged = new BeEvent<(tags: Tag[]) => void>();
+  public static readonly onTagsChanged = new BeEvent<(tags: LegacyTag[]) => void>();
 }

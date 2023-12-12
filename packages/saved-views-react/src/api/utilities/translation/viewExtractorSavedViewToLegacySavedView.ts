@@ -16,7 +16,7 @@ import {
 } from "@itwin/saved-views-client";
 
 import {
-  LegacySavedView as LegacySavedView, LegacySavedView2d as LegacySavedView2d, Tag as LegacyTag,
+  LegacySavedView as LegacySavedView, LegacySavedView2d as LegacySavedView2d, LegacyTag as LegacyTag,
 } from "../SavedViewTypes";
 import { extractClipVectors } from "./clipVectorsExtractor";
 import { extractDisplayStyle, extractDisplayStyle3d } from "./displayStyleExtractor";

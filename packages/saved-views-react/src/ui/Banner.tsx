@@ -14,7 +14,7 @@ import { animated, useSpring } from "react-spring";
 import { IModelConnectionCache } from "../api/caches/IModelConnectionCache";
 import { SavedViewsManager } from "../api/SavedViewsManager";
 import { TagManager } from "../api/TagManager";
-import type { LegacyGroup, LegacySavedViewBase, Tag } from "../api/utilities/SavedViewTypes";
+import type { LegacyGroup, LegacySavedViewBase, LegacyTag } from "../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../api/utilities/SavedViewUtil";
 import { usePreferredViewport } from "../hooks/usePreferredViewport";
 import {
@@ -78,7 +78,7 @@ export function Banner(props: Props) {
   const [creatingView, setCreatingView] = useState(false);
   const [searchString, setSearchString] = useState("");
   const [searchBarOpen, setSearchBarOpen] = useState(false);
-  const [tagsOnModel, setTagsOnModel] = useState<Tag[]>([]);
+  const [tagsOnModel, setTagsOnModel] = useState<LegacyTag[]>([]);
 
   const [searchBarSpringProps, updateSearchBarSpringProps] = useSpring(() => ({
     from: {
@@ -112,7 +112,7 @@ export function Banner(props: Props) {
   };
 
   useEffect(() => {
-    const onTagsChangedListener = (tags: Tag[]) => {
+    const onTagsChangedListener = (tags: LegacyTag[]) => {
       setTagsOnModel(tags);
     };
     return TagManager.onTagsChanged.addListener(onTagsChangedListener);
