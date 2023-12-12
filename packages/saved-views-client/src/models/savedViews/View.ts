@@ -32,7 +32,7 @@ export interface ViewITwinDrawing extends ViewITwin2d {
 }
 
 /** Minimum required information saved for a 2d saved view (Used by Sheet and Drawings). */
-export interface ViewITwin2d extends SavedViewApiBase {
+export interface ViewITwin2d extends SavedViewBase {
   baseModelId: string;
   origin: [x: number, y: number];
   delta: [x: number, y: number];
@@ -40,7 +40,7 @@ export interface ViewITwin2d extends SavedViewApiBase {
   displayStyle?: DisplayStyleSettingsProps;
 }
 
-export interface SavedViewApiBase {
+export interface SavedViewBase {
   /** Origin, represented as an array of x and y coordinates. */
   origin: [number, number] | [number, number, number];
   /** List of categories that should be displayed or hidden on that view. */
@@ -102,7 +102,7 @@ export type ViewData = ViewDataItwin3d | ViewDataITwinSheet | ViewDataITwinDrawi
 export type ViewDataWithLegacy = ViewData & { legacyView: unknown; };
 
 /** Minimum required information saved for a 3D saved view. */
-export interface ViewITwin3d extends SavedViewApiBase {
+export interface ViewITwin3d extends SavedViewBase {
   origin: [x: number, y: number, z: number];
   extents: [x: number, y: number, z: number];
   angles?: ViewYawPitchRoll;
