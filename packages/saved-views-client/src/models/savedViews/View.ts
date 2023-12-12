@@ -91,13 +91,6 @@ export interface ClipPlaneProps {
   interior?: boolean;
 }
 
-/** Minimum saved view structure including possible legacy data. */
-export type ViewWithLegacy = View & { legacyView: unknown; }; // TODO: Replace all usaged with ViewDataWithLegacy
-
-/** Minimum Saved View structure so every application can have something to work with. */
-export type View = { itwin3dView: ViewITwin3d; } | { itwinSheetView: ViewITwinSheet; }
-  | { itwinDrawingView: ViewITwinDrawing; }; // TODO: Replace all usaged with ViewData
-
 export type ViewDataItwin3d = { itwin3dView: ViewITwin3d; };
 export type ViewDataITwinSheet = { itwinSheetView: ViewITwinSheet; };
 export type ViewDataITwinDrawing = { itwinDrawingView: ViewITwinDrawing; };
@@ -144,7 +137,7 @@ export interface SavedViewWithDataRepresentation extends SavedView {
 }
 
 export interface SavedViewWithDataMinimal extends SavedView {
-  savedViewData: ViewWithLegacy;
+  savedViewData: ViewDataWithLegacy;
   extensions?: ExtensionMin[];
 }
 
