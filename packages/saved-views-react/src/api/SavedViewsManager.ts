@@ -166,7 +166,7 @@ export class SavedViewsManager {
   /** Client to get/ set default view id */
   private static _defaultSavedViewIdClient?: IDefaultViewIdClient;
 
-  /** Namespaces for product settings service */
+  /** Namespaces for where legacy views are stored */
   private static _viewNamespace = "designreview-SavedViews";
   private static _thumbnailNamespace = "designreview-Thumbnails";
   private static _groupNamespace = "designreview-Group";
@@ -309,32 +309,32 @@ export class SavedViewsManager {
     return SavedViewsManager.i18n.getLocalizedStringWithNamespace(SavedViewsManager.i18nNamespace, key, options);
   };
 
-  /** Get the namespace under which views are stored in the product settings service */
+  /** Get the namespace under which views are stored in legacy settings */
   public static get viewSettingsNamespace() {
     return SavedViewsManager._viewNamespace;
   }
 
-  /** Get the namespace under which namespaces are stored in the product settings service */
+  /** Get the namespace under which namespaces are stored in legacy settings */
   public static get thumbnailSettingsNamespace() {
     return SavedViewsManager._thumbnailNamespace;
   }
 
-  /** Get the namespace under which groups are stored in the product settings service */
+  /** Get the namespace under which groups are stored in legacy settings */
   public static get groupSettingsNamespace() {
     return SavedViewsManager._groupNamespace;
   }
 
-  /** Get the namespace under which tags are stored in the product settings service */
+  /** Get the namespace under which tags are stored in legacy settings */
   public static get tagSettingsNamespace() {
     return SavedViewsManager._tagsNamespace;
   }
 
-  /** Get the namespace under which default view id is stored in the product settings service */
+  /** Get the namespace under which default view id is stored in legacy settings */
   public static get defaultViewSettingsNamespace() {
     return SavedViewsManager._defaultViewNamespace;
   }
 
-  /** Returns whether or not settings are being stored as application specific in the product settings service */
+  /** Returns whether or not settings are being stored as application specific in legacy settings */
   public static get applicationSpecificSettings() {
     return SavedViewsManager._createApplicationSpecific;
   }
@@ -422,8 +422,8 @@ export class SavedViewsManager {
   /**
    * Called by IModelApp to initialize the SavedViews
    * @param i18n The internationalization service created by the IModelApp.
-   * @param options.savedViewsNamespace If specified overrides the default namespace used to store/retrieve SavedViews in the Settings Service.
-   * @param options.thumbnailsNamespace If specified overrides the default namespace used to store/retrieve views thumbnails in the Settings Service.
+   * @param options.savedViewsNamespace If specified overrides the default namespace used to store/retrieve SavedViews in the legacy settings service.
+   * @param options.thumbnailsNamespace If specified overrides the default namespace used to store/retrieve views thumbnails in the legacy settings service.
    * @param options.onViewSourceNotFound If specified defines the function to be called to report error when Saved View source is not found.
    *
    * @internal

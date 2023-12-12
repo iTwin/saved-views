@@ -91,7 +91,7 @@ export interface ClipPlaneProps {
   interior?: boolean;
 }
 
-/** Minimum saved view structure including possible legacy data from product setting service. */
+/** Minimum saved view structure including possible legacy data. */
 export type ViewWithLegacy = View & { legacyView: unknown; }; // TODO: Replace all usaged with ViewDataWithLegacy
 
 /** Minimum Saved View structure so every application can have something to work with. */
@@ -105,7 +105,7 @@ export type ViewDataITwinDrawing = { itwinDrawingView: ViewITwinDrawing; };
 /** Minimum Saved View structure so every application can have something to work with. */
 export type ViewData = ViewDataItwin3d | ViewDataITwinSheet | ViewDataITwinDrawing;
 
-/** Minimum saved view structure including possible legacy data from product setting service. */
+/** Minimum saved view structure including possible legacy data. */
 export type ViewDataWithLegacy = ViewData & { legacyView: unknown; };
 
 /** Minimum required information saved for a 3D saved view. */
