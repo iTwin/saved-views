@@ -1,4 +1,7 @@
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 // import { ModelCategoryOverrideProvider } from "@bentley/itwin-tools";
 // import { request } from "@bentley/wsg-client";
 import { type EmphasizeElementsProps } from "@itwin/core-common";
