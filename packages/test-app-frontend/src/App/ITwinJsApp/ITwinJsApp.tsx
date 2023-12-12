@@ -109,7 +109,7 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
    */
   const handleViewportCreated = async (viewport: ScreenViewport) => {
     await applyExtensionsToViewport(viewport, selectedSavedView);
-    iModel?.selectionSet.emptyAll(); // Clear selected element
+    iModel?.selectionSet.emptyAll(); // Don't have elements selected upon load
   };
 
   const handleBackClick = () => {
