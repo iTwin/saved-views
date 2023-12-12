@@ -4,14 +4,14 @@
 *--------------------------------------------------------------------------------------------*/
 import _ from "lodash";
 
-import type { Group, LegacySavedView } from "../api/utilities/SavedViewTypes";
+import type { LegacyGroup, LegacySavedView } from "../api/utilities/SavedViewTypes";
 
 export interface BooleanObject {
   [key: string]: boolean | undefined;
 }
 
 export interface GroupObject {
-  [key: string]: Group;
+  [key: string]: LegacyGroup;
 }
 
 export interface SavedViewsObject {
@@ -62,7 +62,7 @@ export const SavedViewActions = {
     return _.omit(currentState, id);
   },
 
-  updateGroup: (currentState: GroupObject, id: string, newGroup: Group): GroupObject => {
+  updateGroup: (currentState: GroupObject, id: string, newGroup: LegacyGroup): GroupObject => {
     if (currentState[id] && _.isEqual(newGroup, currentState[id])) {
       return currentState;
     }
@@ -73,7 +73,7 @@ export const SavedViewActions = {
     };
   },
 
-  createGroup: (currentState: GroupObject, newGroup: Group): GroupObject => {
+  createGroup: (currentState: GroupObject, newGroup: LegacyGroup): GroupObject => {
     if (currentState[newGroup.id]) {
       // The group already exists
       return currentState;

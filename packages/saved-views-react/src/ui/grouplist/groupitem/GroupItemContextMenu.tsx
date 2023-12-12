@@ -6,7 +6,7 @@ import { connect, type ConnectedProps } from "react-redux";
 
 import { IModelConnectionCache } from "../../../api/caches/IModelConnectionCache";
 import { SavedViewsManager } from "../../../api/SavedViewsManager";
-import type { Group, LegacySavedViewBase, LegacySavedViewBaseUpdate } from "../../../api/utilities/SavedViewTypes";
+import type { LegacyGroup, LegacySavedViewBase, LegacySavedViewBaseUpdate } from "../../../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../../../api/utilities/SavedViewUtil";
 import { setGroupOpen, setRenaming, type SavedViewsState } from "../../../store/SavedViewsStateReducer";
 import { createNewSavedView } from "../../createNewSavedView";
@@ -16,12 +16,12 @@ import type { MenuItem } from "../../popupmenu/PopupMenuItem";
 import "./GroupItem.scss";
 
 export interface GroupItemContextMenuItemProps extends MenuItem {
-  onClick: (group: Group) => void;
+  onClick: (group: LegacyGroup) => void;
 }
 
 /** GroupitemContextMenu widget props */
 export interface GroupItemContextMenuProps extends ContextMenuProps {
-  group: Group;
+  group: LegacyGroup;
   handleRename: () => void;
   want2dViews?: boolean;
   additionalContextMenuItems?: GroupItemContextMenuItemProps[];

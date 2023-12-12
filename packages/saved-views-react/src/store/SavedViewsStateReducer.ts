@@ -8,7 +8,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "react-redux-typescript";
 
 import { type TargetViewport } from "../api/TargetViewport";
-import { type Group, type LegacySavedView } from "../api/utilities/SavedViewTypes";
+import { type LegacyGroup, type LegacySavedView } from "../api/utilities/SavedViewTypes";
 import { SavedViewActions, type BooleanObject, type GroupObject, type SavedViewsObject } from "./SavedViewsActions";
 
 export type SavedViewsState = {
@@ -81,11 +81,11 @@ const SavedViewsSlice: any = createSlice({
       const { id } = action.payload;
       state.groups = SavedViewActions.deleteGroup(state.groups, id);
     },
-    updateGroup(state, action: PayloadAction<string, { id: string; newGroup: Group; }>) {
+    updateGroup(state, action: PayloadAction<string, { id: string; newGroup: LegacyGroup; }>) {
       const { id, newGroup } = action.payload;
       state.groups = SavedViewActions.updateGroup(state.groups, id, newGroup);
     },
-    createGroup(state, action: PayloadAction<string, { newGroup: Group; }>) {
+    createGroup(state, action: PayloadAction<string, { newGroup: LegacyGroup; }>) {
       const { newGroup } = action.payload;
       state.groups = SavedViewActions.createGroup(state.groups, newGroup);
     },

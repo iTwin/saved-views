@@ -7,7 +7,7 @@ import { Component } from "react";
 import { connect, type ConnectedProps } from "react-redux";
 
 import { SavedViewsManager } from "../../api/SavedViewsManager";
-import type { Group } from "../../api/utilities/SavedViewTypes";
+import type { LegacyGroup } from "../../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../../api/utilities/SavedViewUtil";
 import { type SavedViewsState } from "../../store/SavedViewsStateReducer";
 import type { SavedViewContextMenuItemProps } from "../viewlist/viewitem/SavedViewItemContextMenu";
@@ -71,7 +71,7 @@ class GroupList extends Component<Props> {
   constructor(props: Props) {
     super(props);
   }
-  private mapGroupAndViewsToComponent(group: Group) {
+  private mapGroupAndViewsToComponent(group: LegacyGroup) {
     return (
       <GroupItem
         group={group}

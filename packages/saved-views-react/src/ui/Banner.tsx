@@ -14,7 +14,7 @@ import { animated, useSpring } from "react-spring";
 import { IModelConnectionCache } from "../api/caches/IModelConnectionCache";
 import { SavedViewsManager } from "../api/SavedViewsManager";
 import { TagManager } from "../api/TagManager";
-import type { Group, LegacySavedViewBase, Tag } from "../api/utilities/SavedViewTypes";
+import type { LegacyGroup, LegacySavedViewBase, Tag } from "../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../api/utilities/SavedViewUtil";
 import { usePreferredViewport } from "../hooks/usePreferredViewport";
 import {
@@ -178,7 +178,7 @@ export function Banner(props: Props) {
     const cache = IModelConnectionCache.getGroupCache(props.connection);
     const name = cache.getNewGroupName() ?? "";
 
-    const group: Group = {
+    const group: LegacyGroup = {
       name,
       id: Guid.createValue(),
       shared: false,
@@ -189,7 +189,7 @@ export function Banner(props: Props) {
 
     cache
       .createGroup(props.connection, group)
-      .then((newGroup: Group) => {
+      .then((newGroup: LegacyGroup) => {
         props.setRenaming({ id: newGroup.id, renaming: true });
       })
       .catch((_error: Error) => {

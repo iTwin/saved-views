@@ -105,7 +105,7 @@ export interface GroupUpdate {
   shared?: boolean;
 }
 
-export interface Group {
+export interface LegacyGroup {
   id: string;
   name: string;
   shared: boolean;

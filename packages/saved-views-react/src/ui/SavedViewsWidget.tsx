@@ -19,7 +19,7 @@ import { GroupCache, GroupCacheEventType, type GroupCacheEventArgs } from "../ap
 import { IModelConnectionCache } from "../api/caches/IModelConnectionCache";
 import { SavedViewCacheEventType, SavedViewsCache, type SavedViewCacheEventArgs } from "../api/caches/SavedViewsCache";
 import { SavedViewsManager } from "../api/SavedViewsManager";
-import { type Group, type LegacySavedView, type LegacySavedViewBase } from "../api/utilities/SavedViewTypes";
+import { type LegacyGroup, type LegacySavedView, type LegacySavedViewBase } from "../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../api/utilities/SavedViewUtil";
 import {
   clearSelectedViews, createGroup, deleteGroup, deleteView, setDefaultViewId, setDesktopViews, setDisplayErrors,
@@ -98,14 +98,14 @@ export class SavedViewsWidget extends React.Component<
   private _dialogContainer: HTMLDivElement | null = null;
   private _indicatorContainer: HTMLDivElement | null = null;
 
-  private _ungroupGroup: Group = {
+  private _ungroupGroup: LegacyGroup = {
     id: SavedViewsManager.ungroupedId,
     name: SavedViewsManager.defaultUngroupedGroupName,
     userId: "",
     shared: false,
   };
 
-  private _desktopViewsGroup: Group = {
+  private _desktopViewsGroup: LegacyGroup = {
     id: SavedViewsManager.desktopViewsGroupId,
     name: SavedViewsManager.defaultDesktopViewGroupName,
     userId: "",
@@ -306,7 +306,7 @@ export class SavedViewsWidget extends React.Component<
       groups.push(this._desktopViewsGroup);
     }
 
-    groups.sort((a: Group, b: Group) => {
+    groups.sort((a: LegacyGroup, b: LegacyGroup) => {
       if (
         b.id === SavedViewsManager.ungroupedId ||
         a.id === SavedViewsManager.desktopViewsGroupId
