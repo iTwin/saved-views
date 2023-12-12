@@ -6,7 +6,7 @@ import { BeUiEvent } from "@itwin/core-bentley";
 import { type IModelConnection, type ViewState } from "@itwin/core-frontend";
 
 import { type ISavedViewsClient } from "../clients/ISavedViewsClient";
-import { type LegacySavedViewBase, type SavedViewBaseUpdate } from "../utilities/SavedViewTypes";
+import { type LegacySavedViewBase, type LegacySavedViewBaseUpdate } from "../utilities/SavedViewTypes";
 import { SavedViewUtil } from "../utilities/SavedViewUtil";
 import { ModelsAndCategoriesCache } from "./ModelsAndCategoriesCache";
 
@@ -114,7 +114,7 @@ export class SavedViewsCache {
    */
   public async updateSavedView(
     iModelConnection: IModelConnection,
-    data: SavedViewBaseUpdate,
+    data: LegacySavedViewBaseUpdate,
     view: LegacySavedViewBase,
   ) {
     const savedView = await this._client.updateSavedView(iModelConnection, data, view);

@@ -14,7 +14,7 @@ import type { IDefaultViewIdClient } from "../../api/clients/DefaultViewIdClient
 import { isSavedView3d } from "../../api/clients/ISavedViewsClient";
 import { SavedViewEvents, SavedViewsManager } from "../../api/SavedViewsManager";
 import { getTargetViewport, type TargetViewport } from "../../api/TargetViewport";
-import { type LegacySavedViewBase, type SavedViewBaseSetting } from "../../api/utilities/SavedViewTypes";
+import { type LegacySavedViewBase, type LegacySavedViewBaseSetting } from "../../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../../api/utilities/SavedViewUtil";
 import { ViewCreator } from "../../api/utilities/ViewCreator";
 import { ModelCategoryOverrideProvider } from "./ModelCategoryOverrideProvider";
@@ -26,7 +26,7 @@ type cacheObject = {
 
 export type ViewStateAndSetting = {
   viewState: ViewState;
-  viewSetting: SavedViewBaseSetting;
+  viewSetting: LegacySavedViewBaseSetting;
 };
 
 const LOGGERCATEGORY = "ITwinSavedViews";

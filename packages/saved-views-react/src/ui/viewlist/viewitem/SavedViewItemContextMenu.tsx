@@ -9,7 +9,7 @@ import { connect, type ConnectedProps } from "react-redux";
 
 import { IModelConnectionCache } from "../../../api/caches/IModelConnectionCache";
 import { SavedViewsManager } from "../../../api/SavedViewsManager";
-import type { LegacySavedView, LegacySavedViewBase, SavedViewBaseUpdate } from "../../../api/utilities/SavedViewTypes";
+import type { LegacySavedView, LegacySavedViewBase, LegacySavedViewBaseUpdate } from "../../../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../../../api/utilities/SavedViewUtil";
 import { setDefaultViewId, setViewSelected, type SavedViewsState } from "../../../store/SavedViewsStateReducer";
 import MoveViewsDialog from "../../grouplist/groupitem/MoveViewsDialog";
@@ -240,7 +240,7 @@ class SavedViewItemContextMenu extends ContextMenu<Props> {
     }
 
     if (vp) {
-      const updatedData: SavedViewBaseUpdate =
+      const updatedData: LegacySavedViewBaseUpdate =
         await SavedViewUtil.createSavedViewObject(
           vp,
           this.props.savedView.name,

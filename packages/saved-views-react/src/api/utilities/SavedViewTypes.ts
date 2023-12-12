@@ -19,7 +19,7 @@ export interface PerModelCategoryVisibilityProps {
   visible: boolean;
 }
 
-export interface SavedViewBaseUpdate {
+export interface LegacySavedViewBaseUpdate {
   id: string;
   name?: string;
   shared?: boolean;
@@ -86,7 +86,7 @@ export interface CleanEmphasizeElementsProps {
 /**
  * Saved view base setting instance
  */
-export interface SavedViewBaseSetting {
+export interface LegacySavedViewBaseSetting {
   id: string;
   name: string;
   shared: boolean;

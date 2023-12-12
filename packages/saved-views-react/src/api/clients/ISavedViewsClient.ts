@@ -6,11 +6,11 @@ import { type AccessToken } from "@itwin/core-bentley";
 import { type IModelConnection } from "@itwin/core-frontend";
 
 import {
-  type LegacySavedView, type LegacySavedViewBase, type SavedViewBaseSetting, type SavedViewBaseUpdate,
+  type LegacySavedView, type LegacySavedViewBase, type LegacySavedViewBaseSetting, type LegacySavedViewBaseUpdate,
 } from "../utilities/SavedViewTypes";
 
 /** Is a 3d saved view */
-export function isSavedView3d(view: LegacySavedViewBase | SavedViewBaseUpdate): view is LegacySavedView {
+export function isSavedView3d(view: LegacySavedViewBase | LegacySavedViewBaseUpdate): view is LegacySavedView {
   return !view.is2d;
 }
 
@@ -42,7 +42,7 @@ export interface ISavedViewsClient {
     iModelId: string | undefined,
     namespace: string,
     applicationSpecific?: boolean
-  ) => Promise<SavedViewBaseSetting>;
+  ) => Promise<LegacySavedViewBaseSetting>;
 
   /** Get the full view object from the service by joining the two view setting and thumbnail into a single object */
   getView: (
@@ -102,7 +102,7 @@ export interface ISavedViewsClient {
    */
   updateSavedView: (
     iModelConnection: IModelConnection,
-    updatedView: SavedViewBaseUpdate,
+    updatedView: LegacySavedViewBaseUpdate,
     oldView: LegacySavedViewBase
   ) => Promise<LegacySavedViewBase>;
 

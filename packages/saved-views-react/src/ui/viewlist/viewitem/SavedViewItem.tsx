@@ -13,7 +13,7 @@ import { connect, type ConnectedProps } from "react-redux";
 
 import { IModelConnectionCache } from "../../../api/caches/IModelConnectionCache";
 import { SavedViewsManager } from "../../../api/SavedViewsManager";
-import type { LegacySavedView, LegacySavedViewBase, SavedViewBaseUpdate } from "../../../api/utilities/SavedViewTypes";
+import type { LegacySavedView, LegacySavedViewBase, LegacySavedViewBaseUpdate } from "../../../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../../../api/utilities/SavedViewUtil";
 import { setRenaming, setViewSelected, type SavedViewsState } from "../../../store/SavedViewsStateReducer";
 import SavedViewItemContextMenu, { type SavedViewContextMenuItemProps } from "./SavedViewItemContextMenu";
@@ -213,7 +213,7 @@ function SavedViewItem({
     const oldSavedViewName = savedView.name;
     setRenaming({ id: savedView.id, renaming: false });
 
-    const viewUpdate: SavedViewBaseUpdate = { name, id: savedView.id };
+    const viewUpdate: LegacySavedViewBaseUpdate = { name, id: savedView.id };
     if (cache) {
       cache
         .updateSavedView(connection, viewUpdate, savedView)
