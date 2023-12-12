@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 import _ from "lodash";
 
-import type { Group, SavedView } from "../api/utilities/SavedViewTypes";
+import type { Group, LegacySavedView } from "../api/utilities/SavedViewTypes";
 
 export interface BooleanObject {
   [key: string]: boolean | undefined;
@@ -15,11 +15,11 @@ export interface GroupObject {
 }
 
 export interface SavedViewsObject {
-  [key: string]: { [key: string]: SavedView; };
+  [key: string]: { [key: string]: LegacySavedView; };
 }
 
 export const SavedViewActions = {
-  setViewSelected: (currentState: SavedView[], view: SavedView, selected: boolean) => {
+  setViewSelected: (currentState: LegacySavedView[], view: LegacySavedView, selected: boolean) => {
     if (selected) {
       const viewAlreadySelected = currentState.find((v) => v.id === view.id);
 
@@ -100,7 +100,7 @@ export const SavedViewActions = {
     };
   },
 
-  updateView: (currentState: SavedViewsObject, id: string, groupId: string, newView: SavedView): SavedViewsObject => {
+  updateView: (currentState: SavedViewsObject, id: string, groupId: string, newView: LegacySavedView): SavedViewsObject => {
     const views = currentState[groupId] ? currentState[groupId] : {};
 
     if (views[id]) {

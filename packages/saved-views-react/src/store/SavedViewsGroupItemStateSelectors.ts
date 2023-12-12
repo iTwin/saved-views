@@ -5,7 +5,7 @@
 import { type ViewDefinitionProps } from "@itwin/core-common";
 
 import { SavedViewsManager } from "../api/SavedViewsManager";
-import { type SavedView } from "../api/utilities/SavedViewTypes";
+import { type LegacySavedView } from "../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../api/utilities/SavedViewUtil";
 import { type GroupItemProps } from "../ui/grouplist/groupitem/GroupItem";
 import { type SavedViewsState } from "./SavedViewsStateReducer";
@@ -24,7 +24,7 @@ const getSearchFilter = (state: SavedViewsState) => state.searchFilter;
 
 const getSearchTags = (state: SavedViewsState) => state.searchTags;
 
-export const selectViews = (state: SavedViewsState, props: GroupItemProps): SavedView[] | ViewDefinitionProps[] => {
+export const selectViews = (state: SavedViewsState, props: GroupItemProps): LegacySavedView[] | ViewDefinitionProps[] => {
   const views = getViews(state, props);
   const searchTags = getSearchTags(state);
   const searchFilter = getSearchFilter(state);
@@ -50,7 +50,7 @@ export const selectShouldGroupRenderSelector = (state: SavedViewsState, props: G
     const values = Object.values(views);
     thereIsASharedViewInThisGroup =
       values.length !== 0 && SavedViewUtil.isSavedView(values[0])
-        ? (values as SavedView[]).some((s) => s.shared)
+        ? (values as LegacySavedView[]).some((s) => s.shared)
         : false;
   } else {
     thereIsASharedViewInThisGroup = false;

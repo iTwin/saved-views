@@ -2,7 +2,7 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import type { SavedView, SavedViewGroup, SavedViewTag, SavedViewsActions } from "@itwin/saved-views-react";
+import type { LegacySavedView, SavedViewGroup, SavedViewTag, SavedViewsActions } from "@itwin/saved-views-react";
 import { enableMapSet, produce } from "immer";
 import { useEffect, useState } from "react";
 
@@ -14,7 +14,7 @@ export function useSavedViewData() {
     const groups = new Map(
       Array.from({ length: 10 }).map(() => createSavedViewGroup()).map((group) => [group.id, group]),
     );
-    const savedViews = new Map<string, SavedView>([
+    const savedViews = new Map<string, LegacySavedView>([
       ...createSavedViews(undefined, [...tags.keys()], 100),
       ...[...groups.keys()].map((groupId) => createSavedViews(groupId, [...tags.keys()], 10)).flat(),
     ]);
@@ -187,14 +187,14 @@ function createSavedViewGroup(): SavedViewGroup {
 
 let lastSavedViewGroupId = 0;
 
-function createSavedViews(groupId: string | undefined, tagIds: string[], amount: number): Array<[string, SavedView]> {
+function createSavedViews(groupId: string | undefined, tagIds: string[], amount: number): Array<[string, LegacySavedView]> {
   return Array
     .from({ length: amount })
     .map(() => createSavedView(groupId, tagIds))
     .map((savedView) => [savedView.id, savedView]);
 }
 
-function createSavedView(groupId: string | undefined, tagIds: string[]): SavedView {
+function createSavedView(groupId: string | undefined, tagIds: string[]): LegacySavedView {
   const id = ++lastSavedViewId;
   return {
     id: id.toString(),

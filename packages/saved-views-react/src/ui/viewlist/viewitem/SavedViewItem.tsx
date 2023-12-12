@@ -13,7 +13,7 @@ import { connect, type ConnectedProps } from "react-redux";
 
 import { IModelConnectionCache } from "../../../api/caches/IModelConnectionCache";
 import { SavedViewsManager } from "../../../api/SavedViewsManager";
-import type { SavedView, SavedViewBase, SavedViewBaseUpdate } from "../../../api/utilities/SavedViewTypes";
+import type { LegacySavedView, LegacySavedViewBase, SavedViewBaseUpdate } from "../../../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../../../api/utilities/SavedViewUtil";
 import { setRenaming, setViewSelected, type SavedViewsState } from "../../../store/SavedViewsStateReducer";
 import SavedViewItemContextMenu, { type SavedViewContextMenuItemProps } from "./SavedViewItemContextMenu";
@@ -23,10 +23,10 @@ import "./ViewItem.scss";
 /** Saved View Item Props */
 export interface SavedViewItemProps extends CommonProps {
   /** Saved view definition */
-  savedView: SavedViewBase;
+  savedView: LegacySavedViewBase;
   draggableIndex: number;
   /** Called when the view is clicked */
-  onClick: (savedView: SavedViewBase) => Promise<void>;
+  onClick: (savedView: LegacySavedViewBase) => Promise<void>;
   viewlistRef?: React.RefObject<HTMLDivElement>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   groupListRef?: React.RefObject<any>;
@@ -172,7 +172,7 @@ function SavedViewItem({
     return;
   }, [renaming, savedView, setRenaming, labelRef, onTitleClicked]);
 
-  const isCached = (savedView: SavedViewBase) => {
+  const isCached = (savedView: LegacySavedViewBase) => {
     if (connection) {
       const cache = IModelConnectionCache.getSavedViewCache(connection);
       if (!cache) {
@@ -273,7 +273,7 @@ function SavedViewItem({
 
   const onCheckboxChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     setViewSelected({
-      view: savedView as SavedView,
+      view: savedView as LegacySavedView,
       selected: e.target.checked,
     });
   };

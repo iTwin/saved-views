@@ -14,7 +14,7 @@ import type { IDefaultViewIdClient } from "../../api/clients/DefaultViewIdClient
 import { isSavedView3d } from "../../api/clients/ISavedViewsClient";
 import { SavedViewEvents, SavedViewsManager } from "../../api/SavedViewsManager";
 import { getTargetViewport, type TargetViewport } from "../../api/TargetViewport";
-import { type SavedViewBase, type SavedViewBaseSetting } from "../../api/utilities/SavedViewTypes";
+import { type LegacySavedViewBase, type SavedViewBaseSetting } from "../../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../../api/utilities/SavedViewUtil";
 import { ViewCreator } from "../../api/utilities/ViewCreator";
 import { ModelCategoryOverrideProvider } from "./ModelCategoryOverrideProvider";
@@ -40,7 +40,7 @@ export const processViewStateSelected = async (
   want2dViews: boolean,
   applyCameraOnly: boolean,
   turnOnModelsCategories: boolean,
-  view?: SavedViewBase,
+  view?: LegacySavedViewBase,
   allModelIds?: Set<string>,
   allCategoryIds?: Set<string>,
   isDesktopView?: boolean,
@@ -215,7 +215,7 @@ const cacheAllModelsCategories = async (
 export const applyView = async (
   connection: IModelConnection,
   isSavedView: boolean,
-  view: SavedViewBase | ViewDefinitionProps,
+  view: LegacySavedViewBase | ViewDefinitionProps,
   want2dViews: boolean,
   applyCameraOnly: boolean,
   turnOnModelsCategories: boolean,
@@ -231,7 +231,7 @@ export const applyView = async (
   const viewState = isSavedView
     ? await client.getViewState(
       iModelConnection,
-      view as SavedViewBase,
+      view as LegacySavedViewBase,
       SavedViewsManager.onViewSourceNotFound,
       SavedViewsManager.state?.turnOnModelsCategoriesNotHidden,
     )
@@ -244,7 +244,7 @@ export const applyView = async (
       want2dViews ?? false,
       applyCameraOnly,
       turnOnModelsCategories,
-      isSavedView ? (view as SavedViewBase) : undefined,
+      isSavedView ? (view as LegacySavedViewBase) : undefined,
       allModelIds,
       allCategoryIds,
     );
@@ -273,7 +273,7 @@ export const applyDefaultSavedView = async (
   }
   const cache = IModelConnectionCache.getSavedViewCache(connection);
   const views = await cache.getSavedViews(connection);
-  const defaultView: SavedViewBase | undefined = views.find((view) => {
+  const defaultView: LegacySavedViewBase | undefined = views.find((view) => {
     if (view.id === viewId) {
       return view;
     }

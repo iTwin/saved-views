@@ -6,7 +6,7 @@ import { BeUiEvent } from "@itwin/core-bentley";
 import { type IModelConnection, type ViewState } from "@itwin/core-frontend";
 
 import { type ISavedViewsClient } from "../clients/ISavedViewsClient";
-import { type SavedViewBase, type SavedViewBaseUpdate } from "../utilities/SavedViewTypes";
+import { type LegacySavedViewBase, type SavedViewBaseUpdate } from "../utilities/SavedViewTypes";
 import { SavedViewUtil } from "../utilities/SavedViewUtil";
 import { ModelsAndCategoriesCache } from "./ModelsAndCategoriesCache";
 
@@ -21,8 +21,8 @@ export enum SavedViewCacheEventType {
 
 /** SavedView Event Args interface. */
 export interface SavedViewCacheEventArgs {
-  savedView?: SavedViewBase;
-  updatedView?: SavedViewBase;
+  savedView?: LegacySavedViewBase;
+  updatedView?: LegacySavedViewBase;
   eventType: SavedViewCacheEventType;
 }
 
@@ -32,7 +32,7 @@ export class SavedViewCacheEvent extends BeUiEvent<SavedViewCacheEventArgs> { }
 /** Saved View Cache */
 export class SavedViewsCache {
   private _client: ISavedViewsClient;
-  private _cache: SavedViewBase[] | undefined;
+  private _cache: LegacySavedViewBase[] | undefined;
   private _viewStateCache: Map<string, ViewState>;
   private _timerId: ReturnType<typeof setInterval> | undefined;
   private _interval: number;
@@ -69,7 +69,7 @@ export class SavedViewsCache {
    * @param data SavedViewData to post
    * @param name Name of the saved view
    */
-  public async createSavedView(iModelConnection: IModelConnection, data: SavedViewBase) {
+  public async createSavedView(iModelConnection: IModelConnection, data: LegacySavedViewBase) {
     const savedView = await this._client.createSavedView(iModelConnection, data);
 
     // Update cache
@@ -86,7 +86,7 @@ export class SavedViewsCache {
   /**
    * For test purposes only, returns true if the saved view is contained in the cache
    */
-  public hasSavedView(view: SavedViewBase) {
+  public hasSavedView(view: LegacySavedViewBase) {
     if (!this._cache) {
       return false;
     }
@@ -100,9 +100,9 @@ export class SavedViewsCache {
   /**
    * For test purposes only, returns true if all the saved views are contained in the cache
    */
-  public hasSavedViews(views: SavedViewBase[]) {
+  public hasSavedViews(views: LegacySavedViewBase[]) {
     return (
-      views.filter((view: SavedViewBase) => this.hasSavedView(view)).length ===
+      views.filter((view: LegacySavedViewBase) => this.hasSavedView(view)).length ===
       views.length
     );
   }
@@ -115,13 +115,13 @@ export class SavedViewsCache {
   public async updateSavedView(
     iModelConnection: IModelConnection,
     data: SavedViewBaseUpdate,
-    view: SavedViewBase,
+    view: LegacySavedViewBase,
   ) {
     const savedView = await this._client.updateSavedView(iModelConnection, data, view);
 
     // Update cache
     if (this._cache) {
-      this._cache = this._cache.map((value: SavedViewBase) => {
+      this._cache = this._cache.map((value: LegacySavedViewBase) => {
         if (value.id === savedView.id) {
           return savedView;
         }
@@ -144,13 +144,13 @@ export class SavedViewsCache {
    * Deletes a saved view from the BIM Review Share service
    * @param instanceId Instance to be deleted
    */
-  public async deleteSavedView(iModelConnection: IModelConnection, view: SavedViewBase) {
+  public async deleteSavedView(iModelConnection: IModelConnection, view: LegacySavedViewBase) {
     const id = view.id;
     await this._client.deleteSavedView(iModelConnection, view);
 
     // Update cache
     if (this._cache) {
-      this._cache = this._cache.filter((value: SavedViewBase) => value.id !== id);
+      this._cache = this._cache.filter((value: LegacySavedViewBase) => value.id !== id);
     }
 
     // Clear cached view state for this saved view
@@ -167,12 +167,12 @@ export class SavedViewsCache {
    * @param view Saved View instance will be shared/unshared
    * @param share boolean determining if the view is shared or not
    */
-  public async shareView(iModelConnection: IModelConnection, view: SavedViewBase, share: boolean) {
+  public async shareView(iModelConnection: IModelConnection, view: LegacySavedViewBase, share: boolean) {
     const savedView = await this._client.shareView(iModelConnection, view, share);
 
     // Update cache
     if (this._cache) {
-      this._cache = this._cache.map((value: SavedViewBase) => {
+      this._cache = this._cache.map((value: LegacySavedViewBase) => {
         if (value.id === savedView.id) {
           return savedView;
         }
@@ -254,7 +254,7 @@ export class SavedViewsCache {
    * @param savedView SavedView base object ot check for a view state cached
    * @returns true if there's a cached ViewState
    */
-  public isViewCached(savedView: SavedViewBase) {
+  public isViewCached(savedView: LegacySavedViewBase) {
     return this._viewStateCache.has(savedView.id);
   }
 
@@ -265,7 +265,7 @@ export class SavedViewsCache {
    */
   public async getViewState(
     iModel: IModelConnection,
-    savedView: SavedViewBase,
+    savedView: LegacySavedViewBase,
     onSourceNotFound?: () => void,
     useHiddenModelsAndCategories?: boolean,
     onHiddenModelsAndCategoriesNotSupported?: () => void,
@@ -287,7 +287,7 @@ export class SavedViewsCache {
 
   private async getOrCreateViewState(
     iModel: IModelConnection,
-    savedView: SavedViewBase,
+    savedView: LegacySavedViewBase,
     onSourceNotFound?: () => void,
   ) {
     const existingViewState = this._viewStateCache.get(savedView.id);

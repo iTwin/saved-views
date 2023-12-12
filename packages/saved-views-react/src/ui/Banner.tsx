@@ -14,7 +14,7 @@ import { animated, useSpring } from "react-spring";
 import { IModelConnectionCache } from "../api/caches/IModelConnectionCache";
 import { SavedViewsManager } from "../api/SavedViewsManager";
 import { TagManager } from "../api/TagManager";
-import type { Group, SavedViewBase, Tag } from "../api/utilities/SavedViewTypes";
+import type { Group, LegacySavedViewBase, Tag } from "../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../api/utilities/SavedViewUtil";
 import { usePreferredViewport } from "../hooks/usePreferredViewport";
 import {
@@ -139,7 +139,7 @@ export function Banner(props: Props) {
         want2dViews: props.want2dViews,
         handleTooManyEmphasizedElements:
           SavedViewsManager.flags.handleTooManyEmphasizedElements,
-        onSuccess: (savedViewData: SavedViewBase) => {
+        onSuccess: (savedViewData: LegacySavedViewBase) => {
           props.setGroupOpen({
             groupId: SavedViewsManager.ungroupedId,
             opened: true,
@@ -148,11 +148,11 @@ export function Banner(props: Props) {
           setCreatingView(false);
         },
         onCancel: () => setCreatingView(false),
-        onError: (_savedViewData: SavedViewBase, _ex: Error) => {
+        onError: (_savedViewData: LegacySavedViewBase, _ex: Error) => {
           SavedViewUtil.showError("Banner", "listTools.error_createView_brief", "listTools.error_createView");
           setCreatingView(false);
         },
-        onTooLarge: (_savedViewData: SavedViewBase) => {
+        onTooLarge: (_savedViewData: LegacySavedViewBase) => {
           SavedViewUtil.showError("Banner", "listTools.error_tooLarge_brief", "listTools.error_tooLarge");
           setCreatingView(false);
         },

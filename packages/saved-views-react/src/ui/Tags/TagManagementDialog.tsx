@@ -14,7 +14,7 @@ import { components, createFilter, type ActionMeta } from "react-select";
 import { SavedViewsManager } from "../../api/SavedViewsManager";
 import { IModelConnectionCache } from "../../api/caches/IModelConnectionCache";
 import type { Tag } from "../../api/types";
-import { isReadOnlyTag, type SavedViewBase } from "../../api/utilities/SavedViewTypes";
+import { isReadOnlyTag, type LegacySavedViewBase } from "../../api/utilities/SavedViewTypes";
 import { type SavedViewsState } from "../../store/SavedViewsStateReducer";
 import { CreatableTypeahead } from "./CreatableTypeahead";
 import { Pill } from "./Pill";
@@ -22,7 +22,7 @@ import { Pill } from "./Pill";
 import "./TagManagementDialog.scss";
 
 interface TagManagementDialogProps {
-  savedView: SavedViewBase;
+  savedView: LegacySavedViewBase;
   isSavedViewOwner: boolean;
   userId: string;
   iModelConn: IModelConnection | undefined;

@@ -6,7 +6,7 @@ import { connect, type ConnectedProps } from "react-redux";
 
 import { IModelConnectionCache } from "../../../api/caches/IModelConnectionCache";
 import { SavedViewsManager } from "../../../api/SavedViewsManager";
-import type { Group, SavedViewBase, SavedViewBaseUpdate } from "../../../api/utilities/SavedViewTypes";
+import type { Group, LegacySavedViewBase, SavedViewBaseUpdate } from "../../../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../../../api/utilities/SavedViewUtil";
 import { setGroupOpen, setRenaming, type SavedViewsState } from "../../../store/SavedViewsStateReducer";
 import { createNewSavedView } from "../../createNewSavedView";
@@ -147,11 +147,11 @@ class GroupItemContextMenu extends ContextMenu<Props> {
       want2dViews: this.props.want2dViews,
       handleTooManyEmphasizedElements:
         SavedViewsManager.flags.handleTooManyEmphasizedElements,
-      onSuccess: (savedViewData: SavedViewBase) => {
+      onSuccess: (savedViewData: LegacySavedViewBase) => {
         this.props.setGroupOpen({ groupId: this.props.group.id, opened: true });
         this.props.setRenaming({ id: savedViewData.id, renaming: true });
       },
-      onError: (_savedViewData: SavedViewBase, ex: Error) => {
+      onError: (_savedViewData: LegacySavedViewBase, ex: Error) => {
         SavedViewUtil.showError(
           "GroupItemContextMenu",
           "listTools.error_createView_brief",
@@ -159,7 +159,7 @@ class GroupItemContextMenu extends ContextMenu<Props> {
           ex,
         );
       },
-      onTooLarge: (_savedViewData: SavedViewBase) => {
+      onTooLarge: (_savedViewData: LegacySavedViewBase) => {
         SavedViewUtil.showError("GroupItemContextMenu", "listTools.error_tooLarge_brief", "listTools.error_tooLarge");
       },
     });
@@ -217,7 +217,7 @@ class GroupItemContextMenu extends ContextMenu<Props> {
     const viewsInDeletedGroup = await viewsCache.getSavedViewsForGroup(iModelConnection, this.props.group.id);
     const groupCache = IModelConnectionCache.getGroupCache(iModelConnection);
 
-    const promises = viewsInDeletedGroup.map(async (v: SavedViewBase) => {
+    const promises = viewsInDeletedGroup.map(async (v: LegacySavedViewBase) => {
       const updated: SavedViewBaseUpdate = {
         groupId: SavedViewsManager.ungroupedId,
         id: v.id,

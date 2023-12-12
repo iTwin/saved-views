@@ -22,7 +22,7 @@ import { getTargetViewport, type TargetViewport } from "../TargetViewport";
 import { ModelsAndCategoriesCache } from "../caches/ModelsAndCategoriesCache";
 import { isDrawingSavedView, isSheetSavedView, isSpatialSavedView } from "../clients/ISavedViewsClient";
 import {
-  type PerModelCategoryVisibilityProps, type SavedView, type SavedView2d, type SavedViewBase,
+  type PerModelCategoryVisibilityProps, type LegacySavedView, type LegacySavedView2d, type LegacySavedViewBase,
 } from "./SavedViewTypes";
 
 const getThumbnail = (vp: Viewport, width: number, height: number): ImageBuffer | undefined => {
@@ -113,7 +113,7 @@ export class SavedViewUtil {
     name: string,
     userId?: string,
     shared?: boolean,
-  ): SavedView2d {
+  ): LegacySavedView2d {
     const viewState = vp.view as DrawingViewState;
     if (!viewState) {
       throw new Error("Invalid viewport");
@@ -151,7 +151,7 @@ export class SavedViewUtil {
     name: string,
     userId?: string,
     shared?: boolean,
-  ): SavedView2d {
+  ): LegacySavedView2d {
     const viewState = vp.view as SheetViewState;
     if (!viewState) {
       throw new Error("Invalid viewport");
@@ -202,7 +202,7 @@ export class SavedViewUtil {
     name: string,
     userId?: string,
     shared?: boolean,
-  ): SavedView {
+  ): LegacySavedView {
     const viewState = vp.view as SpatialViewState;
     if (!viewState) {
       throw new Error("Invalid viewport");
@@ -260,7 +260,7 @@ export class SavedViewUtil {
     name: string,
     userId?: string,
     shared?: boolean,
-  ): SavedViewBase {
+  ): LegacySavedViewBase {
     if (vp.view.isSpatialView()) {
       return this._createSpatialSavedViewObject(vp, name, userId, shared);
     } else if (vp.view.isDrawingView()) {
@@ -279,7 +279,7 @@ export class SavedViewUtil {
     name: string,
     userId?: string,
     shared?: boolean,
-  ): Promise<SavedViewBase> {
+  ): Promise<LegacySavedViewBase> {
     const savedView = SavedViewUtil._createSavedViewObject(vp, name, userId, shared);
     if (SavedViewsManager.flags.supportHiddenModelsAndCategories) {
       await ModelsAndCategoriesCache.getCache(vp.iModel).setHiddenModelsAndCategories(savedView);
@@ -290,7 +290,7 @@ export class SavedViewUtil {
   /** Creates a spatial view state from the saved view object props */
   private static async _createSpatialViewState(
     iModelConnection: IModelConnection,
-    savedView: SavedView,
+    savedView: LegacySavedView,
     _onSourceNotFound?: () => void,
   ): Promise<SpatialViewState | undefined> {
     const props: ViewStateProps = {
@@ -307,7 +307,7 @@ export class SavedViewUtil {
   /** Creates a drawing view state from the data object */
   private static async _createDrawingViewState(
     iModelConnection: IModelConnection,
-    savedView: SavedView2d,
+    savedView: LegacySavedView2d,
   ): Promise<DrawingViewState | undefined> {
     const props: ViewStateProps = {
       viewDefinitionProps: savedView.viewDefinitionProps,
@@ -322,7 +322,7 @@ export class SavedViewUtil {
   /** Creates a sheet view state from the data object */
   private static async _createSheetViewState(
     iModelConnection: IModelConnection,
-    savedView: SavedView2d,
+    savedView: LegacySavedView2d,
   ): Promise<SheetViewState | undefined> {
     if (
       savedView.sheetProps === undefined ||
@@ -349,22 +349,22 @@ export class SavedViewUtil {
    */
   public static async createViewState(
     iModelConnection: IModelConnection,
-    savedView: SavedViewBase,
+    savedView: LegacySavedViewBase,
     _onSourceNotFound?: () => void,
   ): Promise<ViewState | undefined> {
     if (isSpatialSavedView(savedView)) {
-      return this._createSpatialViewState(iModelConnection, savedView as SavedView);
+      return this._createSpatialViewState(iModelConnection, savedView as LegacySavedView);
     } else if (isDrawingSavedView(savedView)) {
-      return this._createDrawingViewState(iModelConnection, savedView as SavedView2d);
+      return this._createDrawingViewState(iModelConnection, savedView as LegacySavedView2d);
     } else if (isSheetSavedView(savedView)) {
-      return this._createSheetViewState(iModelConnection, savedView as SavedView2d);
+      return this._createSheetViewState(iModelConnection, savedView as LegacySavedView2d);
     }
 
     return undefined;
   }
 
   /** Setup the overrides of the viewport based on the saved view when using the ReadonlyClient*/
-  private static async applyExtensionOverrides(view: SavedViewBase, vp: Viewport) {
+  private static async applyExtensionOverrides(view: LegacySavedViewBase, vp: Viewport) {
     // Clear the current if there's any (this should always happen, even if there are no extensions)
     if (EmphasizeElements.get(vp)) {
       EmphasizeElements.clear(vp);
@@ -380,7 +380,7 @@ export class SavedViewUtil {
   }
 
   /** Setup the overrides of the viewport based on the saved view */
-  public static async setupOverrides(view: SavedViewBase, vp: Viewport) {
+  public static async setupOverrides(view: LegacySavedViewBase, vp: Viewport) {
     await SavedViewUtil.applyExtensionOverrides(view, vp);
   }
 
@@ -390,7 +390,7 @@ export class SavedViewUtil {
     SavedViewUtil._urlTemplate = template;
   }
 
-  public static generateAndCopyUrl(savedView: SavedViewBase) {
+  public static generateAndCopyUrl(savedView: LegacySavedViewBase) {
     const urlToCopyStr = SavedViewUtil._urlTemplate || window.location.href;
     const urlToCopy = new URL(urlToCopyStr);
     urlToCopy.searchParams.set("shareViewId", savedView.id);
@@ -429,16 +429,16 @@ export class SavedViewUtil {
     );
   }
 
-  public static isSavedView(view: SavedViewBase | ViewDefinitionProps) {
+  public static isSavedView(view: LegacySavedViewBase | ViewDefinitionProps) {
     return (
-      (view as SavedView).shared !== undefined &&
-      (view as SavedView).name !== undefined
+      (view as LegacySavedView).shared !== undefined &&
+      (view as LegacySavedView).name !== undefined
     );
   }
 
   // TODO: This will need to handle SavedViewBase instead of SavedView when we update widget to handle 2D
   public static getFilteredViews(
-    views: SavedView[] | ViewDefinitionProps[],
+    views: LegacySavedView[] | ViewDefinitionProps[],
     filter: string,
     searchTags: string[],
   ) {
@@ -451,7 +451,7 @@ export class SavedViewUtil {
     }
 
     if (SavedViewUtil.isSavedView(views[0])) {
-      return (views as SavedView[]).filter((view: SavedView) => {
+      return (views as LegacySavedView[]).filter((view: LegacySavedView) => {
         const viewNameContainsFilter =
           !!filter &&
           view.name.toLowerCase().indexOf(filter.toLowerCase()) >= 0;
@@ -488,7 +488,7 @@ export class SavedViewUtil {
 
   public static async updateViewStateFromHiddenContent(
     viewState: ViewState,
-    savedView: SavedViewBase,
+    savedView: LegacySavedViewBase,
     iModel: IModelConnection,
   ) {
     const modelsAndCategoriesCache = ModelsAndCategoriesCache.getCache(iModel);
@@ -507,7 +507,7 @@ export class SavedViewUtil {
 
   public static async applyView(
     iModelConnection: IModelConnection,
-    savedView: SavedViewBase,
+    savedView: LegacySavedViewBase,
     forceFilterContent?: boolean,
     targetViewport: TargetViewport = "selected",
   ) {

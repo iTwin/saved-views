@@ -4,11 +4,11 @@
 *--------------------------------------------------------------------------------------------*/
 import { type Viewport } from "@itwin/core-frontend";
 
-import { type SavedViewBase, type SavedViewBaseUpdate } from "./SavedViewTypes";
+import { type LegacySavedViewBase, type SavedViewBaseUpdate } from "./SavedViewTypes";
 
 export interface ExtensionHandler {
   extensionName: string;
   onViewApply: (extensionData: string, vp: Viewport) => Promise<void>;
-  onViewSave: (savedView: SavedViewBase) => Promise<void>;
-  onViewUpdate: (newSavedView: SavedViewBaseUpdate, oldSavedView: SavedViewBase) => Promise<void>;
+  onViewSave: (savedView: LegacySavedViewBase) => Promise<void>;
+  onViewUpdate: (newSavedView: SavedViewBaseUpdate, oldSavedView: LegacySavedViewBase) => Promise<void>;
 }

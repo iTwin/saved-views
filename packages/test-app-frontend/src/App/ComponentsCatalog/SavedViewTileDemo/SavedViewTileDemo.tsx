@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 import { SvgLocation, SvgLockUnlocked, SvgShare, SvgStar } from "@itwin/itwinui-icons-react";
 import {
-  CreateTileOptionsParams, SavedViewTile, createTileOptions, type SavedView, type SavedViewGroup, type SavedViewTag,
+  CreateTileOptionsParams, SavedViewTile, createTileOptions, type LegacySavedView, type SavedViewGroup, type SavedViewTag,
 } from "@itwin/saved-views-react";
 import { useState, type ReactElement } from "react";
 
@@ -13,7 +13,7 @@ import { useThumbnailImage } from "../useSavedViewData.js";
 export function SavedViewTileBasic(): ReactElement {
   const thumbnail = useThumbnailImage();
 
-  const savedView: SavedView = {
+  const savedView: LegacySavedView = {
     id: "tileId",
     displayName: "Basic Saved View",
     thumbnail,
@@ -27,7 +27,7 @@ export function SavedViewTileBasic(): ReactElement {
 }
 
 export function SavedViewTileNoThumbnail(): ReactElement {
-  const savedView: SavedView = {
+  const savedView: LegacySavedView = {
     id: "tileId",
     displayName: "Basic Saved View",
   };
@@ -43,13 +43,13 @@ export function SavedViewTileBadges(): ReactElement {
   const thumbnail1 = useThumbnailImage();
   const thumbnail2 = useThumbnailImage();
 
-  const savedViewLeft: SavedView = {
+  const savedViewLeft: LegacySavedView = {
     id: "tileId",
     displayName: "Saved view left badges",
     thumbnail: thumbnail1,
   };
 
-  const savedViewRight: SavedView = {
+  const savedViewRight: LegacySavedView = {
     id: "tileId",
     displayName: "Saved view right badges",
     thumbnail: thumbnail2,
@@ -68,7 +68,7 @@ export function SavedViewTileBadges(): ReactElement {
 export function SavedViewTileEditableName(): ReactElement {
   const [displayName, setDisplayName] = useState("Editable name");
   const thumbnail = useThumbnailImage();
-  const savedView: SavedView = {
+  const savedView: LegacySavedView = {
     id: "tileId",
     displayName,
     thumbnail,
@@ -84,7 +84,7 @@ export function SavedViewTileEditableName(): ReactElement {
 export function SavedViewTileGroups(): ReactElement {
   const [groupId, setGroupId] = useState<string>();
   const thumbnail = useThumbnailImage();
-  const savedView: SavedView = {
+  const savedView: LegacySavedView = {
     id: "tileId",
     displayName: "Grouped saved view",
     groupId,
@@ -117,7 +117,7 @@ export function SavedViewTileGroups(): ReactElement {
 export function SavedViewTileTags(): ReactElement {
   const [tagIds, setTagIds] = useState<string[]>(["tag1"]);
   const thumbnail = useThumbnailImage();
-  const savedView: SavedView = {
+  const savedView: LegacySavedView = {
     id: "tileId",
     displayName: "Saved view with tags",
     tagIds,

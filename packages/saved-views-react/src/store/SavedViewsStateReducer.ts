@@ -8,11 +8,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "react-redux-typescript";
 
 import { type TargetViewport } from "../api/TargetViewport";
-import { type Group, type SavedView } from "../api/utilities/SavedViewTypes";
+import { type Group, type LegacySavedView } from "../api/utilities/SavedViewTypes";
 import { SavedViewActions, type BooleanObject, type GroupObject, type SavedViewsObject } from "./SavedViewsActions";
 
 export type SavedViewsState = {
-  selectedViews: SavedView[];
+  selectedViews: LegacySavedView[];
   openedGroups: BooleanObject;
   renamedViews: BooleanObject;
   groups: GroupObject;
@@ -62,7 +62,7 @@ const SavedViewsSlice: any = createSlice({
   name: "SavedViewsSlice",
   initialState,
   reducers: {
-    setViewSelected(state, action: PayloadAction<string, { view: SavedView; selected: boolean; }>) {
+    setViewSelected(state, action: PayloadAction<string, { view: LegacySavedView; selected: boolean; }>) {
       const { view, selected } = action.payload;
       state.selectedViews = SavedViewActions.setViewSelected(state.selectedViews, view, selected);
     },
@@ -96,7 +96,7 @@ const SavedViewsSlice: any = createSlice({
       const { id, groupId } = action.payload;
       state.savedViews = SavedViewActions.deleteView(state.savedViews, id, groupId);
     },
-    updateView(state, action: PayloadAction<string, { id: string; groupId: string; newView: SavedView; }>) {
+    updateView(state, action: PayloadAction<string, { id: string; groupId: string; newView: LegacySavedView; }>) {
       const { id, groupId, newView } = action.payload;
       state.savedViews = SavedViewActions.updateView(state.savedViews, id, groupId, newView);
     },
