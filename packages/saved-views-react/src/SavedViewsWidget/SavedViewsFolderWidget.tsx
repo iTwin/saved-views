@@ -19,6 +19,7 @@ interface SavedViewsFolderWidgetProps {
   actions?: SavedViewsActions | undefined;
   editable?: boolean | undefined;
   options?: ((savedView: SavedView) => ReactNode[]) | undefined;
+  onTileClick?: ((selectedViewId: string) => void) | undefined;
 }
 
 export function SavedViewsFolderWidget(props: SavedViewsFolderWidgetProps): ReactElement {
@@ -64,6 +65,7 @@ export function SavedViewsFolderWidget(props: SavedViewsFolderWidgetProps): Reac
         actions={props.actions}
         editable={props.editable}
         savedViewOptions={props.options}
+        onTileClick={props.onTileClick}
       />
     );
   }
@@ -79,6 +81,7 @@ export function SavedViewsFolderWidget(props: SavedViewsFolderWidgetProps): Reac
       actions={props.actions}
       editable={props.editable}
       options={props.options}
+      onTileClick={props.onTileClick}
     />
   );
 }
@@ -100,6 +103,7 @@ interface SavedViewsHomeScreenProps {
   actions?: SavedViewsActions | undefined;
   editable?: boolean | undefined;
   savedViewOptions?: ((savedView: SavedView) => ReactNode[]) | undefined;
+  onTileClick?: ((selectedViewId: string) => void) | undefined;
 }
 
 function SavedViewsHomeScreen(props: SavedViewsHomeScreenProps): ReactElement {
@@ -149,6 +153,7 @@ function SavedViewsHomeScreen(props: SavedViewsHomeScreenProps): ReactElement {
                 editable={props.editable}
                 onRename={props.actions?.renameSavedView}
                 options={props.savedViewOptions?.(savedView)}
+                onClick={props.onTileClick}
               />
           }
         </SavedViewTileGrid>
@@ -180,6 +185,7 @@ interface SavedViewsGroupScreenProps {
   actions?: SavedViewsActions | undefined;
   editable?: boolean | undefined;
   options?: ((savedView: SavedView) => ReactNode[]) | undefined;
+  onTileClick?: ((selectedViewId: string) => void) | undefined;
 }
 
 function SavedViewsGroupScreen(props: SavedViewsGroupScreenProps): ReactElement {
@@ -224,6 +230,7 @@ function SavedViewsGroupScreen(props: SavedViewsGroupScreenProps): ReactElement 
               tags={props.tags}
               editable={props.editable}
               options={props.options?.(savedView)}
+              onClick={props.onTileClick}
             />,
           )}
         </div>
