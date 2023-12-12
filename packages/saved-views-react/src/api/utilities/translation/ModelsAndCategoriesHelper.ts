@@ -16,8 +16,6 @@ import {
 import { Id64Array } from "@itwin/core-bentley";
 import { IModelQueryClient } from "../../clients/IModelQueryClient.js";
 
-
-
 function legacyViewHasValidHiddenModelsAndCategories(savedView: LegacySavedViewBase): boolean {
   if (isSavedView3d(savedView)) {
     return !!(savedView.hiddenCategories && savedView.hiddenModels);

@@ -83,13 +83,6 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
    * Handle displaying the selected saved view onto the screen.
    */
   const handleTileClick = async (savedViewId: string) => {
-    /*
-     * This function converts a saved view from the Saved View API into a legacy view,
-     * then converts the legacy view into an iTwin.js-style ViewState.
-     *
-     * Once legacy views are officially retired, a straight translation from Saved View to ViewState can be done instead
-     * (but code has not been created for that yet).
-     */
     if (!iModel) {
       return;
     }

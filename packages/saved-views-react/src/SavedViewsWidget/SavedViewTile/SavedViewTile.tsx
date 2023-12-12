@@ -9,17 +9,12 @@ import {
   type ReactElement, type ReactNode,
 } from "react";
 
-// import { useNavigate } from "react-router-dom";
-
-import { useSavedViewsContext } from "../../SavedViewsContext.js";
-import { trimInputString } from "../../utils.js";
 import type { SavedView, SavedViewTag } from "../SavedView.js";
+import { useSavedViewsContext } from "../../SavedViewsContext.js";
 import { SavedViewTileContext, SavedViewTileContextProvider } from "./SavedViewTileContext.js";
+import { trimInputString } from "../../utils.js";
 
 import "./SavedViewTile.css";
-// import { UiFramework } from "@itwin/appui-react";
-// import { ViewportComponent } from "@itwin/imodel-components-react";
-// import { ViewState } from "@itwin/core-frontend";
 
 interface SavedViewTileProps {
   /** A Saved View that is being represented by the tile. */

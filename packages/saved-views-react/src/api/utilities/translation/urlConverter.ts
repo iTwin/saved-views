@@ -2,10 +2,10 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-/* eslint-disable @typescript-eslint/comma-dangle */
-// Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 import { BaseMapLayerProps, ImageMapLayerProps } from "@itwin/core-common";
-import { ViewData, ViewDataITwinDrawing, ViewDataITwinSheet, ViewDataItwin3d } from "@itwin/saved-views-client";
+import {
+  ViewData, ViewDataItwin3d, ViewDataITwinDrawing, ViewDataITwinSheet,
+} from "@itwin/saved-views-client";
 
 /**
  * Convert url that potentially contains restricted characters ('&' or '.') to use unrestricated substitute characters ('++and++' or '++dot++')
@@ -31,7 +31,7 @@ export const urlToLegacyUrl = (restrictedUrl: string): string => {
 
 export const convertAllLegacyUrlsToUrls = (
   savedViewData: ViewData,
-  convert: (url: string) => string
+  convert: (url: string) => string,
 ): void => {
   const displayStyle =
     (savedViewData as ViewDataItwin3d)?.itwin3dView.displayStyle ??

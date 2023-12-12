@@ -24,10 +24,9 @@ import {
   isAnyColorFormat,
   simpleTypeOf,
 } from "./extractionUtilities";
+import { type SavedView, type SavedView2d } from "../SavedViewTypes";
 
 import { type ViewState } from "@itwin/core-frontend";
-
-import { type SavedView, type SavedView2d } from "../SavedViewTypes";
 import { ViewITwin2d, ViewITwin3d } from "@itwin/saved-views-client";
 
 const viewFlagMappings: ExtractionFunc<void, void>[] = [
