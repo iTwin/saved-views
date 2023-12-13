@@ -11,7 +11,7 @@ import {
   isSavedView3d,
 } from "../../clients/ISavedViewsClient.js";
 import {
-  SavedView as LegacySavedView, SavedViewBase as LegacySavedViewBase,
+  LegacySavedView, LegacySavedViewBase,
 } from "../SavedViewTypes.js";
 import { Id64Array } from "@itwin/core-bentley";
 import { IModelQueryClient } from "../../clients/IModelQueryClient.js";

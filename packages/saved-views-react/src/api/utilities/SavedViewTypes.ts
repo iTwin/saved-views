@@ -19,7 +19,7 @@ export interface PerModelCategoryVisibilityProps {
   visible: boolean;
 }
 
-export interface SavedViewBaseUpdate {
+export interface LegacySavedViewBaseUpdate {
   id: string;
   name?: string;
   shared?: boolean;
@@ -31,12 +31,12 @@ export interface SavedViewBaseUpdate {
   categorySelectorProps?: CategorySelectorProps;
   emphasizeElementsProps?: EmphasizeElementsProps; // Treated as an extension in Saved Views public API
   visibilityOverrideProps?: ModelCategoryOverrideProviderProps; // Treated as an extension in Saved Views public API
-  tags?: Tag[];
+  tags?: LegacyTag[];
   hiddenCategories?: Id64Array;
   extensions?: Map<string, string>; // Map of extension data with key of the extensionName
 }
 
-export interface SavedViewBase {
+export interface LegacySavedViewBase {
   id: string;
   name: string;
   shared: boolean;
@@ -48,12 +48,12 @@ export interface SavedViewBase {
   categorySelectorProps: CategorySelectorProps;
   emphasizeElementsProps?: EmphasizeElementsProps; // Treated as an extension in Saved Views public API
   visibilityOverrideProps?: ModelCategoryOverrideProviderProps; // Treated as an extension in Saved Views public API
-  tags?: Tag[];
+  tags?: LegacyTag[];
   hiddenCategories?: Id64Array;
   extensions?: Map<string, string>; // Map of extension data with key of the extensionName
 }
 
-export interface SavedView2d extends SavedViewBase {
+export interface LegacySavedView2d extends LegacySavedViewBase {
   viewDefinitionProps: ViewDefinition2dProps;
   displayStyleProps: DisplayStyleProps;
   sectionDrawing?: SectionDrawingViewProps;
@@ -64,7 +64,7 @@ export interface SavedView2d extends SavedViewBase {
 /**
  * Format for a saved view setting instance in the service
  */
-export interface SavedView extends SavedViewBase {
+export interface LegacySavedView extends LegacySavedViewBase {
   displayStyleProps: DisplayStyle3dProps;
   modelSelectorProps: ModelSelectorProps;
   modelExtents?: Range3dProps;
@@ -86,7 +86,7 @@ export interface CleanEmphasizeElementsProps {
 /**
  * Saved view base setting instance
  */
-export interface SavedViewBaseSetting {
+export interface LegacySavedViewBaseSetting {
   id: string;
   name: string;
   shared: boolean;
@@ -97,7 +97,7 @@ export interface SavedViewBaseSetting {
   categorySelectorProps: CategorySelectorProps;
   emphasizeElementsProps?: CleanEmphasizeElementsProps;
   visibilityOverrideProps?: ModelCategoryOverrideProviderProps;
-  tags?: Tag[];
+  tags?: LegacyTag[];
 }
 
 export interface GroupUpdate {
@@ -105,19 +105,19 @@ export interface GroupUpdate {
   shared?: boolean;
 }
 
-export interface Group {
+export interface LegacyGroup {
   id: string;
   name: string;
   shared: boolean;
   userId: string;
 }
 
-export interface Tag {
+export interface LegacyTag {
   name: string;
   createdByUserId: string;
 }
 
-export interface ReadOnlyTag extends Tag {
+export interface ReadOnlyTag extends LegacyTag {
   id: string;
   links: TagLinks;
 }
@@ -125,7 +125,7 @@ export interface ReadOnlyTag extends Tag {
 /** Tag links object. */
 export type TagLinks = ResourceLinks;
 
-export function isReadOnlyTag(tag: Tag): tag is ReadOnlyTag {
+export function isReadOnlyTag(tag: LegacyTag): tag is ReadOnlyTag {
   return (
     (tag as ReadOnlyTag).id !== undefined &&
     (tag as ReadOnlyTag).links !== undefined

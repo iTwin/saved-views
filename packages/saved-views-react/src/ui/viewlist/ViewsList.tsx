@@ -14,7 +14,7 @@ import { FixedSizeList, type ListChildComponentProps } from "react-window";
 import { IModelConnectionCache } from "../../api/caches/IModelConnectionCache";
 import { SavedViewsManager } from "../../api/SavedViewsManager";
 import { type TargetViewport } from "../../api/TargetViewport";
-import { type SavedView, type SavedViewBase } from "../../api/utilities/SavedViewTypes";
+import { type LegacySavedView, type LegacySavedViewBase } from "../../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../../api/utilities/SavedViewUtil";
 import { type SavedViewsState } from "../../store/SavedViewsStateReducer";
 import { processViewStateSelected } from "./ProcessViewState";
@@ -54,7 +54,7 @@ function RenderRow({ index, style, data }: ListChildComponentProps) {
 
 /** ViewList properties  */
 export interface ViewsListProps extends CommonProps {
-  views: Array<SavedView | ViewDefinitionProps>;
+  views: Array<LegacySavedView | ViewDefinitionProps>;
   listGridHeight?: number;
   /** Width of a grid item */
   listGridWidth?: number;
@@ -102,7 +102,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type Props = PropsFromRedux & ViewsListProps;
 
 interface ViewsListState {
-  selected: SavedViewBase | ViewDefinitionProps | null;
+  selected: LegacySavedViewBase | ViewDefinitionProps | null;
 }
 
 /** View List Component with functionality to show thumbnails, handle saved view functionality */
@@ -121,7 +121,7 @@ class ViewsList extends React.PureComponent<Props, ViewsListState> {
   private _allCategoryIds = new Set<string>();
 
   /** Handles opening a saved view */
-  private async handleSavedViewSelected(view: SavedViewBase) {
+  private async handleSavedViewSelected(view: LegacySavedViewBase) {
     this.setState({ selected: view });
 
     const iModelConnection = this.props.iModel;
@@ -203,7 +203,7 @@ class ViewsList extends React.PureComponent<Props, ViewsListState> {
   }
 
   /** Create props for the saved view item from our props */
-  private createSavedViewItemProps(savedView: SavedView, index: number) {
+  private createSavedViewItemProps(savedView: LegacySavedView, index: number) {
     const props: SavedViewItemProps = {
       draggableIndex: index,
       savedView,
@@ -234,9 +234,9 @@ class ViewsList extends React.PureComponent<Props, ViewsListState> {
 
     const nameToViewItem = new Map<string, React.ReactElement>();
 
-    this.props.views.forEach((view: SavedView | ViewDefinitionProps) => {
+    this.props.views.forEach((view: LegacySavedView | ViewDefinitionProps) => {
       if (SavedViewUtil.isSavedView(view)) {
-        const savedView = view as SavedView;
+        const savedView = view as LegacySavedView;
         const props = this.createSavedViewItemProps(savedView, index);
         nameToViewItem.set(
           this.getSortingName(nameToViewItem, savedView.name),

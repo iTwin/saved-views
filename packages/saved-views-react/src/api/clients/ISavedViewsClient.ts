@@ -6,28 +6,28 @@ import { type AccessToken } from "@itwin/core-bentley";
 import { type IModelConnection } from "@itwin/core-frontend";
 
 import {
-  type SavedView, type SavedViewBase, type SavedViewBaseSetting, type SavedViewBaseUpdate,
+  type LegacySavedView, type LegacySavedViewBase, type LegacySavedViewBaseSetting, type LegacySavedViewBaseUpdate,
 } from "../utilities/SavedViewTypes";
 
 /** Is a 3d saved view */
-export function isSavedView3d(view: SavedViewBase | SavedViewBaseUpdate): view is SavedView {
+export function isSavedView3d(view: LegacySavedViewBase | LegacySavedViewBaseUpdate): view is LegacySavedView {
   return !view.is2d;
 }
 
 /** Is a 3d spatial saved view */
-export function isSpatialSavedView(view: SavedViewBase) {
+export function isSpatialSavedView(view: LegacySavedViewBase) {
   return (
     (view.is2d === undefined || !view.is2d) && "modelSelectorProps" in view
   );
 }
 
 /** Is a 2d drawing saved view */
-export function isDrawingSavedView(view: SavedViewBase) {
+export function isDrawingSavedView(view: LegacySavedViewBase) {
   return view.is2d !== undefined && view.is2d && !("sheetProps" in view);
 }
 
 /** Is a 2d sheet saved view */
-export function isSheetSavedView(view: SavedViewBase) {
+export function isSheetSavedView(view: LegacySavedViewBase) {
   return view.is2d !== undefined && view.is2d && "sheetProps" in view;
 }
 
@@ -42,7 +42,7 @@ export interface ISavedViewsClient {
     iModelId: string | undefined,
     namespace: string,
     applicationSpecific?: boolean
-  ) => Promise<SavedViewBaseSetting>;
+  ) => Promise<LegacySavedViewBaseSetting>;
 
   /** Get the full view object from the service by joining the two view setting and thumbnail into a single object */
   getView: (
@@ -52,7 +52,7 @@ export interface ISavedViewsClient {
     savedViewNamespace: string,
     thumbnailNamespace?: string,
     applicationSpecific?: boolean,
-  ) => Promise<SavedViewBase>;
+  ) => Promise<LegacySavedViewBase>;
 
   /**
    * Creates a saved view in the legacy settings service
@@ -65,12 +65,12 @@ export interface ISavedViewsClient {
    */
   createSavedView: (
     iModelConnection: IModelConnection,
-    savedView: SavedViewBase,
+    savedView: LegacySavedViewBase,
     saveThumbnail?: boolean,
     savedViewNamespace?: string,
     thumbnailNamespace?: string,
     applicationSpecific?: boolean
-  ) => Promise<SavedViewBase>;
+  ) => Promise<LegacySavedViewBase>;
 
   /**
    * Creates a saved view in the legacy settings service
@@ -85,12 +85,12 @@ export interface ISavedViewsClient {
   createSavedViewByIds: (
     projectId: string,
     iModelId: string | undefined,
-    savedView: SavedViewBase,
+    savedView: LegacySavedViewBase,
     saveThumbnail: boolean,
     savedViewNamespace?: string,
     thumbnailNamespace?: string,
     applicationSpecific?: boolean,
-  ) => Promise<SavedViewBase>;
+  ) => Promise<LegacySavedViewBase>;
 
   /**
    * Updates the Saved View instance with the passed view state
@@ -102,9 +102,9 @@ export interface ISavedViewsClient {
    */
   updateSavedView: (
     iModelConnection: IModelConnection,
-    updatedView: SavedViewBaseUpdate,
-    oldView: SavedViewBase
-  ) => Promise<SavedViewBase>;
+    updatedView: LegacySavedViewBaseUpdate,
+    oldView: LegacySavedViewBase
+  ) => Promise<LegacySavedViewBase>;
 
   /**
    * Delete a saved view in user or shared space depending on view.shared
@@ -113,7 +113,7 @@ export interface ISavedViewsClient {
    */
   deleteSavedView: (
     iModelConnection: IModelConnection,
-    view: SavedViewBase
+    view: LegacySavedViewBase
   ) => Promise<void>;
 
   /**
@@ -143,9 +143,9 @@ export interface ISavedViewsClient {
    */
   shareView: (
     iModelConnection: IModelConnection,
-    view: SavedViewBase,
+    view: LegacySavedViewBase,
     shared: boolean
-  ) => Promise<SavedViewBase>;
+  ) => Promise<LegacySavedViewBase>;
 
   /**
    * Gets saved views that this user can access
@@ -160,7 +160,7 @@ export interface ISavedViewsClient {
     savedViewNamespace?: string,
     thumbnailNamespace?: string,
     applicationSpecific?: boolean,
-  ) => Promise<SavedViewBase[]>;
+  ) => Promise<LegacySavedViewBase[]>;
 
   /**
    * Gets saved views that this user can access
@@ -180,5 +180,5 @@ export interface ISavedViewsClient {
     thumbnailNamespace?: string,
     applicationSpecific?: boolean,
     getAccessToken?: () => Promise<AccessToken>
-  ) => Promise<SavedViewBase[]>;
+  ) => Promise<LegacySavedViewBase[]>;
 }

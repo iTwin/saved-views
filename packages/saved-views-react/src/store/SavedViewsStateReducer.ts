@@ -8,11 +8,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "react-redux-typescript";
 
 import { type TargetViewport } from "../api/TargetViewport";
-import { type Group, type SavedView } from "../api/utilities/SavedViewTypes";
+import { type LegacyGroup, type LegacySavedView } from "../api/utilities/SavedViewTypes";
 import { SavedViewActions, type BooleanObject, type GroupObject, type SavedViewsObject } from "./SavedViewsActions";
 
 export type SavedViewsState = {
-  selectedViews: SavedView[];
+  selectedViews: LegacySavedView[];
   openedGroups: BooleanObject;
   renamedViews: BooleanObject;
   groups: GroupObject;
@@ -62,7 +62,7 @@ const SavedViewsSlice: any = createSlice({
   name: "SavedViewsSlice",
   initialState,
   reducers: {
-    setViewSelected(state, action: PayloadAction<string, { view: SavedView; selected: boolean; }>) {
+    setViewSelected(state, action: PayloadAction<string, { view: LegacySavedView; selected: boolean; }>) {
       const { view, selected } = action.payload;
       state.selectedViews = SavedViewActions.setViewSelected(state.selectedViews, view, selected);
     },
@@ -81,11 +81,11 @@ const SavedViewsSlice: any = createSlice({
       const { id } = action.payload;
       state.groups = SavedViewActions.deleteGroup(state.groups, id);
     },
-    updateGroup(state, action: PayloadAction<string, { id: string; newGroup: Group; }>) {
+    updateGroup(state, action: PayloadAction<string, { id: string; newGroup: LegacyGroup; }>) {
       const { id, newGroup } = action.payload;
       state.groups = SavedViewActions.updateGroup(state.groups, id, newGroup);
     },
-    createGroup(state, action: PayloadAction<string, { newGroup: Group; }>) {
+    createGroup(state, action: PayloadAction<string, { newGroup: LegacyGroup; }>) {
       const { newGroup } = action.payload;
       state.groups = SavedViewActions.createGroup(state.groups, newGroup);
     },
@@ -96,7 +96,7 @@ const SavedViewsSlice: any = createSlice({
       const { id, groupId } = action.payload;
       state.savedViews = SavedViewActions.deleteView(state.savedViews, id, groupId);
     },
-    updateView(state, action: PayloadAction<string, { id: string; groupId: string; newView: SavedView; }>) {
+    updateView(state, action: PayloadAction<string, { id: string; groupId: string; newView: LegacySavedView; }>) {
       const { id, groupId, newView } = action.payload;
       state.savedViews = SavedViewActions.updateView(state.savedViews, id, groupId, newView);
     },

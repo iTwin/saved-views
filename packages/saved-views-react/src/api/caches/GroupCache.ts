@@ -6,7 +6,7 @@ import { BeUiEvent } from "@itwin/core-bentley";
 import { type IModelConnection } from "@itwin/core-frontend";
 
 import { IGroupClient } from "../clients/IGroupClient";
-import { type Group, type GroupUpdate } from "../utilities/SavedViewTypes";
+import { type LegacyGroup, type GroupUpdate } from "../utilities/SavedViewTypes";
 
 /** Event types to delineate what kind of change occurred when the group cache is modified */
 export enum GroupCacheEventType {
@@ -18,7 +18,7 @@ export enum GroupCacheEventType {
 }
 
 export interface GroupCacheEventArgs {
-  group?: Group;
+  group?: LegacyGroup;
   eventType: GroupCacheEventType;
 }
 
@@ -27,7 +27,7 @@ export class GroupCacheEvent extends BeUiEvent<GroupCacheEventArgs> {}
 
 export class GroupCache {
   private _client: IGroupClient;
-  private _cache: Group[] | undefined;
+  private _cache: LegacyGroup[] | undefined;
   private _timerId: ReturnType<typeof setInterval> | undefined;
   private _interval: number;
 
@@ -56,8 +56,8 @@ export class GroupCache {
     }
   }
 
-  public async createGroup(iModelConnection: IModelConnection, data: Group) {
-    const group: Group = await this._client.createGroup(iModelConnection, data);
+  public async createGroup(iModelConnection: IModelConnection, data: LegacyGroup) {
+    const group: LegacyGroup = await this._client.createGroup(iModelConnection, data);
 
     // Update cache
     if (this._cache) {
@@ -73,7 +73,7 @@ export class GroupCache {
     return group;
   }
 
-  public hasGroup(group: Group) {
+  public hasGroup(group: LegacyGroup) {
     if (!this._cache) {
       return false;
     }
@@ -83,12 +83,12 @@ export class GroupCache {
     );
   }
 
-  public async updateGroup(iModelConnection: IModelConnection, data: GroupUpdate, group: Group) {
-    const updatedGroup: Group = await this._client.updateGroup(iModelConnection, data, group);
+  public async updateGroup(iModelConnection: IModelConnection, data: GroupUpdate, group: LegacyGroup) {
+    const updatedGroup: LegacyGroup = await this._client.updateGroup(iModelConnection, data, group);
 
     // Update cache
     if (this._cache) {
-      this._cache = this._cache.map((value: Group) => {
+      this._cache = this._cache.map((value: LegacyGroup) => {
         if (value.id === group.id) {
           return updatedGroup;
         }
@@ -103,13 +103,13 @@ export class GroupCache {
     }
   }
 
-  public async deleteGroup(iModelConnection: IModelConnection, group: Group) {
+  public async deleteGroup(iModelConnection: IModelConnection, group: LegacyGroup) {
     const id = group.id;
     await this._client.deleteGroup(iModelConnection, group);
 
     // Update cache
     if (this._cache) {
-      this._cache = this._cache.filter((value: Group) => value.id !== id);
+      this._cache = this._cache.filter((value: LegacyGroup) => value.id !== id);
     }
 
     GroupCache.ON_CACHE_EVENT.emit({
@@ -118,12 +118,12 @@ export class GroupCache {
     });
   }
 
-  public async shareGroup(iModelConnection: IModelConnection, group: Group, share: boolean) {
+  public async shareGroup(iModelConnection: IModelConnection, group: LegacyGroup, share: boolean) {
     const sharedGroup = await this._client.shareGroup(iModelConnection, group, share);
 
     // Update cache
     if (this._cache) {
-      this._cache = this._cache.map((g: Group) => {
+      this._cache = this._cache.map((g: LegacyGroup) => {
         if (g.id === sharedGroup.id) {
           return sharedGroup;
         }

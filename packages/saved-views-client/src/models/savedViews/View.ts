@@ -32,7 +32,7 @@ export interface ViewITwinDrawing extends ViewITwin2d {
 }
 
 /** Minimum required information saved for a 2d saved view (Used by Sheet and Drawings). */
-export interface ViewITwin2d extends SavedViewApiBase {
+export interface ViewITwin2d extends SavedViewBase {
   baseModelId: string;
   origin: [x: number, y: number];
   delta: [x: number, y: number];
@@ -40,7 +40,7 @@ export interface ViewITwin2d extends SavedViewApiBase {
   displayStyle?: DisplayStyleSettingsProps;
 }
 
-export interface SavedViewApiBase {
+export interface SavedViewBase {
   /** Origin, represented as an array of x and y coordinates. */
   origin: [number, number] | [number, number, number];
   /** List of categories that should be displayed or hidden on that view. */
@@ -91,13 +91,6 @@ export interface ClipPlaneProps {
   interior?: boolean;
 }
 
-/** Minimum saved view structure including possible legacy data. */
-export type ViewWithLegacy = View & { legacyView: unknown; }; // TODO: Replace all usaged with ViewDataWithLegacy
-
-/** Minimum Saved View structure so every application can have something to work with. */
-export type View = { itwin3dView: ViewITwin3d; } | { itwinSheetView: ViewITwinSheet; }
-  | { itwinDrawingView: ViewITwinDrawing; }; // TODO: Replace all usaged with ViewData
-
 export type ViewDataItwin3d = { itwin3dView: ViewITwin3d; };
 export type ViewDataITwinSheet = { itwinSheetView: ViewITwinSheet; };
 export type ViewDataITwinDrawing = { itwinDrawingView: ViewITwinDrawing; };
@@ -109,7 +102,7 @@ export type ViewData = ViewDataItwin3d | ViewDataITwinSheet | ViewDataITwinDrawi
 export type ViewDataWithLegacy = ViewData & { legacyView: unknown; };
 
 /** Minimum required information saved for a 3D saved view. */
-export interface ViewITwin3d extends SavedViewApiBase {
+export interface ViewITwin3d extends SavedViewBase {
   origin: [x: number, y: number, z: number];
   extents: [x: number, y: number, z: number];
   angles?: ViewYawPitchRoll;
@@ -144,7 +137,7 @@ export interface SavedViewWithDataRepresentation extends SavedView {
 }
 
 export interface SavedViewWithDataMinimal extends SavedView {
-  savedViewData: ViewWithLegacy;
+  savedViewData: ViewDataWithLegacy;
   extensions?: ExtensionMin[];
 }
 

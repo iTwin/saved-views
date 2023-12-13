@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 import { Logger } from "@itwin/core-bentley";
 
-import type { SavedViewBase } from "./SavedViewTypes";
+import type { LegacySavedViewBase } from "./SavedViewTypes";
 
 const MAX_SAVED_VIEW_SIZE = 990000;
 
@@ -36,17 +36,17 @@ function roughSizeOfObject(obj: any) {
   return bytes;
 }
 
-export const sizeOfSavedView = (savedView: SavedViewBase): number => {
+export const sizeOfSavedView = (savedView: LegacySavedViewBase): number => {
   const size = roughSizeOfObject(savedView);
   Logger.logTrace("ITwinSavedViews.ViewSize", `View named: ${savedView.name} has an estimated size of: ${size}`);
   return size;
 };
 
-export const isSavedViewTooLarge = (savedView: SavedViewBase): boolean => {
+export const isSavedViewTooLarge = (savedView: LegacySavedViewBase): boolean => {
   return roughSizeOfObject(savedView) > MAX_SAVED_VIEW_SIZE;
 };
 
-export const isTooManyEmphasizedElements = (savedView: SavedViewBase): boolean => {
+export const isTooManyEmphasizedElements = (savedView: LegacySavedViewBase): boolean => {
   if (savedView.emphasizeElementsProps) {
     const savedViewSize = sizeOfSavedView(savedView);
     if (savedViewSize > MAX_SAVED_VIEW_SIZE) {

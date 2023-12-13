@@ -14,7 +14,7 @@ import { animated, useSpring } from "react-spring";
 import { IModelConnectionCache } from "../api/caches/IModelConnectionCache";
 import { SavedViewsManager } from "../api/SavedViewsManager";
 import { TagManager } from "../api/TagManager";
-import type { Group, SavedViewBase, Tag } from "../api/utilities/SavedViewTypes";
+import type { LegacyGroup, LegacySavedViewBase, LegacyTag } from "../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../api/utilities/SavedViewUtil";
 import { usePreferredViewport } from "../hooks/usePreferredViewport";
 import {
@@ -78,7 +78,7 @@ export function Banner(props: Props) {
   const [creatingView, setCreatingView] = useState(false);
   const [searchString, setSearchString] = useState("");
   const [searchBarOpen, setSearchBarOpen] = useState(false);
-  const [tagsOnModel, setTagsOnModel] = useState<Tag[]>([]);
+  const [tagsOnModel, setTagsOnModel] = useState<LegacyTag[]>([]);
 
   const [searchBarSpringProps, updateSearchBarSpringProps] = useSpring(() => ({
     from: {
@@ -112,7 +112,7 @@ export function Banner(props: Props) {
   };
 
   useEffect(() => {
-    const onTagsChangedListener = (tags: Tag[]) => {
+    const onTagsChangedListener = (tags: LegacyTag[]) => {
       setTagsOnModel(tags);
     };
     return TagManager.onTagsChanged.addListener(onTagsChangedListener);
@@ -139,7 +139,7 @@ export function Banner(props: Props) {
         want2dViews: props.want2dViews,
         handleTooManyEmphasizedElements:
           SavedViewsManager.flags.handleTooManyEmphasizedElements,
-        onSuccess: (savedViewData: SavedViewBase) => {
+        onSuccess: (savedViewData: LegacySavedViewBase) => {
           props.setGroupOpen({
             groupId: SavedViewsManager.ungroupedId,
             opened: true,
@@ -148,11 +148,11 @@ export function Banner(props: Props) {
           setCreatingView(false);
         },
         onCancel: () => setCreatingView(false),
-        onError: (_savedViewData: SavedViewBase, _ex: Error) => {
+        onError: (_savedViewData: LegacySavedViewBase, _ex: Error) => {
           SavedViewUtil.showError("Banner", "listTools.error_createView_brief", "listTools.error_createView");
           setCreatingView(false);
         },
-        onTooLarge: (_savedViewData: SavedViewBase) => {
+        onTooLarge: (_savedViewData: LegacySavedViewBase) => {
           SavedViewUtil.showError("Banner", "listTools.error_tooLarge_brief", "listTools.error_tooLarge");
           setCreatingView(false);
         },
@@ -178,7 +178,7 @@ export function Banner(props: Props) {
     const cache = IModelConnectionCache.getGroupCache(props.connection);
     const name = cache.getNewGroupName() ?? "";
 
-    const group: Group = {
+    const group: LegacyGroup = {
       name,
       id: Guid.createValue(),
       shared: false,
@@ -189,7 +189,7 @@ export function Banner(props: Props) {
 
     cache
       .createGroup(props.connection, group)
-      .then((newGroup: Group) => {
+      .then((newGroup: LegacyGroup) => {
         props.setRenaming({ id: newGroup.id, renaming: true });
       })
       .catch((_error: Error) => {
