@@ -2,7 +2,7 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import type { ExtensionMin, ExtensionSavedViewCreate, View } from "@itwin/saved-views-client";
+import type { ExtensionMin, ExtensionSavedViewCreate, SavedViewWithDataRepresentation, View } from "@itwin/saved-views-client";
 
 import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedViewsWidget/SavedView.js";
 
@@ -14,6 +14,7 @@ export interface SavedViewInfo {
 
 export interface SavedViewsClient {
   getSavedViewInfo: (args: GetSavedViewInfoParams) => Promise<SavedViewInfo>;
+  getSingularSavedView: (args: GetSingularSavedViewParams) => Promise<SavedViewWithDataRepresentation>;
   getThumbnailUrl: (args: GetThumbnailUrlParams) => Promise<string | undefined>;
   createSavedView: (args: CreateSavedViewParams) => Promise<SavedView>;
   updateSavedView: (args: UpdateSavedViewParams) => Promise<SavedView>;
@@ -29,6 +30,10 @@ export interface SavedViewsClient {
 export interface GetSavedViewInfoParams extends CommonParams {
   iTwinId: string;
   iModelId?: string | undefined;
+}
+
+export interface GetSingularSavedViewParams extends CommonParams {
+  savedViewId: string;
 }
 
 export interface GetThumbnailUrlParams extends CommonParams {

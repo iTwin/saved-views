@@ -2,13 +2,16 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { ITwinSavedViewsClient as Client, Group, SavedViewWithDataMinimal, Tag } from "@itwin/saved-views-client";
+import {
+  ITwinSavedViewsClient as Client, type Group, type SavedViewWithDataMinimal, type SavedViewWithDataRepresentation,
+  type Tag,
+} from "@itwin/saved-views-client";
 
 import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedViewsWidget/SavedView.js";
 import type {
   CreateGroupParams, CreateSavedViewParams, CreateTagParams, DeleteGroupParams, DeleteSavedViewParams, DeleteTagParams,
-  GetSavedViewInfoParams, GetThumbnailUrlParams, SavedViewInfo, SavedViewsClient, UpdateGroupParams,
-  UpdateSavedViewParams, UpdateTagParams,
+  GetSavedViewInfoParams, GetSingularSavedViewParams, GetThumbnailUrlParams, SavedViewInfo, SavedViewsClient,
+  UpdateGroupParams, UpdateSavedViewParams, UpdateTagParams,
 } from "./SavedViewsClient.js";
 
 interface ITwinSavedViewsClientParams {
@@ -35,6 +38,14 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       groups,
       tags,
     };
+  }
+
+  public async getSingularSavedView(args: GetSingularSavedViewParams): Promise<SavedViewWithDataRepresentation> {
+    const response = await this.client.getSavedViewRepresentation({
+      savedViewId: args.savedViewId,
+      signal: args.signal,
+    });
+    return response.savedView;
   }
 
   public async getThumbnailUrl(args: GetThumbnailUrlParams): Promise<string | undefined> {

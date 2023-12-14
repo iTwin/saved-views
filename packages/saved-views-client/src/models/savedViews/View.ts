@@ -32,7 +32,7 @@ export interface ViewITwinDrawing extends ViewITwin2d {
 }
 
 /** Minimum required information saved for a 2d saved view (Used by Sheet and Drawings). */
-export interface ViewITwin2d extends SavedViewBase {
+export interface ViewITwin2d extends SavedViewApiBase {
   baseModelId: string;
   origin: [x: number, y: number];
   delta: [x: number, y: number];
@@ -40,7 +40,7 @@ export interface ViewITwin2d extends SavedViewBase {
   displayStyle?: DisplayStyleSettingsProps;
 }
 
-export interface SavedViewBase {
+export interface SavedViewApiBase {
   /** Origin, represented as an array of x and y coordinates. */
   origin: [number, number] | [number, number, number];
   /** List of categories that should be displayed or hidden on that view. */
@@ -91,15 +91,25 @@ export interface ClipPlaneProps {
   interior?: boolean;
 }
 
-/** Minimum saved view structure including possible legacy data from product setting service. */
-export type ViewWithLegacy = View & { legacyView: unknown; };
+/** Minimum saved view structure including possible legacy data. */
+export type ViewWithLegacy = View & { legacyView: unknown; }; // TODO: Replace all usaged with ViewDataWithLegacy
 
 /** Minimum Saved View structure so every application can have something to work with. */
 export type View = { itwin3dView: ViewITwin3d; } | { itwinSheetView: ViewITwinSheet; }
-  | { itwinDrawingView: ViewITwinDrawing; };
+  | { itwinDrawingView: ViewITwinDrawing; }; // TODO: Replace all usaged with ViewData
+
+export type ViewDataItwin3d = { itwin3dView: ViewITwin3d; };
+export type ViewDataITwinSheet = { itwinSheetView: ViewITwinSheet; };
+export type ViewDataITwinDrawing = { itwinDrawingView: ViewITwinDrawing; };
+
+/** Minimum Saved View structure so every application can have something to work with. */
+export type ViewData = ViewDataItwin3d | ViewDataITwinSheet | ViewDataITwinDrawing;
+
+/** Minimum saved view structure including possible legacy data. */
+export type ViewDataWithLegacy = ViewData & { legacyView: unknown; };
 
 /** Minimum required information saved for a 3D saved view. */
-export interface ViewITwin3d extends SavedViewBase {
+export interface ViewITwin3d extends SavedViewApiBase {
   origin: [x: number, y: number, z: number];
   extents: [x: number, y: number, z: number];
   angles?: ViewYawPitchRoll;
@@ -129,7 +139,7 @@ export interface ViewVisibilityList {
 }
 
 export interface SavedViewWithDataRepresentation extends SavedView {
-  savedViewData: ViewWithLegacy;
+  savedViewData: ViewDataWithLegacy;
   extensions?: Extension[];
 }
 

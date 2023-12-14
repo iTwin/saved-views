@@ -12,6 +12,7 @@ export * from "./api/clients/DefaultViewIdClient";
 export * from "./api/clients/IGroupClient";
 export * from "./api/clients/ISavedViewsClient";
 export * from "./api/clients/ITagClient";
+export * from "./api/utilities/translation/SavedViewTranslation";
 export * from "./api/utilities/SavedViewTypes";
 export * from "./api/utilities/SavedViewUtil";
 export * from "./api/utilities/ViewCreator";

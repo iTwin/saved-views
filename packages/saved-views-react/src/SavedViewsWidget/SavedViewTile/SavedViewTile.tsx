@@ -9,10 +9,10 @@ import {
   type ReactElement, type ReactNode,
 } from "react";
 
-import { useSavedViewsContext } from "../../SavedViewsContext.js";
-import { trimInputString } from "../../utils.js";
 import type { SavedView, SavedViewTag } from "../SavedView.js";
+import { useSavedViewsContext } from "../../SavedViewsContext.js";
 import { SavedViewTileContext, SavedViewTileContextProvider } from "./SavedViewTileContext.js";
+import { trimInputString } from "../../utils.js";
 
 import "./SavedViewTile.css";
 
@@ -44,6 +44,11 @@ interface SavedViewTileProps {
    * <SavedViewTile savedView={savedView} onRename={handleRename} editable />
    */
   onRename?: ((savedViewId: string, newName: string) => void) | undefined;
+
+  /**
+   * Click handler meant for triggering the render of iModel onto the screen with the saved view applied
+   */
+  onClick?: ((selectedViewId: string) => void) | undefined;
 }
 
 /**
@@ -160,6 +165,7 @@ export function SavedViewTile(props: SavedViewTileProps): ReactElement {
         leftIcon={<TileIconContainer style={{ placeSelf: "start" }} icons={props.leftIcons} />}
         rightIcon={<TileIconContainer style={{ placeSelf: "start end" }} icons={rightIcons} />}
         isActionable={!props.editable && !editingName}
+        onClick={() => props.onClick?.(props.savedView.id)}
       />
     </SavedViewTileContextProvider>
   );

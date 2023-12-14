@@ -55,10 +55,10 @@ export interface ISavedViewsClient {
   ) => Promise<SavedViewBase>;
 
   /**
-   * Creates a saved view in the Product Settings
+   * Creates a saved view in the legacy settings service
    * @param iModelConnection connnection to the iModel
    * @param savedView saved view
-   * @param saveThumbnail true to save the thumbnail in Product Settings (at the thumbnailNamespace)
+   * @param saveThumbnail true to save the thumbnail in legacy settings (at the thumbnailNamespace)
    * @param savedViewNamespace namespace for the saved view (defaults to "designreview-SavedViews")
    * @param thumbnailNamespace namespace for the thumbnail (defaults to "designreview-Thumbnails")
    * @returns The SavedView instance created
@@ -73,11 +73,11 @@ export interface ISavedViewsClient {
   ) => Promise<SavedViewBase>;
 
   /**
-   * Creates a saved view in the Product Settings
+   * Creates a saved view in the legacy settings service
    * @param projectId project Id
    * @param iModelId iModel Id
    * @param savedView saved view
-   * @param saveThumbnail true to save the thumbnail in Product Settings (at the thumbnailNamespace)
+   * @param saveThumbnail true to save the thumbnail in legacy settings (at the thumbnailNamespace)
    * @param savedViewNamespace namespace for the saved view (defaults to "designreview-SavedViews")
    * @param thumbnailNamespace namespace for the thumbnail (defaults to "designreview-Thumbnails")
    * @returns The SavedView instance created

@@ -119,7 +119,7 @@ class SavedViewItemContextMenu extends ContextMenu<Props> {
 
       addMoveEntryIfAllowed();
     } else {
-      // We cannot unshare another user's view due to access to their user settings in PSS
+      // We cannot unshare another user's view due to access to their user settings in legacy storage
       if (this.props.savedView.userId === SavedViewsManager.userId) {
         contextMenuItems.push({
           iconSpec: "icon-share",
