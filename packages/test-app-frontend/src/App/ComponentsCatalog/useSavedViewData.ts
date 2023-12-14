@@ -2,7 +2,7 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import type { SavedView, SavedViewGroup, SavedViewTag, SavedViewsActions } from "@itwin/saved-views-react";
+import type { SavedView, SavedViewGroup, SavedViewTag, SavedViewActions } from "@itwin/saved-views-react";
 import { enableMapSet, produce } from "immer";
 import { useEffect, useState } from "react";
 
@@ -50,7 +50,7 @@ export function useSavedViewData() {
     [],
   );
 
-  const actions: SavedViewsActions = {
+  const actions: Partial<SavedViewActions> = {
     renameSavedView(savedViewId: string, newName: string): void {
       setState(
         produce((draft) => {

@@ -2,13 +2,16 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { ITwinSavedViewsClient as Client, SavedViewWithDataRepresentation } from "@itwin/saved-views-client";
+import {
+  ITwinSavedViewsClient as Client, type Group, type SavedViewWithDataMinimal, type SavedViewWithDataRepresentation,
+  type Tag,
+} from "@itwin/saved-views-client";
 
-import type { SavedViewGroup, SavedViewTag } from "../SavedViewsWidget/SavedView.js";
+import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedViewsWidget/SavedView.js";
 import type {
   CreateGroupParams, CreateSavedViewParams, CreateTagParams, DeleteGroupParams, DeleteSavedViewParams, DeleteTagParams,
-  GetSavedViewInfoParams, GetSingularSavedViewParams, GetThumbnailUrlParams, SavedViewInfo, SavedViewsClient, UpdateGroupParams,
-  UpdateSavedViewParams, UpdateTagParams,
+  GetSavedViewInfoParams, GetSingularSavedViewParams, GetThumbnailUrlParams, SavedViewInfo, SavedViewsClient,
+  UpdateGroupParams, UpdateSavedViewParams, UpdateTagParams,
 } from "./SavedViewsClient.js";
 
 interface ITwinSavedViewsClientParams {
@@ -31,15 +34,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     ]);
 
     return {
-      savedViews: savedViews
-        .map((savedView) => ({
-          id: savedView.id,
-          displayName: savedView.displayName,
-          tagIds: savedView.tags?.map((tag) => tag.id),
-          groupId: savedView._links.group?.href.split("/").at(-1),
-          shared: savedView.shared,
-          thumbnail: undefined,
-        })),
+      savedViews: savedViews.map(savedViewResponseToSavedView),
       groups,
       tags,
     };
@@ -62,8 +57,8 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     return response.href;
   }
 
-  public async createSavedView(args: CreateSavedViewParams): Promise<void> {
-    await this.client.createSavedView({
+  public async createSavedView(args: CreateSavedViewParams): Promise<SavedView> {
+    const { savedView } = await this.client.createSavedView({
       iTwinId: args.iTwinId,
       iModelId: args.iModelId,
       displayName: args.savedView.displayName,
@@ -73,10 +68,11 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       savedViewData: args.savedViewData,
       signal: args.signal,
     });
+    return savedViewResponseToSavedView(savedView);
   }
 
-  public async updateSavedView(args: UpdateSavedViewParams): Promise<void> {
-    await this.client.updateSavedView({
+  public async updateSavedView(args: UpdateSavedViewParams): Promise<SavedView> {
+    const { savedView } = await this.client.updateSavedView({
       savedViewId: args.savedView.id,
       displayName: args.savedView.displayName,
       tagIds: args.savedView.tagIds,
@@ -86,6 +82,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       extensions: args.extensions,
       signal: args.signal,
     });
+    return savedViewResponseToSavedView(savedView);
   }
 
   public async deleteSavedView(args: DeleteSavedViewParams): Promise<void> {
@@ -99,20 +96,17 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       displayName: args.group.displayName,
       signal: args.signal,
     });
-    return {
-      id: group.id,
-      displayName: group.displayName,
-      shared: group.shared,
-    };
+    return groupResponseToSavedViewGroup(group);
   }
 
-  public async updateGroup(args: UpdateGroupParams): Promise<void> {
-    await this.client.updateGroup({
+  public async updateGroup(args: UpdateGroupParams): Promise<SavedViewGroup> {
+    const { group } = await this.client.updateGroup({
       groupId: args.group.id,
       displayName: args.group.displayName,
       shared: args.group.shared,
       signal: args.signal,
     });
+    return groupResponseToSavedViewGroup(group);
   }
 
   public async deleteGroup(args: DeleteGroupParams): Promise<void> {
@@ -126,17 +120,45 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       displayName: args.displayName,
       signal: args.signal,
     });
-    return {
-      id: tag.id,
-      displayName: tag.displayName,
-    };
+    return tagResponseToSavedViewTag(tag);
   }
 
-  public async updateTag(args: UpdateTagParams): Promise<void> {
-    await this.client.updateTag({ tagId: args.tag.id, displayName: args.tag.displayName, signal: args.signal });
+  public async updateTag(args: UpdateTagParams): Promise<SavedViewTag> {
+    const { tag } = await this.client.updateTag({
+      tagId: args.tag.id,
+      displayName: args.tag.displayName,
+      signal: args.signal,
+    });
+    return tagResponseToSavedViewTag(tag);
   }
 
   public async deleteTag(args: DeleteTagParams): Promise<void> {
     await this.client.deleteTag({ tagId: args.tagId, signal: args.signal });
   }
+}
+
+function savedViewResponseToSavedView(response: SavedViewWithDataMinimal): SavedView {
+  return {
+    id: response.id,
+    displayName: response.displayName,
+    tagIds: response.tags?.map((tag) => tag.id),
+    groupId: response._links.group?.href.split("/").at(-1),
+    shared: response.shared,
+    thumbnail: undefined,
+  };
+}
+
+function groupResponseToSavedViewGroup(response: Group): SavedViewGroup {
+  return {
+    id: response.id,
+    displayName: response.displayName,
+    shared: response.shared,
+  };
+}
+
+function tagResponseToSavedViewTag(response: Tag): SavedViewTag {
+  return {
+    id: response.id,
+    displayName: response.displayName,
+  };
 }

@@ -10,8 +10,12 @@ type Customizable<T> = {
 }
 
 export const defaultLocalization = {
+  /** @default "Delete" */
+  delete: "Delete",
+
   /** @default "Rename" */
   rename: "Rename",
+
   moveToGroupMenu: {
     /** @default "Create group" */
     createGroup: "Create group:",
@@ -28,10 +32,12 @@ export const defaultLocalization = {
     /** @default "Move to group" */
     moveToGroup: "Move to group",
   },
+
   searchableMenu: {
     /** @default "No search results" */
     noSearchResults: "No search results",
   },
+
   tagsMenu: {
     /** @default "Create tag:" */
     createTag: "Create tag:",
@@ -45,6 +51,7 @@ export const defaultLocalization = {
     /** @default "Tags" */
     tags: "Tags",
   },
+
   tile: {
     /** @default "more" */
     moreTags: "more",

@@ -26,8 +26,8 @@ import "./SavedViewOptions.css";
  */
 export const SavedViewOptions = {
   /**
-   * Makes Saved View title enter editable state. Has no effect if the {@linkcode SavedViewTile} does not receive
-   * `onRename` prop.
+   * When activated, makes Saved View title enter editable state. Has no effect if the {@linkcode SavedViewTile} does
+   * not receive `onRename` prop.
    *
    * @example
    * <SavedViewOptions.Rename icon={<SvgBlank />} />
@@ -60,6 +60,17 @@ export const SavedViewOptions = {
    * />
    */
   ManageTags,
+
+  /**
+   * Displays option for Saved View deletion.
+   *
+   * @example
+   * <SavedViewOptions.Delete
+   *  icon={<SvgBlank />}
+   *  deleteSavedView={handleDeleteSavedView}
+   * />
+   */
+  Delete,
 };
 
 export interface CreateTileOptionsParams {
@@ -71,6 +82,9 @@ export interface CreateTileOptionsParams {
 
   /** When set, the returned options contain a `Tags` entry. */
   tagActions?: OmitCommonOptionProps<ComponentProps<typeof SavedViewOptions.ManageTags>>;
+
+  /** When set, the returned options contain a `Delete` entry. */
+  deleteSavedView?: ComponentProps<typeof SavedViewOptions.Delete>["deleteSavedView"];
 }
 
 type OmitCommonOptionProps<T> = Omit<T, "icon">;
@@ -116,6 +130,10 @@ export function createTileOptions(args: CreateTileOptionsParams): ReactElement[]
         icon={<SvgBlank />}
       />,
     );
+  }
+
+  if (args.deleteSavedView) {
+    options.push(<SavedViewOptions.Delete key="delete" icon={<SvgBlank />} deleteSavedView={args.deleteSavedView} />);
   }
 
   return options;
@@ -383,6 +401,21 @@ function SearchableSubmenu<T extends Indexable>(props: SearchableSubmenuProps<T>
         </MenuItem>
       }
     </>
+  );
+}
+
+interface DeleteProps extends CommonOptionProps {
+  deleteSavedView: (savedViewId: string) => void;
+}
+
+function Delete(props: DeleteProps): ReactElement {
+  const { savedView } = useSavedViewTileContext();
+  const { localization } = useSavedViewsContext();
+
+  return (
+    <MenuItem icon={props.icon} onClick={() => props.deleteSavedView(savedView.id)}>
+      {localization.delete}
+    </MenuItem>
   );
 }
 

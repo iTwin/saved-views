@@ -6,7 +6,8 @@ import { SvgBlank, SvgEdit, SvgMore, SvgShare } from "@itwin/itwinui-icons-react
 import { Button, DropdownMenu, ExpandableBlock, IconButton, MenuItem, Surface, Text } from "@itwin/itwinui-react";
 import { Fragment, useLayoutEffect, useRef, useState, type MouseEvent, type ReactElement, type ReactNode } from "react";
 
-import type { SavedView, SavedViewGroup, SavedViewTag, SavedViewsActions } from "./SavedView.js";
+import type { SavedViewActions } from "../useSavedViews.js";
+import type { SavedView, SavedViewGroup, SavedViewTag } from "./SavedView.js";
 import { SavedViewTile } from "./SavedViewTile/SavedViewTile.js";
 
 import "./SavedViewsExpandableBlockWidget.css";
@@ -15,7 +16,7 @@ interface SavedViewsExpandableBlockWidgetProps {
   savedViews: Map<string, SavedView>;
   groups: Map<string, SavedViewGroup>;
   tags: Map<string, SavedViewTag>;
-  actions?: SavedViewsActions | undefined;
+  actions?: Partial<SavedViewActions> | undefined;
   editable?: boolean | undefined;
   options?: ((savedView: SavedView) => ReactNode[]) | undefined;
 }
@@ -57,7 +58,7 @@ interface SavedViewsGroupProps {
   groups: Map<string, SavedViewGroup>;
   tags: Map<string, SavedViewTag>;
   expanded?: boolean | undefined;
-  actions?: SavedViewsActions | undefined;
+  actions?: Partial<SavedViewActions> | undefined;
   editable?: boolean | undefined;
   options?: ((savedView: SavedView) => ReactNode[]) | undefined;
 }
