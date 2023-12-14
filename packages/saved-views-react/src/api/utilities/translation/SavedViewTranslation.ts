@@ -18,8 +18,8 @@ import {
   isDrawingSavedView, isSheetSavedView, isSpatialSavedView,
 } from "../../clients/ISavedViewsClient.js";
 import {
-  SavedView as LegacySavedView, SavedView2d as LegacySavedView2d,
-  SavedViewBase as LegacySavedViewBase,
+  LegacySavedView, LegacySavedView2d,
+  LegacySavedViewBase,
 } from "../SavedViewTypes.js";
 import { applyHiddenModelsAndCategories } from "./ModelsAndCategoriesHelper.js";
 import { SavedViewsExtensionHandlers } from "./SavedViewsExtensionHandlers.js";

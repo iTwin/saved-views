@@ -7,7 +7,7 @@ import { type IModelConnection, type ViewState } from "@itwin/core-frontend";
 
 import { IModelQueryClient } from "../clients/IModelQueryClient";
 import { isSavedView3d } from "../clients/ISavedViewsClient";
-import { type SavedView, type SavedViewBase } from "../utilities/SavedViewTypes";
+import { type LegacySavedView, type LegacySavedViewBase } from "../utilities/SavedViewTypes";
 
 const getDiff = (arr1: string[] | Set<string>, arr2: string[] | Set<string>) => {
   const set1 = new Set([...arr1]);
@@ -59,29 +59,29 @@ export class ModelsAndCategoriesCache {
     return getDiff(categories, allCategories);
   }
 
-  public async getHiddenModels(savedView: SavedView): Promise<Id64Array> {
+  public async getHiddenModels(savedView: LegacySavedView): Promise<Id64Array> {
     const visibleModels = savedView.modelSelectorProps.models;
     return this.getMissingModels(visibleModels);
   }
 
-  public async getVisibleModels(savedView: SavedView): Promise<Id64Array | undefined> {
+  public async getVisibleModels(savedView: LegacySavedView): Promise<Id64Array | undefined> {
     const hiddenModels = savedView.hiddenModels;
     return hiddenModels ? this.getMissingModels(hiddenModels) : undefined;
   }
 
-  public async getHiddenCategories(savedView: SavedViewBase): Promise<Id64Array> {
+  public async getHiddenCategories(savedView: LegacySavedViewBase): Promise<Id64Array> {
     const visibleCategories = savedView.categorySelectorProps.categories;
     return this.getMissingCategories(visibleCategories);
   }
 
-  public async getVisibleCategories(savedView: SavedViewBase): Promise<Id64Array | undefined> {
+  public async getVisibleCategories(savedView: LegacySavedViewBase): Promise<Id64Array | undefined> {
     const hiddenCategories = savedView.hiddenCategories;
     return hiddenCategories
       ? this.getMissingCategories(hiddenCategories)
       : undefined;
   }
 
-  public async setHiddenModelsAndCategories(savedView: SavedViewBase): Promise<void> {
+  public async setHiddenModelsAndCategories(savedView: LegacySavedViewBase): Promise<void> {
     if (isSavedView3d(savedView)) {
       savedView.hiddenModels = await this.getHiddenModels(savedView);
     }
@@ -89,7 +89,7 @@ export class ModelsAndCategoriesCache {
   }
 
   public async getVisibleModelsAndCategories(
-    savedView: SavedViewBase,
+    savedView: LegacySavedViewBase,
   ): Promise<{ models?: Id64Array; categories?: Id64Array; }> {
     return {
       models: isSavedView3d(savedView)
@@ -99,14 +99,14 @@ export class ModelsAndCategoriesCache {
     };
   }
 
-  public hasValidHiddenModelsAndCategories = (savedView: SavedViewBase) => {
+  public hasValidHiddenModelsAndCategories = (savedView: LegacySavedViewBase) => {
     if (isSavedView3d(savedView)) {
       return savedView.hiddenCategories && savedView.hiddenModels;
     }
     return !!savedView.hiddenCategories;
   };
 
-  public async updateView(viewState: ViewState, savedView: SavedViewBase) {
+  public async updateView(viewState: ViewState, savedView: LegacySavedViewBase) {
     if (this.hasValidHiddenModelsAndCategories(savedView)) {
       const visible = await this.getVisibleModelsAndCategories(savedView);
       if (visible.categories) {

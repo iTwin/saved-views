@@ -24,7 +24,7 @@ import {
   isAnyColorFormat,
   simpleTypeOf,
 } from "./extractionUtilities";
-import { type SavedView, type SavedView2d } from "../SavedViewTypes";
+import { type LegacySavedView, type LegacySavedView2d } from "../SavedViewTypes";
 
 import { type ViewState } from "@itwin/core-frontend";
 import { ViewITwin2d, ViewITwin3d } from "@itwin/saved-views-client";
@@ -615,7 +615,7 @@ export const extractDisplayStyle = (data: object, viewState?: ViewState) => {
     applyExtraction(styles, output, displayStylesMapping);
   }
   if ("displayStyleProps" in data) {
-    styles = (data as SavedView2d).displayStyleProps.jsonProperties?.styles;
+    styles = (data as LegacySavedView2d).displayStyleProps.jsonProperties?.styles;
     applyExtraction(styles, output, displayStylesLegacyMapping);
   }
   if (styles === undefined) {
@@ -641,7 +641,7 @@ export const extractDisplayStyle3d = (data: object) => {
     applyExtraction(styles, output, displayStyle3dMapping);
   }
   if ("displayStyleProps" in data) {
-    styles = (data as SavedView).displayStyleProps.jsonProperties?.styles;
+    styles = (data as LegacySavedView).displayStyleProps.jsonProperties?.styles;
     applyExtraction(styles, output, displayStyle3dLegacyMapping);
   }
   if (styles === undefined) {

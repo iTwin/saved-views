@@ -9,7 +9,7 @@ import { connect, type ConnectedProps } from "react-redux";
 
 import { IModelConnectionCache } from "../../../api/caches/IModelConnectionCache";
 import { SavedViewsManager } from "../../../api/SavedViewsManager";
-import type { Group, GroupUpdate } from "../../../api/utilities/SavedViewTypes";
+import type { LegacyGroup, GroupUpdate } from "../../../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../../../api/utilities/SavedViewUtil";
 import { selectShouldGroupRenderSelector, selectViews } from "../../../store/SavedViewsGroupItemStateSelectors";
 import { setGroupOpen, setRenaming, type SavedViewsState } from "../../../store/SavedViewsStateReducer";
@@ -21,7 +21,7 @@ import "./GroupItem.scss";
 
 /** GroupItem widget props */
 export interface GroupItemProps extends CommonProps {
-  group: Group;
+  group: LegacyGroup;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   groupListContainerRef?: React.RefObject<any>;
   want2dViews?: boolean;

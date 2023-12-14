@@ -9,7 +9,7 @@ import { IModelApp, type IModelConnection, type ScreenViewport } from "@itwin/co
 import { IModelConnectionCache } from "../api/caches/IModelConnectionCache";
 import { SavedViewsCache } from "../api/caches/SavedViewsCache";
 import { isSpatialSavedView } from "../api/clients/ISavedViewsClient";
-import { SavedViewBase } from "../api/utilities/SavedViewTypes";
+import { LegacySavedViewBase } from "../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../api/utilities/SavedViewUtil";
 import { isSavedViewTooLarge, isTooManyEmphasizedElements } from "../api/utilities/sizeOfSavedView";
 import OversizedViewsDialog from "./OversizedViewDialog";
@@ -25,9 +25,9 @@ export interface CreateNewSavedViewProps {
   userId: string;
   want2dViews: boolean;
   handleTooManyEmphasizedElements: boolean;
-  onSuccess?: (savedViewData: SavedViewBase) => void;
-  onError?: (savedViewData: SavedViewBase, ex: Error) => void;
-  onTooLarge?: (savedViewData: SavedViewBase) => void;
+  onSuccess?: (savedViewData: LegacySavedViewBase) => void;
+  onError?: (savedViewData: LegacySavedViewBase, ex: Error) => void;
+  onTooLarge?: (savedViewData: LegacySavedViewBase) => void;
   onCancel?: () => void;
   groupId?: string;
   includeHiddenModelsAndCategories?: boolean;

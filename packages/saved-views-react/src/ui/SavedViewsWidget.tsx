@@ -19,7 +19,7 @@ import { GroupCache, GroupCacheEventType, type GroupCacheEventArgs } from "../ap
 import { IModelConnectionCache } from "../api/caches/IModelConnectionCache";
 import { SavedViewCacheEventType, SavedViewsCache, type SavedViewCacheEventArgs } from "../api/caches/SavedViewsCache";
 import { SavedViewsManager } from "../api/SavedViewsManager";
-import { type Group, type SavedView, type SavedViewBase } from "../api/utilities/SavedViewTypes";
+import { type LegacyGroup, type LegacySavedView, type LegacySavedViewBase } from "../api/utilities/SavedViewTypes";
 import { SavedViewUtil } from "../api/utilities/SavedViewUtil";
 import {
   clearSelectedViews, createGroup, deleteGroup, deleteView, setDefaultViewId, setDesktopViews, setDisplayErrors,
@@ -98,14 +98,14 @@ export class SavedViewsWidget extends React.Component<
   private _dialogContainer: HTMLDivElement | null = null;
   private _indicatorContainer: HTMLDivElement | null = null;
 
-  private _ungroupGroup: Group = {
+  private _ungroupGroup: LegacyGroup = {
     id: SavedViewsManager.ungroupedId,
     name: SavedViewsManager.defaultUngroupedGroupName,
     userId: "",
     shared: false,
   };
 
-  private _desktopViewsGroup: Group = {
+  private _desktopViewsGroup: LegacyGroup = {
     id: SavedViewsManager.desktopViewsGroupId,
     name: SavedViewsManager.defaultDesktopViewGroupName,
     userId: "",
@@ -216,7 +216,7 @@ export class SavedViewsWidget extends React.Component<
           updateView({
             groupId: args.savedView?.groupId ?? SavedViewsManager.ungroupedId,
             id: args.savedView?.id,
-            newView: args.savedView as SavedView,
+            newView: args.savedView as LegacySavedView,
           }),
         );
         break;
@@ -231,7 +231,7 @@ export class SavedViewsWidget extends React.Component<
           updateView({
             groupId: args.updatedView?.groupId ?? SavedViewsManager.ungroupedId,
             id: args.updatedView?.id,
-            newView: args.updatedView as SavedView,
+            newView: args.updatedView as LegacySavedView,
           }),
         );
 
@@ -306,7 +306,7 @@ export class SavedViewsWidget extends React.Component<
       groups.push(this._desktopViewsGroup);
     }
 
-    groups.sort((a: Group, b: Group) => {
+    groups.sort((a: LegacyGroup, b: LegacyGroup) => {
       if (
         b.id === SavedViewsManager.ungroupedId ||
         a.id === SavedViewsManager.desktopViewsGroupId
@@ -441,17 +441,17 @@ export class SavedViewsWidget extends React.Component<
     }
 
     const views = await client.getSavedViews(iModel, refresh);
-    const namedViews = views.filter((view: SavedViewBase) => {
+    const namedViews = views.filter((view: LegacySavedViewBase) => {
       return view.name !== undefined;
     });
-    const savedViews = namedViews.filter((view: SavedViewBase) => {
+    const savedViews = namedViews.filter((view: LegacySavedViewBase) => {
       if (want2dViews) {
         return !!view.is2d;
       } else {
         return !view.is2d;
       }
     });
-    savedViews.sort((a: SavedViewBase, b: SavedViewBase) => {
+    savedViews.sort((a: LegacySavedViewBase, b: LegacySavedViewBase) => {
       return a.name.localeCompare(b.name);
     });
 
@@ -481,7 +481,7 @@ export class SavedViewsWidget extends React.Component<
         updateView({
           groupId,
           id: savedView.id,
-          newView: savedView as SavedView,
+          newView: savedView as LegacySavedView,
         }),
       );
     });

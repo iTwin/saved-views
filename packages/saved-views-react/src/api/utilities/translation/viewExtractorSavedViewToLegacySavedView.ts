@@ -11,12 +11,12 @@ import {
   SheetViewState,
 } from "@itwin/core-frontend";
 import {
-  SavedViewApiBase, SavedViewTag, SavedViewWithDataRepresentation, ViewDataItwin3d,
+  SavedViewBase, SavedViewTag, SavedViewWithDataRepresentation, ViewDataItwin3d,
   ViewDataITwinDrawing, ViewDataITwinSheet, ViewITwin3d,
 } from "@itwin/saved-views-client";
 
 import {
-  SavedView as LegacySavedView, SavedView2d as LegacySavedView2d, Tag as LegacyTag,
+  LegacySavedView, LegacySavedView2d, LegacyTag,
 } from "../SavedViewTypes";
 import { extractClipVectors } from "./clipVectorsExtractor";
 import { extractDisplayStyle, extractDisplayStyle3d } from "./displayStyleExtractor";
@@ -301,7 +301,7 @@ export function savedViewITwin3dToLegacy3dSavedView(
  * @returns iModelViewData
  */
 function appendHiddenCategoriesToLegacyView(
-  iTwinView: SavedViewApiBase,
+  iTwinView: SavedViewBase,
   legacyView: LegacySavedView | LegacySavedView2d,
 ) {
   if (iTwinView.categories && iTwinView.categories.disabled) {

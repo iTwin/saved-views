@@ -4,13 +4,13 @@
 *--------------------------------------------------------------------------------------------*/
 import { type IModelConnection } from "@itwin/core-frontend";
 
-import { type Group, type GroupUpdate } from "../utilities/SavedViewTypes";
+import { type LegacyGroup, type GroupUpdate } from "../utilities/SavedViewTypes";
 
 export interface IGroupClient {
-  createGroup(iModelConnection: IModelConnection, group: Group): Promise<Group>;
-  updateGroup(iModelConnection: IModelConnection, updatedGroup: GroupUpdate, oldGroup: Group): Promise<Group>;
-  deleteGroup(iModelConnection: IModelConnection, group: Group): Promise<void>;
-  shareGroup(iModelConnection: IModelConnection, group: Group, shared: boolean): Promise<Group>;
-  getGroups(iModelConnection: IModelConnection): Promise<Group[]>;
-  getGroup(id: string, projectId?: string, iModelId?: string | undefined): Promise<Group>;
+  createGroup(iModelConnection: IModelConnection, group: LegacyGroup): Promise<LegacyGroup>;
+  updateGroup(iModelConnection: IModelConnection, updatedGroup: GroupUpdate, oldGroup: LegacyGroup): Promise<LegacyGroup>;
+  deleteGroup(iModelConnection: IModelConnection, group: LegacyGroup): Promise<void>;
+  shareGroup(iModelConnection: IModelConnection, group: LegacyGroup, shared: boolean): Promise<LegacyGroup>;
+  getGroups(iModelConnection: IModelConnection): Promise<LegacyGroup[]>;
+  getGroup(id: string, projectId?: string, iModelId?: string | undefined): Promise<LegacyGroup>;
 }

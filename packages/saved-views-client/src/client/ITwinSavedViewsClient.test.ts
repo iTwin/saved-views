@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 import { describe, expect, it, vi } from "vitest";
 
-import { View } from "../models/savedViews/View.js";
+import { ViewData } from "../models/savedViews/View.js";
 import { CallITwinApiParams } from "./ApiUtils.js";
 import { ITwinSavedViewsClient, PreferOptions } from "./ITwinSavedViewsClient.js";
 
@@ -170,7 +170,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
       await systemUnderTest.createSavedView({
         iTwinId: "",
         signal: new AbortSignal(),
-        savedViewData: {} as View,
+        savedViewData: {} as ViewData,
         displayName: "Test View",
       });
     }, checkIfFetchIsReceivingExpectedParams);
@@ -179,7 +179,7 @@ describe("ITwinSavedViewsClient tests for callITwinApi information transference"
   it("updateSavedView", async () => {
     const savedViewId = "savedViewComboId";
     const body = {
-      savedViewData: {} as View,
+      savedViewData: {} as ViewData,
       groupId: "groupId",
       displayName: "displayName",
       shared: true,

@@ -6,7 +6,7 @@ import { Extension, ExtensionListItem, ExtensionMin, ExtensionSavedViewCreate } 
 import { Group } from "../models/Group.js";
 import { HalLinks } from "../models/Links.js";
 import { Tag } from "../models/Tag.js";
-import { SavedViewWithDataMinimal, SavedViewWithDataRepresentation, View } from "../models/savedViews/View.js";
+import { SavedViewWithDataMinimal, SavedViewWithDataRepresentation, ViewData } from "../models/savedViews/View.js";
 
 export interface SavedViewsClient {
   getSavedViewMinimal(args: SingleSavedViewParams): Promise<SavedViewMinimalResponse>;
@@ -53,7 +53,7 @@ export interface GetSavedViewsParams extends CommonRequestParams {
 export interface CreateSavedViewParams extends CommonRequestParams {
   iTwinId: string;
   iModelId?: string;
-  savedViewData: View;
+  savedViewData: ViewData;
   groupId?: string;
   displayName: string;
   shared?: boolean;
@@ -63,7 +63,7 @@ export interface CreateSavedViewParams extends CommonRequestParams {
 
 export interface UpdateSavedViewParams extends CommonRequestParams {
   savedViewId: string;
-  savedViewData?: View;
+  savedViewData?: ViewData;
   groupId?: string;
   displayName?: string;
   shared?: boolean;

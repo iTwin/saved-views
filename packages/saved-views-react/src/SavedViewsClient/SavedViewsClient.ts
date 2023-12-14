@@ -2,7 +2,7 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import type { ExtensionMin, ExtensionSavedViewCreate, SavedViewWithDataRepresentation, View } from "@itwin/saved-views-client";
+import type { ExtensionMin, ExtensionSavedViewCreate, SavedViewWithDataRepresentation, ViewData } from "@itwin/saved-views-client";
 
 import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedViewsWidget/SavedView.js";
 
@@ -44,13 +44,13 @@ export interface CreateSavedViewParams extends CommonParams {
   iTwinId: string;
   iModelId?: string | undefined;
   savedView: Pick<SavedView, "displayName" | "tagIds" | "groupId" | "shared">;
-  savedViewData: View;
+  savedViewData: ViewData;
   extensions?: ExtensionSavedViewCreate[] | undefined;
 }
 
 export interface UpdateSavedViewParams extends CommonParams {
   savedView: Pick<SavedView, "id"> & Partial<SavedView>;
-  savedViewData?: View | undefined;
+  savedViewData?: ViewData | undefined;
   extensions?: ExtensionMin[] | undefined;
 }
 
