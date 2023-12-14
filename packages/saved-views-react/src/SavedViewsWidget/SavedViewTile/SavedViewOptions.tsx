@@ -409,9 +409,14 @@ interface DeleteProps extends CommonOptionProps {
 }
 
 function Delete(props: DeleteProps): ReactElement {
+  const { savedView } = useSavedViewTileContext();
   const { localization } = useSavedViewsContext();
 
-  return <MenuItem icon={props.icon}>{localization.delete}</MenuItem>
+  return (
+    <MenuItem icon={props.icon} onClick={() => props.deleteSavedView(savedView.id)}>
+      {localization.delete}
+    </MenuItem>
+  );
 }
 
 interface CommonOptionProps {
