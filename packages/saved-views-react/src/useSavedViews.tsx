@@ -2,7 +2,7 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import type { View } from "@itwin/saved-views-client";
+import type { ViewData } from "@itwin/saved-views-client";
 import {
   useCallback, useEffect, useRef, useState, type MutableRefObject, type ReactElement, type ReactNode,
   type SetStateAction,
@@ -28,7 +28,7 @@ interface UseSavedViewsResult {
 }
 
 export interface SavedViewActions {
-  createSavedView: (savedViewName: string, savedViewData: View) => void;
+  createSavedView: (savedViewName: string, savedViewData: ViewData) => void;
   renameSavedView: (savedViewId: string, newName: string) => void;
   deleteSavedView: (savedViewId: string) => void;
   createGroup: (groupName: string) => void;
@@ -199,7 +199,7 @@ function createSavedViewActions(
 
   return {
     createSavedView: actionWrapper(
-      async (savedViewName: string, savedViewData: View) => {
+      async (savedViewName: string, savedViewData: ViewData) => {
         const savedView = await client.createSavedView({
           iTwinId: iTwinId,
           iModelId: iModelId,
