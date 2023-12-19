@@ -15,6 +15,10 @@ export {
 } from "./SavedViewsWidget/SavedViewTile/SavedViewTileContext.js";
 export { SavedViewsExpandableBlockWidget } from "./SavedViewsWidget/SavedViewsExpandableBlockWidget.js";
 export { SavedViewsFolderWidget } from "./SavedViewsWidget/SavedViewsFolderWidget.js";
+export {
+  applyExtensionsToViewport, translateLegacySavedViewToITwinJsViewState,
+  translateSavedViewResponseToLegacySavedViewResponse,
+} from "./api/utilities/translation/SavedViewTranslation.js";
 export { defaultLocalization, type LocalizationStrings } from "./localization.js";
-export * from "./saved-views";
 export { useSavedViews, type SavedViewActions } from "./useSavedViews.js";
+
