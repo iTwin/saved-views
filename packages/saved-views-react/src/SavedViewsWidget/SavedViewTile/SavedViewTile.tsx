@@ -9,10 +9,10 @@ import {
   type ReactElement, type ReactNode,
 } from "react";
 
-import type { SavedView, SavedViewTag } from "../SavedView.js";
 import { useSavedViewsContext } from "../../SavedViewsContext.js";
-import { SavedViewTileContext, SavedViewTileContextProvider } from "./SavedViewTileContext.js";
 import { trimInputString } from "../../utils.js";
+import type { SavedView, SavedViewTag } from "../SavedView.js";
+import { SavedViewTileContext, SavedViewTileContextProvider } from "./SavedViewTileContext.js";
 
 import "./SavedViewTile.css";
 
@@ -141,10 +141,9 @@ export function SavedViewTile(props: SavedViewTileProps): ReactElement {
 
   return (
     <SavedViewTileContextProvider value={savedViewTileContext}>
-      <Tile
-        className="svr-tile"
-        thumbnail={props.savedView.thumbnail ?? <SvgImageFrame />}
-        name={
+      <Tile.Wrapper className="svr-tile" onClick={() => props.onClick?.(props.savedView.id)}>
+        {!props.editable && <Tile.Action />}
+        <Tile.Name className="svr-tile-name">
           <EditableTileName
             displayName={props.savedView.displayName}
             editing={editingName}
@@ -159,14 +158,30 @@ export function SavedViewTile(props: SavedViewTileProps): ReactElement {
             }}
             editable={props.editable || editingName}
           />
-        }
-        metadata={metadata}
-        moreOptions={(props.options && props.options.length > 0) ? props.options : undefined}
-        leftIcon={<TileIconContainer style={{ placeSelf: "start" }} icons={props.leftIcons} />}
-        rightIcon={<TileIconContainer style={{ placeSelf: "start end" }} icons={rightIcons} />}
-        isActionable={!props.editable && !editingName}
-        onClick={() => props.onClick?.(props.savedView.id)}
-      />
+        </Tile.Name>
+        <Tile.ThumbnailArea className="svr-tile-thumbnail">
+          {
+            typeof props.savedView.thumbnail === "string"
+              ? <Tile.ThumbnailPicture url={props.savedView.thumbnail} />
+              : props.savedView.thumbnail
+                ? props.savedView.thumbnail
+                : <Tile.ThumbnailPicture><SvgImageFrame /></Tile.ThumbnailPicture>
+          }
+          <TileIconContainer style={{ placeSelf: "start" }} icons={props.leftIcons} />
+          <TileIconContainer style={{ placeSelf: "start end" }} icons={rightIcons} />
+        </Tile.ThumbnailArea>
+        <Tile.ContentArea>
+          <Tile.Metadata>
+            {metadata}
+          </Tile.Metadata>
+          {
+            props.options && props.options.length > 0 &&
+            <Tile.MoreOptions>
+              {props.options}
+            </Tile.MoreOptions>
+          }
+        </Tile.ContentArea>
+      </Tile.Wrapper>
     </SavedViewTileContextProvider>
   );
 }

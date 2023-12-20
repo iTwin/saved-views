@@ -2,7 +2,7 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import type { SavedView, SavedViewGroup, SavedViewTag, SavedViewActions } from "@itwin/saved-views-react";
+import type { SavedView, SavedViewActions, SavedViewGroup, SavedViewTag } from "@itwin/saved-views-react";
 import { enableMapSet, produce } from "immer";
 import { useEffect, useState } from "react";
 
@@ -261,7 +261,7 @@ async function getThumbnailImage(): Promise<string | undefined> {
   ctx.setTransform(0.5 * canvas.width, 0.0, 0.0, -0.5 * canvas.width, 0.5 * canvas.width, 0.5 * canvas.height);
 
   ctx.fillStyle = "#666666";
-  ctx.fillRect(-1.0, -0.5, 2.0, 2.0);
+  ctx.fillRect(-1.0, -1.0, 2.0, 2.0);
 
   ctx.translate(0.0, -0.035);
   ctx.scale(2.0, 2.0);

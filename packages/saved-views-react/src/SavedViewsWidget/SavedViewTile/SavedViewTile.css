@@ -7,11 +7,11 @@
   width: var(--itwin-svr-tile-width, calc(8 * var(--iui-size-xl)));
 }
 
-.svr-tile .iui-tile-thumbnail {
+.svr-tile .svr-tile-thumbnail {
   height: var(--itwin-svr-tile-height, calc(4 * var(--iui-size-xl)));
 }
 
-.svr-tile .iui-tile-name {
+.svr-tile .svr-tile-name {
   height: calc(var(--iui-size-l) + 2px);
   user-select: unset;
 }
