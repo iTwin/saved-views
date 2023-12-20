@@ -2,8 +2,6 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import _ from "lodash";
-
 import { type Id64Array } from "@itwin/core-bentley";
 import {
   type DrawingViewState,
@@ -333,7 +331,7 @@ export const cleanLegacyViewModelSelectorPropsModels = (
   savedView: SavedViewWithDataRepresentation,
 ) => {
   if ((savedView.savedViewData.legacyView as LegacySavedView)?.modelSelectorProps) {
-    const savedViewCopy = _.cloneDeep(savedView);
+    const savedViewCopy = structuredClone(savedView);
     const legacyView = (savedViewCopy.savedViewData.legacyView as LegacySavedView);
     legacyView.modelSelectorProps.models =
       legacyView.modelSelectorProps.models.filter((model) => !!model);
