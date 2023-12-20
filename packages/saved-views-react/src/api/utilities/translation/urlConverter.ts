@@ -8,17 +8,6 @@ import {
 } from "@itwin/saved-views-client";
 
 /**
- * Convert url that potentially contains restricted characters ('&' or '.') to use unrestricated substitute characters ('++and++' or '++dot++')
- * @param extensionData
- */
-export const legacyUrlToUrl = (unrestrictedUrl: string): string => {
-  const restrictedUrl = unrestrictedUrl
-    .replaceAll("&", "++and++")
-    .replaceAll(".", "++dot++");
-  return restrictedUrl;
-};
-
-/**
  * Convert url that potentially contains subtituted characters ('++and++' or '++dot++') to use restricated characters ('&' or '.')
  * @param extensionData
  */
