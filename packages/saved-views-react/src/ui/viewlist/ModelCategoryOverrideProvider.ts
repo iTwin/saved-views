@@ -3,12 +3,7 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import { FeatureAppearance, type FeatureAppearanceProps } from "@itwin/core-common";
-import { type FeatureOverrideProvider, type FeatureSymbology, type Viewport } from "@itwin/core-frontend";
-
-/**
- * Note: this file should be included (added) to ui-framework.  It is included
- * here until iT1/iT3 is using core 3.0 packages
- */
+import type { FeatureOverrideProvider, FeatureSymbology, Viewport } from "@itwin/core-frontend";
 
 interface AppearanceOverrideProps {
   ids: string[];
@@ -51,24 +46,6 @@ export class ModelCategoryOverrideProvider implements FeatureOverrideProvider {
     }
 
     return provider;
-  }
-
-  public overrideSubcategories(subCategoryIds: string[], appearance: FeatureAppearance) {
-    this._subCategoryOverrides.set(subCategoryIds, appearance);
-  }
-
-  public overrideModels(modelIds: string[], appearance: FeatureAppearance) {
-    this._modelOverrides.set(modelIds, appearance);
-  }
-
-  public emphasizeSubcategories(subCategoryIds: string[], defaultAppearance: FeatureAppearance) {
-    this._emphasizedSubcats.push(...subCategoryIds);
-    this._catDefaultAppearance = defaultAppearance;
-  }
-
-  public emphasizeModels(modelIds: string[], defaultAppearance: FeatureAppearance) {
-    this._emphasizedModels.push(...modelIds);
-    this._modelDefaultAppearance = defaultAppearance;
   }
 
   public addFeatureOverrides(overrides: FeatureSymbology.Overrides, _vp: Viewport): void {
@@ -117,51 +94,6 @@ export class ModelCategoryOverrideProvider implements FeatureOverrideProvider {
         });
       });
     }
-  }
-
-  public toJSON(): ModelCategoryOverrideProviderProps {
-    const props: ModelCategoryOverrideProviderProps = {};
-    if (0 !== this._subCategoryOverrides.size) {
-      const appearanceOverride: AppearanceOverrideProps[] = [];
-      this._subCategoryOverrides.forEach(
-        (appearance: FeatureAppearance, ids: string[], _map) => {
-          const app = appearance.toJSON();
-          appearanceOverride.push({ ids: [...ids], app });
-        },
-      );
-
-      props.subCategoryOverrides = appearanceOverride;
-    }
-
-    if (0 !== this._modelOverrides.size) {
-      const appearanceOverride: AppearanceOverrideProps[] = [];
-      this._modelOverrides.forEach(
-        (appearance: FeatureAppearance, ids: string[], _map) => {
-          const app = appearance.toJSON();
-          appearanceOverride.push({ ids: [...ids], app });
-        },
-      );
-
-      props.modelOverrides = appearanceOverride;
-    }
-
-    if (0 !== this._emphasizedSubcats.length && this._catDefaultAppearance) {
-      const appearanceOverride: AppearanceOverrideProps = {
-        ids: [...this._emphasizedSubcats],
-        app: this._catDefaultAppearance,
-      };
-      props.catEmphasizeOverride = appearanceOverride;
-    }
-
-    if (0 !== this._emphasizedModels.length && this._modelDefaultAppearance) {
-      const appearanceOverride: AppearanceOverrideProps = {
-        ids: [...this._emphasizedModels],
-        app: this._modelDefaultAppearance,
-      };
-      props.modelEmphasizeOverride = appearanceOverride;
-    }
-
-    return props;
   }
 
   public fromJSON(props: ModelCategoryOverrideProviderProps): boolean {
