@@ -13,7 +13,7 @@ import { UiCore } from "@itwin/core-react";
 import { FrontendIModelsAccess } from "@itwin/imodels-access-frontend";
 import { IModelsClient } from "@itwin/imodels-client-management";
 import { PageLayout } from "@itwin/itwinui-layouts-react";
-import { Button, toaster } from "@itwin/itwinui-react";
+import { Button, useToaster } from "@itwin/itwinui-react";
 import {
   ITwinSavedViewsClient, SavedViewsFolderWidget, applyExtensionsToViewport, createTileOptions,
   translateLegacySavedViewToITwinJsViewState, translateSavedViewResponseToLegacySavedViewResponse, useSavedViews,
@@ -34,7 +34,9 @@ export interface ITwinJsAppProps {
 }
 
 export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
-  type LoadingState = "opening-imodel" | "opening-viewstate" | "creating-viewstate" | "loaded" | "rendering-imodel" | "rendered";
+  type LoadingState = "opening-imodel" | "opening-viewstate" | "creating-viewstate" | "loaded" | "rendering-imodel"
+    | "rendered";
+  const toaster = useToaster();
   const [loadingState, setLoadingState] = useState<LoadingState>("opening-imodel");
   const [selectedViewState, setSelectedViewState] = useState<ViewState>();
   const [selectedSavedView, setSelectedSavedView] = useState<SavedViewWithDataRepresentation>();
@@ -73,7 +75,7 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
   const client = useMemo(
     () => new ITwinSavedViewsClient({
       getAccessToken: () => props.authorizationClient.getAccessToken(),
-      baseUrl: "https://qa-api.bentley.com/savedviews",
+      baseUrl: applyUrlPrefix("https://api.bentley.com/savedviews"),
     }),
     [props.authorizationClient],
   );
@@ -105,7 +107,7 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
     }
     setLoadingState("rendering-imodel");
 
-    const savedViewResponse = await client.getSingularSavedView({savedViewId});
+    const savedViewResponse = await client.getSingularSavedView({ savedViewId });
 
     const legacySavedViewResponse = await translateSavedViewResponseToLegacySavedViewResponse(savedViewResponse, iModel);
     setSelectedSavedView(legacySavedViewResponse);
@@ -160,7 +162,7 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
           viewportRef={(viewport) => handleViewportCreated(viewport)}
         />
       </PageLayout.Content>
-    )
+    );
   }
 
   const groups = [...savedViews.groups.values()];
@@ -247,6 +249,7 @@ function useIModel(
   authorizationClient: AuthorizationClient,
 ): IModelConnection | undefined {
   const [iModel, setIModel] = useState<IModelConnection>();
+  const toaster = useToaster();
 
   useEffect(
     () => {
@@ -262,7 +265,7 @@ function useIModel(
             setIModel(openedIModel);
           }
         } catch (error) {
-          displayIModelError(IModelApp.localization.getLocalizedString("App:error:imodel-open-remote"), error);
+          displayIModelError(toaster, IModelApp.localization.getLocalizedString("App:error:imodel-open-remote"), error);
         }
       })();
 
@@ -273,18 +276,23 @@ function useIModel(
           try {
             await openedIModel.close();
           } catch (error) {
-            displayIModelError(IModelApp.localization.getLocalizedString("App:error:imodel-close-remote"), error);
+            displayIModelError(
+              toaster,
+              IModelApp.localization.getLocalizedString("App:error:imodel-close-remote"),
+              error,
+            );
           }
         })();
       };
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [authorizationClient, iModelId, iTwinId],
   );
 
   return iModel;
 }
 
-function displayIModelError(message: string, error: unknown): void {
+function displayIModelError(toaster: ReturnType<typeof useToaster>, message: string, error: unknown): void {
   const errorMessage = (error && typeof error === "object") ? (error as { message: unknown; }).message : error;
   toaster.negative(<>{message}<br /> {errorMessage}</>);
 }

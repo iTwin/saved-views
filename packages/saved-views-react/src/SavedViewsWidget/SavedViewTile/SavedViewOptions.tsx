@@ -144,7 +144,7 @@ function Rename(props: CommonOptionProps): ReactElement {
   const { localization } = useSavedViewsContext();
 
   return (
-    <MenuItem icon={props.icon} onClick={() => setEditingName(true)}>
+    <MenuItem startIcon={props.icon} onClick={() => setEditingName(true)}>
       {localization.rename}
     </MenuItem>
   );
@@ -175,7 +175,7 @@ function MoveToGroup(props: MoveToGroupProps): ReactElement {
 
   return (
     <MenuItem
-      icon={props.icon}
+      startIcon={props.icon}
       subMenuItems={[
         <MoveToGroupSubmenu
           key="move"
@@ -223,7 +223,7 @@ function MoveToGroupSubmenu(props: MoveToGroupSubmenuProps): ReactElement {
           <MenuItem
             key={group.id}
             className="svr-searchable-submenu-item"
-            icon={group.shared ? <SvgShare /> : <SvgBlank />}
+            startIcon={group.shared ? <SvgShare /> : <SvgBlank />}
             onClick={() => handleMoveToGroup(group.id)}
             disabled={group.id === props.savedView.groupId}
           >
@@ -271,7 +271,7 @@ function ManageTags(props: ManageTagsProps): ReactElement {
 
   return (
     <MenuItem
-      icon={props.icon}
+      startIcon={props.icon}
       subMenuItems={[
         <ManageTagsSubmenu
           key="tags"
@@ -325,7 +325,7 @@ function ManageTagsSubmenu(props: ManageTagsSubmenuProps): ReactElement {
           <MenuItem
             key={tag.id}
             className="svr-searchable-submenu-item"
-            icon={props.savedView.tagIds?.includes(tag.id) ? <SvgCheckmarkSmall /> : <SvgBlank />}
+            startIcon={props.savedView.tagIds?.includes(tag.id) ? <SvgCheckmarkSmall /> : <SvgBlank />}
             onClick={() => handleTagClick(tag.id)}
           >
             {tag.displayName}
@@ -395,7 +395,7 @@ function SearchableSubmenu<T extends Indexable>(props: SearchableSubmenuProps<T>
       </div>
       {
         offerCreate &&
-        <MenuItem className="svr-searchable-submenu-item" icon={<SvgAdd />} onClick={handleCreate}>
+        <MenuItem className="svr-searchable-submenu-item" startIcon={<SvgAdd />} onClick={handleCreate}>
           {props.creationLabel}&nbsp;
           <Text className="svr-semibold" as="span">{trimmedValue}</Text>
         </MenuItem>
@@ -413,7 +413,7 @@ function Delete(props: DeleteProps): ReactElement {
   const { localization } = useSavedViewsContext();
 
   return (
-    <MenuItem icon={props.icon} onClick={() => props.deleteSavedView(savedView.id)}>
+    <MenuItem startIcon={props.icon} onClick={() => props.deleteSavedView(savedView.id)}>
       {localization.delete}
     </MenuItem>
   );

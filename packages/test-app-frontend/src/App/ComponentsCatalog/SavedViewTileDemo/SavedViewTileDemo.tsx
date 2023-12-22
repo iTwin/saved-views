@@ -44,23 +44,30 @@ export function SavedViewTileBadges(): ReactElement {
   const thumbnail2 = useThumbnailImage();
 
   const savedViewLeft: SavedView = {
-    id: "tileId",
+    id: "tileId1",
     displayName: "Saved view left badges",
     thumbnail: thumbnail1,
   };
 
   const savedViewRight: SavedView = {
-    id: "tileId",
+    id: "tileId2",
     displayName: "Saved view right badges",
     thumbnail: thumbnail2,
+  };
+
+  const savedViewBoth: SavedView = {
+    id: "tileId3",
+    displayName: "Saved view both badges",
+    thumbnail: thumbnail1,
   };
 
   const leftIcons = [<SvgLocation key="location" />, <SvgLockUnlocked key="unlocked" />];
   const rightIcons = [<SvgStar key="star" />, <SvgShare key="share" />];
   return (
-    <div style={{ placeSelf: "center", display: "flex", gap: "var(--iui-size-m)" }}>
+    <div style={{ display: "grid", grid: "auto auto / auto auto", gap: "var(--iui-size-m)", placeSelf: "center" }}>
       <SavedViewTile savedView={savedViewLeft} leftIcons={leftIcons} />
       <SavedViewTile savedView={savedViewRight} rightIcons={rightIcons} />
+      <SavedViewTile savedView={savedViewBoth} leftIcons={leftIcons} rightIcons={rightIcons} />
     </div>
   );
 }

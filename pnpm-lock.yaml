@@ -79,8 +79,8 @@ importers:
         specifier: ^2.4.0
         version: 2.4.0(react-dom@17.0.2)(react@17.0.2)
       '@itwin/itwinui-react':
-        specifier: ^2.12.10
-        version: 2.12.17(react-dom@17.0.2)(react@17.0.2)
+        specifier: ^3.0.11
+        version: 3.0.11(@itwin/itwinui-illustrations-react@2.1.0)(react-dom@17.0.2)(react@17.0.2)
       '@itwin/saved-views-client':
         specifier: workspace:*
         version: link:../saved-views-client
@@ -242,8 +242,8 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0(react-dom@17.0.2)(react@17.0.2)
       '@itwin/itwinui-react':
-        specifier: ^2.12.10
-        version: 2.12.17(react-dom@17.0.2)(react@17.0.2)
+        specifier: ^3.0.11
+        version: 3.0.11(@itwin/itwinui-illustrations-react@2.1.0)(react-dom@17.0.2)(react@17.0.2)
       '@itwin/saved-views-react':
         specifier: workspace:*
         version: link:../saved-views-react
@@ -702,6 +702,47 @@ packages:
   /@eslint/js@8.54.0:
     resolution: {integrity: sha512-ut5V+D+fOoWPgGGNj83GGjnntO39xDy6DWxO0wb7Jp3DcMX0TfIqdzHF85VTQkerdyGmuuMD9AKAo5KiNlf/AQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    dev: false
+
+  /@floating-ui/core@1.5.2:
+    resolution: {integrity: sha512-Ii3MrfY/GAIN3OhXNzpCKaLxHQfJF9qvwq/kEJYdqDxeIHa01K8sldugal6TmeeXl+WMvhv9cnVzUTaFFJF09A==}
+    dependencies:
+      '@floating-ui/utils': 0.1.6
+    dev: false
+
+  /@floating-ui/dom@1.5.3:
+    resolution: {integrity: sha512-ClAbQnEqJAKCJOEbbLo5IUlZHkNszqhuxS4fHAVxRPXPya6Ysf2G8KypnYcOTpx6I8xcgF9bbHb6g/2KpbV8qA==}
+    dependencies:
+      '@floating-ui/core': 1.5.2
+      '@floating-ui/utils': 0.1.6
+    dev: false
+
+  /@floating-ui/react-dom@2.0.4(react-dom@17.0.2)(react@17.0.2):
+    resolution: {integrity: sha512-CF8k2rgKeh/49UrnIBs4BdxPUV6vize/Db1d/YbCLyp9GiVZ0BEwf5AiDSxJRCr6yOkGqTFHtmrULxkEfYZ7dQ==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      '@floating-ui/dom': 1.5.3
+      react: 17.0.2
+      react-dom: 17.0.2(react@17.0.2)
+    dev: false
+
+  /@floating-ui/react@0.25.4(react-dom@17.0.2)(react@17.0.2):
+    resolution: {integrity: sha512-lWRQ/UiTvSIBxohn0/2HFHEmnmOVRjl7j6XcRJuLH0ls6f/9AyHMWVzkAJFuwx0n9gaEeCmg9VccCSCJzbEJig==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      '@floating-ui/react-dom': 2.0.4(react-dom@17.0.2)(react@17.0.2)
+      '@floating-ui/utils': 0.1.6
+      react: 17.0.2
+      react-dom: 17.0.2(react@17.0.2)
+      tabbable: 6.2.0
+    dev: false
+
+  /@floating-ui/utils@0.1.6:
+    resolution: {integrity: sha512-OfX7E2oUDYxtBvsuS4e/jSn4Q9Qb6DzgeYtsAdkPZ47znpoNsMgZw0+tVijiv3uGNR6dgNlty6r9rzIzHjtd/A==}
     dev: false
 
   /@humanwhocodes/config-array@0.11.13:
@@ -1173,6 +1214,26 @@ packages:
       react-table: 7.8.0(react@17.0.2)
       react-transition-group: 4.4.5(react-dom@17.0.2)(react@17.0.2)
       tippy.js: 6.3.7
+    dev: false
+
+  /@itwin/itwinui-react@3.0.11(@itwin/itwinui-illustrations-react@2.1.0)(react-dom@17.0.2)(react@17.0.2):
+    resolution: {integrity: sha512-IwZJVVwejJFNfQVaQPyif9V1+FY/7h2PuCmHiuqlCGBbQg0njD+Mu6NIWYS6EVkyklNxaNO//y1Fb6ySeH29oQ==}
+    peerDependencies:
+      '@itwin/itwinui-illustrations-react': ^2.1.0
+      react: '>= 17.0.0 < 19.0.0'
+      react-dom: '>=17.0.0 < 19.0.0'
+    peerDependenciesMeta:
+      '@itwin/itwinui-illustrations-react':
+        optional: true
+    dependencies:
+      '@floating-ui/react': 0.25.4(react-dom@17.0.2)(react@17.0.2)
+      '@itwin/itwinui-illustrations-react': 2.1.0(react-dom@17.0.2)(react@17.0.2)
+      classnames: 2.3.2
+      react: 17.0.2
+      react-dom: 17.0.2(react@17.0.2)
+      react-table: 7.8.0(react@17.0.2)
+      react-transition-group: 4.4.5(react-dom@17.0.2)(react@17.0.2)
+      tslib: 2.6.2
     dev: false
 
   /@itwin/itwinui-variables@1.0.0:
@@ -5101,6 +5162,10 @@ packages:
   /supports-preserve-symlinks-flag@1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
+
+  /tabbable@6.2.0:
+    resolution: {integrity: sha512-Cat63mxsVJlzYvN51JmVXIgNoUokrIaT2zLclCXjRd8boZ0004U4KCs/sToJ75C6sdlByWxpYnb5Boif1VSFew==}
+    dev: false
 
   /test-exclude@6.0.0:
     resolution: {integrity: sha512-cAGWPIyOHU6zlmg88jwm7VRyXnMN7iV68OGAbYDk/Mh/xC/pzVPlQtY6ngoIH/5/tciuhGfvESU8GrHrcxD56w==}

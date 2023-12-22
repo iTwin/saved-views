@@ -22,6 +22,7 @@ import { ErrorPage } from "./errors/ErrorPage";
 import { IModelBrowser } from "./imodel-browser/IModelBrowser";
 import { ITwinBrowser } from "./imodel-browser/ITwinBrowser";
 
+import "@itwin/itwinui-react/styles.css";
 import "./App.css";
 
 export function App(): ReactElement {

@@ -17,9 +17,5 @@ interface RenameProps {
 
 function Rename(props: RenameProps): ReactElement {
   const { setEditingName } = useSavedViewGroupTileContext();
-  return (
-    <MenuItem icon={props.icon} onClick={() => setEditingName(true)}>
-      Rename
-    </MenuItem>
-  );
+  return <MenuItem startIcon={props.icon} onClick={() => setEditingName(true)}>Rename</MenuItem>;
 }
