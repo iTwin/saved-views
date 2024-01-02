@@ -7,6 +7,7 @@ import { createContext, useContext } from "react";
 import type { SavedViewGroup } from "../SavedView.js";
 
 const savedViewGroupTileContext = createContext<SavedViewGroupTileContext | undefined>(undefined);
+savedViewGroupTileContext.displayName = "SavedViewGroupTileContext";
 
 /** Context that's accessable within `<SavedViewGroupTile />` component. */
 export interface SavedViewGroupTileContext {

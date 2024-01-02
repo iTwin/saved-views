@@ -7,6 +7,7 @@ import { createContext, useContext } from "react";
 import type { SavedView } from "../SavedView.js";
 
 const savedViewTileContext = createContext<SavedViewTileContext | undefined>(undefined);
+savedViewTileContext.displayName = "SavedViewTileContext";
 
 /** Context that's accessable within `<SavedViewTile />` component. */
 export interface SavedViewTileContext {
