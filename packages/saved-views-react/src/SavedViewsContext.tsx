@@ -6,6 +6,7 @@ import { PropsWithChildren, ReactElement, createContext, useContext, useMemo } f
 import { LocalizationStrings, defaultLocalization } from "./localization.js";
 
 const savedViewsContext = createContext<SavedViewsContext>({ localization: defaultLocalization });
+savedViewsContext.displayName = "SavedViewsContext";
 
 export interface SavedViewsContext {
   localization: typeof defaultLocalization;

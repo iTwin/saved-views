@@ -2,13 +2,14 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { SvgEdit, SvgImageFrame, SvgShare, SvgTag } from "@itwin/itwinui-icons-react";
-import { Button, Input, Text, Tile } from "@itwin/itwinui-react";
+import { SvgEdit, SvgImageFrame, SvgShare, SvgTag, SvgMore } from "@itwin/itwinui-icons-react";
+import { Button, Input, Text, Tile, IconButton } from "@itwin/itwinui-react";
 import {
   useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type FocusEvent, type KeyboardEvent,
   type ReactElement, type ReactNode,
 } from "react";
 
+import { LayeredDropdownMenu } from "../../LayeredDropdownMenu/LayeredDropdownMenu.js";
 import { useSavedViewsContext } from "../../SavedViewsContext.js";
 import { trimInputString } from "../../utils.js";
 import type { SavedView, SavedViewTag } from "../SavedView.js";
@@ -33,7 +34,7 @@ interface SavedViewTileProps {
   rightIcons?: ReactNode[] | undefined;
 
   /** Items to be added to the tile options menu. */
-  options?: ReactNode[] | undefined;
+  options?: ReactElement[] | undefined;
 
   /**
    * Invoked when user submits a new name for the Saved View.
@@ -176,9 +177,11 @@ export function SavedViewTile(props: SavedViewTileProps): ReactElement {
           </Tile.Metadata>
           {
             props.options && props.options.length > 0 &&
-            <Tile.MoreOptions>
-              {props.options}
-            </Tile.MoreOptions>
+            <div className="svr-tile--more-options">
+              <LayeredDropdownMenu menuItems={props.options}>
+                <IconButton size="small" styleType="borderless"><SvgMore /></IconButton>
+              </LayeredDropdownMenu>
+            </div>
           }
         </Tile.ContentArea>
       </Tile.Wrapper>
