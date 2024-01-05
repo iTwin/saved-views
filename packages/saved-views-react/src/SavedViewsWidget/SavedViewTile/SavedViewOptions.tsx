@@ -21,7 +21,7 @@ import "./SavedViewOptions.css";
  * @example
  * <SavedViewTile
  *   savedView={savedView}
- *   options={[<SavedViewOptions.Rename key="rename" icon={<SvgBlank />} />]}
+ *   options={(close) => [<SavedViewOptions.Rename key="rename" icon={<SvgBlank />} onClick={close} />]}
  *   onRename={handleRename}
  * />
  */
@@ -31,7 +31,11 @@ export const SavedViewOptions = {
    * not receive `onRename` prop.
    *
    * @example
-   * <SavedViewOptions.Rename icon={<SvgBlank />} />
+   * <SavedViewTile
+   *   savedView={savedView}
+   *   options={(close) => [<SavedViewOptions.Rename key="rename" icon={<SvgBlank />} onClick={close} />]}
+   *   onRename={handleRename}
+   * />
    */
   Rename,
 
@@ -101,51 +105,63 @@ type OmitCommonOptionProps<T> = Omit<T, "icon">;
  *   editable
  * />
  */
-export function createTileOptions(args: CreateTileOptionsParams): ReactElement[] {
-  const options: ReactElement[] = [];
+export function createTileOptions(args: CreateTileOptionsParams): (close: () => void) => ReactElement[] {
+  return (close) => {
+    const options: ReactElement[] = [];
 
-  if (args.renameSavedView) {
-    options.push(<SavedViewOptions.Rename key="rename" icon={<SvgRename />} />);
-  }
+    if (args.renameSavedView) {
+      options.push(<SavedViewOptions.Rename key="rename" icon={<SvgRename />} onClick={close} />);
+    }
 
-  if (args.groupActions && args.groupActions) {
-    options.push(
-      <SavedViewOptions.MoveToGroup
-        key="move"
-        groups={args.groupActions.groups}
-        moveToGroup={args.groupActions.moveToGroup}
-        moveToNewGroup={args.groupActions.moveToNewGroup}
-        icon={<SvgBlank />}
-      />,
-    );
-  }
+    if (args.groupActions && args.groupActions) {
+      options.push(
+        <SavedViewOptions.MoveToGroup
+          key="move"
+          groups={args.groupActions.groups}
+          moveToGroup={args.groupActions.moveToGroup}
+          moveToNewGroup={args.groupActions.moveToNewGroup}
+          icon={<SvgBlank />}
+        />,
+      );
+    }
 
-  if (args.tagActions && args.tagActions) {
-    options.push(
-      <SavedViewOptions.ManageTags
-        key="tags"
-        tags={args.tagActions.tags}
-        addTag={args.tagActions.addTag}
-        addNewTag={args.tagActions.addNewTag}
-        removeTag={args.tagActions.removeTag}
-        icon={<SvgBlank />}
-      />,
-    );
-  }
+    if (args.tagActions && args.tagActions) {
+      options.push(
+        <SavedViewOptions.ManageTags
+          key="tags"
+          tags={args.tagActions.tags}
+          addTag={args.tagActions.addTag}
+          addNewTag={args.tagActions.addNewTag}
+          removeTag={args.tagActions.removeTag}
+          icon={<SvgBlank />}
+        />,
+      );
+    }
 
-  if (args.deleteSavedView) {
-    options.push(<SavedViewOptions.Delete key="delete" icon={<SvgBlank />} deleteSavedView={args.deleteSavedView} />);
-  }
+    if (args.deleteSavedView) {
+      options.push(<SavedViewOptions.Delete key="delete" icon={<SvgBlank />} deleteSavedView={args.deleteSavedView} />);
+    }
 
-  return options;
+    return options;
+  };
 }
 
-function Rename(props: CommonOptionProps): ReactElement {
+interface RenameProps extends CommonOptionProps {
+  /** Invoked after triggering the rename action. Often used to close the tile dropdown menu. */
+  onClick?: (() => void) | undefined;
+}
+
+function Rename(props: RenameProps): ReactElement {
   const { setEditingName } = useSavedViewTileContext();
   const { localization } = useSavedViewsContext();
 
+  const handleClick = () => {
+    setEditingName(true);
+    props.onClick?.();
+  }
+
   return (
-    <MenuItem startIcon={props.icon} onClick={() => setEditingName(true)}>
+    <MenuItem startIcon={props.icon} onClick={handleClick}>
       {localization.rename}
     </MenuItem>
   );
