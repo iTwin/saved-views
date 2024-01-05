@@ -4,6 +4,7 @@
 
 ## Packages
 
+[@itwin/saved-views-client](./packages/saved-views-client/)
 [@itwin/saved-views-react](./packages/saved-views-react/)
 
 ## Setup
