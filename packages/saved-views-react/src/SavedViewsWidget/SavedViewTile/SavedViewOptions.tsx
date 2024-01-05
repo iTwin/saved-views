@@ -7,6 +7,7 @@ import { Input, MenuItem, Text } from "@itwin/itwinui-react";
 import Fuse from "fuse.js";
 import { useMemo, useState, type ChangeEvent, type ComponentProps, type ReactElement, type ReactNode } from "react";
 
+import { LayeredMenuItem } from "../../LayeredDropdownMenu/LayeredDropdownMenu.js";
 import { useSavedViewsContext } from "../../SavedViewsContext.js";
 import { trimInputString } from "../../utils.js";
 import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedView.js";
@@ -174,20 +175,20 @@ function MoveToGroup(props: MoveToGroupProps): ReactElement {
   const { localization } = useSavedViewsContext();
 
   return (
-    <MenuItem
-      startIcon={props.icon}
-      subMenuItems={[
+    <LayeredMenuItem
+      icon={<SvgBlank />}
+      content={
         <MoveToGroupSubmenu
           key="move"
           savedView={savedView}
           groups={props.groups}
           moveToGroup={props.moveToGroup}
           moveToNewGroup={props.moveToNewGroup}
-        />,
-      ]}
+        />
+      }
     >
       {localization.moveToGroupMenu.moveToGroup}
-    </MenuItem>
+    </LayeredMenuItem>
   );
 }
 
@@ -213,7 +214,6 @@ function MoveToGroupSubmenu(props: MoveToGroupSubmenuProps): ReactElement {
   return (
     <SearchableSubmenu
       collection={props.groups}
-      numShownResults={6}
       placeholder={props.moveToNewGroup ? moveToGroupMenu.findOrCreateGroup : moveToGroupMenu.findGroup}
       creationLabel={moveToGroupMenu.createGroup}
       onCreate={handleCreate}
@@ -270,9 +270,9 @@ function ManageTags(props: ManageTagsProps): ReactElement {
   const { localization } = useSavedViewsContext();
 
   return (
-    <MenuItem
-      startIcon={props.icon}
-      subMenuItems={[
+    <LayeredMenuItem
+      icon={props.icon}
+      content={
         <ManageTagsSubmenu
           key="tags"
           savedView={savedView}
@@ -280,11 +280,11 @@ function ManageTags(props: ManageTagsProps): ReactElement {
           addTag={props.addTag}
           addNewTag={props.addNewTag}
           removeTag={props.removeTag}
-        />,
-      ]}
+        />
+      }
     >
       {localization.tagsMenu.tags}
-    </MenuItem>
+    </LayeredMenuItem>
   );
 }
 
@@ -315,7 +315,6 @@ function ManageTagsSubmenu(props: ManageTagsSubmenuProps): ReactElement {
   return (
     <SearchableSubmenu
       collection={props.tags}
-      numShownResults={6}
       placeholder={props.addNewTag ? localization.tagsMenu.findOrCreateTag : localization.tagsMenu.findTag}
       creationLabel={localization.tagsMenu.createTag}
       onCreate={handleCreate}
@@ -338,7 +337,6 @@ function ManageTagsSubmenu(props: ManageTagsSubmenuProps): ReactElement {
 
 interface SearchableSubmenuProps<T> {
   collection: T[];
-  numShownResults: number;
   placeholder: string;
   creationLabel: string;
   onCreate?: ((value: string) => void) | undefined;
@@ -376,31 +374,29 @@ function SearchableSubmenu<T extends Indexable>(props: SearchableSubmenuProps<T>
     onCreate(trimmedValue);
   });
 
-  const numShownResults = props.numShownResults - (offerCreate ? 1 : 0);
-  const maxHeight = `calc(${numShownResults} * var(--iui-component-height) - ${numShownResults - 1}px)`;
   return (
-    <>
+    <div className="svr-searchable-submenu">
       <Input
         className="svr-searchable-submenu-item"
         placeholder={props.placeholder}
         value={inputValue}
         onChange={handleSearchChange}
       />
-      <div style={{ overflow: "auto", maxHeight }}>
+      <div>
+        {
+          offerCreate &&
+          <MenuItem className="svr-searchable-submenu-item" startIcon={<SvgAdd />} onClick={handleCreate}>
+            {props.creationLabel}&nbsp;
+            <Text className="svr-semibold" as="span">{trimmedValue}</Text>
+          </MenuItem>
+        }
         {props.children(searchResults)}
         {
           searchResults.length === 0 &&
           <MenuItem sublabel={localization.searchableMenu.noSearchResults} size="default" disabled />
         }
       </div>
-      {
-        offerCreate &&
-        <MenuItem className="svr-searchable-submenu-item" startIcon={<SvgAdd />} onClick={handleCreate}>
-          {props.creationLabel}&nbsp;
-          <Text className="svr-semibold" as="span">{trimmedValue}</Text>
-        </MenuItem>
-      }
-    </>
+    </div>
   );
 }
 

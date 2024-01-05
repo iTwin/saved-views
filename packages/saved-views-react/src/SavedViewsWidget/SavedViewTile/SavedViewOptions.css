@@ -3,6 +3,18 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 
+.svr-searchable-submenu {
+  display: grid;
+  grid: auto minmax(0, 1fr) / 1fr;
+  gap: var(--iui-size-xs);
+  height: calc(var(--iui-menu-max-height) - 2 * var(--iui-component-height) - 1px);
+  user-select: none;
+}
+
+.svr-searchable-submenu > div {
+  overflow: auto;
+}
+
 .svr-searchable-submenu-item {
   width: calc(10 * var(--iui-size-l));
 }

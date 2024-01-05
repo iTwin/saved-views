@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 import { SvgChevronLeft, SvgHome } from "@itwin/itwinui-icons-react";
 import { Breadcrumbs, Button, DropdownButton, IconButton, MenuItem } from "@itwin/itwinui-react";
-import { useCallback, useMemo, useState, type ReactElement, type ReactNode } from "react";
+import { useCallback, useMemo, useState, type ReactElement } from "react";
 
 import type { SavedViewActions } from "../useSavedViews.js";
 import type { SavedView, SavedViewGroup, SavedViewTag } from "./SavedView.js";
@@ -19,7 +19,7 @@ interface SavedViewsFolderWidgetProps {
   tags: Map<string, SavedViewTag>;
   actions?: Partial<SavedViewActions> | undefined;
   editable?: boolean | undefined;
-  options?: ((savedView: SavedView) => ReactNode[]) | undefined;
+  options?: ((savedView: SavedView) => ReactElement[]) | undefined;
   onTileClick?: ((selectedViewId: string) => void) | undefined;
 }
 
@@ -103,7 +103,7 @@ interface SavedViewsHomeScreenProps {
   storeScrollOffset: (offset: number) => void;
   actions?: Partial<SavedViewActions> | undefined;
   editable?: boolean | undefined;
-  savedViewOptions?: ((savedView: SavedView) => ReactNode[]) | undefined;
+  savedViewOptions?: ((savedView: SavedView) => ReactElement[]) | undefined;
   onTileClick?: ((selectedViewId: string) => void) | undefined;
 }
 
@@ -183,7 +183,7 @@ interface SavedViewsGroupScreenProps {
   setActiveGroup: (groupId: string | undefined) => void;
   actions?: Partial<SavedViewActions> | undefined;
   editable?: boolean | undefined;
-  options?: ((savedView: SavedView) => ReactNode[]) | undefined;
+  options?: ((savedView: SavedView) => ReactElement[]) | undefined;
   onTileClick?: ((selectedViewId: string) => void) | undefined;
 }
 

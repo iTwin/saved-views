@@ -18,7 +18,7 @@ interface SavedViewsExpandableBlockWidgetProps {
   tags: Map<string, SavedViewTag>;
   actions?: Partial<SavedViewActions> | undefined;
   editable?: boolean | undefined;
-  options?: ((savedView: SavedView) => ReactNode[]) | undefined;
+  options?: ((savedView: SavedView) => ReactElement[]) | undefined;
 }
 
 export function SavedViewsExpandableBlockWidget(props: SavedViewsExpandableBlockWidgetProps): ReactElement {
@@ -60,7 +60,7 @@ interface SavedViewsGroupProps {
   expanded?: boolean | undefined;
   actions?: Partial<SavedViewActions> | undefined;
   editable?: boolean | undefined;
-  options?: ((savedView: SavedView) => ReactNode[]) | undefined;
+  options?: ((savedView: SavedView) => ReactElement[]) | undefined;
 }
 
 export function SavedViewsGroup(props: SavedViewsGroupProps): ReactElement {

@@ -43,6 +43,20 @@
   margin-left: var(--iui-size-s);
 }
 
+.svr-tile--more-options {
+  z-index: 2;
+  grid-area: 1 / 1 / -1 / -1;
+  place-self: end;
+  margin: 0;
+  margin-inline-end: calc(-1*var(--iui-size-2xs));
+  display: grid;
+  position: absolute;
+}
+
+.svr-tile:not(:hover, :focus-within) .svr-tile--more-options:where(:not(.svr-visible)) {
+  visibility: hidden;
+}
+
 .svr-tile--icon-container {
   display: flex;
   margin-top: calc(0.5 * var(--iui-size-s));
