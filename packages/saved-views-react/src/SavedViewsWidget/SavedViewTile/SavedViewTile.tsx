@@ -34,7 +34,7 @@ interface SavedViewTileProps {
   rightIcons?: ReactNode[] | undefined;
 
   /** Items to be added to the tile options menu. */
-  options?: ReactElement[] | undefined;
+  options?: ((close: () => void) => ReactElement[]) | ReactElement[] | undefined;
 
   /**
    * Invoked when user submits a new name for the Saved View.
