@@ -48,3 +48,9 @@
 .svr-folder .svr-folder-edit.svr-folder-edit:hover > div {
   visibility: visible;
 }
+
+.svr-expandable-block-title {
+  display: flex;
+  gap: var(--iui-size-xs);
+  align-items: center;
+}

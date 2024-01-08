@@ -148,36 +148,6 @@ export function BorderlessExpandableBlock(props: BorderlessExpandableBlockProps)
     closeDropdown();
   };
 
-  const title = (
-    <div style={{ display: "grid", grid: "1fr / auto 1fr", gap: "var(--iui-size-xs)" }}>
-      <div style={{ display: "flex", gap: "var(--iui-size-xs" }}>
-        {props.shared && <SvgShare style={{ alignSelf: "center" }} />}
-        <Text>{props.displayName}</Text>
-        <Text isMuted>({props.numItems})</Text>
-      </div>
-      <div
-        style={{ justifySelf: "end", display: "flex", alignItems: "center", gap: "var(--iui-size-xs)" }}
-        onClick={handleGroupMenuClick}
-      >
-        {
-          props.editable &&
-          <DropdownMenu menuItems={
-            (close) => [
-              <MenuItem key="edit" startIcon={<SvgEdit />} onClick={() => handleEditGroupClick(close)}>Edit</MenuItem>,
-              props.shared
-                ? <MenuItem key="unshare" startIcon={<SvgBlank />}>Unshare</MenuItem>
-                : <MenuItem key="share" startIcon={<SvgBlank />}>Share</MenuItem>,
-            ]}
-          >
-            <IconButton styleType="borderless" size="small" onClick={handleGroupMenuClick}>
-              <SvgMore />
-            </IconButton>
-          </DropdownMenu>
-        }
-      </div>
-    </div>
-  );
-
   const [expanded, setExpanded] = useState(props.expanded ?? false);
 
   const expandableBlockRef = useRef<HTMLDivElement>(null);
@@ -194,16 +164,43 @@ export function BorderlessExpandableBlock(props: BorderlessExpandableBlockProps)
     <div className={props.className}>
       <div ref={expandableBlockRef} />
       <StickyHeader>
-        <ExpandableBlock
+        <ExpandableBlock.Wrapper
           style={{ background: "var(--iui-color-background)" }}
+          role="button"
           styleType="borderless"
-          className="svr-expandable-block"
-          title={title}
           isExpanded={expanded}
           onToggle={handleExpanded}
         >
-          {undefined}
-        </ExpandableBlock>
+          <ExpandableBlock.Trigger as="div">
+            <ExpandableBlock.ExpandIcon />
+            <ExpandableBlock.LabelArea>
+              <ExpandableBlock.Title className="svr-expandable-block-title">
+                {props.shared && <SvgShare />}
+                <Text>{props.displayName}</Text>
+                <Text isMuted>({props.numItems})</Text>
+              </ExpandableBlock.Title>
+            </ExpandableBlock.LabelArea>
+            {
+              props.editable &&
+              <ExpandableBlock.EndIcon onClick={handleGroupMenuClick}>
+                <DropdownMenu menuItems={
+                  (close) => [
+                    <MenuItem key="edit" startIcon={<SvgEdit />} onClick={() => handleEditGroupClick(close)}>
+                      Edit
+                    </MenuItem>,
+                    props.shared
+                      ? <MenuItem key="unshare" startIcon={<SvgBlank />}>Unshare</MenuItem>
+                      : <MenuItem key="share" startIcon={<SvgBlank />}>Share</MenuItem>,
+                  ]}
+                >
+                  <IconButton styleType="borderless" size="small" onClick={handleGroupMenuClick}>
+                    <SvgMore />
+                  </IconButton>
+                </DropdownMenu>
+              </ExpandableBlock.EndIcon>
+            }
+          </ExpandableBlock.Trigger>
+        </ExpandableBlock.Wrapper>
       </StickyHeader>
       {expanded && props.children}
     </div>
