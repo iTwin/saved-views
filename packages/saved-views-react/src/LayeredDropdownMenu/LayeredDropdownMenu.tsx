@@ -32,12 +32,15 @@ export function LayeredDropdownMenu(props: LayeredDropdownMenuProps): ReactEleme
     () => {
       const menuItemsCallback = activeMenuItem === undefined
         ? (menuItems: ReactElement[]) => menuItems.map((item, i) => (
-          <layeredMenuItemIdentifierContext.Provider key={i} value={i}>
+          <layeredMenuItemIdentifierContext.Provider key={item.key ?? i} value={i}>
             {item}
           </layeredMenuItemIdentifierContext.Provider>
         ))
         : (menuItems: ReactElement[]) => [
-          <layeredMenuItemIdentifierContext.Provider key={activeMenuItem} value={activeMenuItem}>
+          <layeredMenuItemIdentifierContext.Provider
+            key={menuItems[activeMenuItem].key ?? activeMenuItem}
+            value={activeMenuItem}
+          >
             {menuItems[activeMenuItem]}
           </layeredMenuItemIdentifierContext.Provider>,
         ];
