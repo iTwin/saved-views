@@ -19,7 +19,7 @@ interface SavedViewsFolderWidgetProps {
   tags: Map<string, SavedViewTag>;
   actions?: Partial<SavedViewActions> | undefined;
   editable?: boolean | undefined;
-  options?: ((savedView: SavedView) => ReactElement[]) | undefined;
+  options?: ((savedView: SavedView) => (((close: () => void) => ReactElement[]) | ReactElement[])) | undefined;
   onTileClick?: ((selectedViewId: string) => void) | undefined;
 }
 
@@ -103,7 +103,7 @@ interface SavedViewsHomeScreenProps {
   storeScrollOffset: (offset: number) => void;
   actions?: Partial<SavedViewActions> | undefined;
   editable?: boolean | undefined;
-  savedViewOptions?: ((savedView: SavedView) => ReactElement[]) | undefined;
+  savedViewOptions?: ((savedView: SavedView) => (((close: () => void) => ReactElement[]) | ReactElement[])) | undefined;
   onTileClick?: ((selectedViewId: string) => void) | undefined;
 }
 
@@ -183,7 +183,7 @@ interface SavedViewsGroupScreenProps {
   setActiveGroup: (groupId: string | undefined) => void;
   actions?: Partial<SavedViewActions> | undefined;
   editable?: boolean | undefined;
-  options?: ((savedView: SavedView) => ReactElement[]) | undefined;
+  options?: ((savedView: SavedView) => (((close: () => void) => ReactElement[]) | ReactElement[])) | undefined;
   onTileClick?: ((selectedViewId: string) => void) | undefined;
 }
 
