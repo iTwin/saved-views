@@ -150,60 +150,60 @@ export function BorderlessExpandableBlock(props: BorderlessExpandableBlockProps)
 
   const [expanded, setExpanded] = useState(props.expanded ?? false);
 
-  const expandableBlockRef = useRef<HTMLDivElement>(null);
+  const scrollbackRef = useRef<HTMLDivElement>(null);
 
-  const handleExpanded = (expanded: boolean) => {
+  const handleExpandToggle = (expanded: boolean) => {
     setExpanded(expanded);
     props.onExpandToggle?.(expanded);
     if (!expanded) {
-      expandableBlockRef.current?.scrollIntoView({ block: "nearest" });
+      scrollbackRef.current?.scrollIntoView({ block: "nearest" });
     }
   };
 
   return (
-    <div className={props.className}>
-      <div ref={expandableBlockRef} />
+    <ExpandableBlock.Wrapper
+      className={props.className}
+      role="button"
+      styleType="borderless"
+      isExpanded={expanded}
+      onToggle={handleExpandToggle}
+    >
+      <div ref={scrollbackRef} />
       <StickyHeader>
-        <ExpandableBlock.Wrapper
-          style={{ background: "var(--iui-color-background)" }}
-          role="button"
-          styleType="borderless"
-          isExpanded={expanded}
-          onToggle={handleExpanded}
-        >
-          <ExpandableBlock.Trigger as="div">
-            <ExpandableBlock.ExpandIcon />
-            <ExpandableBlock.LabelArea>
-              <ExpandableBlock.Title className="svr-expandable-block-title">
-                {props.shared && <SvgShare />}
-                <Text>{props.displayName}</Text>
-                <Text isMuted>({props.numItems})</Text>
-              </ExpandableBlock.Title>
-            </ExpandableBlock.LabelArea>
-            {
-              props.editable &&
-              <ExpandableBlock.EndIcon onClick={handleGroupMenuClick}>
-                <DropdownMenu menuItems={
-                  (close) => [
-                    <MenuItem key="edit" startIcon={<SvgEdit />} onClick={() => handleEditGroupClick(close)}>
-                      Edit
-                    </MenuItem>,
-                    props.shared
-                      ? <MenuItem key="unshare" startIcon={<SvgBlank />}>Unshare</MenuItem>
-                      : <MenuItem key="share" startIcon={<SvgBlank />}>Share</MenuItem>,
-                  ]}
-                >
-                  <IconButton styleType="borderless" size="small" onClick={handleGroupMenuClick}>
-                    <SvgMore />
-                  </IconButton>
-                </DropdownMenu>
-              </ExpandableBlock.EndIcon>
-            }
-          </ExpandableBlock.Trigger>
-        </ExpandableBlock.Wrapper>
+        <ExpandableBlock.Trigger as="div" className="svr-expandable-block-header">
+          <ExpandableBlock.ExpandIcon />
+          <ExpandableBlock.LabelArea>
+            <ExpandableBlock.Title className="svr-expandable-block-title">
+              {props.shared && <SvgShare />}
+              <Text>{props.displayName}</Text>
+              <Text isMuted>({props.numItems})</Text>
+            </ExpandableBlock.Title>
+          </ExpandableBlock.LabelArea>
+          {
+            props.editable &&
+            <ExpandableBlock.EndIcon onClick={handleGroupMenuClick}>
+              <DropdownMenu menuItems={
+                (close) => [
+                  <MenuItem key="edit" startIcon={<SvgEdit />} onClick={() => handleEditGroupClick(close)}>
+                    Edit
+                  </MenuItem>,
+                  props.shared
+                    ? <MenuItem key="unshare" startIcon={<SvgBlank />}>Unshare</MenuItem>
+                    : <MenuItem key="share" startIcon={<SvgBlank />}>Share</MenuItem>,
+                ]}
+              >
+                <IconButton styleType="borderless" size="small" onClick={handleGroupMenuClick}>
+                  <SvgMore />
+                </IconButton>
+              </DropdownMenu>
+            </ExpandableBlock.EndIcon>
+          }
+        </ExpandableBlock.Trigger>
       </StickyHeader>
-      {expanded && props.children}
-    </div>
+      <ExpandableBlock.Content>
+        {expanded && props.children}
+      </ExpandableBlock.Content>
+    </ExpandableBlock.Wrapper>
   );
 }
 
