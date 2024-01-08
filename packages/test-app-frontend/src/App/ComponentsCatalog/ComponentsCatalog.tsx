@@ -18,6 +18,7 @@ import {
   SavedViewTileBadges, SavedViewTileBasic, SavedViewTileEditableName, SavedViewTileGroups, SavedViewTileNoThumbnail,
   SavedViewTileTags,
 } from "./components/SavedViewTileDemo.js";
+import { LayeredDropdownMenuDemo } from "./components/LayeredDropdownMenuDemo.js";
 
 import "./ComponentsCatalog.css";
 
@@ -34,6 +35,7 @@ const componentsMap = new Map([
       SavedViewTileTags,
     ],
   ],
+  ["LayeredDropdownMenu", [LayeredDropdownMenuDemo]],
 ]);
 
 export function ComponentsCatalogRoutes(): ReactElement {
