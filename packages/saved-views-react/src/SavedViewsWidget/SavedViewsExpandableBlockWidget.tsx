@@ -163,14 +163,13 @@ export function BorderlessExpandableBlock(props: BorderlessExpandableBlockProps)
   return (
     <ExpandableBlock.Wrapper
       className={props.className}
-      role="button"
       styleType="borderless"
       isExpanded={expanded}
       onToggle={handleExpandToggle}
     >
       <div ref={scrollbackRef} />
       <StickyHeader>
-        <ExpandableBlock.Trigger as="div" className="svr-expandable-block-header">
+        <ExpandableBlock.Trigger as="div" className="svr-expandable-block-header" role="button">
           <ExpandableBlock.ExpandIcon />
           <ExpandableBlock.LabelArea>
             <ExpandableBlock.Title className="svr-expandable-block-title">
