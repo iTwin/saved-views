@@ -13,11 +13,11 @@ import { Navigate, Route, Routes, useNavigate, useParams } from "react-router-do
 
 import {
   SavedViewsExpandableBlockWidgetDemo, SavedViewsFolderWidgetDemo,
-} from "./SavedViewsWidgetDemo/SavedViewsWidgetDemo.js";
+} from "./components/SavedViewsWidgetDemo.js";
 import {
   SavedViewTileBadges, SavedViewTileBasic, SavedViewTileEditableName, SavedViewTileGroups, SavedViewTileNoThumbnail,
   SavedViewTileTags,
-} from "./SavedViewTileDemo/SavedViewTileDemo.js";
+} from "./components/SavedViewTileDemo.js";
 
 import "./ComponentsCatalog.css";
 
