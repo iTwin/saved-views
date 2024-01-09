@@ -78,7 +78,7 @@ export const SavedViewOptions = {
   Delete,
 };
 
-export interface CreateTileOptionsParams {
+export interface CreateSavedViewOptionsParams {
   /** When `true`, the returned options contain a `Rename` entry. */
   renameSavedView?: boolean | undefined;
 
@@ -101,11 +101,11 @@ type OmitCommonOptionProps<T> = Omit<T, "icon">;
  * @example
  * <SavedViewTile
  *   savedView={savedView}
- *   options={createTileOptions({ tagActions, groupActions })}
+ *   options={createSavedViewOptions({ tagActions, groupActions })}
  *   editable
  * />
  */
-export function createTileOptions(args: CreateTileOptionsParams): (close: () => void) => ReactElement[] {
+export function createSavedViewOptions(args: CreateSavedViewOptionsParams): (close: () => void) => ReactElement[] {
   return (close) => {
     const options: ReactElement[] = [];
 

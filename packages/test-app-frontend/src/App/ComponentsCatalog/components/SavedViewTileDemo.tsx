@@ -4,7 +4,8 @@
 *--------------------------------------------------------------------------------------------*/
 import { SvgLocation, SvgLockUnlocked, SvgShare, SvgStar } from "@itwin/itwinui-icons-react";
 import {
-  CreateTileOptionsParams, SavedViewTile, createTileOptions, type SavedView, type SavedViewGroup, type SavedViewTag,
+  SavedViewTile, createSavedViewOptions, type CreateSavedViewOptionsParams, type SavedView, type SavedViewGroup,
+  type SavedViewTag,
 } from "@itwin/saved-views-react";
 import { useState, type ReactElement } from "react";
 
@@ -102,7 +103,7 @@ export function SavedViewTileGroups(): ReactElement {
     { id: "group1", displayName: "First Group" },
   ]);
 
-  const groupActions: CreateTileOptionsParams["groupActions"] = {
+  const groupActions: CreateSavedViewOptionsParams["groupActions"] = {
     groups,
     moveToGroup(_savedViewId: string, groupId: string): void {
       setGroupId(groupId);
@@ -116,7 +117,7 @@ export function SavedViewTileGroups(): ReactElement {
 
   return (
     <div style={{ placeSelf: "center" }}>
-      <SavedViewTile savedView={savedView} options={createTileOptions({ groupActions })} />
+      <SavedViewTile savedView={savedView} options={createSavedViewOptions({ groupActions })} />
     </div>
   );
 }
@@ -137,7 +138,7 @@ export function SavedViewTileTags(): ReactElement {
     { id: "tag3", displayName: "Third tag" },
   ]);
 
-  const tagActions: CreateTileOptionsParams["tagActions"] = {
+  const tagActions: CreateSavedViewOptionsParams["tagActions"] = {
     tags,
     addTag(_savedViewId: string, tagId: string): void {
       setTagIds((prev) => [...prev, tagId]);
@@ -156,7 +157,7 @@ export function SavedViewTileTags(): ReactElement {
     <div style={{ placeSelf: "center" }}>
       <SavedViewTile
         savedView={savedView}
-        options={createTileOptions({ tagActions })}
+        options={createSavedViewOptions({ tagActions })}
         tags={new Map(tags.map((tag) => [tag.id, tag]))}
       />
     </div>

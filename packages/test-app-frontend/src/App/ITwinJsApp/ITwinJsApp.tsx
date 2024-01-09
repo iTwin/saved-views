@@ -15,7 +15,7 @@ import { IModelsClient } from "@itwin/imodels-client-management";
 import { PageLayout } from "@itwin/itwinui-layouts-react";
 import { Button, useToaster } from "@itwin/itwinui-react";
 import {
-  ITwinSavedViewsClient, SavedViewsFolderWidget, applyExtensionsToViewport, createTileOptions,
+  ITwinSavedViewsClient, SavedViewsFolderWidget, applyExtensionsToViewport, createSavedViewOptions,
   translateLegacySavedViewToITwinJsViewState, translateSavedViewResponseToLegacySavedViewResponse, useSavedViews,
 } from "@itwin/saved-views-react";
 import { useEffect, useMemo, useState, type ReactElement } from "react";
@@ -167,7 +167,7 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
 
   const groups = [...savedViews.groups.values()];
   const tags = [...savedViews.tags.values()];
-  const tileOptions = createTileOptions({
+  const tileOptions = createSavedViewOptions({
     renameSavedView: true,
     groupActions: {
       groups,

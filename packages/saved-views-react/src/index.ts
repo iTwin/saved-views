@@ -5,7 +5,7 @@
 export { LayeredDropdownMenu, LayeredMenuItem } from "./LayeredDropdownMenu/LayeredDropdownMenu.js";
 export type { SavedView, SavedViewGroup, SavedViewTag } from "./SavedView.js";
 export {
-  SavedViewOptions, createTileOptions, type CreateTileOptionsParams,
+  SavedViewOptions, createSavedViewOptions, type CreateSavedViewOptionsParams,
 } from "./SavedViewTile/SavedViewOptions.js";
 export { SavedViewTile } from "./SavedViewTile/SavedViewTile.js";
 export {
