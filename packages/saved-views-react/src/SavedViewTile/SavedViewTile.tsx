@@ -114,7 +114,7 @@ export function SavedViewTile(props: SavedViewTileProps): ReactElement {
         return;
       }
 
-      // The following check is a workaround for false positiv overflow detection in Firefox
+      // The following check is a workaround for false positive overflow detection in Firefox
       if (!isOverflowing(metadataDiv) && !isOverflowing(metadataDiv.lastChild as HTMLElement)) {
         return;
       }
