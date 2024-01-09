@@ -2,17 +2,17 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { SvgEdit, SvgImageFrame, SvgShare, SvgTag, SvgMore } from "@itwin/itwinui-icons-react";
-import { Button, Input, Text, Tile, IconButton } from "@itwin/itwinui-react";
+import { SvgEdit, SvgImageFrame, SvgMore, SvgShare, SvgTag } from "@itwin/itwinui-icons-react";
+import { Button, IconButton, Input, Text, Tile } from "@itwin/itwinui-react";
 import {
   useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type FocusEvent, type KeyboardEvent,
   type ReactElement, type ReactNode,
 } from "react";
 
-import { LayeredDropdownMenu } from "../../LayeredDropdownMenu/LayeredDropdownMenu.js";
-import { useSavedViewsContext } from "../../SavedViewsContext.js";
-import { trimInputString } from "../../utils.js";
+import { LayeredDropdownMenu } from "../LayeredDropdownMenu/LayeredDropdownMenu.js";
 import type { SavedView, SavedViewTag } from "../SavedView.js";
+import { useSavedViewsContext } from "../SavedViewsContext.js";
+import { trimInputString } from "../utils.js";
 import { SavedViewTileContext, SavedViewTileContextProvider } from "./SavedViewTileContext.js";
 
 import "./SavedViewTile.css";

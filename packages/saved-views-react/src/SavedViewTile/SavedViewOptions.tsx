@@ -7,10 +7,10 @@ import { Input, MenuItem, Text } from "@itwin/itwinui-react";
 import Fuse from "fuse.js";
 import { useMemo, useState, type ChangeEvent, type ComponentProps, type ReactElement, type ReactNode } from "react";
 
-import { LayeredMenuItem } from "../../LayeredDropdownMenu/LayeredDropdownMenu.js";
-import { useSavedViewsContext } from "../../SavedViewsContext.js";
-import { trimInputString } from "../../utils.js";
+import { LayeredMenuItem } from "../LayeredDropdownMenu/LayeredDropdownMenu.js";
 import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedView.js";
+import { useSavedViewsContext } from "../SavedViewsContext.js";
+import { trimInputString } from "../utils.js";
 import { useSavedViewTileContext } from "./SavedViewTileContext.js";
 
 import "./SavedViewOptions.css";
@@ -158,7 +158,7 @@ function Rename(props: RenameProps): ReactElement {
   const handleClick = () => {
     setEditingName(true);
     props.onClick?.();
-  }
+  };
 
   return (
     <MenuItem startIcon={props.icon} onClick={handleClick}>

@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 import type { ExtensionMin, ExtensionSavedViewCreate, SavedViewWithDataRepresentation, ViewData } from "@itwin/saved-views-client";
 
-import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedViewsWidget/SavedView.js";
+import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedView.js";
 
 export interface SavedViewInfo {
   savedViews: SavedView[];
