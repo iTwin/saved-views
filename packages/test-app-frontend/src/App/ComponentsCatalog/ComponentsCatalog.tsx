@@ -13,11 +13,12 @@ import { Navigate, Route, Routes, useNavigate, useParams } from "react-router-do
 
 import {
   SavedViewsExpandableBlockWidgetDemo, SavedViewsFolderWidgetDemo,
-} from "./SavedViewsWidgetDemo/SavedViewsWidgetDemo.js";
+} from "./components/SavedViewsWidgetDemo.js";
 import {
   SavedViewTileBadges, SavedViewTileBasic, SavedViewTileEditableName, SavedViewTileGroups, SavedViewTileNoThumbnail,
   SavedViewTileTags,
-} from "./SavedViewTileDemo/SavedViewTileDemo.js";
+} from "./components/SavedViewTileDemo.js";
+import { LayeredDropdownMenuDemo } from "./components/LayeredDropdownMenuDemo.js";
 
 import "./ComponentsCatalog.css";
 
@@ -34,6 +35,7 @@ const componentsMap = new Map([
       SavedViewTileTags,
     ],
   ],
+  ["LayeredDropdownMenu", [LayeredDropdownMenuDemo]],
 ]);
 
 export function ComponentsCatalogRoutes(): ReactElement {
