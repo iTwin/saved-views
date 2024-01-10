@@ -3,11 +3,12 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import { SvgBlank, SvgEdit, SvgMore, SvgShare } from "@itwin/itwinui-icons-react";
-import { Button, DropdownMenu, ExpandableBlock, IconButton, MenuItem, Surface, Text } from "@itwin/itwinui-react";
-import { Fragment, useLayoutEffect, useRef, useState, type MouseEvent, type ReactElement, type ReactNode } from "react";
+import { Button, DropdownMenu, IconButton, MenuItem, Surface, Text } from "@itwin/itwinui-react";
+import { Fragment, useState, type ReactElement, type ReactNode } from "react";
 
 import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedView.js";
 import { SavedViewTile } from "../SavedViewTile/SavedViewTile.js";
+import { StickyExpandableBlock } from "../StickyExpandableBlock/StickyExpandableBlock.js";
 import type { SavedViewActions } from "../useSavedViews.js";
 
 import "./SavedViewsExpandableBlockWidget.css";
@@ -140,102 +141,47 @@ interface BorderlessExpandableBlockProps {
 }
 
 export function BorderlessExpandableBlock(props: BorderlessExpandableBlockProps): ReactElement {
-  const handleGroupMenuClick = (event: MouseEvent) => {
-    event.stopPropagation();
-  };
-
   const handleEditGroupClick = (closeDropdown: () => void) => {
     closeDropdown();
   };
 
   const [expanded, setExpanded] = useState(props.expanded ?? false);
-
-  const scrollbackRef = useRef<HTMLDivElement>(null);
-
   const handleExpandToggle = (expanded: boolean) => {
     setExpanded(expanded);
     props.onExpandToggle?.(expanded);
-    if (!expanded) {
-      scrollbackRef.current?.scrollIntoView({ block: "nearest" });
-    }
   };
 
   return (
-    <ExpandableBlock.Wrapper
-      className={props.className}
-      styleType="borderless"
+    <StickyExpandableBlock
+      titleClassName="svr-borderless-expandable-block-title"
+      title={
+        <>
+          {props.shared && <SvgShare />}
+          <Text>{props.displayName}</Text>
+          <Text isMuted>({props.numItems})</Text>
+        </>
+      }
+      endIcon={
+        props.editable &&
+        <DropdownMenu menuItems={
+          (close) => [
+            <MenuItem key="edit" startIcon={<SvgEdit />} onClick={() => handleEditGroupClick(close)}>
+              Edit
+            </MenuItem>,
+            props.shared
+              ? <MenuItem key="unshare" startIcon={<SvgBlank />}>Unshare</MenuItem>
+              : <MenuItem key="share" startIcon={<SvgBlank />}>Share</MenuItem>,
+          ]}
+        >
+          <IconButton styleType="borderless" size="small">
+            <SvgMore />
+          </IconButton>
+        </DropdownMenu>
+      }
       isExpanded={expanded}
       onToggle={handleExpandToggle}
     >
-      <div ref={scrollbackRef} />
-      <StickyHeader>
-        <ExpandableBlock.Trigger as="div" className="svr-expandable-block-header" role="button">
-          <ExpandableBlock.ExpandIcon />
-          <ExpandableBlock.LabelArea>
-            <ExpandableBlock.Title className="svr-expandable-block-title">
-              {props.shared && <SvgShare />}
-              <Text>{props.displayName}</Text>
-              <Text isMuted>({props.numItems})</Text>
-            </ExpandableBlock.Title>
-          </ExpandableBlock.LabelArea>
-          {
-            props.editable &&
-            <ExpandableBlock.EndIcon onClick={handleGroupMenuClick}>
-              <DropdownMenu menuItems={
-                (close) => [
-                  <MenuItem key="edit" startIcon={<SvgEdit />} onClick={() => handleEditGroupClick(close)}>
-                    Edit
-                  </MenuItem>,
-                  props.shared
-                    ? <MenuItem key="unshare" startIcon={<SvgBlank />}>Unshare</MenuItem>
-                    : <MenuItem key="share" startIcon={<SvgBlank />}>Share</MenuItem>,
-                ]}
-              >
-                <IconButton styleType="borderless" size="small" onClick={handleGroupMenuClick}>
-                  <SvgMore />
-                </IconButton>
-              </DropdownMenu>
-            </ExpandableBlock.EndIcon>
-          }
-        </ExpandableBlock.Trigger>
-      </StickyHeader>
-      <ExpandableBlock.Content>
-        {expanded && props.children}
-      </ExpandableBlock.Content>
-    </ExpandableBlock.Wrapper>
-  );
-}
-
-interface StickyHeaderProps {
-  children: ReactNode;
-}
-
-function StickyHeader(props: StickyHeaderProps): ReactElement {
-  const [stuck, setStuck] = useState(false);
-  const divRef = useRef<HTMLDivElement>(null);
-
-  useLayoutEffect(
-    () => {
-      const div = divRef.current;
-      if (!div) {
-        return;
-      }
-
-      const scrollableParent = div.closest(".svr-saved-views-widget");
-      const handleScroll = () => {
-        const parentOffset = div.parentElement?.offsetTop ?? div.offsetTop;
-        setStuck(div.offsetTop - parentOffset > 0);
-      };
-      scrollableParent?.addEventListener("scroll", handleScroll);
-      return () => scrollableParent?.removeEventListener("scroll", handleScroll);
-    },
-    [],
-  );
-
-  const boxShadow = stuck ? "var(--iui-shadow-1)" : "none";
-  return (
-    <div ref={divRef} style={{ position: "sticky", top: 0, zIndex: 1, boxShadow }}>
-      {props.children}
-    </div>
+      {expanded && props.children}
+    </StickyExpandableBlock>
   );
 }

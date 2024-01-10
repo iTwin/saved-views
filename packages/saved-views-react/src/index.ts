@@ -16,6 +16,7 @@ export type { SavedViewInfo, SavedViewsClient } from "./SavedViewsClient/SavedVi
 export { SavedViewsContextProvider, type SavedViewsContext } from "./SavedViewsContext.js";
 export { SavedViewsExpandableBlockWidget } from "./SavedViewsWidget/SavedViewsExpandableBlockWidget.js";
 export { SavedViewsFolderWidget } from "./SavedViewsWidget/SavedViewsFolderWidget.js";
+export { StickyExpandableBlock } from "./StickyExpandableBlock/StickyExpandableBlock.js";
 export {
   applyExtensionsToViewport, translateLegacySavedViewToITwinJsViewState,
   translateSavedViewResponseToLegacySavedViewResponse,
