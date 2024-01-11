@@ -3,7 +3,9 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import { Button, Surface } from "@itwin/itwinui-react";
-import { SavedViewsExpandableBlockWidget, SavedViewsFolderWidget, createTileOptions } from "@itwin/saved-views-react";
+import {
+  SavedViewsExpandableBlockWidget, SavedViewsFolderWidget, createSavedViewOptions,
+} from "@itwin/saved-views-react";
 import { ReactElement } from "react";
 
 import { useSavedViewData } from "../useSavedViewData.js";
@@ -11,7 +13,7 @@ import { useSavedViewData } from "../useSavedViewData.js";
 export function SavedViewsExpandableBlockWidgetDemo(): ReactElement {
   const { state: { savedViews, groups, tags, editing }, actions, setEditing } = useSavedViewData();
 
-  const options = createTileOptions({
+  const options = createSavedViewOptions({
     renameSavedView: true,
     groupActions: actions.moveToGroup && {
       groups: [...groups.values()],
@@ -65,7 +67,7 @@ export function SavedViewsExpandableBlockWidgetDemo(): ReactElement {
 export function SavedViewsFolderWidgetDemo(): ReactElement {
   const { state: { savedViews, groups, tags }, actions } = useSavedViewData();
 
-  const options = createTileOptions({
+  const options = createSavedViewOptions({
     renameSavedView: true,
     groupActions: actions.moveToGroup && {
       groups: [...groups.values()],

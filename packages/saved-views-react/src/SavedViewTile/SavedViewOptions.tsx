@@ -7,10 +7,10 @@ import { Input, MenuItem, Text } from "@itwin/itwinui-react";
 import Fuse from "fuse.js";
 import { useMemo, useState, type ChangeEvent, type ComponentProps, type ReactElement, type ReactNode } from "react";
 
-import { LayeredMenuItem } from "../../LayeredDropdownMenu/LayeredDropdownMenu.js";
-import { useSavedViewsContext } from "../../SavedViewsContext.js";
-import { trimInputString } from "../../utils.js";
+import { LayeredMenuItem } from "../LayeredDropdownMenu/LayeredDropdownMenu.js";
 import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedView.js";
+import { useSavedViewsContext } from "../SavedViewsContext.js";
+import { trimInputString } from "../utils.js";
 import { useSavedViewTileContext } from "./SavedViewTileContext.js";
 
 import "./SavedViewOptions.css";
@@ -78,7 +78,7 @@ export const SavedViewOptions = {
   Delete,
 };
 
-export interface CreateTileOptionsParams {
+export interface CreateSavedViewOptionsParams {
   /** When `true`, the returned options contain a `Rename` entry. */
   renameSavedView?: boolean | undefined;
 
@@ -101,11 +101,11 @@ type OmitCommonOptionProps<T> = Omit<T, "icon">;
  * @example
  * <SavedViewTile
  *   savedView={savedView}
- *   options={createTileOptions({ tagActions, groupActions })}
+ *   options={createSavedViewOptions({ tagActions, groupActions })}
  *   editable
  * />
  */
-export function createTileOptions(args: CreateTileOptionsParams): (close: () => void) => ReactElement[] {
+export function createSavedViewOptions(args: CreateSavedViewOptionsParams): (close: () => void) => ReactElement[] {
   return (close) => {
     const options: ReactElement[] = [];
 
@@ -158,7 +158,7 @@ function Rename(props: RenameProps): ReactElement {
   const handleClick = () => {
     setEditingName(true);
     props.onClick?.();
-  }
+  };
 
   return (
     <MenuItem startIcon={props.icon} onClick={handleClick}>

@@ -7,7 +7,7 @@ import {
   type Tag,
 } from "@itwin/saved-views-client";
 
-import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedViewsWidget/SavedView.js";
+import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedView.js";
 import type {
   CreateGroupParams, CreateSavedViewParams, CreateTagParams, DeleteGroupParams, DeleteSavedViewParams, DeleteTagParams,
   GetSavedViewInfoParams, GetSingularSavedViewParams, GetThumbnailUrlParams, SavedViewInfo, SavedViewsClient,

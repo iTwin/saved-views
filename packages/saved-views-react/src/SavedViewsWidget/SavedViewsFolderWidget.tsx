@@ -6,11 +6,11 @@ import { SvgChevronLeft, SvgHome } from "@itwin/itwinui-icons-react";
 import { Breadcrumbs, Button, DropdownButton, IconButton, MenuItem } from "@itwin/itwinui-react";
 import { useCallback, useMemo, useState, type ReactElement } from "react";
 
+import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedView.js";
+import { SavedViewTile } from "../SavedViewTile/SavedViewTile.js";
 import type { SavedViewActions } from "../useSavedViews.js";
-import type { SavedView, SavedViewGroup, SavedViewTag } from "./SavedView.js";
 import { SavedViewGroupOptions } from "./SavedViewGroupTile/SavedViewGroupOptions.js";
 import { SavedViewGroupTile } from "./SavedViewGroupTile/SavedViewGroupTile.js";
-import { SavedViewTile } from "./SavedViewTile/SavedViewTile.js";
 import { BorderlessExpandableBlock, SavedViewTileGrid } from "./SavedViewsExpandableBlockWidget.js";
 
 interface SavedViewsFolderWidgetProps {

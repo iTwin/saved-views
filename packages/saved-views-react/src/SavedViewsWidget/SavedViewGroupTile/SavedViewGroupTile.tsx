@@ -6,8 +6,8 @@ import { SvgFolder } from "@itwin/itwinui-icons-react";
 import { Text, Tile } from "@itwin/itwinui-react";
 import { useLayoutEffect, useMemo, useRef, useState, type ReactElement, type ReactNode } from "react";
 
-import type { SavedViewGroup } from "../SavedView.js";
-import { EditableTileName } from "../SavedViewTile/SavedViewTile.js";
+import type { SavedViewGroup } from "../../SavedView.js";
+import { EditableTileName } from "../../SavedViewTile/SavedViewTile.js";
 import { SavedViewGroupTileContext, SavedViewGroupTileContextProvider } from "./SavedViewGroupTileContext.js";
 
 interface SavedViewGroupTileProps {

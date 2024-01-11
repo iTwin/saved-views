@@ -8,8 +8,8 @@ import {
   type SetStateAction,
 } from "react";
 
+import type { SavedView, SavedViewGroup, SavedViewTag } from "./SavedView.js";
 import type { SavedViewsClient } from "./SavedViewsClient/SavedViewsClient.js";
-import type { SavedView, SavedViewGroup, SavedViewTag } from "./SavedViewsWidget/SavedView.js";
 
 interface UseSavedViewsParams {
   iTwinId: string;

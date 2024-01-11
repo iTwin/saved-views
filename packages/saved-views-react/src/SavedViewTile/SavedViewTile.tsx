@@ -2,17 +2,17 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { SvgEdit, SvgImageFrame, SvgShare, SvgTag, SvgMore } from "@itwin/itwinui-icons-react";
-import { Button, Input, Text, Tile, IconButton } from "@itwin/itwinui-react";
+import { SvgEdit, SvgImageFrame, SvgMore, SvgShare, SvgTag } from "@itwin/itwinui-icons-react";
+import { Button, IconButton, Input, Text, Tile } from "@itwin/itwinui-react";
 import {
   useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type FocusEvent, type KeyboardEvent,
   type ReactElement, type ReactNode,
 } from "react";
 
-import { LayeredDropdownMenu } from "../../LayeredDropdownMenu/LayeredDropdownMenu.js";
-import { useSavedViewsContext } from "../../SavedViewsContext.js";
-import { trimInputString } from "../../utils.js";
+import { LayeredDropdownMenu } from "../LayeredDropdownMenu/LayeredDropdownMenu.js";
 import type { SavedView, SavedViewTag } from "../SavedView.js";
+import { useSavedViewsContext } from "../SavedViewsContext.js";
+import { trimInputString } from "../utils.js";
 import { SavedViewTileContext, SavedViewTileContextProvider } from "./SavedViewTileContext.js";
 
 import "./SavedViewTile.css";
@@ -50,6 +50,9 @@ interface SavedViewTileProps {
    * Click handler meant for triggering the render of iModel onto the screen with the saved view applied
    */
   onClick?: ((selectedViewId: string) => void) | undefined;
+
+  /** Sets `className` of the top-level tile element. */
+  className?: string | undefined;
 }
 
 /**
@@ -114,7 +117,7 @@ export function SavedViewTile(props: SavedViewTileProps): ReactElement {
         return;
       }
 
-      // The following check is a workaround for false positiv overflow detection in Firefox
+      // The following check is a workaround for false positive overflow detection in Firefox
       if (!isOverflowing(metadataDiv) && !isOverflowing(metadataDiv.lastChild as HTMLElement)) {
         return;
       }
@@ -142,7 +145,7 @@ export function SavedViewTile(props: SavedViewTileProps): ReactElement {
 
   return (
     <SavedViewTileContextProvider value={savedViewTileContext}>
-      <Tile.Wrapper className="svr-tile" onClick={() => props.onClick?.(props.savedView.id)}>
+      <Tile.Wrapper className={`svr-tile ${props.className || ""}`} onClick={() => props.onClick?.(props.savedView.id)}>
         {!props.editable && <Tile.Action />}
         <Tile.Name className="svr-tile-name">
           <EditableTileName
@@ -177,7 +180,7 @@ export function SavedViewTile(props: SavedViewTileProps): ReactElement {
           </Tile.Metadata>
           {
             props.options && props.options.length > 0 &&
-            <div className="svr-tile--more-options">
+            <div className="svr-tile--more-options" onClick={(ev) => ev.stopPropagation()}>
               <LayeredDropdownMenu menuItems={props.options}>
                 <IconButton size="small" styleType="borderless"><SvgMore /></IconButton>
               </LayeredDropdownMenu>
