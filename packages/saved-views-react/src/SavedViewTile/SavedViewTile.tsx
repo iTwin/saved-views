@@ -180,9 +180,9 @@ export function SavedViewTile(props: SavedViewTileProps): ReactElement {
           </Tile.Metadata>
           {
             props.options && props.options.length > 0 &&
-            <div className="svr-tile--more-options">
+            <div className="svr-tile--more-options" onClick={(ev) => ev.stopPropagation()}>
               <LayeredDropdownMenu menuItems={props.options}>
-                <IconButton size="small" styleType="borderless"><SvgMore /></IconButton>
+                  <IconButton size="small" styleType="borderless"><SvgMore /></IconButton>
               </LayeredDropdownMenu>
             </div>
           }
