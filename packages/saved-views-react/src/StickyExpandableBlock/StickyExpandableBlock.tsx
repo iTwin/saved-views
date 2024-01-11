@@ -9,7 +9,7 @@ import {
 
 import "./StickyExpandableBlock.css";
 
-interface StikyExpandableBlockProps {
+interface StickyExpandableBlockProps {
   /** Expandable block title. */
   title: ReactNode;
 
@@ -41,7 +41,7 @@ interface StikyExpandableBlockProps {
  *   Content
  * </StickyExpandableBlock>
  */
-export function StickyExpandableBlock(props: StikyExpandableBlockProps): ReactElement {
+export function StickyExpandableBlock(props: StickyExpandableBlockProps): ReactElement {
   // Prevent clicks on the end icon toggling expansion state
   const handleGroupMenuClick = (event: MouseEvent) => {
     event.stopPropagation();
