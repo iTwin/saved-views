@@ -49,11 +49,7 @@
   visibility: visible;
 }
 
-.svr-expandable-block-header:not(:hover) {
-  background: var(--iui-color-background);
-}
-
-.svr-expandable-block-title {
+.svr-borderless-expandable-block-title {
   display: flex;
   gap: var(--iui-size-xs);
   align-items: center;

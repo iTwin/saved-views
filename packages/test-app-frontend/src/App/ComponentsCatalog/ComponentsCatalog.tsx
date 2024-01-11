@@ -6,24 +6,25 @@ import { SvgRefresh, SvgStatusErrorHollow } from "@itwin/itwinui-icons-react";
 import { PageLayout } from "@itwin/itwinui-layouts-react";
 import { Code, IconButton, List, ListItem, Surface, Text } from "@itwin/itwinui-react";
 import {
-  Component, createElement, StrictMode, useLayoutEffect, useRef, type PropsWithChildren, type ReactElement,
+  Component, StrictMode, createElement, useLayoutEffect, useRef, type PropsWithChildren, type ReactElement,
   type ReactNode,
 } from "react";
 import { Navigate, Route, Routes, useNavigate, useParams } from "react-router-dom";
 
-import {
-  SavedViewsExpandableBlockWidgetDemo, SavedViewsFolderWidgetDemo,
-} from "./components/SavedViewsWidgetDemo.js";
+import { LayeredDropdownMenuDemo } from "./components/LayeredDropdownMenuDemo.js";
 import {
   SavedViewTileBadges, SavedViewTileBasic, SavedViewTileEditableName, SavedViewTileGroups, SavedViewTileNoThumbnail,
   SavedViewTileTags,
 } from "./components/SavedViewTileDemo.js";
-import { LayeredDropdownMenuDemo } from "./components/LayeredDropdownMenuDemo.js";
+import {
+  SavedViewsExpandableBlockWidgetDemo, SavedViewsFolderWidgetDemo,
+} from "./components/SavedViewsWidgetDemo.js";
+import { StickyExpandableBlockDemo } from "./components/StickyExpandableBlockDemo.js";
 
 import "./ComponentsCatalog.css";
 
 const componentsMap = new Map([
-  ["SavedViewsWidget", [SavedViewsExpandableBlockWidgetDemo, SavedViewsFolderWidgetDemo]],
+  ["LayeredDropdownMenu", [LayeredDropdownMenuDemo]],
   [
     "SavedViewTile",
     [
@@ -35,7 +36,8 @@ const componentsMap = new Map([
       SavedViewTileTags,
     ],
   ],
-  ["LayeredDropdownMenu", [LayeredDropdownMenuDemo]],
+  ["SavedViewsWidget", [SavedViewsExpandableBlockWidgetDemo, SavedViewsFolderWidgetDemo]],
+  ["StickyExpandableBlock", [StickyExpandableBlockDemo]],
 ]);
 
 export function ComponentsCatalogRoutes(): ReactElement {
