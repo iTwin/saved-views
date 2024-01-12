@@ -65,11 +65,8 @@
     "vitest": "^1.0.4"
   },
   "peerDependencies": {
-    "@itwin/appui-layout-react": "^4.0.6",
-    "@itwin/core-bentley": "^4.0.6",
     "@itwin/core-common": "^4.0.6",
     "@itwin/core-frontend": "^4.0.6",
-    "@itwin/core-geometry": "^4.0.6",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },
