@@ -2,19 +2,12 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import {
-  IModelConnection,
-  ViewState,
-} from "@itwin/core-frontend";
+import type { Id64Array } from "@itwin/core-bentley";
+import type { IModelConnection, ViewState } from "@itwin/core-frontend";
 
-import {
-  isSavedView3d,
-} from "../../clients/ISavedViewsClient.js";
-import {
-  LegacySavedView, LegacySavedViewBase,
-} from "../SavedViewTypes.js";
-import { Id64Array } from "@itwin/core-bentley";
 import { IModelQueryClient } from "../../clients/IModelQueryClient.js";
+import { isSavedView3d } from "../../clients/ISavedViewsClient.js";
+import type { LegacySavedView, LegacySavedViewBase } from "../SavedViewTypes.js";
 
 function legacyViewHasValidHiddenModelsAndCategories(savedView: LegacySavedViewBase): boolean {
   if (isSavedView3d(savedView)) {
