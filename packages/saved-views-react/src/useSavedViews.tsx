@@ -12,11 +12,25 @@ import type { SavedView, SavedViewGroup, SavedViewTag } from "./SavedView.js";
 import type { SavedViewsClient } from "./SavedViewsClient/SavedViewsClient.js";
 
 interface UseSavedViewsParams {
+  /** iTwin identifier. */
   iTwinId: string;
+
+  /** iModel identifier. */
   iModelId: string;
+
+  /** Implements communication with Saved Views store. */
   client: SavedViewsClient;
+
+  /**
+   * Invoked when any of {@linkcode SavedViewActions} is triggered. Does not get called again until either
+   * {@linkcode onUpdateComplete} or {@linkcode onUpdateError} is invoked.
+   */
   onUpdateInProgress?: (() => void) | undefined;
+
+  /** Invoked once after {@linkcode onUpdateInProgress} when the data is successfully synchronised with the store. */
   onUpdateComplete?: (() => void) | undefined;
+
+  /** Invoked once after {@linkcode onUpdateInProgress} when data synchronisation with the store fails. */
   onUpdateError?: ((error: unknown) => void) | undefined;
 }
 
@@ -30,9 +44,11 @@ interface UseSavedViewsResult {
 export interface SavedViewActions {
   createSavedView: (savedViewName: string, savedViewData: ViewData) => void;
   renameSavedView: (savedViewId: string, newName: string) => void;
+  shareSavedView: (savedViewId: string, share: boolean) => void;
   deleteSavedView: (savedViewId: string) => void;
   createGroup: (groupName: string) => void;
   renameGroup: (groupId: string, newName: string) => void;
+  shareGroup: (groupId: string, share: boolean) => void;
   moveToGroup: (savedViewId: string, groupId: string) => void;
   moveToNewGroup: (savedViewId: string, groupName: string) => void;
   deleteGroup: (groupId: string) => void;
@@ -41,6 +57,7 @@ export interface SavedViewActions {
   removeTag: (savedViewId: string, tagId: string) => void;
 }
 
+/** Implements Saved Views data synchronisation with basic optimistic updates. */
 export function useSavedViews(args: UseSavedViewsParams): UseSavedViewsResult | undefined {
   const onUpdateInProgress = useEvent(args.onUpdateInProgress ?? (() => { }));
   const onUpdateComplete = useEvent(args.onUpdateComplete ?? (() => { }));
@@ -237,6 +254,28 @@ function createSavedViewActions(
         }
       },
     ),
+    shareSavedView: actionWrapper(
+      async (savedViewId: string, share: boolean) => {
+        const savedView = ref.current.mostRecentState.savedViews.get(savedViewId);
+        if (!savedView || savedView.shared === share) {
+          return;
+        }
+
+        updateSavedView(savedViewId, (savedView) => {
+          savedView.shared = share;
+        });
+
+        try {
+          const savedView = await client.updateSavedView({ savedView: { id: savedViewId, shared: share }, signal });
+          updateSavedView(savedView.id, () => savedView);
+        } catch (error) {
+          updateSavedView(savedViewId, (savedView) => {
+            savedView.shared = !share;
+          });
+          throw error;
+        }
+      },
+    ),
     deleteSavedView: actionWrapper(
       async (savedViewId: string) => {
         let prevSavedView: SavedView | undefined;
@@ -277,9 +316,7 @@ function createSavedViewActions(
         });
         try {
           const group = await client.updateGroup({ group: { id: groupId, displayName: newName }, signal });
-          if (!signal.aborted) {
-            updateGroup(group.id, () => group);
-          }
+          updateGroup(group.id, () => group);
         } catch (error) {
           if (prevName !== undefined) {
             const restoredDisplayName = prevName;
@@ -287,6 +324,27 @@ function createSavedViewActions(
               group.displayName = restoredDisplayName;
             });
           }
+          throw error;
+        }
+      },
+    ),
+    shareGroup: actionWrapper(
+      async (groupId: string, share: boolean) => {
+        const group = ref.current.mostRecentState.groups.get(groupId);
+        if (!group || group.shared === share) {
+          return;
+        }
+
+        updateGroup(groupId, (group) => {
+          group.shared = share;
+        });
+        try {
+          const group = await client.updateGroup({ group: { id: groupId, shared: share }, signal });
+          updateGroup(group.id, () => group);
+        } catch (error) {
+          updateGroup(groupId, (group) => {
+            group.shared = !share;
+          });
           throw error;
         }
       },
