@@ -8,7 +8,7 @@
 }
 
 .svr-tile .svr-tile-thumbnail {
-  height: var(--itwin-svr-tile-height, calc(4 * var(--iui-size-xl)));
+  height: var(--itwin-svr-thumbnail-height, calc(4 * var(--iui-size-xl)));
 }
 
 .svr-tile .svr-tile-name {

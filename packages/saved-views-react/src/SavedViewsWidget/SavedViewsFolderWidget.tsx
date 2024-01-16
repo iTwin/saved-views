@@ -8,10 +8,11 @@ import { useCallback, useMemo, useState, type ReactElement } from "react";
 
 import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedView.js";
 import { SavedViewTile } from "../SavedViewTile/SavedViewTile.js";
+import { TileGrid } from "../TileGrid/TileGrid.js";
 import type { SavedViewActions } from "../useSavedViews.js";
 import { SavedViewGroupOptions } from "./SavedViewGroupTile/SavedViewGroupOptions.js";
 import { SavedViewGroupTile } from "./SavedViewGroupTile/SavedViewGroupTile.js";
-import { BorderlessExpandableBlock, SavedViewTileGrid } from "./SavedViewsExpandableBlockWidget.js";
+import { BorderlessExpandableBlock } from "./SavedViewsExpandableBlockWidget.js";
 
 interface SavedViewsFolderWidgetProps {
   savedViews: Map<string, SavedView>;
@@ -145,10 +146,11 @@ function SavedViewsHomeScreen(props: SavedViewsHomeScreenProps): ReactElement {
       onScroll={(event) => props.storeScrollOffset((event.target as HTMLElement).scrollTop)}
     >
       <BorderlessExpandableBlock displayName="Saved views" numItems={ungroupedSavedViews.length} expanded>
-        <SavedViewTileGrid savedViews={ungroupedSavedViews}>
+        <TileGrid gridItems={ungroupedSavedViews}>
           {
             (savedView) =>
               <SavedViewTile
+                key={savedView.id}
                 savedView={savedView}
                 tags={props.tags}
                 editable={props.editable}
@@ -157,7 +159,7 @@ function SavedViewsHomeScreen(props: SavedViewsHomeScreenProps): ReactElement {
                 onClick={props.onTileClick}
               />
           }
-        </SavedViewTileGrid>
+        </TileGrid>
       </BorderlessExpandableBlock>
       <BorderlessExpandableBlock
         className="svr-group-grid"
@@ -167,7 +169,7 @@ function SavedViewsHomeScreen(props: SavedViewsHomeScreenProps): ReactElement {
         onExpandToggle={(expanded) => !expanded && props.clearFocusedGroup?.()}
         editable={props.editable}
       >
-        <div className="svr-saved-view-grid">
+        <div className="svr-tile-grid">
           {groupTiles}
         </div>
       </BorderlessExpandableBlock>
@@ -220,18 +222,20 @@ function SavedViewsGroupScreen(props: SavedViewsGroupScreenProps): ReactElement 
         </Breadcrumbs>
       </div>
       <div style={{ overflow: "auto" }}>
-        <div className="svr-saved-view-grid">
-          {props.savedViews.map((savedView) =>
-            <SavedViewTile
-              key={savedView.id}
-              savedView={savedView}
-              tags={props.tags}
-              editable={props.editable}
-              options={props.options?.(savedView)}
-              onClick={props.onTileClick}
-            />,
-          )}
-        </div>
+        <TileGrid gridItems={props.savedViews}>
+          {
+            (savedView) => (
+              <SavedViewTile
+                key={savedView.id}
+                savedView={savedView}
+                tags={props.tags}
+                editable={props.editable}
+                options={props.options?.(savedView)}
+                onClick={props.onTileClick}
+              />
+            )
+          }
+        </TileGrid>
       </div>
     </div>
   );

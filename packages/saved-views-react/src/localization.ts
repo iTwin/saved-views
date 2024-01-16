@@ -16,6 +16,7 @@ export const defaultLocalization = {
   /** @default "Rename" */
   rename: "Rename",
 
+  /** Strings used within `<SavedViewOptions.MoveToGroup />` component. */
   moveToGroupMenu: {
     /** @default "Create group" */
     createGroup: "Create group:",
@@ -33,11 +34,13 @@ export const defaultLocalization = {
     moveToGroup: "Move to group",
   },
 
+  /** Strings used within `SavedViewOptions` components. */
   searchableMenu: {
     /** @default "No search results" */
     noSearchResults: "No search results",
   },
 
+  /** Strings used within `<SavedViewOptions.ManageTags />` component. */
   tagsMenu: {
     /** @default "Create tag:" */
     createTag: "Create tag:",
@@ -52,8 +55,18 @@ export const defaultLocalization = {
     tags: "Tags",
   },
 
+  /** Strings used within `<SavedViewTile />` component. */
   tile: {
     /** @default "more" */
     moreTags: "more",
+  },
+
+  /** Strings used within `<TileGrid />` component. */
+  tileGrid: {
+    /** @default "more available" */
+    moreAvailable: "more available",
+
+    /** @default "Show more" */
+    showMore: "Show more",
   },
 } as const;

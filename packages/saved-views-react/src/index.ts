@@ -17,6 +17,7 @@ export { SavedViewsContextProvider, type SavedViewsContext } from "./SavedViewsC
 export { SavedViewsExpandableBlockWidget } from "./SavedViewsWidget/SavedViewsExpandableBlockWidget.js";
 export { SavedViewsFolderWidget } from "./SavedViewsWidget/SavedViewsFolderWidget.js";
 export { StickyExpandableBlock } from "./StickyExpandableBlock/StickyExpandableBlock.js";
+export { TileGrid } from "./TileGrid/TileGrid.js";
 export {
   applyExtensionsToViewport, translateLegacySavedViewToITwinJsViewState,
   translateSavedViewResponseToLegacySavedViewResponse,

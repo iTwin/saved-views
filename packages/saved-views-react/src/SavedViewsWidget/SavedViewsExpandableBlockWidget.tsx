@@ -3,12 +3,13 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import { SvgBlank, SvgEdit, SvgMore, SvgShare } from "@itwin/itwinui-icons-react";
-import { Button, DropdownMenu, IconButton, MenuItem, Surface, Text } from "@itwin/itwinui-react";
-import { Fragment, useState, type ReactElement, type ReactNode } from "react";
+import { DropdownMenu, IconButton, MenuItem, Text } from "@itwin/itwinui-react";
+import { useState, type ReactElement, type ReactNode } from "react";
 
 import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedView.js";
 import { SavedViewTile } from "../SavedViewTile/SavedViewTile.js";
 import { StickyExpandableBlock } from "../StickyExpandableBlock/StickyExpandableBlock.js";
+import { TileGrid } from "../TileGrid/TileGrid.js";
 import type { SavedViewActions } from "../useSavedViews.js";
 
 import "./SavedViewsExpandableBlockWidget.css";
@@ -74,58 +75,21 @@ export function SavedViewsGroup(props: SavedViewsGroupProps): ReactElement {
       shared={props.group?.shared}
       editable={props.editable}
     >
-      <SavedViewTileGrid savedViews={savedViews}>
+      <TileGrid gridItems={savedViews}>
         {
-          (savedView) =>
+          (savedView) => (
             <SavedViewTile
+              key={savedView.id}
               savedView={savedView}
               tags={props.tags}
               editable={props.editable}
               onRename={props.actions?.renameSavedView}
               options={props.options?.(savedView)}
             />
+          )
         }
-      </SavedViewTileGrid>
+      </TileGrid>
     </BorderlessExpandableBlock>
-  );
-}
-
-interface SavedViewTileGridProps {
-  savedViews: SavedView[];
-  children: (savedView: SavedView) => ReactElement;
-}
-
-export function SavedViewTileGrid(props: SavedViewTileGridProps): ReactElement {
-  const pageSize = 12;
-  const [softLimit, setSoftLimit] = useState(pageSize - 1);
-
-  const tiles = props.savedViews
-    .slice(0, props.savedViews.length > softLimit + pageSize ? softLimit : undefined)
-    .map((savedView) => <Fragment key={savedView.id}>{props.children(savedView)}</Fragment>);
-  const numAdditionalSavedViews = props.savedViews.length - tiles.length;
-
-  return (
-    <div className="svr-saved-view-grid">
-      {tiles}
-      {
-        numAdditionalSavedViews > 0 &&
-        <Surface
-          style={{
-            padding: "var(--iui-size-m)",
-            display: "grid",
-            justifyItems: "center",
-            gap: "var(--iui-size-s)",
-          }}
-          elevation={0}
-        >
-          <Text variant="headline">{numAdditionalSavedViews}</Text>
-          <Text style={{ textAlign: "center", width: "calc(5 * var(--iui-size-xl))" }} variant="leading">
-            more available
-          </Text>
-          <Button onClick={() => setSoftLimit((prev) => prev + pageSize)}>Show more</Button>
-        </Surface>
-      }
-    </div>
   );
 }
 
