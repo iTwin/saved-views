@@ -20,6 +20,7 @@ import {
   SavedViewsExpandableBlockWidgetDemo, SavedViewsFolderWidgetDemo,
 } from "./components/SavedViewsWidgetDemo.js";
 import { StickyExpandableBlockDemo } from "./components/StickyExpandableBlockDemo.js";
+import { TileGridDemo } from "./components/TileGridDemo.js";
 
 import "./ComponentsCatalog.css";
 
@@ -38,6 +39,7 @@ const componentsMap = new Map([
   ],
   ["SavedViewsWidget", [SavedViewsExpandableBlockWidgetDemo, SavedViewsFolderWidgetDemo]],
   ["StickyExpandableBlock", [StickyExpandableBlockDemo]],
+  ["TileGrid", [TileGridDemo]],
 ]);
 
 export function ComponentsCatalogRoutes(): ReactElement {

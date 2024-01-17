@@ -1,0 +1,26 @@
+/*---------------------------------------------------------------------------------------------
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+
+@layer itwin-svr {
+  .svr-tile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, var(--itwin-svr-tile-width));
+    place-content: start space-around;
+    place-items: center;
+    gap: var(--iui-size-m);
+    margin: var(--iui-size-xs) var(--iui-size-s);
+    margin-bottom: var(--iui-size-l);
+  }
+
+  .svr-tile-grid--more-items-tile {
+    padding: var(--iui-size-m);
+    display: grid;
+    gap: var(--iui-size-s);
+    justify-items: center;
+    width: calc(0.8 * var(--itwin-svr-tile-width));
+    text-align: center;
+    min-width: min-content;
+  }
+}
