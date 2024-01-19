@@ -57,7 +57,15 @@ export interface SavedViewActions {
   removeTag: (savedViewId: string, tagId: string) => void;
 }
 
-/** Implements Saved Views data synchronisation with basic optimistic updates. */
+/**
+ * Pulls Saved View data from a store and provides means to update and synchronize the data back to it. Interaction with
+ * the store is performed via {@linkcode SavedViewsClient} interface which could communicate, for instance, with
+ * [iTwin Saved Views API](https://developer.bentley.com/apis/savedviews/overview/) using `ITwinSavedViewsClient`.
+ *
+ * Note on the current implementation limitations. While the result of the first update action is reflected immediately,
+ * subsequent actions are put in a queue and executed serially. This may cause the UI to feel sluggish when user makes
+ * changes to Saved Views faster than the Saved Views store can be updated.
+ */
 export function useSavedViews(args: UseSavedViewsParams): UseSavedViewsResult | undefined {
   const onUpdateInProgress = useEvent(args.onUpdateInProgress ?? (() => { }));
   const onUpdateComplete = useEvent(args.onUpdateComplete ?? (() => { }));

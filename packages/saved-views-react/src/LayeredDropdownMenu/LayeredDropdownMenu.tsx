@@ -11,8 +11,8 @@ import "./LayeredDropdownMenu.css";
 interface LayeredDropdownMenuProps {
   /**
    * Items to pass to iTwinUI `<DropdownMenu />` component. It is preferable for items to include at least one
-   * `<LayeredDropdownMenuItem />`. Otherwise, it is more efficient to use plain `<DropdownMenu />`.
-  */
+   * `<LayeredMenuItem />`. Otherwise, it is more efficient to use plain `<DropdownMenu />`.
+   */
   menuItems: ReactElement[] | ((close: () => void) => ReactElement[]);
 
   /** Dropdown menu trigger to pass to iTwinUI `<DropdownMenu />` component. */
