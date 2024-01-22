@@ -2,24 +2,18 @@
 
 ## About
 
-## Installation
+This package hosts client-side code and TypeScript types for interacting with [iTwin Platform Saved Views API](https://developer.bentley.com/apis/savedviews/overview/).
 
-```shell
-npm install @itwin/saved-views-client
-```
+## Usage
 
-## Example
-
-```TypeScript
+```ts
 import { ITwinSavedViewsClient } from "@itwin/saved-views-client";
 
-const iTwinSavedViewsClient = new ITwinSavedViewsClient({
-  getAccessToken: () => { return token; };
+const client = new ITwinSavedViewsClient({
+  getAccessToken: async () => "access_token",
 });
 
-const res = await iTwinSavedViewsClient.getSavedViewMinimal({
-  savedViewId:"ID",
-})
+const response = await client.getSavedViewMinimal({ savedViewId: "id" });
 ```
 
 ## Contributing
