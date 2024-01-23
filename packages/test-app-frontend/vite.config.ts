@@ -20,8 +20,6 @@ export default defineConfig(() => ({
         { src: "./node_modules/@itwin/core-frontend/lib/public/**", dest: "." },
         { src: "./node_modules/@itwin/core-react/lib/public/locales", dest: "." },
         { src: "./node_modules/@itwin/imodel-components-react/lib/public/locales", dest: "." },
-        { src: "./node_modules/@itwin/presentation-common/lib/public/locales", dest: "." },
-        { src: "./node_modules/@itwin/presentation-components/lib/public/locales", dest: "." },
       ],
     }),
   ],
