@@ -10,7 +10,8 @@ This package hosts client-side code and TypeScript types for interacting with [i
 import { ITwinSavedViewsClient } from "@itwin/saved-views-client";
 
 const client = new ITwinSavedViewsClient({
-  getAccessToken: async () => "access_token",
+  // auth_token should have access to savedviews:read and savedviews:modify OIDC scopes
+  getAccessToken: async () => "auth_token",
 });
 
 const response = await client.getSavedViewMinimal({ savedViewId: "id" });
