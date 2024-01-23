@@ -4,10 +4,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/iTwin/saved-views-react.git",
+    "url": "https://github.com/iTwin/saved-views.git",
     "directory": "packages/saved-views-client"
   },
-  "homepage": "https://github.com/iTwin/saved-views-react/packages/saved-views-client",
+  "homepage": "https://github.com/iTwin/saved-views/packages/saved-views-client",
   "author": {
     "name": "Bentley Systems, Inc.",
     "url": "https://www.bentley.com"

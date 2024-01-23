@@ -42,7 +42,7 @@ export function AppHeader(): ReactElement {
     <IconButton
       key="Repository"
       as="a"
-      href="https://github.com/iTwin/saved-views-react"
+      href="https://github.com/iTwin/saved-views"
       title="Source code"
       styleType="borderless"
     >
