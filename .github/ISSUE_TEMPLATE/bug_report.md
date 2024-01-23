@@ -7,7 +7,7 @@ assignees: ''
 ---
 
 <!--
-Thank you for contributing to iTwin/saved-views-react by creating an issue!
+Thank you for contributing to iTwin/saved-views by creating an issue!
 Make sure you first do a search for existing issues to avoid duplicates.
 -->
 

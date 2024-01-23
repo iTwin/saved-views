@@ -1,6 +1,6 @@
 # iTwin Saved Views
 
-[![CI](https://github.com/iTwin/saved-views-react/actions/workflows/CI.yaml/badge.svg)](https://github.com/iTwin/saved-views-react/actions/workflows/CI.yaml) [![CodeQL](https://github.com/iTwin/saved-views-react/actions/workflows/codeql.yml/badge.svg)](https://github.com/iTwin/saved-views-react/actions/workflows/codeql.yml)
+[![CI](https://github.com/iTwin/saved-views/actions/workflows/CI.yaml/badge.svg)](https://github.com/iTwin/saved-views/actions/workflows/CI.yaml) [![CodeQL](https://github.com/iTwin/saved-views/actions/workflows/codeql.yml/badge.svg)](https://github.com/iTwin/saved-views/actions/workflows/codeql.yml)
 
 ## Packages
 
