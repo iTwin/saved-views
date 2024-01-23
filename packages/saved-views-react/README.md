@@ -49,7 +49,10 @@ export function SavedViewsWidget(props) {
 ```tsx
 import { useSavedViews, ITwinSavedViewsClient } from "@itwin/saved-views-react";
 
-const client = new ITwinSavedViewsClient({ getAccessToken: async () => "auth_token" });
+const client = new ITwinSavedViewsClient({
+  // auth_token should have access to savedviews:read and savedviews:modify OIDC scopes
+  getAccessToken: async () => "auth_token",
+});
 
 export function SavedViewsWidget(props) {
   const savedViews = useSavedViews({ iTwinId: props.iTwinId, iModelId: props.iModelId, client });

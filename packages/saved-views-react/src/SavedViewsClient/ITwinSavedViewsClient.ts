@@ -15,10 +15,17 @@ import type {
 } from "./SavedViewsClient.js";
 
 interface ITwinSavedViewsClientParams {
+  /** @default "https://api.bentley.com/savedviews"  */
   getAccessToken: () => Promise<string>;
+
+  /**
+   * Authorization token that grants access to iTwin Saved Views API. The token should be valid for `savedviews:read`
+   * and `savedviews:modify` OIDC scopes.
+   */
   baseUrl?: string | undefined;
 }
 
+/**  */
 export class ITwinSavedViewsClient implements SavedViewsClient {
   private client: Client;
 
