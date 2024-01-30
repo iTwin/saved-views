@@ -23,7 +23,8 @@
         "types": "./lib/cjs/index.d.ts",
         "default": "./lib/cjs/index.js"
       }
-    }
+    },
+    "./experimental": "./lib/esm/experimental.js"
   },
   "files": [
     "./lib",

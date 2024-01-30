@@ -6,11 +6,13 @@ import react from "@vitejs/plugin-react-swc";
 import * as path from "path";
 import { defineConfig, Plugin } from "vite";
 import { viteStaticCopy } from "vite-plugin-static-copy";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 // https://vitejs.dev/config/
 export default defineConfig(() => ({
   plugins: [
-    new StringReplacePlugin(),
+    tsconfigPaths(),
+    stringReplacePlugin(),
     react(),
     viteStaticCopy({
       targets: [
@@ -25,14 +27,6 @@ export default defineConfig(() => ({
   ],
   resolve: {
     alias: [
-      {
-        find: "@itwin/saved-views-client",
-        replacement: path.resolve(__dirname, "../saved-views-client/src/index.ts"),
-      },
-      {
-        find: "@itwin/saved-views-react",
-        replacement: path.resolve(__dirname, "../saved-views-react/src/index.ts"),
-      },
       {
         find: /^~(.*\/core-react\/)scrollbar$/,
         replacement: path.resolve(__dirname, "./node_modules/$1/_scrollbar.scss"),
@@ -68,12 +62,13 @@ export default defineConfig(() => ({
   },
 }));
 
-class StringReplacePlugin implements Plugin {
-  public name = StringReplacePlugin.name;
-  public enforce = "pre" as const;
-
-  public transform(code: string): string {
-    // iTwin.js by default injects a font that is incorrect and lacks some required font weights
-    return code.replace("document.head.prepend(openSans);", "// document.head.prepend(openSans);");
+function stringReplacePlugin(): Plugin {
+  return {
+    name: stringReplacePlugin.name,
+    enforce: "pre",
+    transform: (code: string) => {
+      // iTwin.js by default injects a font that is incorrect and lacks some required font weights
+      return code.replace("document.head.prepend(openSans);", "// document.head.prepend(openSans);");
+    }
   }
 }

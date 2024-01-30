@@ -11,6 +11,7 @@
     "paths": {
       "@itwin/saved-views-client": [ "../saved-views-client/src/index.ts" ],
       "@itwin/saved-views-react": [ "../saved-views-react/src/index.ts" ],
+      "@itwin/saved-views-react/experimental": ["../saved-views-react/src/experimental.ts"],
     },
   },
   "include": [ "src" ],
