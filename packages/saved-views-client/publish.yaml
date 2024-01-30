@@ -1,7 +1,7 @@
 trigger:
   tags:
     include:
-      - v*.*.*
+      - v*.*.*-client
 
 pr: none
 
@@ -9,8 +9,8 @@ variables:
   - name: packageName
     value: saved-views-client
   - name: packageVersion
-    # Build.SourceBranchName will be a tag that triggereed the pipeline, like "v1.2.3"
-    value: ${{ replace(variables['Build.SourceBranchName'], 'v', '') }}
+    # Build.SourceBranchName will be a tag that triggereed the pipeline, like "v1.2.3-client"
+    value: ${{ replace(replace(variables['Build.SourceBranchName'], '-client', ''), 'v', '') }}
   - name: tarballName
     value: itwin-$(packageName)-$(packageVersion).tgz
 
