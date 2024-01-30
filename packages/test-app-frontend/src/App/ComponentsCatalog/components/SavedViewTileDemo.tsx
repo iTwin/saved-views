@@ -3,10 +3,8 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import { SvgLocation, SvgLockUnlocked, SvgShare, SvgStar } from "@itwin/itwinui-icons-react";
-import {
-  SavedViewTile, createSavedViewOptions, type CreateSavedViewOptionsParams, type SavedView, type SavedViewGroup,
-  type SavedViewTag,
-} from "@itwin/saved-views-react";
+import { SavedViewTile, type SavedView, type SavedViewGroup, type SavedViewTag } from "@itwin/saved-views-react";
+import { createSavedViewOptions, type CreateSavedViewOptionsParams } from "@itwin/saved-views-react/experimental";
 import { useState, type ReactElement } from "react";
 
 import { useThumbnailImage } from "../useSavedViewData.js";

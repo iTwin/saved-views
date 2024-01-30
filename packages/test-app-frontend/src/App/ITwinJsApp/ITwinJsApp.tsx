@@ -14,10 +14,11 @@ import { FrontendIModelsAccess } from "@itwin/imodels-access-frontend";
 import { IModelsClient } from "@itwin/imodels-client-management";
 import { PageLayout } from "@itwin/itwinui-layouts-react";
 import { Button, useToaster } from "@itwin/itwinui-react";
+import { ITwinSavedViewsClient, useSavedViews } from "@itwin/saved-views-react";
 import {
-  ITwinSavedViewsClient, SavedViewsFolderWidget, applyExtensionsToViewport, createSavedViewOptions,
-  translateLegacySavedViewToITwinJsViewState, translateSavedViewResponseToLegacySavedViewResponse, useSavedViews,
-} from "@itwin/saved-views-react";
+  SavedViewsFolderWidget, applyExtensionsToViewport, createSavedViewOptions, translateLegacySavedViewToITwinJsViewState,
+  translateSavedViewResponseToLegacySavedViewResponse,
+} from "@itwin/saved-views-react/experimental";
 import { useEffect, useMemo, useState, type ReactElement } from "react";
 
 import { ViewportComponent } from "@itwin/imodel-components-react";

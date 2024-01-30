@@ -5,7 +5,7 @@
 import { Button, Surface } from "@itwin/itwinui-react";
 import {
   SavedViewsExpandableBlockWidget, SavedViewsFolderWidget, createSavedViewOptions,
-} from "@itwin/saved-views-react";
+} from "@itwin/saved-views-react/experimental";
 import { ReactElement } from "react";
 
 import { useSavedViewData } from "../useSavedViewData.js";

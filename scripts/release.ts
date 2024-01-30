@@ -3,12 +3,15 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import { execFileSync } from "child_process";
-import * as fs from "fs";
-import * as path from "path";
+import fs from "fs";
+import path from "path";
 
-const usage = `Usage: npm release -- <version>
-Where <version> is one of:
-    major | minor | patch | premajor [preid] | preminor [preid] | prepatch [preid] | prerelease [preid]`;
+const usage = `Usage:
+    npm run release -- client <version>
+    npm run release -- react <version>
+
+    Where <version> is one of:
+        major | minor | patch | premajor [preid] | preminor [preid] | prepatch [preid] | prerelease [preid]`;
 
 main();
 
@@ -131,19 +134,24 @@ function validateArgs(argv: string[]): ProcessedCliArgs {
     printUsageAndExit();
   }
 
-  const version = argv[2];
-  const preid = argv[3];
+  const packageId = argv[2]
+  const version = argv[3];
+  const preid = argv[4];
 
-  if (!new Set(["major", "minor", "patch", "premajor", "preminor", "prepatch", "prerelease"]).has(version)) {
+  if (!["client", "react"].includes(packageId)) {
     printUsageAndExit();
   }
 
-  const maxArgvLength = version.startsWith("pre") ? 4 : 3;
+  if (!["major", "minor", "patch", "premajor", "preminor", "prepatch", "prerelease"].includes(version)) {
+    printUsageAndExit();
+  }
+
+  const maxArgvLength = version.startsWith("pre") ? 5 : 4;
   if (argv.length > maxArgvLength) {
     printUsageAndExit();
   }
 
-  const packageDirPath = path.join(process.cwd(), "packages/saved-views-react");
+  const packageDirPath = path.join(process.cwd(), `packages/saved-views-${packageId}`);
   if (!fs.existsSync(packageDirPath)) {
     printErrorAndExit(`Directory "${packageDirPath}" does not exist.`);
   }
