@@ -7,6 +7,5 @@ export { SavedViewsExpandableBlockWidget } from "./SavedViewsWidget/SavedViewsEx
 export { SavedViewsFolderWidget } from "./SavedViewsWidget/SavedViewsFolderWidget.js";
 export {
   applyExtensionsToViewport, translateLegacySavedViewToITwinJsViewState,
-  translateSavedViewResponseToLegacySavedViewResponse
+  translateSavedViewResponseToLegacySavedViewResponse,
 } from "./api/utilities/translation/SavedViewTranslation.js";
-

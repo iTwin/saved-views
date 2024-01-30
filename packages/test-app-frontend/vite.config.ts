@@ -69,6 +69,6 @@ function stringReplacePlugin(): Plugin {
     transform: (code: string) => {
       // iTwin.js by default injects a font that is incorrect and lacks some required font weights
       return code.replace("document.head.prepend(openSans);", "// document.head.prepend(openSans);");
-    }
-  }
+    },
+  };
 }
