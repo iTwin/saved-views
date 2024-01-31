@@ -5,7 +5,7 @@ parameters:
     type: string
 
 stages:
-  - stage: Publish artifact
+  - stage: PublishArtifact
     displayName: Build
     jobs:
       - job: Build
