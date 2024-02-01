@@ -2,18 +2,13 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { type EmphasizeElementsProps } from "@itwin/core-common";
-import {
-  EmphasizeElements, PerModelCategoryVisibility,
-  type Viewport,
-} from "@itwin/core-frontend";
+import type { EmphasizeElementsProps } from "@itwin/core-common";
+import { EmphasizeElements, PerModelCategoryVisibility, type Viewport } from "@itwin/core-frontend";
 
-import {
-  ModelCategoryOverrideProvider,
-} from "../../../ui/viewlist/ModelCategoryOverrideProvider.js";
+import { ModelCategoryOverrideProvider } from "../../../ui/viewlist/ModelCategoryOverrideProvider.js";
 import {
   extractEmphasizeElements, extractPerModelCategoryVisibility, extractVisibilityOverride,
-} from "./extensionExtractor";
+} from "./extensionExtractor.js";
 
 export interface ExtensionHandler {
   extensionName: string;

@@ -2,7 +2,9 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import type { ExtensionMin, ExtensionSavedViewCreate, SavedViewWithDataRepresentation, ViewData } from "@itwin/saved-views-client";
+import type {
+  ExtensionMin, ExtensionSavedViewCreate, SavedViewWithDataRepresentation, ViewData,
+} from "@itwin/saved-views-client";
 
 import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedView.js";
 

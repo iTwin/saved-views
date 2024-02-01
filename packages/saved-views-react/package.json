@@ -12,32 +12,27 @@
     "name": "Bentley Systems, Inc.",
     "url": "https://www.bentley.com"
   },
-  "types": "./lib/cjs/index.d.ts",
+  "type": "module",
   "exports": {
     ".": {
-      "import": {
-        "types": "./lib/esm/index.d.ts",
-        "default": "./lib/esm/index.js"
-      },
-      "require": {
-        "types": "./lib/cjs/index.d.ts",
-        "default": "./lib/cjs/index.js"
-      }
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
     },
-    "./experimental": "./lib/esm/experimental.js"
+    "./experimental": {
+      "types": "./lib/experimental.d.ts",
+      "default": "./lib/experimental.js"
+    }
   },
   "files": [
     "./lib",
     "./public"
   ],
   "scripts": {
-    "build": "run-p build:esm build:cjs",
-    "build:esm": "run-s build:transpile:esm build:css:esm",
-    "build:cjs": "run-s build:transpile:cjs build:css:cjs",
-    "build:transpile:esm": "tsc --project ./tsconfig.build.json",
-    "build:transpile:cjs": "tsc --project ./tsconfig.build.json --module CommonJS --moduleResolution Node16 --outDir ./lib/cjs",
-    "build:css:esm": "postcss src/**/*.css --base ./src --dir ./lib/esm",
-    "build:css:cjs": "postcss src/**/*.css --base ./src --dir ./lib/cjs",
+    "build": "run-p build:*",
+    "build:transpile": "run-s build:transpile:*",
+    "build:transpile:client": "cd ../saved-views-client && npm run build",
+    "build:transpile:react": "tsc --project ./tsconfig.build.json",
+    "build:css": "postcss src/**/*.css --base ./src --dir ./lib",
     "test": "vitest run --passWithNoTests",
     "test:cover": "vitest run --coverage --passWithNoTests",
     "test:watch": "vitest watch",

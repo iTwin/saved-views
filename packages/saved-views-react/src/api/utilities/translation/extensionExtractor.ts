@@ -2,24 +2,15 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import {
-  type ExtractionFunc,
-  applyExtraction,
-  extractArray,
-  extractBoolean,
-  extractColor,
-  extractNumber,
-  extractObject,
-  extractSimpleArray,
-  extractString,
-  simpleTypeOf,
-} from "./extractionUtilities";
-
 import { type EmphasizeElementsProps } from "@itwin/core-common";
 
-import { type PerModelCategoryVisibilityProps } from "../SavedViewTypes";
-import { featureAppearanceMappings } from "./displayStyleExtractor";
 import { ModelCategoryOverrideProviderProps } from "../../../ui/viewlist/ModelCategoryOverrideProvider.js";
+import type { PerModelCategoryVisibilityProps } from "../SavedViewTypes.js";
+import { featureAppearanceMappings } from "./displayStyleExtractor.js";
+import {
+  applyExtraction, extractArray, extractBoolean, extractColor, extractNumber, extractObject, extractSimpleArray,
+  extractString, simpleTypeOf, type ExtractionFunc,
+} from "./extractionUtilities.js";
 
 /** Appearance Override type for EmphasizeElements */
 const appearanceOverrideEmphElemMappings: ExtractionFunc<void, void>[] = [

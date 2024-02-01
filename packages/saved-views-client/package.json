@@ -12,22 +12,15 @@
     "name": "Bentley Systems, Inc.",
     "url": "https://www.bentley.com"
   },
-  "types": "./lib/cjs/index.d.ts",
+  "type": "module",
   "exports": {
     ".": {
-      "import": {
-        "types": "./lib/esm/index.d.ts",
-        "default": "./lib/esm/index.js"
-      },
-      "require": {
-        "types": "./lib/cjs/index.d.ts",
-        "default": "./lib/cjs/index.js"
-      }
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
     }
   },
   "files": [
-    "./lib",
-    "./public"
+    "./lib"
   ],
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json",

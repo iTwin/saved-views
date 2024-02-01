@@ -5,8 +5,7 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "declaration": true,
-    "esModuleInterop": true,
-    "outDir": "./lib/esm",
+    "outDir": "./lib",
     "paths": {
       "@itwin/saved-views-client": [ "../saved-views-client/src/index.ts" ],
     },

@@ -3,9 +3,7 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import { BaseMapLayerProps, ImageMapLayerProps } from "@itwin/core-common";
-import {
-  ViewData, ViewDataItwin3d, ViewDataITwinDrawing, ViewDataITwinSheet,
-} from "@itwin/saved-views-client";
+import type { ViewData, ViewDataITwinDrawing, ViewDataITwinSheet, ViewDataItwin3d } from "@itwin/saved-views-client";
 
 /**
  * Convert url that potentially contains subtituted characters ('++and++' or '++dot++') to use restricated characters ('&' or '.')

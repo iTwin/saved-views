@@ -4,29 +4,29 @@
 *--------------------------------------------------------------------------------------------*/
 import { IModelReadRpcInterface, ViewQueryParams, ViewStateProps } from "@itwin/core-common";
 import {
-  DrawingViewState, EmphasizeElements, IModelConnection, ScreenViewport, SheetViewState,
-  SpatialViewState, Viewport, ViewState,
+  DrawingViewState, EmphasizeElements, IModelConnection, ScreenViewport, SheetViewState, SpatialViewState, ViewState,
+  Viewport,
 } from "@itwin/core-frontend";
 import {
-  Extension, SavedViewWithDataRepresentation, ViewData, ViewDataItwin3d, ViewDataITwinDrawing,
+  Extension, SavedViewWithDataRepresentation, ViewData, ViewDataITwinDrawing, ViewDataITwinSheet, ViewDataItwin3d,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  ViewDataITwinSheet, ViewDataWithLegacy,
+  ViewDataWithLegacy,
 } from "@itwin/saved-views-client";
 
-import { ViewTypes } from "../../../SavedViewTypes.js";
-import {
-  isDrawingSavedView, isSheetSavedView, isSpatialSavedView,
-} from "../../clients/ISavedViewsClient.js";
-import {
-  LegacySavedView, LegacySavedView2d,
-  LegacySavedViewBase,
-} from "../SavedViewTypes.js";
+import { isDrawingSavedView, isSheetSavedView, isSpatialSavedView } from "../../clients/ISavedViewsClient.js";
+import { LegacySavedView, LegacySavedView2d, LegacySavedViewBase } from "../SavedViewTypes.js";
 import { applyHiddenModelsAndCategories } from "./ModelsAndCategoriesHelper.js";
 import { SavedViewsExtensionHandlers } from "./SavedViewsExtensionHandlers.js";
 import {
   cleanLegacyViewModelSelectorPropsModels, savedViewITwin3dToLegacy3dSavedView,
   savedViewItwinDrawingToLegacyDrawingView, savedViewItwinSheetToLegacySheetSavedView,
 } from "./viewExtractorSavedViewToLegacySavedView.js";
+
+enum ViewTypes {
+  SheetViewDefinition,
+  ViewDefinition3d,
+  DrawingViewDefinition,
+}
 
 /**
  * Type-check for {@link ViewDataItwin3d}

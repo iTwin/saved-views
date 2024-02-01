@@ -3,16 +3,9 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import {
-  type ExtractionFunc,
-  applyExtraction,
-  extractArray2d,
-  extractArrayConditionally,
-  extractBoolean,
-  extractNumber,
-  extractObject,
-  extractSimpleArray,
-  simpleTypeOf,
-} from "./extractionUtilities";
+  applyExtraction, extractArray2d, extractArrayConditionally, extractBoolean, extractNumber, extractObject,
+  extractSimpleArray, simpleTypeOf, type ExtractionFunc,
+} from "./extractionUtilities.js";
 
 const isPoint = (val: unknown): val is [number, number, number] =>
   Array.isArray(val) &&

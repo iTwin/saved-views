@@ -3,10 +3,8 @@
   "compilerOptions": {
     "lib": [ "ES2022", "DOM" ],
     "isolatedModules": true,
-    "jsx": "react-jsx",
     "declaration": true,
-    "esModuleInterop": true,
-    "outDir": "./lib/esm",
+    "outDir": "./lib",
   },
   "include": [ "src" ],
   "references": [ { "path": "./tsconfig.node.json" } ],

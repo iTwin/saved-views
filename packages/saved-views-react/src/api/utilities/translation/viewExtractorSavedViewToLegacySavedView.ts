@@ -2,23 +2,17 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { type Id64Array } from "@itwin/core-bentley";
-import {
-  type DrawingViewState,
-  type SpatialViewState,
-  SheetViewState,
-} from "@itwin/core-frontend";
-import {
-  SavedViewBase, SavedViewTag, SavedViewWithDataRepresentation, ViewDataItwin3d,
-  ViewDataITwinDrawing, ViewDataITwinSheet, ViewITwin3d,
+import type { Id64Array } from "@itwin/core-bentley";
+import { SheetViewState, type DrawingViewState, type SpatialViewState } from "@itwin/core-frontend";
+import type {
+  SavedViewBase, SavedViewTag, SavedViewWithDataRepresentation, ViewDataITwinDrawing, ViewDataITwinSheet,
+  ViewDataItwin3d, ViewITwin3d,
 } from "@itwin/saved-views-client";
 
-import {
-  LegacySavedView, LegacySavedView2d, LegacyTag,
-} from "../SavedViewTypes";
-import { extractClipVectors } from "./clipVectorsExtractor";
-import { extractDisplayStyle, extractDisplayStyle3d } from "./displayStyleExtractor";
-import { convertAllLegacyUrlsToUrls, urlToLegacyUrl } from "./urlConverter";
+import type { LegacySavedView, LegacySavedView2d, LegacyTag } from "../SavedViewTypes.js";
+import { extractClipVectors } from "./clipVectorsExtractor.js";
+import { extractDisplayStyle, extractDisplayStyle3d } from "./displayStyleExtractor.js";
+import { convertAllLegacyUrlsToUrls, urlToLegacyUrl } from "./urlConverter.js";
 
 const UNGROUPED_ID = "-1";
 
