@@ -8,7 +8,7 @@ stages:
   - stage: PublishArtifact
     displayName: Build and publish artifact
     jobs:
-      - job: Build
+      - job: BuildAndPublish
         steps:
           - checkout: self
             clean: true
@@ -46,9 +46,6 @@ stages:
               script: npm run test:cover
               workingDirectory: packages/${{ parameters.packageName }}/
 
-      - job: Publish
-        dependsOn: Build
-        steps:
           - task: CmdLine@2
             displayName: Pack package files
             inputs:
