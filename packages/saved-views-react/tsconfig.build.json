@@ -1,4 +1,9 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["./src/tests", "**/*.test.*"],
+  "compilerOptions": {
+    // Specifying @itwin/saved-views-client path mapping in the parent config makes TypeScript think its source code
+    // is part of the current package and include its files in the output
+    "paths": { },
+  },
+  "exclude": [ "**/*.test.*" ],
 }

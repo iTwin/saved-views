@@ -2,11 +2,10 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-/* eslint-disable @typescript-eslint/no-var-requires */
-const fs: typeof import("fs/promises") = require("fs/promises");
-const postcssModules: typeof import("postcss-modules") = require("postcss-modules");
-const recursiveReaddir: typeof import("recursive-readdir") = require("recursive-readdir");
-const packageJson: typeof import("./package.json") = require("./package.json");
+import fs from "fs/promises";
+import postcssModules from "postcss-modules";
+import recursiveReaddir from "recursive-readdir";
+import packageJson from "./package.json";
 
 const replacements = new Map<string, string>();
 const majorVersion = packageJson.version.substring(0, packageJson.version.indexOf("."));
