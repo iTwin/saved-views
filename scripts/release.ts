@@ -20,7 +20,7 @@ function main(): void {
   validateChangelog(args.changelogFilePath);
 
   try {
-    const parameters = ["version", "--no-git-tag-version", args.version];
+    const parameters = ["version", "--no-git-tag-version", args.versionBump];
     if (args.preid) {
       parameters.push("--preid", args.preid);
     }
@@ -31,7 +31,8 @@ function main(): void {
   }
 
   const { packageName, packageVersion } = readPackageJson(args.packageJsonFilePath);
-  updateChangelog(args.changelogFilePath, packageVersion);
+  const releaseTag = `v${packageVersion}-${args.packageId}`;
+  updateChangelog(args.changelogFilePath, packageVersion, releaseTag);
 
   try {
     // Make sure only the modified package.json and CHANGELOG.md files get committed
@@ -43,7 +44,7 @@ function main(): void {
   }
 
   console.log(`Successfully bumped ${packageName} version and committed the changes.
-Release tag: v${packageVersion}`);
+Release tag: ${releaseTag}`);
 }
 
 function readPackageJson(packageJsonFilePath: string): { packageName: string; packageVersion: string; } {
@@ -61,7 +62,7 @@ function readPackageJson(packageJsonFilePath: string): { packageName: string; pa
   return { packageName, packageVersion };
 }
 
-function updateChangelog(changelogFilePath: string, packageVersion: string): void {
+function updateChangelog(changelogFilePath: string, packageVersion: string, releaseTag: string): void {
   const {
     changelogContent,
     unreleasedHeaderStartPosition,
@@ -71,7 +72,7 @@ function updateChangelog(changelogFilePath: string, packageVersion: string): voi
   const unreleasedHeader = changelogContent.substring(unreleasedHeaderStartPosition, unreleasedHeaderEndPosition);
   const releaseHeader = unreleasedHeader
     .replace("Unreleased", packageVersion)
-    .replace("HEAD", `v${packageVersion}`)
+    .replace("HEAD", releaseTag)
     .concat(` - ${formatDate(new Date())}`);
 
   const updatedChangelogContent = changelogContent
@@ -122,7 +123,8 @@ function pad(component: number): string {
 }
 
 interface ProcessedCliArgs {
-  version: string;
+  versionBump: string;
+  packageId: string;
   preid: string | undefined;
   packageDirPath: string;
   packageJsonFilePath: string;
@@ -135,18 +137,18 @@ function validateArgs(argv: string[]): ProcessedCliArgs {
   }
 
   const packageId = argv[2]
-  const version = argv[3];
+  const versionBump = argv[3];
   const preid = argv[4];
 
   if (!["client", "react"].includes(packageId)) {
     printUsageAndExit();
   }
 
-  if (!["major", "minor", "patch", "premajor", "preminor", "prepatch", "prerelease"].includes(version)) {
+  if (!["major", "minor", "patch", "premajor", "preminor", "prepatch", "prerelease"].includes(versionBump)) {
     printUsageAndExit();
   }
 
-  const maxArgvLength = version.startsWith("pre") ? 5 : 4;
+  const maxArgvLength = versionBump.startsWith("pre") ? 5 : 4;
   if (argv.length > maxArgvLength) {
     printUsageAndExit();
   }
@@ -167,7 +169,8 @@ function validateArgs(argv: string[]): ProcessedCliArgs {
   }
 
   return {
-    version,
+    versionBump,
+    packageId,
     preid,
     packageDirPath,
     packageJsonFilePath,

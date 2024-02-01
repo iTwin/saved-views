@@ -6,7 +6,7 @@ parameters:
 
 stages:
   - stage: PublishArtifact
-    displayName: Build
+    displayName: Build and publish artifact
     jobs:
       - job: Build
         steps:

@@ -27,8 +27,8 @@ stages:
       tarballName: $(tarballName)
 
   - stage: publish
-    dependsOn: build
-    displayName: Publish
+    dependsOn: PublishArtifact
+    displayName: Publish package to npmjs
     jobs:
       - template: templates/npmjs-publish-deployment.yaml@templates
         parameters:
