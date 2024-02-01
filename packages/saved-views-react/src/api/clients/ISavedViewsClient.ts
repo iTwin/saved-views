@@ -2,7 +2,7 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import type { LegacySavedView, LegacySavedViewBase } from "../utilities/SavedViewTypes";
+import type { LegacySavedView, LegacySavedViewBase } from "../utilities/SavedViewTypes.js";
 
 /** Is a 3d saved view */
 export function isSavedView3d(view: LegacySavedViewBase): view is LegacySavedView {

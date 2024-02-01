@@ -2,8 +2,9 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { PropsWithChildren, ReactElement, createContext, useContext, useMemo } from "react";
-import { LocalizationStrings, defaultLocalization } from "./localization.js";
+import { createContext, useContext, useMemo, type PropsWithChildren, type ReactElement } from "react";
+
+import { defaultLocalization, type LocalizationStrings } from "./localization.js";
 
 const savedViewsContext = createContext<SavedViewsContext>({ localization: defaultLocalization });
 savedViewsContext.displayName = "SavedViewsContext";

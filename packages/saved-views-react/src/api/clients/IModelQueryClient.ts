@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 import type { Id64Array } from "@itwin/core-bentley";
 import { QueryRowFormat } from "@itwin/core-common";
-import { type IModelConnection } from "@itwin/core-frontend";
+import type { IModelConnection } from "@itwin/core-frontend";
 
 /**
  * Helper function to execute ECSql queries.

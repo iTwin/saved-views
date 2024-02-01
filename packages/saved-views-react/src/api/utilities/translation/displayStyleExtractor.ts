@@ -2,32 +2,16 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import {
-  type ExtractionFunc,
-  applyExtraction,
-  extractArray,
-  extractArrayConditionally,
-  extractBoolean,
-  extractColor,
-  extractColorLegacy,
-  extractConditionally,
-  extractNumber,
-  extractNumberOrBool,
-  extractObject,
-  extractPlainTypedMap,
-  extractRGB,
-  extractSimpleArray,
-  extractString,
-  extractStringOrArray,
-  extractStringOrNumber,
-  extractStringOrNumberArray,
-  isAnyColorFormat,
-  simpleTypeOf,
-} from "./extractionUtilities";
-import { type LegacySavedView, type LegacySavedView2d } from "../SavedViewTypes";
-
-import { type ViewState } from "@itwin/core-frontend";
+import type { ViewState } from "@itwin/core-frontend";
 import { ViewITwin2d, ViewITwin3d } from "@itwin/saved-views-client";
+
+import type { LegacySavedView, LegacySavedView2d } from "../SavedViewTypes.js";
+import {
+  applyExtraction, extractArray, extractArrayConditionally, extractBoolean, extractColor, extractColorLegacy,
+  extractConditionally, extractNumber, extractNumberOrBool, extractObject, extractPlainTypedMap, extractRGB,
+  extractSimpleArray, extractString, extractStringOrArray, extractStringOrNumber, extractStringOrNumberArray,
+  isAnyColorFormat, simpleTypeOf, type ExtractionFunc,
+} from "./extractionUtilities.js";
 
 const viewFlagMappings: ExtractionFunc<void, void>[] = [
   extractNumber("renderMode"),

@@ -9,7 +9,7 @@ import type {
 } from "@itwin/core-common";
 import type { Range3dProps } from "@itwin/core-geometry";
 
-import type { ModelCategoryOverrideProviderProps } from "../../ui/viewlist/ModelCategoryOverrideProvider";
+import type { ModelCategoryOverrideProviderProps } from "../../ui/viewlist/ModelCategoryOverrideProvider.js";
 
 /** Per Model Category Visibility Props */
 export interface PerModelCategoryVisibilityProps {

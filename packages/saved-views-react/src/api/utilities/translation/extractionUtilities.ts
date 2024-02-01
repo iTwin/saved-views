@@ -3,7 +3,8 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import { ColorDef } from "@itwin/core-common";
-import { Rgba, RgbatColorProps } from "./RgbColor";
+
+import type { Rgba, RgbatColorProps } from "./RgbColor.js";
 
 /**
  * Returns a function that does a simple typeof check on a value
