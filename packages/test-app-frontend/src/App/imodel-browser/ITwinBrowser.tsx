@@ -13,18 +13,18 @@ import { getRecentITwins, GetRecentITwinsResult } from "../ITwinApi";
 
 export function ITwinBrowser(): ReactElement {
   const navigate = useNavigate();
-  const { userAuthorizationClient } = useAuthorization();
+  const { authorizationClient } = useAuthorization();
   const [iTwins, setITwins] = useState<GetRecentITwinsResult["iTwins"]>();
 
   useEffect(
     () => {
-      if (userAuthorizationClient === undefined) {
+      if (authorizationClient === undefined) {
         return;
       }
 
       let disposed = false;
       void (async () => {
-        const result = await getRecentITwins({ authorizationClient: userAuthorizationClient });
+        const result = await getRecentITwins({ authorizationClient });
         if (!disposed) {
           setITwins(result?.iTwins);
         }
@@ -32,7 +32,7 @@ export function ITwinBrowser(): ReactElement {
 
       return () => { disposed = true; };
     },
-    [userAuthorizationClient],
+    [authorizationClient],
   );
 
   if (iTwins === undefined) {

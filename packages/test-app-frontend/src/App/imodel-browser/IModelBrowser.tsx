@@ -13,18 +13,18 @@ import { getIModelThumbnail, getITwinIModels, GetITwinIModelsResult } from "../I
 
 export function IModelBrowser(): ReactElement {
   const { iTwinId } = useParams<{ iTwinId: string; }>();
-  const { userAuthorizationClient } = useAuthorization();
+  const { authorizationClient } = useAuthorization();
   const [iModels, setiModels] = useState<GetITwinIModelsResult["iModels"]>();
 
   useEffect(
     () => {
-      if (iTwinId === undefined || userAuthorizationClient === undefined) {
+      if (iTwinId === undefined || authorizationClient === undefined) {
         return;
       }
 
       let disposed = false;
       void (async () => {
-        const result = await getITwinIModels({ iTwinId }, { authorizationClient: userAuthorizationClient });
+        const result = await getITwinIModels({ iTwinId }, { authorizationClient });
         if (!disposed) {
           setiModels(result?.iModels);
         }
@@ -32,10 +32,10 @@ export function IModelBrowser(): ReactElement {
 
       return () => { disposed = true; };
     },
-    [iTwinId, userAuthorizationClient],
+    [iTwinId, authorizationClient],
   );
 
-  if (!iModels || !userAuthorizationClient) {
+  if (!iModels || !authorizationClient) {
     return <LoadingScreen>Loading content...</LoadingScreen>;
   }
 
@@ -49,7 +49,7 @@ export function IModelBrowser(): ReactElement {
             iModelId={iModel.id}
             name={iModel.name}
             description={iModel.description ?? undefined}
-            authorizationClient={userAuthorizationClient}
+            authorizationClient={authorizationClient}
           />
         ))}
       </FluidGrid>

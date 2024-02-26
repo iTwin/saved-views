@@ -2,19 +2,18 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { AccessToken } from "@itwin/core-bentley";
-import { AuthorizationClient } from "@itwin/core-common";
+import type { AuthorizationClient } from "@itwin/core-common";
 import { Code } from "@itwin/itwinui-react";
-import { User, UserManager, WebStorageStateStore } from "oidc-client-ts";
+import { UserManager, WebStorageStateStore, type User } from "oidc-client-ts";
 import {
-  ComponentType, createContext, Fragment, PropsWithChildren, ReactElement, ReactNode, useContext, useEffect, useRef,
-  useState,
+  Fragment, createContext, useContext, useEffect, useRef, useState, type ComponentType, type PropsWithChildren,
+  type ReactElement, type ReactNode,
 } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { applyUrlPrefix } from "../environment";
-import { LoadingScreen } from "./common/LoadingScreen";
-import { ErrorPage } from "./errors/ErrorPage";
+import { applyUrlPrefix } from "../environment.js";
+import { LoadingScreen } from "./common/LoadingScreen.js";
+import { ErrorPage } from "./errors/ErrorPage.js";
 
 export interface AuthorizationProviderConfig {
   authority: string;
@@ -64,7 +63,7 @@ export function createAuthorizationProvider(config: AuthorizationProviderConfig)
     const [authorizationContextValue, setAuthorizationContextValue] = useState<AuthorizationContext>({
       state: AuthorizationState.Pending,
       user: undefined,
-      userAuthorizationClient: undefined,
+      authorizationClient: undefined,
       signIn,
       signOut,
     });
@@ -75,7 +74,7 @@ export function createAuthorizationProvider(config: AuthorizationProviderConfig)
         setAuthorizationContextValue({
           state: AuthorizationState.SignedIn,
           user,
-          userAuthorizationClient: new AuthClient(userManager),
+          authorizationClient: new AuthClient(userManager),
           signIn,
           signOut,
         });
@@ -88,7 +87,7 @@ export function createAuthorizationProvider(config: AuthorizationProviderConfig)
           setAuthorizationContextValue({
             state: AuthorizationState.SignedOut,
             user: undefined,
-            userAuthorizationClient: undefined,
+            authorizationClient: undefined,
             signIn,
             signOut,
           });
@@ -128,13 +127,13 @@ interface InternalAuthorizationContext {
 interface AuthorizationContextWithUser {
   state: AuthorizationState.SignedIn;
   user: User;
-  userAuthorizationClient: AuthorizationClient;
+  authorizationClient: AuthorizationClient;
 }
 
 interface AuthorizationContextWithoutUser {
   state: Exclude<AuthorizationState, AuthorizationState.SignedIn>;
   user: undefined;
-  userAuthorizationClient: undefined;
+  authorizationClient: undefined;
 }
 
 export enum AuthorizationState {
@@ -147,7 +146,7 @@ export enum AuthorizationState {
 class AuthClient implements AuthorizationClient {
   constructor(private userManager: UserManager) { }
 
-  public async getAccessToken(): Promise<AccessToken> {
+  public async getAccessToken(): Promise<string> {
     const user = await this.userManager.getUser();
     return user ? `${user.token_type} ${user.access_token}` : "";
   }
@@ -161,7 +160,7 @@ export function useAuthorization(): AuthorizationContext {
 const authorizationContext = createContext<AuthorizationContext>({
   state: AuthorizationState.Offline,
   user: undefined,
-  userAuthorizationClient: undefined,
+  authorizationClient: undefined,
   signIn: async () => { },
   signOut: async () => { },
 });
