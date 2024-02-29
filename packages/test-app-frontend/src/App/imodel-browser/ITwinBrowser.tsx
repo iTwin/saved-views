@@ -2,14 +2,15 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { ReactElement, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { SvgProject } from "@itwin/itwinui-icons-react";
 import { FluidGrid, Grid, PageLayout } from "@itwin/itwinui-layouts-react";
 import { Surface, Text, Tile } from "@itwin/itwinui-react";
-import { useAuthorization } from "../Authorization";
-import { LoadingScreen } from "../common/LoadingScreen";
-import { getRecentITwins, GetRecentITwinsResult } from "../ITwinApi";
+import { useEffect, useState, type ReactElement } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { useAuthorization } from "../Authorization.js";
+import { LoadingScreen } from "../common/LoadingScreen.js";
+import { getRecentITwins, GetRecentITwinsResult } from "../ITwinApi.js";
 
 export function ITwinBrowser(): ReactElement {
   const navigate = useNavigate();
@@ -18,10 +19,6 @@ export function ITwinBrowser(): ReactElement {
 
   useEffect(
     () => {
-      if (authorizationClient === undefined) {
-        return;
-      }
-
       let disposed = false;
       void (async () => {
         const result = await getRecentITwins({ authorizationClient });

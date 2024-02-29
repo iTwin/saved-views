@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 import { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { AuthorizationClient } from "@itwin/core-common";
+import type { AuthorizationClient } from "@itwin/core-common";
 import { FluidGrid, PageLayout } from "@itwin/itwinui-layouts-react";
 import { Text, Tile } from "@itwin/itwinui-react";
 import { useAuthorization } from "../Authorization";
@@ -18,7 +18,7 @@ export function IModelBrowser(): ReactElement {
 
   useEffect(
     () => {
-      if (iTwinId === undefined || authorizationClient === undefined) {
+      if (iTwinId === undefined) {
         return;
       }
 
@@ -35,7 +35,7 @@ export function IModelBrowser(): ReactElement {
     [iTwinId, authorizationClient],
   );
 
-  if (!iModels || !authorizationClient) {
+  if (!iModels) {
     return <LoadingScreen>Loading content...</LoadingScreen>;
   }
 
@@ -74,7 +74,7 @@ export function IModelTile(props: IModelTileProps): ReactElement {
     () => {
       const element = divRef.current;
       const authorizationClient = props.authorizationClient;
-      if (thumbnail !== undefined || !element || !authorizationClient) {
+      if (thumbnail !== undefined || !element) {
         return;
       }
 

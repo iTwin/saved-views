@@ -5,15 +5,20 @@
 import { AppNotificationManager, UiFramework } from "@itwin/appui-react";
 import { Id64 } from "@itwin/core-bentley";
 import {
-  AuthorizationClient, BentleyCloudRpcManager, BentleyCloudRpcParams, IModelReadRpcInterface, IModelTileRpcInterface,
+  BentleyCloudRpcManager, BentleyCloudRpcParams, IModelReadRpcInterface, IModelTileRpcInterface,
+  type AuthorizationClient,
 } from "@itwin/core-common";
-import { CheckpointConnection, IModelApp, IModelConnection, ScreenViewport, ViewCreator3d, ViewState } from "@itwin/core-frontend";
+import {
+  CheckpointConnection, IModelApp, IModelConnection, ScreenViewport, ViewCreator3d, ViewState
+} from "@itwin/core-frontend";
 import { ITwinLocalization } from "@itwin/core-i18n";
 import { UiCore } from "@itwin/core-react";
+import { ViewportComponent } from "@itwin/imodel-components-react";
 import { FrontendIModelsAccess } from "@itwin/imodels-access-frontend";
 import { IModelsClient } from "@itwin/imodels-client-management";
 import { PageLayout } from "@itwin/itwinui-layouts-react";
 import { Button, useToaster } from "@itwin/itwinui-react";
+import { SavedViewWithDataRepresentation } from "@itwin/saved-views-client";
 import { ITwinSavedViewsClient, useSavedViews } from "@itwin/saved-views-react";
 import {
   SavedViewsFolderWidget, applyExtensionsToViewport, createSavedViewOptions, translateLegacySavedViewToITwinJsViewState,
@@ -21,27 +26,28 @@ import {
 } from "@itwin/saved-views-react/experimental";
 import { useEffect, useMemo, useState, type ReactElement } from "react";
 
-import { ViewportComponent } from "@itwin/imodel-components-react";
-import { SavedViewWithDataRepresentation } from "@itwin/saved-views-client";
-import { applyUrlPrefix } from "../../environment";
-import { LoadingScreen } from "../common/LoadingScreen";
+import { applyUrlPrefix } from "../../environment.js";
+import { useAuthorization } from "../Authorization.js";
+import { LoadingScreen } from "../common/LoadingScreen.js";
 
 import "./ITwinJsApp.css";
 
 export interface ITwinJsAppProps {
   iTwinId: string;
   iModelId: string;
-  authorizationClient: AuthorizationClient;
 }
 
 export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
+  const { authorizationClient } = useAuthorization();
+
   type LoadingState = "opening-imodel" | "opening-viewstate" | "creating-viewstate" | "loaded" | "rendering-imodel"
     | "rendered";
   const toaster = useToaster();
   const [loadingState, setLoadingState] = useState<LoadingState>("opening-imodel");
   const [selectedViewState, setSelectedViewState] = useState<ViewState>();
   const [selectedSavedView, setSelectedSavedView] = useState<SavedViewWithDataRepresentation>();
-  const iModel = useIModel(props.iTwinId, props.iModelId, props.authorizationClient);
+  const iModel = useIModel(props.iTwinId, props.iModelId, authorizationClient);
+
   useEffect(
     () => {
       if (!iModel) {
@@ -75,10 +81,10 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
 
   const client = useMemo(
     () => new ITwinSavedViewsClient({
-      getAccessToken: () => props.authorizationClient.getAccessToken(),
+      getAccessToken: () => authorizationClient.getAccessToken(),
       baseUrl: applyUrlPrefix("https://api.bentley.com/savedviews"),
     }),
-    [props.authorizationClient],
+    [authorizationClient],
   );
 
   const [updatingSavedViews, setUpdatingSavedViews] = useState(false);
@@ -220,7 +226,7 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
   );
 }
 
-export async function initializeITwinJsApp(_authorizationClient: AuthorizationClient): Promise<void> {
+export async function initializeITwinJsApp(): Promise<void> {
   if (IModelApp.initialized) {
     return;
   }
@@ -286,8 +292,7 @@ function useIModel(
         })();
       };
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [authorizationClient, iModelId, iTwinId],
+    [authorizationClient, iModelId, iTwinId, toaster],
   );
 
   return iModel;

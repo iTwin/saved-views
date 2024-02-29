@@ -2,8 +2,9 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { AuthorizationClient } from "@itwin/core-common";
-import { applyUrlPrefix } from "../environment";
+import type { AuthorizationClient } from "@itwin/core-common";
+
+import { applyUrlPrefix } from "../environment.js";
 
 export interface GetUserProfileResult {
   user: {
