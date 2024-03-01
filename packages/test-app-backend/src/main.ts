@@ -8,8 +8,6 @@ import { BentleyCloudRpcManager, IModelReadRpcInterface, IModelTileRpcInterface 
 import { IModelJsExpressServer } from "@itwin/express-server";
 import { BackendIModelsAccess } from "@itwin/imodels-access-backend";
 import { IModelsClient } from "@itwin/imodels-client-authoring";
-import { Presentation } from "@itwin/presentation-backend";
-import { PresentationRpcInterface } from "@itwin/presentation-common";
 import { config } from "dotenv-flow";
 
 config({ path: "../test-app-frontend" });
@@ -23,11 +21,10 @@ void (async () => {
       new IModelsClient({ api: { baseUrl: `https://${process.env.VITE_URL_PREFIX}api.bentley.com/imodels` } }),
     ),
   });
-  Presentation.initialize();
 
   const rpcConfig = BentleyCloudRpcManager.initializeImpl(
     { info: { title: "test-app-backend", version: "v1.0" } },
-    [IModelReadRpcInterface, IModelTileRpcInterface, PresentationRpcInterface],
+    [IModelReadRpcInterface, IModelTileRpcInterface],
   );
   const server = new IModelJsExpressServer(rpcConfig.protocol);
 
