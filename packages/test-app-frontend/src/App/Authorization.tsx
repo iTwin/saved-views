@@ -137,7 +137,7 @@ function SignInPopupPrompt(props: SignInPopupPromptProps): ReactElement {
       justifyContent: "space-between",
       grid: "1fr / 250px auto",
       alignItems: "center",
-      gap: "var(--iui-size-s)"
+      gap: "var(--iui-size-s)",
     }}>
       {props.text}
       <Button styleType="high-visibility" onClick={props.onClick}>Sign in</Button>

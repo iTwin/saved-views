@@ -9,7 +9,7 @@ import {
   type AuthorizationClient,
 } from "@itwin/core-common";
 import {
-  CheckpointConnection, IModelApp, IModelConnection, ScreenViewport, ViewCreator3d, ViewState
+  CheckpointConnection, IModelApp, IModelConnection, ScreenViewport, ViewCreator3d, ViewState,
 } from "@itwin/core-frontend";
 import { ITwinLocalization } from "@itwin/core-i18n";
 import { UiCore } from "@itwin/core-react";
