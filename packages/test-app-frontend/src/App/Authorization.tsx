@@ -2,19 +2,18 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { AccessToken } from "@itwin/core-bentley";
-import { AuthorizationClient } from "@itwin/core-common";
-import { Code } from "@itwin/itwinui-react";
-import { User, UserManager, WebStorageStateStore } from "oidc-client-ts";
+import type { AuthorizationClient } from "@itwin/core-common";
+import { Button, Code, useToaster } from "@itwin/itwinui-react";
+import { UserManager, WebStorageStateStore, type User } from "oidc-client-ts";
 import {
-  ComponentType, createContext, Fragment, PropsWithChildren, ReactElement, ReactNode, useContext, useEffect, useRef,
-  useState,
+  Fragment, createContext, useContext, useEffect, useMemo, useRef, useState, type ComponentType, type PropsWithChildren,
+  type ReactElement, type ReactNode,
 } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { applyUrlPrefix } from "../environment";
-import { LoadingScreen } from "./common/LoadingScreen";
-import { ErrorPage } from "./errors/ErrorPage";
+import { applyUrlPrefix } from "../environment.js";
+import { LoadingScreen } from "./common/LoadingScreen.js";
+import { ErrorPage } from "./errors/ErrorPage.js";
 
 export interface AuthorizationProviderConfig {
   authority: string;
@@ -40,18 +39,6 @@ export function createAuthorizationProvider(config: AuthorizationProviderConfig)
     accessTokenExpiringNotificationTimeInSeconds: 120,
     userStore: new WebStorageStateStore({ store: localStorage }),
   });
-  userManager.events.addSilentRenewError((error) => {
-    // eslint-disable-next-line no-console
-    console.warn(error);
-  });
-  userManager.events.addAccessTokenExpiring(async () => {
-    try {
-      await userManager.signinSilent();
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(`Silent sign in failed: ${error as string}`);
-    }
-  });
 
   const signIn = async () => {
     await userManager.signinRedirect({
@@ -61,10 +48,13 @@ export function createAuthorizationProvider(config: AuthorizationProviderConfig)
   const signOut = async () => userManager.signoutRedirect();
 
   return function AuthorizationProvider(props: PropsWithChildren<unknown>): ReactElement {
+    const toaster = useToaster();
+    const authorizationClient = useMemo(() => new AuthClient(userManager, toaster, signIn), [toaster]);
+
     const [authorizationContextValue, setAuthorizationContextValue] = useState<AuthorizationContext>({
       state: AuthorizationState.Pending,
       user: undefined,
-      userAuthorizationClient: undefined,
+      authorizationClient,
       signIn,
       signOut,
     });
@@ -75,7 +65,7 @@ export function createAuthorizationProvider(config: AuthorizationProviderConfig)
         setAuthorizationContextValue({
           state: AuthorizationState.SignedIn,
           user,
-          userAuthorizationClient: new AuthClient(userManager),
+          authorizationClient,
           signIn,
           signOut,
         });
@@ -84,25 +74,45 @@ export function createAuthorizationProvider(config: AuthorizationProviderConfig)
 
     useEffect(
       () => {
+        const handleSilentRenewError = (error: unknown) => {
+          // eslint-disable-next-line no-console
+          console.warn(error);
+        };
+
+        const handleAccessTokenExpiring = async () => {
+          try {
+            await userManager.signinSilent();
+          } catch (error) {
+            toaster.informational(
+              <SignInPopupPrompt text="Access token is expiring." onClick={signIn} />,
+              { type: "persisting", hasCloseButton: true },
+            );
+          }
+        };
+
         const handleUserUnloaded = () => {
           setAuthorizationContextValue({
             state: AuthorizationState.SignedOut,
             user: undefined,
-            userAuthorizationClient: undefined,
+            authorizationClient,
             signIn,
             signOut,
           });
         };
 
+        userManager.events.addSilentRenewError(handleSilentRenewError);
+        userManager.events.addAccessTokenExpiring(handleAccessTokenExpiring);
         userManager.events.addUserLoaded(internalAuthorizationContextValue.loadUser);
         userManager.events.addUserUnloaded(handleUserUnloaded);
 
         return () => {
+          userManager.events.removeSilentRenewError(handleSilentRenewError);
+          userManager.events.removeAccessTokenExpiring(handleAccessTokenExpiring);
           userManager.events.removeUserLoaded(internalAuthorizationContextValue.loadUser);
           userManager.events.removeUserUnloaded(handleUserUnloaded);
         };
       },
-      [internalAuthorizationContextValue],
+      [internalAuthorizationContextValue, authorizationClient, toaster],
     );
 
     return (
@@ -115,7 +125,28 @@ export function createAuthorizationProvider(config: AuthorizationProviderConfig)
   };
 }
 
+interface SignInPopupPromptProps {
+  text: string;
+  onClick: () => void;
+}
+
+function SignInPopupPrompt(props: SignInPopupPromptProps): ReactElement {
+  return (
+    <div style={{
+      display: "grid",
+      justifyContent: "space-between",
+      grid: "1fr / 250px auto",
+      alignItems: "center",
+      gap: "var(--iui-size-s)",
+    }}>
+      {props.text}
+      <Button styleType="high-visibility" onClick={props.onClick}>Sign in</Button>
+    </div>
+  );
+}
+
 export type AuthorizationContext = {
+  authorizationClient: AuthorizationClient;
   signIn: () => Promise<void>;
   signOut: () => Promise<void>;
 } & (AuthorizationContextWithUser | AuthorizationContextWithoutUser);
@@ -128,13 +159,11 @@ interface InternalAuthorizationContext {
 interface AuthorizationContextWithUser {
   state: AuthorizationState.SignedIn;
   user: User;
-  userAuthorizationClient: AuthorizationClient;
 }
 
 interface AuthorizationContextWithoutUser {
   state: Exclude<AuthorizationState, AuthorizationState.SignedIn>;
   user: undefined;
-  userAuthorizationClient: undefined;
 }
 
 export enum AuthorizationState {
@@ -145,10 +174,26 @@ export enum AuthorizationState {
 }
 
 class AuthClient implements AuthorizationClient {
-  constructor(private userManager: UserManager) { }
+  constructor(
+    private userManager: UserManager,
+    private toaster: ReturnType<typeof useToaster>,
+    private signIn: () => Promise<void>,
+  ) { }
 
-  public async getAccessToken(): Promise<AccessToken> {
+  public async getAccessToken(): Promise<string> {
     const user = await this.userManager.getUser();
+    if (user?.expired) {
+      return new Promise((resolve, reject) => {
+        const { close } = this.toaster.informational(
+          <SignInPopupPrompt
+            text="You are not signed in."
+            onClick={() => this.signIn().then(() => resolve(this.getAccessToken())).then(close)}
+          />,
+          { type: "persisting", hasCloseButton: true, onRemove: reject },
+        );
+      });
+    }
+
     return user ? `${user.token_type} ${user.access_token}` : "";
   }
 }
@@ -161,7 +206,7 @@ export function useAuthorization(): AuthorizationContext {
 const authorizationContext = createContext<AuthorizationContext>({
   state: AuthorizationState.Offline,
   user: undefined,
-  userAuthorizationClient: undefined,
+  authorizationClient: { getAccessToken: async () => "" },
   signIn: async () => { },
   signOut: async () => { },
 });

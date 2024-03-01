@@ -14,7 +14,7 @@ import { AuthorizationState, useAuthorization } from "./Authorization";
 import { GetUserProfileResult, getUserProfile } from "./ITwinApi";
 
 export function AppHeader(): ReactElement {
-  const { state, signIn, signOut, userAuthorizationClient } = useAuthorization();
+  const { state, signIn, signOut, authorizationClient } = useAuthorization();
   const navigate = useNavigate();
 
   const [user, setUser] = useState<UserProfile>();
@@ -26,7 +26,7 @@ export function AppHeader(): ReactElement {
 
       let disposed = false;
       void (async () => {
-        const profile = await getUserProfile({ authorizationClient: userAuthorizationClient });
+        const profile = await getUserProfile({ authorizationClient });
         if (!disposed) {
           setUser(profile?.user);
         }
@@ -34,7 +34,7 @@ export function AppHeader(): ReactElement {
 
       return () => { disposed = true; };
     },
-    [state, userAuthorizationClient],
+    [state, authorizationClient],
   );
 
   const actions = [
