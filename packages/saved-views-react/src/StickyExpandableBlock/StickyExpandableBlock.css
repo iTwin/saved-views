@@ -2,17 +2,20 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
+@layer itwinui;
 
-.svr-expandable-block-header {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
+@layer itwin-svr {
+  .svr-expandable-block-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
 
-.svr-expandable-block-header[data-stuck=true] {
-  box-shadow: var(--iui-shadow-1);
-}
+  .svr-expandable-block-header[data-stuck=true] {
+    box-shadow: var(--iui-shadow-1);
+  }
 
-.svr-expandable-block-header:not(:hover) {
-  background: var(--iui-color-background);
+  .svr-expandable-block-header:not(:hover) {
+    background: var(--iui-color-background);
+  }
 }

@@ -2,8 +2,12 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-.svr-layered-dropdown--back {
-  display: flex;
-  gap: var(--iui-size-s);
-  align-items: center;
+@layer itwinui;
+
+@layer itwin-svr {
+  .svr-layered-dropdown--back {
+    display: flex;
+    gap: var(--iui-size-s);
+    align-items: center;
+  }
 }
