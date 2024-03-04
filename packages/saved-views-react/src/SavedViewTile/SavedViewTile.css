@@ -2,86 +2,89 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
+@layer itwinui;
 
-.svr-tile {
-  width: var(--itwin-svr-tile-width, calc(8 * var(--iui-size-xl)));
-}
+@layer itwin-svr {
+  .svr-tile {
+    width: var(--itwin-svr-tile-width, calc(8 * var(--iui-size-xl)));
+  }
 
-.svr-tile .svr-tile-thumbnail {
-  height: var(--itwin-svr-thumbnail-height, calc(4 * var(--iui-size-xl)));
-}
+  .svr-tile .svr-tile-thumbnail {
+    height: var(--itwin-svr-thumbnail-height, calc(4 * var(--iui-size-xl)));
+  }
 
-.svr-tile .svr-tile-name {
-  height: calc(var(--iui-size-l) + 2px);
-  user-select: unset;
-}
+  .svr-tile .svr-tile-name {
+    height: calc(var(--iui-size-l) + 2px);
+    user-select: unset;
+  }
 
-.svr-tile--metadata {
-  display: grid;
-  grid: 1fr / auto minmax(0, 1fr) auto;
-  align-items: center;
-}
+  .svr-tile--metadata {
+    display: grid;
+    grid: 1fr / auto minmax(0, 1fr) auto;
+    align-items: center;
+  }
 
-.svr-tile--metadata > svg {
-  margin-right: var(--iui-size-xs);
-}
+  .svr-tile--metadata > svg {
+    margin-right: var(--iui-size-xs);
+  }
 
-.svr-tile--tag-container {
-  display: flex;
-  gap: var(--iui-size-s);
-}
+  .svr-tile--tag-container {
+    display: flex;
+    gap: var(--iui-size-s);
+  }
 
-.svr-tile--tag {
-  align-items: center;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  min-width: 0;
-}
+  .svr-tile--tag {
+    align-items: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    min-width: 0;
+  }
 
-.svr-tile--tag-overflow {
-  margin-left: var(--iui-size-s);
-}
+  .svr-tile--tag-overflow {
+    margin-left: var(--iui-size-s);
+  }
 
-.svr-tile--more-options {
-  z-index: 2;
-  grid-area: 1 / 1 / -1 / -1;
-  place-self: end;
-  margin: 0;
-  margin-inline-end: calc(-1*var(--iui-size-2xs));
-  display: grid;
-  position: absolute;
-}
+  .svr-tile--more-options {
+    z-index: 2;
+    grid-area: 1 / 1 / -1 / -1;
+    place-self: end;
+    margin: 0;
+    margin-inline-end: calc(-1*var(--iui-size-2xs));
+    display: grid;
+    position: absolute;
+  }
 
-.svr-tile:not(:hover, :focus-within) .svr-tile--more-options:where(:not(.svr-visible)) {
-  visibility: hidden;
-}
+  .svr-tile:not(:hover, :focus-within) .svr-tile--more-options:where(:not(.svr-visible)) {
+    visibility: hidden;
+  }
 
-.svr-tile--icon-container {
-  display: flex;
-  margin-top: calc(0.5 * var(--iui-size-s));
-  margin-inline: var(--iui-size-xs);
-  gap: var(--iui-size-2xs);
-  z-index: 1;
-}
+  .svr-tile--icon-container {
+    display: flex;
+    margin-top: calc(0.5 * var(--iui-size-s));
+    margin-inline: var(--iui-size-xs);
+    gap: var(--iui-size-2xs);
+    z-index: 1;
+  }
 
-.svr-tile--icon {
-  border-radius: 50%;
-  background: rgb(0, 0, 0, var(--iui-opacity-3));
-  min-width: var(--iui-component-height-small);
-  min-height: var(--iui-component-height-small);
-  display: flex;
-  place-items: center;
-  padding-inline: var(--iui-size-2xs);
-  border: 1px solid transparent;
-}
+  .svr-tile--icon {
+    border-radius: 50%;
+    background: rgb(0, 0, 0, var(--iui-opacity-3));
+    min-width: var(--iui-component-height-small);
+    min-height: var(--iui-component-height-small);
+    display: flex;
+    place-items: center;
+    padding-inline: var(--iui-size-2xs);
+    border: 1px solid transparent;
+  }
 
-.svr-tile--icon svg {
-  fill: var(--iui-color-white);
-}
+  .svr-tile--icon svg {
+    fill: var(--iui-color-white);
+  }
 
-.svr-tile--editable-title > span {
-  display: flex;
-  align-items: center;
-  gap: var(--iui-size-s);
+  .svr-tile--editable-title > span {
+    display: flex;
+    align-items: center;
+    gap: var(--iui-size-s);
+  }
 }

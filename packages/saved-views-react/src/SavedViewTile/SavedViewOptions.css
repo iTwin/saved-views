@@ -2,23 +2,26 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
+@layer itwinui;
 
-.svr-searchable-submenu {
-  display: grid;
-  grid: auto minmax(0, 1fr) / 1fr;
-  gap: var(--iui-size-xs);
-  height: calc(var(--iui-menu-max-height) - 2 * var(--iui-component-height) - 1px);
-  user-select: none;
-}
+@layer itwin-svr {
+  .svr-searchable-submenu {
+    display: grid;
+    grid: auto minmax(0, 1fr) / 1fr;
+    gap: var(--iui-size-xs);
+    height: calc(var(--iui-menu-max-height) - 2 * var(--iui-component-height) - 1px);
+    user-select: none;
+  }
 
-.svr-searchable-submenu > div {
-  overflow: auto;
-}
+  .svr-searchable-submenu > div {
+    overflow: auto;
+  }
 
-.svr-searchable-submenu-item {
-  width: calc(10 * var(--iui-size-l));
-}
+  .svr-searchable-submenu-item {
+    width: calc(10 * var(--iui-size-l));
+  }
 
-.svr-semibold {
-  font-weight: var(--iui-font-weight-semibold);
+  .svr-semibold {
+    font-weight: var(--iui-font-weight-semibold);
+  }
 }
