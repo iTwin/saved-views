@@ -8,19 +8,18 @@ import { Button, SideNavigation, SidenavButton, Surface, ThemeProvider } from "@
 import { PropsWithChildren, ReactElement, useEffect, useState } from "react";
 import { Navigate, Outlet, Route, Routes, useMatch, useNavigate, useParams } from "react-router-dom";
 
-import { applyUrlPrefix, clientId } from "../environment";
-import { AppContext, appContext } from "./AppContext";
-import { AppHeader } from "./AppHeader";
+import { applyUrlPrefix, clientId } from "../environment.js";
+import { AppContext, appContext } from "./AppContext.js";
+import { AppHeader } from "./AppHeader.js";
 import {
-  AuthorizationState, SignInCallback, SignInSilent, SignInSilentCallback, createAuthorizationProvider,
-  useAuthorization,
-} from "./Authorization";
-import { ComponentsCatalogRoutes } from "./ComponentsCatalog/ComponentsCatalog";
-import type { ITwinJsApp } from "./ITwinJsApp/ITwinJsApp";
-import { LoadingScreen } from "./common/LoadingScreen";
-import { ErrorPage } from "./errors/ErrorPage";
-import { IModelBrowser } from "./imodel-browser/IModelBrowser";
-import { ITwinBrowser } from "./imodel-browser/ITwinBrowser";
+  AuthorizationState, SignInCallback, SignInSilent, SignInSilentCallback, createAuthorizationProvider, useAuthorization,
+} from "./Authorization.js";
+import { ComponentsCatalogRoutes } from "./ComponentsCatalog/ComponentsCatalog.js";
+import type { ITwinJsApp } from "./ITwinJsApp/ITwinJsApp.js";
+import { LoadingScreen } from "./common/LoadingScreen.js";
+import { ErrorPage } from "./errors/ErrorPage.js";
+import { IModelBrowser } from "./imodel-browser/IModelBrowser.js";
+import { ITwinBrowser } from "./imodel-browser/ITwinBrowser.js";
 
 import "@itwin/itwinui-react/styles.css";
 import "./App.css";
@@ -33,8 +32,8 @@ export function App(): ReactElement {
 
   return (
     <appContext.Provider value={appContextValue}>
-      <AuthorizationProvider>
-        <ThemeProvider theme={appContextValue.theme}>
+      <ThemeProvider theme={appContextValue.theme}>
+        <AuthorizationProvider>
           <PageLayout>
             <PageLayout.Header>
               <AppHeader />
@@ -45,8 +44,8 @@ export function App(): ReactElement {
               <Route path="/*" element={<><SignInSilent /><Main /></>} />
             </Routes>
           </PageLayout>
-        </ThemeProvider>
-      </AuthorizationProvider>
+        </AuthorizationProvider>
+      </ThemeProvider>
     </appContext.Provider>
   );
 }
@@ -161,17 +160,12 @@ function SignInPrompt(props: SignInPromptProps): ReactElement {
 
 function useBackgroundITwinJsAppLoading(): typeof ITwinJsApp | undefined {
   const [itwinJsApp, setITwinJsApp] = useState<typeof ITwinJsApp>();
-  const { userAuthorizationClient } = useAuthorization();
   useEffect(
     () => {
-      if (!userAuthorizationClient) {
-        return;
-      }
-
       let disposed = false;
       void (async () => {
         const { ITwinJsApp, initializeITwinJsApp } = await import("./ITwinJsApp/ITwinJsApp.js");
-        await initializeITwinJsApp(userAuthorizationClient);
+        await initializeITwinJsApp();
         if (!disposed) {
           setITwinJsApp(() => ITwinJsApp);
         }
@@ -179,7 +173,7 @@ function useBackgroundITwinJsAppLoading(): typeof ITwinJsApp | undefined {
 
       return () => { disposed = true; };
     },
-    [userAuthorizationClient],
+    [],
   );
   return itwinJsApp;
 }
@@ -189,15 +183,14 @@ interface OpenIModelProps {
 }
 
 function OpenIModel(props: OpenIModelProps): ReactElement | null {
-  const { userAuthorizationClient } = useAuthorization();
   const { iTwinId, iModelId } = useParams<{ iTwinId: string; iModelId: string; }>();
   if (iTwinId === undefined || iModelId === undefined) {
     return null;
   }
 
-  if (props.iTwinJsApp === undefined || userAuthorizationClient === undefined) {
+  if (props.iTwinJsApp === undefined) {
     return <LoadingScreen>Initializing...</LoadingScreen>;
   }
 
-  return <props.iTwinJsApp iTwinId={iTwinId} iModelId={iModelId} authorizationClient={userAuthorizationClient} />;
+  return <props.iTwinJsApp iTwinId={iTwinId} iModelId={iModelId} />;
 }
