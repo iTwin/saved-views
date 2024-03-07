@@ -70,12 +70,7 @@ export function SavedViewGroupTile(props: SavedViewGroupTileProps): ReactElement
               }}
             />
           }
-          thumbnail={
-            <div className="svr-folder-edit" onClick={dispatchOpenGroup}>
-              <div style={{ position: "absolute" }} />
-              <SvgFolder className="iui-thumbnail-icon" />
-            </div>
-          }
+          thumbnail={<SvgFolder className="iui-thumbnail-icon" />}
           isActionable={!props.editable && !editingName}
           moreOptions={(props.options && props.options.length > 0) ? props.options : undefined}
           onClick={dispatchOpenGroup}
