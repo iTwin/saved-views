@@ -205,10 +205,11 @@ function SavedViewsGroupScreen(props: SavedViewsGroupScreenProps): ReactElement 
           padding: "var(--iui-size-s)",
         }}
       >
-        <Button startIcon={<SvgChevronLeft />} onClick={() => props.setActiveGroup(undefined)}>Back</Button>
+        <Button styleType="borderless" startIcon={<SvgChevronLeft />} onClick={() => props.setActiveGroup(undefined)}>Back</Button>
         <Breadcrumbs>
-          <IconButton onClick={() => props.setActiveGroup(undefined)}><SvgHome /></IconButton>
+          <IconButton styleType="borderless" onClick={() => props.setActiveGroup(undefined)}><SvgHome /></IconButton>
           <DropdownButton
+            styleType="borderless"
             menuItems={(close) =>
               groups.map((group) =>
                 <MenuItem key={group.id} onClick={() => { close(); props.setActiveGroup(group.id); }}>
