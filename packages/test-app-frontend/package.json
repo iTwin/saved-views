@@ -16,9 +16,6 @@
   },
   "dependencies": {
     "@bentley/icons-generic-webfont": "^1.0.34",
-    "@itwin/appui-layout-react": "^4.8.3",
-    "@itwin/appui-react": "^4.10.0",
-    "@itwin/components-react": "^4.10.0",
     "@itwin/core-bentley": "^4.4.3",
     "@itwin/core-common": "^4.4.3",
     "@itwin/core-frontend": "^4.4.3",
