@@ -2,7 +2,6 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { AppNotificationManager, UiFramework } from "@itwin/appui-react";
 import { Id64 } from "@itwin/core-bentley";
 import {
   BentleyCloudRpcManager, BentleyCloudRpcParams, IModelReadRpcInterface, IModelTileRpcInterface,
@@ -17,18 +16,16 @@ import { ViewportComponent } from "@itwin/imodel-components-react";
 import { FrontendIModelsAccess } from "@itwin/imodels-access-frontend";
 import { IModelsClient } from "@itwin/imodels-client-management";
 import { PageLayout } from "@itwin/itwinui-layouts-react";
-import { Button, useToaster } from "@itwin/itwinui-react";
+import { useToaster } from "@itwin/itwinui-react";
 import { SavedViewWithDataRepresentation } from "@itwin/saved-views-client";
-import { ITwinSavedViewsClient, useSavedViews } from "@itwin/saved-views-react";
-import {
-  SavedViewsFolderWidget, applyExtensionsToViewport, createSavedViewOptions, translateLegacySavedViewToITwinJsViewState,
-  translateSavedViewResponseToLegacySavedViewResponse,
-} from "@itwin/saved-views-react/experimental";
-import { useEffect, useMemo, useState, type ReactElement } from "react";
+import { applyExtensionsToViewport } from "@itwin/saved-views-react/experimental";
+import { useEffect, useRef, useState, type ReactElement } from "react";
 
 import { applyUrlPrefix } from "../../environment.js";
 import { useAuthorization } from "../Authorization.js";
 import { LoadingScreen } from "../common/LoadingScreen.js";
+import { Overlap } from "../common/Overlap.js";
+import { SavedViewsWidget } from "./SavedViewsWidget.js";
 
 import "./ITwinJsApp.css";
 
@@ -42,10 +39,8 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
 
   type LoadingState = "opening-imodel" | "opening-viewstate" | "creating-viewstate" | "loaded" | "rendering-imodel"
     | "rendered";
-  const toaster = useToaster();
   const [loadingState, setLoadingState] = useState<LoadingState>("opening-imodel");
-  const [selectedViewState, setSelectedViewState] = useState<ViewState>();
-  const [selectedSavedView, setSelectedSavedView] = useState<SavedViewWithDataRepresentation>();
+  const [viewState, setViewState] = useState<ViewState>();
   const iModel = useIModel(props.iTwinId, props.iModelId, authorizationClient);
 
   useEffect(
@@ -70,8 +65,7 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
 
         if (!disposed) {
           setLoadingState("loaded");
-          UiFramework.setIModelConnection(iModel);
-          UiFramework.setDefaultViewState(viewState);
+          setViewState(viewState);
         }
       })();
       return () => { disposed = true; };
@@ -79,71 +73,19 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
     [iModel],
   );
 
-  const client = useMemo(
-    () => new ITwinSavedViewsClient({
-      getAccessToken: () => authorizationClient.getAccessToken(),
-      baseUrl: applyUrlPrefix("https://api.bentley.com/savedviews"),
-    }),
-    [authorizationClient],
-  );
-
-  const [updatingSavedViews, setUpdatingSavedViews] = useState(false);
-  const savedViews = useSavedViews({
-    iTwinId: props.iTwinId,
-    iModelId: props.iModelId,
-    client,
-    onUpdateInProgress: () => setUpdatingSavedViews(true),
-    onUpdateComplete: () => setUpdatingSavedViews(false),
-    onUpdateError: (error) => {
-      toaster.negative("Failed to update saved views.");
-      // eslint-disable-next-line no-console
-      console.error(error);
-    },
-  });
-
-  /*
-    * This function converts a saved view from the Saved View API into a legacy view,
-    * then converts the legacy view into an iTwin.js-style ViewState.
-    *
-    * Once legacy views are officially retired, a straight translation from Saved View to ViewState can be done instead
-    * (but code has not been created for that yet).
-    */
-  const handleTileClick = async (savedViewId: string) => {
-    if (!iModel) {
-      return;
+  const viewportRef = useRef<ScreenViewport>();
+  const handleSavedViewSelect = (savedView: SavedViewWithDataRepresentation, viewState: ViewState) => {
+    setViewState(viewState);
+    if (viewportRef.current) {
+      applyExtensionsToViewport(viewportRef.current, savedView);
     }
-    setLoadingState("rendering-imodel");
-
-    const savedViewResponse = await client.getSingularSavedView({ savedViewId });
-
-    const legacySavedViewResponse = await translateSavedViewResponseToLegacySavedViewResponse(savedViewResponse, iModel);
-    setSelectedSavedView(legacySavedViewResponse);
-
-    const viewState = await translateLegacySavedViewToITwinJsViewState(legacySavedViewResponse, iModel);
-    setLoadingState("rendered");
-    setSelectedViewState(viewState);
-  };
-
-  /*
-   * Apply extension data onto the viewport.
-   * Extension data from a saved view cannot be applied until after the viewport is created
-   * since it is applied to the viewport and not the viewstate.
-   */
-  const handleViewportCreated = async (viewport: ScreenViewport) => {
-    await applyExtensionsToViewport(viewport, selectedSavedView);
-  };
-
-  const handleBackClick = () => {
-    setSelectedSavedView(undefined);
-    setSelectedViewState(undefined);
-    setLoadingState("loaded");
   };
 
   if (loadingState === "rendering-imodel") {
     return <LoadingScreen>Opening View...</LoadingScreen>;
   }
 
-  if (loadingState === "opening-imodel") {
+  if (!iModel) {
     return <LoadingScreen>Opening iModel...</LoadingScreen>;
   }
 
@@ -155,73 +97,21 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
     return <LoadingScreen>Creating ViewState...</LoadingScreen>;
   }
 
-  if (!savedViews) {
-    return <LoadingScreen>Loading saved views...</LoadingScreen>;
-  }
-
-  if (selectedViewState && iModel) {
-    return (
-      <PageLayout.Content>
-        <Button onClick={handleBackClick} className="viewport-back-button">Back</Button>
+  return (
+    <PageLayout.Content>
+      <Overlap style={{ height: "100%" }}>
         <ViewportComponent
           imodel={iModel}
-          viewState={selectedViewState}
-          viewportRef={(viewport) => handleViewportCreated(viewport)}
+          viewState={viewState}
+          viewportRef={(v) => viewportRef.current = v}
         />
-      </PageLayout.Content>
-    );
-  }
-
-  const groups = [...savedViews.groups.values()];
-  const tags = [...savedViews.tags.values()];
-  const tileOptions = createSavedViewOptions({
-    renameSavedView: true,
-    groupActions: {
-      groups,
-      moveToGroup: savedViews.actions.moveToGroup,
-      moveToNewGroup: savedViews.actions.moveToNewGroup,
-    },
-    tagActions: {
-      tags,
-      addTag: savedViews.actions.addTag,
-      addNewTag: savedViews.actions.addNewTag,
-      removeTag: savedViews.actions.removeTag,
-    },
-    deleteSavedView: savedViews.actions.deleteSavedView,
-  });
-
-  const handleCreateView = () => savedViews.actions.createSavedView(
-    "0 Saved View Name",
-    {
-      itwin3dView: {
-        origin: [0.0, 0.0, 0.0],
-        extents: [100.0, 100.0, 100.0],
-        angles: {
-          yaw: 90.0,
-          pitch: 90.0,
-          roll: 90.0,
-        },
-      },
-    },
-  );
-
-  return (
-    <PageLayout.Content
-      style={{ display: "grid", grid: "auto minmax(0, 1fr) / 1fr", gap: "var(--iui-size-s)", height: "100%" }}
-    >
-      <div style={{ display: "flex", gap: "var(--iui-size-s)", paddingTop: "var(--iui-size-s)", alignItems: "center" }}>
-        <Button onClick={handleCreateView}>Create saved view</Button>
-        <Button onClick={() => savedViews.actions.createGroup("0 Group")}>Create group</Button>
-        {updatingSavedViews && "Updating saved views..."}
-      </div>
-      <SavedViewsFolderWidget
-        savedViews={savedViews.savedViews}
-        groups={savedViews.groups}
-        tags={savedViews.tags}
-        actions={savedViews.actions}
-        options={() => tileOptions}
-        onTileClick={handleTileClick}
-      />
+        <SavedViewsWidget
+          iTwinId={props.iTwinId}
+          iModelId={props.iModelId}
+          iModel={iModel}
+          onSavedViewSelect={handleSavedViewSelect}
+        />
+      </Overlap>
     </PageLayout.Content>
   );
 }
@@ -237,7 +127,6 @@ export async function initializeITwinJsApp(): Promise<void> {
       initOptions: { lng: "en" },
       urlTemplate: "/locales/{{lng}}/{{ns}}.json",
     }),
-    notifications: new AppNotificationManager(),
     hubAccess: new FrontendIModelsAccess(iModelsClient),
     publicPath: "/",
   });
@@ -247,7 +136,7 @@ export async function initializeITwinJsApp(): Promise<void> {
   };
 
   BentleyCloudRpcManager.initializeClient(rpcParams, [IModelReadRpcInterface, IModelTileRpcInterface]);
-  await Promise.all([UiCore.initialize(IModelApp.localization), UiFramework.initialize(undefined)]);
+  await Promise.all([UiCore.initialize(IModelApp.localization)]);
 }
 
 function useIModel(
