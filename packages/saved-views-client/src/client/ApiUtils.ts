@@ -12,7 +12,7 @@ export interface CallITwinApiParams {
   signal?: AbortSignal | undefined;
 }
 
-export async function callITwinApi(args: CallITwinApiParams): Promise<Record<string, unknown>> {
+export async function callITwinApi(args: CallITwinApiParams): Promise<unknown> {
   const response = await fetch(args.url, {
     method: args.method,
     body: args.body && JSON.stringify(args.body),
@@ -27,7 +27,11 @@ export async function callITwinApi(args: CallITwinApiParams): Promise<Record<str
     await throwBadResponseCodeError(response, "iTwin API request failed.");
   }
 
-  return response.json();
+  try {
+    return await response.json();
+  } catch {
+    return undefined;
+  }
 }
 
 async function throwBadResponseCodeError(response: Response, errorMessage: string): Promise<never> {
