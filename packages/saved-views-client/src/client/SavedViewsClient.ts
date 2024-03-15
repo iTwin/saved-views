@@ -2,11 +2,11 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { Extension, ExtensionListItem, ExtensionMin, ExtensionSavedViewCreate } from "../models/Extension.js";
-import { Group } from "../models/Group.js";
-import { HalLinks } from "../models/Links.js";
-import { Tag } from "../models/Tag.js";
-import { SavedViewWithDataMinimal, SavedViewWithDataRepresentation, ViewData } from "../models/savedViews/View.js";
+import type { Extension, ExtensionListItem, ExtensionMin, ExtensionSavedViewCreate } from "../models/Extension.js";
+import type { Group } from "../models/Group.js";
+import type { HalLinks } from "../models/Links.js";
+import type { Tag } from "../models/Tag.js";
+import type { SavedViewMinimal, SavedViewRepresentation, ViewData } from "../models/savedViews/View.js";
 
 export interface SavedViewsClient {
   getSavedViewMinimal(args: SingleSavedViewParams): Promise<SavedViewMinimalResponse>;
@@ -72,19 +72,19 @@ export interface UpdateSavedViewParams extends CommonRequestParams {
 }
 
 export interface SavedViewMinimalResponse {
-  savedView: SavedViewWithDataMinimal;
+  savedView: SavedViewMinimal;
 }
 
 export interface SavedViewRepresentationResponse {
-  savedView: SavedViewWithDataRepresentation;
+  savedView: SavedViewRepresentation;
 }
 export interface SavedViewListMinimalResponse {
-  savedViews: SavedViewWithDataMinimal[];
+  savedViews: SavedViewMinimal[];
   _links: HalLinks<["self", "prev"?, "next"?]>;
 }
 
 export interface SavedViewListRepresentationResponse {
-  savedViews: SavedViewWithDataRepresentation[];
+  savedViews: SavedViewRepresentation[];
   _links: HalLinks<["self", "prev"?, "next"?]>;
 }
 

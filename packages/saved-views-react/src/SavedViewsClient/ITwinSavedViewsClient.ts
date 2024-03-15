@@ -3,7 +3,7 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import {
-  ITwinSavedViewsClient as Client, type Group, type SavedViewWithDataMinimal, type SavedViewWithDataRepresentation,
+  ITwinSavedViewsClient as Client, type Group, type SavedViewMinimal, type SavedViewRepresentation,
   type Tag,
 } from "@itwin/saved-views-client";
 
@@ -47,7 +47,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     };
   }
 
-  public async getSingularSavedView(args: GetSingularSavedViewParams): Promise<SavedViewWithDataRepresentation> {
+  public async getSingularSavedView(args: GetSingularSavedViewParams): Promise<SavedViewRepresentation> {
     const response = await this.client.getSavedViewRepresentation({
       savedViewId: args.savedViewId,
       signal: args.signal,
@@ -144,7 +144,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   }
 }
 
-function savedViewResponseToSavedView(response: SavedViewWithDataMinimal): SavedView {
+function savedViewResponseToSavedView(response: SavedViewMinimal): SavedView {
   return {
     id: response.id,
     displayName: response.displayName,

@@ -3,7 +3,7 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import type {
-  ExtensionMin, ExtensionSavedViewCreate, SavedViewWithDataRepresentation, ViewData,
+  ExtensionMin, ExtensionSavedViewCreate, SavedViewRepresentation, ViewData,
 } from "@itwin/saved-views-client";
 
 import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedView.js";
@@ -16,7 +16,7 @@ export interface SavedViewInfo {
 
 export interface SavedViewsClient {
   getSavedViewInfo: (args: GetSavedViewInfoParams) => Promise<SavedViewInfo>;
-  getSingularSavedView: (args: GetSingularSavedViewParams) => Promise<SavedViewWithDataRepresentation>;
+  getSingularSavedView: (args: GetSingularSavedViewParams) => Promise<SavedViewRepresentation>;
   getThumbnailUrl: (args: GetThumbnailUrlParams) => Promise<string | undefined>;
   createSavedView: (args: CreateSavedViewParams) => Promise<SavedView>;
   updateSavedView: (args: UpdateSavedViewParams) => Promise<SavedView>;

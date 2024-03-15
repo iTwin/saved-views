@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 import { IModelConnection, type ViewState } from "@itwin/core-frontend";
 import { Button, useToaster } from "@itwin/itwinui-react";
-import type { SavedViewWithDataRepresentation } from "@itwin/saved-views-client";
+import type { SavedViewRepresentation } from "@itwin/saved-views-client";
 import { ITwinSavedViewsClient, useSavedViews } from "@itwin/saved-views-react";
 import {
   SavedViewsFolderWidget, createSavedViewOptions, translateLegacySavedViewToITwinJsViewState,
@@ -20,7 +20,7 @@ interface SavedViewsWidgetProps {
   iTwinId: string;
   iModelId: string;
   iModel: IModelConnection;
-  onSavedViewSelect: (savedView: SavedViewWithDataRepresentation, viewState: ViewState) => void;
+  onSavedViewSelect: (savedView: SavedViewRepresentation, viewState: ViewState) => void;
 }
 
 export function SavedViewsWidget(props: SavedViewsWidgetProps): ReactElement {
