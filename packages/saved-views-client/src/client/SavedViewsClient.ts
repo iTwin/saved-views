@@ -79,7 +79,7 @@ export interface SavedViewRepresentationResponse {
   savedView: SavedViewRepresentation;
 }
 export interface SavedViewListMinimalResponse {
-  savedViews: SavedViewMinimal[];
+  savedViews: Array<Omit<SavedViewMinimal, "savedViewData">>;
   _links: HalLinks<["self", "prev"?, "next"?]>;
 }
 

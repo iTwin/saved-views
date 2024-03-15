@@ -144,7 +144,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   }
 }
 
-function savedViewResponseToSavedView(response: SavedViewMinimal): SavedView {
+function savedViewResponseToSavedView(response: Omit<SavedViewMinimal, "savedViewData">): SavedView {
   return {
     id: response.id,
     displayName: response.displayName,
