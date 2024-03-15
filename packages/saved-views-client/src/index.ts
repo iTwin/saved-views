@@ -9,6 +9,7 @@ export * from "./models/Group.js";
 export * from "./models/Links.js";
 export * from "./models/Tag.js";
 export * from "./models/savedViews/DisplayStyles.js";
+export { isViewDataITwin3d, isViewDataITwinDrawing, isViewDataITwinSheet } from "./models/savedViews/View.js";
 export type {
   ClipPlaneProps, ClipPrimitivePlaneProps, ClipPrimitiveShapeProps, PlanesProps, SavedView, SavedViewMinimal,
   SavedViewRepresentation, ShapeProps, ViewCamera, ViewData, ViewDataITwin3d, ViewDataITwinDrawing, ViewDataITwinSheet,

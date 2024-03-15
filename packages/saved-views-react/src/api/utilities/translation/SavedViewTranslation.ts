@@ -7,8 +7,8 @@ import {
   DrawingViewState, EmphasizeElements, IModelConnection, ScreenViewport, SheetViewState, SpatialViewState, ViewState,
   Viewport,
 } from "@itwin/core-frontend";
-import type {
-  Extension, SavedViewRepresentation, ViewData, ViewDataITwinDrawing, ViewDataITwinSheet, ViewDataITwin3d,
+import {
+  isViewDataITwin3d, isViewDataITwinDrawing, isViewDataITwinSheet, type Extension, type SavedViewRepresentation,
 } from "@itwin/saved-views-client";
 
 import { isDrawingSavedView, isSheetSavedView, isSpatialSavedView } from "../../clients/ISavedViewsClient.js";
@@ -24,18 +24,6 @@ enum ViewTypes {
   SheetViewDefinition,
   ViewDefinition3d,
   DrawingViewDefinition,
-}
-
-function isSavedViewItwin3d(savedViewData: ViewData): savedViewData is ViewDataITwin3d {
-  return (savedViewData as ViewDataITwin3d).itwin3dView !== undefined;
-}
-
-function isSavedViewItwinSheet(savedViewData: ViewData): savedViewData is ViewDataITwinSheet {
-  return (savedViewData as ViewDataITwinSheet).itwinSheetView !== undefined;
-}
-
-function isSavedViewItwinDrawing(savedViewData: ViewData): savedViewData is ViewDataITwinDrawing {
-  return (savedViewData as ViewDataITwinDrawing).itwinDrawingView !== undefined;
 }
 
 /**
@@ -111,7 +99,7 @@ async function translateSavedViewToLegacySavedView(
     legacySavedView = savedViewData.legacyView as any;
     // legacySavedView.id = savedView.id; // Change legacy sv id to comboId
 
-  } else if (isSavedViewItwin3d(savedViewData)) {
+  } else if (isViewDataITwin3d(savedViewData)) {
     const iModelViewData = await fetchIModelViewData(
       ViewTypes.ViewDefinition3d,
       iModelConnection,
@@ -122,7 +110,7 @@ async function translateSavedViewToLegacySavedView(
     );
     legacySavedView = actual;
 
-  } else if (isSavedViewItwinDrawing(savedViewData)) {
+  } else if (isViewDataITwinDrawing(savedViewData)) {
     const iModelViewData = await fetchIModelViewData(
       ViewTypes.DrawingViewDefinition,
       iModelConnection,
@@ -133,7 +121,7 @@ async function translateSavedViewToLegacySavedView(
     );
     legacySavedView = actual;
 
-  } else if (isSavedViewItwinSheet(savedViewData)) {
+  } else if (isViewDataITwinSheet(savedViewData)) {
     const iModelViewData = await fetchIModelViewData(
       ViewTypes.SheetViewDefinition,
       iModelConnection,

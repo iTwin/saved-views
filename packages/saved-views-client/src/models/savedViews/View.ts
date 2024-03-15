@@ -27,8 +27,22 @@ export interface SavedView {
 export type ViewData = ViewDataITwin3d | ViewDataITwinDrawing | ViewDataITwinSheet;
 
 export type ViewDataITwin3d = { itwin3dView: ViewITwin3d; };
+
+export function isViewDataITwin3d(savedViewData: ViewData): savedViewData is ViewDataITwin3d {
+  return (savedViewData as ViewDataITwin3d).itwin3dView !== undefined;
+}
+
 export type ViewDataITwinDrawing = { itwinDrawingView: ViewITwinDrawing; };
+
+export function isViewDataITwinDrawing(savedViewData: ViewData): savedViewData is ViewDataITwinDrawing {
+  return (savedViewData as ViewDataITwinDrawing).itwinDrawingView !== undefined;
+}
+
 export type ViewDataITwinSheet = { itwinSheetView: ViewITwinSheet; };
+
+export function isViewDataITwinSheet(savedViewData: ViewData): savedViewData is ViewDataITwinSheet {
+  return (savedViewData as ViewDataITwinSheet).itwinSheetView !== undefined;
+}
 
 export interface ViewITwin3d {
   origin: [x: number, y: number, z: number];
