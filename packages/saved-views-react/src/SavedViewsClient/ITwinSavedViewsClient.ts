@@ -11,7 +11,7 @@ import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedView.js";
 import type {
   CreateGroupParams, CreateSavedViewParams, CreateTagParams, DeleteGroupParams, DeleteSavedViewParams, DeleteTagParams,
   GetSavedViewInfoParams, GetSingularSavedViewParams, GetThumbnailUrlParams, SavedViewInfo, SavedViewsClient,
-  UpdateGroupParams, UpdateSavedViewParams, UpdateTagParams,
+  UpdateGroupParams, UpdateSavedViewParams, UpdateTagParams, UploadThumbnailParams,
 } from "./SavedViewsClient.js";
 
 interface ITwinSavedViewsClientParams {
@@ -62,6 +62,14 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       signal: args.signal,
     });
     return response.href;
+  }
+
+  public async uploadThumbnail(args: UploadThumbnailParams): Promise<void> {
+    await this.client.updateImage({
+      savedViewId: args.savedViewId,
+      image: args.image,
+      signal: args.signal,
+    });
   }
 
   public async createSavedView(args: CreateSavedViewParams): Promise<SavedView> {

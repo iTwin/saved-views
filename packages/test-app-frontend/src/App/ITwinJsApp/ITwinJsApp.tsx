@@ -8,7 +8,7 @@ import {
   type AuthorizationClient,
 } from "@itwin/core-common";
 import {
-  CheckpointConnection, IModelApp, IModelConnection, ScreenViewport, ViewCreator3d, ViewState,
+  CheckpointConnection, IModelApp, IModelConnection, ScreenViewport, ViewCreator3d, ViewState, Viewport,
 } from "@itwin/core-frontend";
 import { ITwinLocalization } from "@itwin/core-i18n";
 import { UiCore } from "@itwin/core-react";
@@ -17,7 +17,7 @@ import { FrontendIModelsAccess } from "@itwin/imodels-access-frontend";
 import { IModelsClient } from "@itwin/imodels-client-management";
 import { PageLayout } from "@itwin/itwinui-layouts-react";
 import { useToaster } from "@itwin/itwinui-react";
-import { SavedViewWithDataRepresentation } from "@itwin/saved-views-client";
+import { SavedViewRepresentation } from "@itwin/saved-views-client";
 import { applyExtensionsToViewport } from "@itwin/saved-views-react/experimental";
 import { useEffect, useRef, useState, type ReactElement } from "react";
 
@@ -74,12 +74,14 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
   );
 
   const viewportRef = useRef<ScreenViewport>();
-  const handleSavedViewSelect = (savedView: SavedViewWithDataRepresentation, viewState: ViewState) => {
+  const handleSavedViewSelect = (savedView: SavedViewRepresentation, viewState: ViewState) => {
     setViewState(viewState);
     if (viewportRef.current) {
       applyExtensionsToViewport(viewportRef.current, savedView);
     }
   };
+
+  const [viewport, setViewport] = useState<Viewport>();
 
   if (loadingState === "rendering-imodel") {
     return <LoadingScreen>Opening View...</LoadingScreen>;
@@ -103,14 +105,18 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
         <ViewportComponent
           imodel={iModel}
           viewState={viewState}
-          viewportRef={(v) => viewportRef.current = v}
+          viewportRef={(v) => (setViewport(v), viewportRef.current = v)}
         />
-        <SavedViewsWidget
-          iTwinId={props.iTwinId}
-          iModelId={props.iModelId}
-          iModel={iModel}
-          onSavedViewSelect={handleSavedViewSelect}
-        />
+        {
+          viewport &&
+          <SavedViewsWidget
+            iTwinId={props.iTwinId}
+            iModelId={props.iModelId}
+            iModel={iModel}
+            onSavedViewSelect={handleSavedViewSelect}
+            viewport={viewport}
+          />
+        }
       </Overlap>
     </PageLayout.Content>
   );
