@@ -11,7 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 * Component CSS styles are now scoped to `itwin-svr` CSS layer
 * Add `@itwin/core-geometry` as peer dependency
 * Add `SavedViewsClient.uploadThumbnail` method
-* Add `SavedViewActions.uploadImage` method
+* Add `SavedViewActions.uploadThumbnail` method
 * `SavedViewActions.createSavedView` method now returns a promise which resolves into created Saved View id
 
 ### Minor changes
