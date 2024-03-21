@@ -3,7 +3,7 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import { BaseMapLayerProps, ImageMapLayerProps } from "@itwin/core-common";
-import type { ViewData, ViewDataITwinDrawing, ViewDataITwinSheet, ViewDataItwin3d } from "@itwin/saved-views-client";
+import type { ViewData, ViewDataITwinDrawing, ViewDataITwinSheet, ViewDataITwin3d } from "@itwin/saved-views-client";
 
 /**
  * Convert url that potentially contains subtituted characters ('++and++' or '++dot++') to use restricated characters ('&' or '.')
@@ -21,7 +21,7 @@ export const convertAllLegacyUrlsToUrls = (
   convert: (url: string) => string,
 ): void => {
   const displayStyle =
-    (savedViewData as ViewDataItwin3d)?.itwin3dView.displayStyle ??
+    (savedViewData as ViewDataITwin3d)?.itwin3dView.displayStyle ??
     (savedViewData as ViewDataITwinDrawing)?.itwinDrawingView.displayStyle ??
     (savedViewData as ViewDataITwinSheet)?.itwinSheetView.displayStyle;
   if (displayStyle === undefined) {

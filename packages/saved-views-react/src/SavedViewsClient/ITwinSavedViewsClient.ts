@@ -3,7 +3,7 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import {
-  ITwinSavedViewsClient as Client, type Group, type SavedViewWithDataMinimal, type SavedViewWithDataRepresentation,
+  ITwinSavedViewsClient as Client, type Group, type SavedViewMinimal, type SavedViewRepresentation,
   type Tag,
 } from "@itwin/saved-views-client";
 
@@ -11,7 +11,7 @@ import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedView.js";
 import type {
   CreateGroupParams, CreateSavedViewParams, CreateTagParams, DeleteGroupParams, DeleteSavedViewParams, DeleteTagParams,
   GetSavedViewInfoParams, GetSingularSavedViewParams, GetThumbnailUrlParams, SavedViewInfo, SavedViewsClient,
-  UpdateGroupParams, UpdateSavedViewParams, UpdateTagParams,
+  UpdateGroupParams, UpdateSavedViewParams, UpdateTagParams, UploadThumbnailParams,
 } from "./SavedViewsClient.js";
 
 interface ITwinSavedViewsClientParams {
@@ -47,7 +47,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     };
   }
 
-  public async getSingularSavedView(args: GetSingularSavedViewParams): Promise<SavedViewWithDataRepresentation> {
+  public async getSingularSavedView(args: GetSingularSavedViewParams): Promise<SavedViewRepresentation> {
     const response = await this.client.getSavedViewRepresentation({
       savedViewId: args.savedViewId,
       signal: args.signal,
@@ -62,6 +62,14 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       signal: args.signal,
     });
     return response.href;
+  }
+
+  public async uploadThumbnail(args: UploadThumbnailParams): Promise<void> {
+    await this.client.updateImage({
+      savedViewId: args.savedViewId,
+      image: args.image,
+      signal: args.signal,
+    });
   }
 
   public async createSavedView(args: CreateSavedViewParams): Promise<SavedView> {
@@ -144,7 +152,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   }
 }
 
-function savedViewResponseToSavedView(response: SavedViewWithDataMinimal): SavedView {
+function savedViewResponseToSavedView(response: Omit<SavedViewMinimal, "savedViewData">): SavedView {
   return {
     id: response.id,
     displayName: response.displayName,

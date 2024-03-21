@@ -2,8 +2,11 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
+import type { DisplayStyle3dProps, DisplayStyleProps } from "@itwin/core-common";
 import type { ViewState } from "@itwin/core-frontend";
-import { ViewITwin2d, ViewITwin3d } from "@itwin/saved-views-client";
+import type {
+  DisplayStyle3dSettingsProps, DisplayStyleSettingsProps, ViewITwin2d, ViewITwin3d,
+} from "@itwin/saved-views-client";
 
 import type { LegacySavedView, LegacySavedView2d } from "../SavedViewTypes.js";
 import {
@@ -574,7 +577,7 @@ const displayStyle3dMapping: ExtractionFunc<void, void>[] = [
 const displayStyle3dLegacyMapping: ExtractionFunc<void, void>[] = [
   ...displayStylesLegacyMapping,
   extractObject(environmentLegacyMappings, "environment"),
-  extractObject(ambientOcclusionMappings, "ambientOcclusion", "ao"),
+  extractObject(ambientOcclusionMappings, "ao", "ambientOcclusion"),
   extractObject(solarShadowMappings, "solarShadows"),
   extractObject(lightsMappings, "lights"),
   extractPlainTypedMap(
@@ -611,11 +614,13 @@ export const extractDisplayStyle = (data: object, viewState?: ViewState) => {
   return output;
 };
 
-/**
- * Extracts the display style 3d from a legacy view displayStyle field
- * And transforms it into our schema
- * @param data
- */
+export function extractDisplayStyle2dFromLegacy(data: DisplayStyleProps): DisplayStyleSettingsProps {
+  const styles = data.jsonProperties?.styles;
+  const output = {};
+  applyExtraction(styles, output, displayStyle3dLegacyMapping);
+  return output;
+}
+
 export const extractDisplayStyle3d = (data: object) => {
   let styles;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -634,6 +639,13 @@ export const extractDisplayStyle3d = (data: object) => {
 
   return output;
 };
+
+export function extractDisplayStyle3dFromLegacy(data: DisplayStyle3dProps): DisplayStyle3dSettingsProps {
+  const output = {} as DisplayStyle3dSettingsProps;
+  const styles = data.jsonProperties?.styles;
+  applyExtraction(styles, output, displayStyle3dLegacyMapping);
+  return output;
+}
 
 function appendAcsAndGridViewFlagsToOutput(
   drawingViewState: ViewState,

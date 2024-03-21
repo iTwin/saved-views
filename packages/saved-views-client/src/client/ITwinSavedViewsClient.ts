@@ -2,8 +2,12 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { callITwinApi } from "./ApiUtils.js";
+import type { DisplayStyleSettingsProps } from "../models/savedViews/DisplayStyles.js";
 import {
+  isViewDataITwin3d, isViewDataITwinDrawing, isViewDataITwinSheet, type ViewData,
+} from "../models/savedViews/View.js";
+import { callITwinApi } from "./ApiUtils.js";
+import type {
   CreateExtensionParams, CreateGroupParams, CreateSavedViewParams, CreateTagParams, ExtensionListResponse,
   ExtensionResponse, GetExtensionsParams, GetGroupsParams, GetImageParams, GetSavedViewsParams, GetTagsParams,
   GroupListResponse, GroupResponse, ImageResponse, SavedViewListMinimalResponse, SavedViewListRepresentationResponse,
@@ -33,40 +37,46 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     this.getAccessToken = args.getAccessToken;
   }
 
-  private async queryITwinApi<ReturnType>(queyParams: QueryParams): Promise<ReturnType> {
+  private async queryITwinApi<ReturnType>(args: QueryParams): Promise<ReturnType> {
     return callITwinApi({
-      url: queyParams.url,
-      method: queyParams.method,
+      url: args.url,
+      method: args.method,
       headers: {
         "Content-Type": "application/json",
-        ...queyParams.headers,
+        ...args.headers,
       },
-      body: queyParams.body,
+      body: args.body,
       getAccessToken: this.getAccessToken,
-      signal: queyParams.signal,
+      signal: args.signal,
     }) as ReturnType;
   }
 
   async getSavedViewMinimal(args: SingleSavedViewParams): Promise<SavedViewMinimalResponse> {
-    return this.queryITwinApi({
+    const response = await this.queryITwinApi({
       url: `${this.baseUrl}/${args.savedViewId}`,
       method: "GET",
       headers: {
         Prefer: PreferOptions.Minimal,
       },
       signal: args.signal,
-    });
+    }) as SavedViewMinimalResponse;
+
+    replaceAllUrlFields(response.savedView.savedViewData, fromITwinApi);
+    return response;
   }
 
   async getSavedViewRepresentation(args: SingleSavedViewParams): Promise<SavedViewRepresentationResponse> {
-    return this.queryITwinApi({
+    const response = await this.queryITwinApi({
       url: `${this.baseUrl}/${args.savedViewId}`,
       method: "GET",
       headers: {
         Prefer: PreferOptions.Representation,
       },
       signal: args.signal,
-    });
+    }) as SavedViewRepresentationResponse;
+
+    replaceAllUrlFields(response.savedView.savedViewData, fromITwinApi);
+    return response;
   }
 
   async getAllSavedViewsMinimal(args: GetSavedViewsParams): Promise<SavedViewListMinimalResponse> {
@@ -91,22 +101,34 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     const top = args.top && `$top=${args.top}`;
     const skip = args.skip && `$skip=${args.skip}`;
     const query = [iTwinId, iModelId, groupId, top, skip].filter((param) => param).join("&");
-    return this.queryITwinApi({
+    const response = await this.queryITwinApi({
       url: `${this.baseUrl}?${query}`,
       method: "GET",
       headers: {
         Prefer: PreferOptions.Representation,
       },
       signal: args.signal,
-    });
+    }) as SavedViewListRepresentationResponse;
+
+    for (const savedView of response.savedViews) {
+      replaceAllUrlFields(savedView.savedViewData, fromITwinApi);
+    }
+
+    return response;
   }
 
   async createSavedView(args: CreateSavedViewParams): Promise<SavedViewMinimalResponse> {
     const { signal, ...body } = args;
+    const savedViewData = structuredClone(body.savedViewData);
+    replaceAllUrlFields(savedViewData, toITwinApi);
+
     return this.queryITwinApi({
       url: `${this.baseUrl}/`,
       method: "POST",
-      body,
+      body: {
+        ...body,
+        savedViewData,
+      },
       signal,
     });
   }
@@ -285,4 +307,67 @@ interface QueryParams {
     Prefer?: PreferOptions;
   };
   signal?: AbortSignal | undefined;
+}
+
+function replaceAllUrlFields(savedViewData: ViewData, replace: (url: string) => string): void {
+  const displayStyle = getDisplayStyle(savedViewData);
+  const mapImagery = displayStyle?.mapImagery;
+  if (mapImagery) {
+    if (mapImagery.backgroundBase && "url" in mapImagery.backgroundBase) {
+      const baseUrl = mapImagery.backgroundBase.url;
+      if (baseUrl) {
+        mapImagery.backgroundBase.url = replace(baseUrl);
+      }
+    }
+
+    for (const layer of mapImagery?.overlayLayers ?? []) {
+      if ("url" in layer && layer.url) {
+        layer.url = replace(layer.url);
+      }
+    }
+
+    for (const layer of (mapImagery?.backgroundLayers ?? [])) {
+      if ("url" in layer && layer.url) {
+        layer.url = replace(layer.url);
+      }
+    }
+  }
+
+  for (const model of displayStyle?.contextRealityModels ?? []) {
+    if (model.tilesetUrl) {
+      model.tilesetUrl = replace(model.tilesetUrl);
+    }
+
+    if (model.description) {
+      model.description = replace(model.description);
+    }
+  }
+}
+
+function getDisplayStyle(savedViewData: ViewData): DisplayStyleSettingsProps | undefined {
+  if (isViewDataITwin3d(savedViewData)) {
+    return savedViewData.itwin3dView.displayStyle;
+  }
+
+  if (isViewDataITwinDrawing(savedViewData)) {
+    return savedViewData.itwinDrawingView.displayStyle;
+  }
+
+  if (isViewDataITwinSheet(savedViewData)) {
+    return savedViewData.itwinSheetView.displayStyle;
+  }
+
+  return undefined;
+}
+
+function toITwinApi(url: string): string {
+  return url
+    .replaceAll("&", "++and++")
+    .replaceAll(".", "++dot++");
+}
+
+function fromITwinApi(url: string): string {
+  return url
+    .replaceAll("++and++", "&")
+    .replaceAll("++dot++", ".");
 }

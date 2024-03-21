@@ -12,5 +12,7 @@ export type { SavedViewInfo, SavedViewsClient } from "./SavedViewsClient/SavedVi
 export { SavedViewsContextProvider, type SavedViewsContext } from "./SavedViewsContext.js";
 export { StickyExpandableBlock } from "./StickyExpandableBlock/StickyExpandableBlock.js";
 export { TileGrid } from "./TileGrid/TileGrid.js";
+export { captureSavedViewData } from "./captureSavedViewData.js";
+export { captureSavedViewThumbnail } from "./captureSavedViewThumbnail.js";
 export { defaultLocalization, type LocalizationStrings } from "./localization.js";
 export { useSavedViews, type SavedViewActions } from "./useSavedViews.js";

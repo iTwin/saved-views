@@ -2,12 +2,12 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { IModelConnection, type ViewState } from "@itwin/core-frontend";
+import { IModelConnection, Viewport, type ViewState } from "@itwin/core-frontend";
 import { Button, useToaster } from "@itwin/itwinui-react";
-import type { SavedViewWithDataRepresentation } from "@itwin/saved-views-client";
-import { ITwinSavedViewsClient, useSavedViews } from "@itwin/saved-views-react";
+import type { SavedViewRepresentation } from "@itwin/saved-views-client";
+import { captureSavedViewData, captureSavedViewThumbnail, ITwinSavedViewsClient, useSavedViews } from "@itwin/saved-views-react";
 import {
-  SavedViewsFolderWidget, createSavedViewOptions, translateLegacySavedViewToITwinJsViewState,
+  createSavedViewOptions, SavedViewsFolderWidget, translateLegacySavedViewToITwinJsViewState,
   translateSavedViewResponseToLegacySavedViewResponse,
 } from "@itwin/saved-views-react/experimental";
 import { ReactElement, useMemo, useState } from "react";
@@ -20,7 +20,8 @@ interface SavedViewsWidgetProps {
   iTwinId: string;
   iModelId: string;
   iModel: IModelConnection;
-  onSavedViewSelect: (savedView: SavedViewWithDataRepresentation, viewState: ViewState) => void;
+  viewport: Viewport;
+  onSavedViewSelect: (savedView: SavedViewRepresentation, viewState: ViewState) => void;
 }
 
 export function SavedViewsWidget(props: SavedViewsWidgetProps): ReactElement {
@@ -72,20 +73,17 @@ export function SavedViewsWidget(props: SavedViewsWidgetProps): ReactElement {
     return <LoadingScreen>Loading saved views...</LoadingScreen>;
   }
 
-  const handleCreateView = () => savedViews.actions.createSavedView(
-    "0 Saved View Name",
-    {
-      itwin3dView: {
-        origin: [0.0, 0.0, 0.0],
-        extents: [100.0, 100.0, 100.0],
-        angles: {
-          yaw: 90.0,
-          pitch: 90.0,
-          roll: 90.0,
-        },
-      },
-    },
-  );
+  const handleCreateView = async () => {
+    const savedViewData = await captureSavedViewData(
+      props.viewport,
+      { supportHiddenModelsAndCategories: true, want2dViews: true },
+    );
+    const savedViewId = await savedViews.actions.createSavedView("0 Saved View Name", savedViewData);
+    const thumbnail = captureSavedViewThumbnail(props.viewport);
+    if (thumbnail) {
+      savedViews.actions.uploadThumbnail(savedViewId, thumbnail);
+    }
+  };
 
   const groups = [...savedViews.groups.values()];
   const tags = [...savedViews.tags.values()];

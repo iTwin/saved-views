@@ -42,7 +42,7 @@ interface UseSavedViewsResult {
 }
 
 export interface SavedViewActions {
-  createSavedView: (savedViewName: string, savedViewData: ViewData) => void;
+  createSavedView: (savedViewName: string, savedViewData: ViewData) => Promise<string>;
   renameSavedView: (savedViewId: string, newName: string) => void;
   shareSavedView: (savedViewId: string, share: boolean) => void;
   deleteSavedView: (savedViewId: string) => void;
@@ -55,6 +55,7 @@ export interface SavedViewActions {
   addTag: (savedViewId: string, tagId: string) => void;
   addNewTag: (savedViewId: string, tagName: string) => void;
   removeTag: (savedViewId: string, tagId: string) => void;
+  uploadThumbnail: (savedViewId: string, imageDataUrl: string) => void;
 }
 
 /**
@@ -206,7 +207,7 @@ function useEvent<T extends unknown[], U>(handleEvent: (...args: T) => U): (...a
 
 interface ActionsRef {
   mostRecentState: SavedViewsStore;
-  actionQueue: Array<() => Promise<void>>;
+  actionQueue: Array<() => Promise<unknown>>;
   abortController: AbortController;
 }
 
@@ -235,6 +236,7 @@ function createSavedViewActions(
           signal,
         });
         updateSavedViews((savedViews) => savedViews.set(savedView.id, savedView));
+        return savedView.id;
       },
     ),
     renameSavedView: actionWrapper(
@@ -528,46 +530,71 @@ function createSavedViewActions(
         }
       },
     ),
-  };
-
-  /** Serializes action execution and notifies when action processing begins and ends. Silences cancellation errors. */
-  function actionWrapper<T extends unknown[]>(
-    callback: (...args: T) => Promise<void>,
-  ): (...args: T) => Promise<void> {
-    return async (...args) => {
-      ref.current.actionQueue.push(async () => {
-        if (signal.aborted) {
-          return;
-        }
+    uploadThumbnail: actionWrapper(
+      async (savedViewId: string, imageDataUrl: string) => {
+        let prevThumnbnail: ReactNode | string | undefined;
+        updateSavedView(savedViewId, (savedView) => {
+          prevThumnbnail = savedView.thumbnail;
+          savedView.thumbnail = imageDataUrl;
+        });
 
         try {
-          await callback(...args);
+          await client.uploadThumbnail({ savedViewId, image: imageDataUrl, signal });
         } catch (error) {
-          if (error && typeof error === "object" && "name" in error && error.name === "AbortError") {
-            // It's a cancellation error
-          } else {
-            throw error;
+          if (prevThumnbnail !== undefined) {
+            const restoredDisplayName = prevThumnbnail;
+            updateSavedView(savedViewId, (savedView) => {
+              savedView.thumbnail = restoredDisplayName;
+            });
           }
+          throw error;
         }
-      });
+      },
+    ),
+  };
 
-      // If there are no other queued actions, start executing the queue
-      if (ref.current.actionQueue.length === 1) {
-        onUpdateInProgress();
+  /**
+   * Serializes action execution and notifies when action processing begins and ends. Continues to execute actions
+   * after cancellation.
+   */
+  function actionWrapper<T extends unknown[], U>(callback: (...args: T) => Promise<U>): (...args: T) => Promise<U> {
+    return async (...args) => {
+      // eslint-disable-next-line no-async-promise-executor
+      return new Promise(async (resolve, reject) => {
+        ref.current.actionQueue.push(async () => {
+          if (signal.aborted) {
+            reject(signal.reason);
+            return;
+          }
 
-        // By the time the first action completes, other actions may have been queued
-        while (ref.current.actionQueue.length > 0) {
           try {
-            await ref.current.actionQueue[0]();
+            resolve(await callback(...args));
           } catch (error) {
-            onUpdateError(error);
-          } finally {
+            reject(error);
+
+            if (error && typeof error === "object" && "name" in error && error.name === "AbortError") {
+              // It's a cancellation error, no need to report it
+            } else {
+              try {
+                onUpdateError(error);
+              } catch { }
+            }
+          }
+        });
+
+        // If there are no other queued actions, start executing the queue
+        if (ref.current.actionQueue.length === 1) {
+          onUpdateInProgress();
+
+          // By the time the first action completes, other actions may have been queued
+          while (ref.current.actionQueue.length > 0) {
+            await ref.current.actionQueue[0]();
             ref.current.actionQueue.shift();
           }
-        }
 
-        onUpdateComplete();
-      }
+          onUpdateComplete();
+        }
+      });
     };
   }
 

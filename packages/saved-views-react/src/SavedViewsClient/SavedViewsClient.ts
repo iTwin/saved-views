@@ -3,7 +3,7 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import type {
-  ExtensionMin, ExtensionSavedViewCreate, SavedViewWithDataRepresentation, ViewData,
+  ExtensionMin, ExtensionSavedViewCreate, SavedViewRepresentation, ViewData,
 } from "@itwin/saved-views-client";
 
 import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedView.js";
@@ -16,8 +16,9 @@ export interface SavedViewInfo {
 
 export interface SavedViewsClient {
   getSavedViewInfo: (args: GetSavedViewInfoParams) => Promise<SavedViewInfo>;
-  getSingularSavedView: (args: GetSingularSavedViewParams) => Promise<SavedViewWithDataRepresentation>;
+  getSingularSavedView: (args: GetSingularSavedViewParams) => Promise<SavedViewRepresentation>;
   getThumbnailUrl: (args: GetThumbnailUrlParams) => Promise<string | undefined>;
+  uploadThumbnail: (args: UploadThumbnailParams) => Promise<void>;
   createSavedView: (args: CreateSavedViewParams) => Promise<SavedView>;
   updateSavedView: (args: UpdateSavedViewParams) => Promise<SavedView>;
   deleteSavedView: (args: DeleteSavedViewParams) => Promise<void>;
@@ -40,6 +41,12 @@ export interface GetSingularSavedViewParams extends CommonParams {
 
 export interface GetThumbnailUrlParams extends CommonParams {
   savedViewId: string;
+}
+
+export interface UploadThumbnailParams extends CommonParams {
+  savedViewId: string;
+  /** Image data encoded as base64 data URL. */
+  image: string;
 }
 
 export interface CreateSavedViewParams extends CommonParams {
