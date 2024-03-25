@@ -9,8 +9,8 @@ import {
 } from "@itwin/core-frontend";
 import { type AngleProps, type XYProps, type XYZProps, type YawPitchRollProps } from "@itwin/core-geometry";
 import {
-  isViewDataITwin3d, type ViewData, type ViewDataITwin3d, type ViewDataITwinDrawing, type ViewDataITwinSheet,
-  type ViewITwinDrawing, type ViewYawPitchRoll,
+  type ViewData, type ViewDataITwin3d, type ViewDataITwinDrawing, type ViewDataITwinSheet, type ViewITwinDrawing,
+  type ViewYawPitchRoll,
 } from "@itwin/saved-views-client";
 
 import { extractClipVectorsFromLegacy } from "./api/utilities/translation/clipVectorsLegacyExtractor.js";
@@ -18,32 +18,35 @@ import {
   extractDisplayStyle2dFromLegacy, extractDisplayStyle3dFromLegacy,
 } from "./api/utilities/translation/displayStyleExtractor.js";
 
-interface SavedViewFlags {
-  supportHiddenModelsAndCategories: boolean;
-  want2dViews: boolean;
+interface CaptureSavedViewDataArgs {
+  /** Viewport to capture the view from. */
+  viewport: Viewport;
+
+  /**
+   * Collect a list of models and categories that are currently not enabled in the {@linkcode viewport}.
+   * @default true
+   */
+  captureHiddenModelsAndCategories: boolean;
 }
 
-export async function captureSavedViewData(vp: Viewport, flags: SavedViewFlags): Promise<ViewData> {
-  const hiddenCategoriesPromise = flags.supportHiddenModelsAndCategories ? getHiddenCategories(vp) : undefined;
+export async function captureSavedViewData(args: CaptureSavedViewDataArgs): Promise<ViewData> {
+  const hiddenCategoriesPromise = args.captureHiddenModelsAndCategories
+    ? getHiddenCategories(args.viewport)
+    : undefined;
 
-  let savedViewData: ViewData;
-  if (vp.view.isSpatialView()) {
+  if (args.viewport.view.isSpatialView()) {
     const [hiddenCategories, hiddenModels] = await Promise.all([
       hiddenCategoriesPromise,
-      flags.supportHiddenModelsAndCategories ? getHiddenModels(vp) : undefined,
+      args.captureHiddenModelsAndCategories ? getHiddenModels(args.viewport) : undefined,
     ]);
-    savedViewData = createSpatialSavedViewObject(vp, hiddenCategories, hiddenModels);
-  } else if (vp.view.isDrawingView()) {
-    savedViewData = createDrawingSavedViewObject(vp, await hiddenCategoriesPromise);
-  } else {
-    savedViewData = createSheetSavedViewObject(vp, await hiddenCategoriesPromise);
+    return createSpatialSavedViewObject(args.viewport, hiddenCategories, hiddenModels);
   }
 
-  if (!isViewDataITwin3d(savedViewData) && !flags.want2dViews) {
-    throw new Error("No support for 2D views yet");
+  if (args.viewport.view.isDrawingView()) {
+    return createDrawingSavedViewObject(args.viewport, await hiddenCategoriesPromise);
   }
 
-  return savedViewData;
+  return createSheetSavedViewObject(args.viewport, await hiddenCategoriesPromise);
 }
 
 function createSpatialSavedViewObject(
