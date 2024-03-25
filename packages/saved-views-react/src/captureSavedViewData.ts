@@ -26,7 +26,7 @@ interface CaptureSavedViewDataArgs {
    * Collect a list of models and categories that are currently not enabled in the {@linkcode viewport}.
    * @default true
    */
-  captureHiddenModelsAndCategories: boolean;
+  captureHiddenModelsAndCategories?: boolean | undefined;
 }
 
 export async function captureSavedViewData(args: CaptureSavedViewDataArgs): Promise<ViewData> {

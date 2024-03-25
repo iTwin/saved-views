@@ -74,10 +74,7 @@ export function SavedViewsWidget(props: SavedViewsWidgetProps): ReactElement {
   }
 
   const handleCreateView = async () => {
-    const savedViewData = await captureSavedViewData(
-      props.viewport,
-      { supportHiddenModelsAndCategories: true, want2dViews: true },
-    );
+    const savedViewData = await captureSavedViewData({ viewport: props.viewport });
     const savedViewId = await savedViews.actions.createSavedView("0 Saved View Name", savedViewData);
     const thumbnail = captureSavedViewThumbnail(props.viewport);
     if (thumbnail) {
