@@ -30,14 +30,13 @@ interface CaptureSavedViewDataArgs {
 }
 
 export async function captureSavedViewData(args: CaptureSavedViewDataArgs): Promise<ViewData> {
-  const hiddenCategoriesPromise = args.captureHiddenModelsAndCategories
-    ? getHiddenCategories(args.viewport)
-    : undefined;
+  const { captureHiddenModelsAndCategories = true } = args;
+  const hiddenCategoriesPromise = captureHiddenModelsAndCategories ? getHiddenCategories(args.viewport) : undefined;
 
   if (args.viewport.view.isSpatialView()) {
     const [hiddenCategories, hiddenModels] = await Promise.all([
       hiddenCategoriesPromise,
-      args.captureHiddenModelsAndCategories ? getHiddenModels(args.viewport) : undefined,
+      captureHiddenModelsAndCategories ? getHiddenModels(args.viewport) : undefined,
     ]);
     return createSpatialSavedViewObject(args.viewport, hiddenCategories, hiddenModels);
   }
