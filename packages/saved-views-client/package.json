@@ -13,6 +13,7 @@
     "url": "https://www.bentley.com"
   },
   "type": "module",
+  "types": "./lib/index.d.ts",
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
