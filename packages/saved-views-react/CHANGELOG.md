@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 * Add view capturing functions
     * `captureSavedViewData`
     * `captureSavedViewThumbnail`
+* `package.json`: Define `types` field to help ES module users that have badly configured `tsconfig.json`
 
 
 ## [0.1.0](https://github.com/iTwin/saved-views/tree/v0.1.0-react/packages/saved-views-react) - 2024-02-02
