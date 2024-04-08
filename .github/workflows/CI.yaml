@@ -41,5 +41,8 @@ jobs:
     - name: Typecheck
       run: npm run typecheck
 
+    - name: Check saved-views-client unit test coverage
+      run: npm run test:cover --prefix ./packages/saved-views-client
+
     - name: Check saved-views-react unit test coverage
       run: npm run test:cover --prefix ./packages/saved-views-react
