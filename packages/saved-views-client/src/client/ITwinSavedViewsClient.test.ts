@@ -2,578 +2,427 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 
-import { ViewData } from "../models/savedViews/View.js";
-import { CallITwinApiParams } from "./ApiUtils.js";
+import type { ViewData } from "../models/savedViews/View.js";
 import { ITwinSavedViewsClient, PreferOptions } from "./ITwinSavedViewsClient.js";
 
-interface TestQueryParams {
-  urlParams: string[];
-  method: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
-  body?: object | undefined;
-  headers?: {
-    Prefer?: PreferOptions;
-  };
-  signal?: AbortSignal | undefined;
-}
+describe("ITwinSavedViewsClient", () => {
+  const fetch = vi.fn();
 
-const baseUrl = "https://api.bentley.com/savedviews";
-const authToken = "auth token";
+  beforeAll(() => {
+    vi.stubGlobal("fetch", fetch);
+  });
 
-const getAccessToken = async () => {
-  return authToken;
-};
+  afterAll(() => {
+    vi.unstubAllGlobals();
+  });
 
-const systemUnderTest: ITwinSavedViewsClient = new ITwinSavedViewsClient({
-  getAccessToken: getAccessToken,
+  afterEach(() => {
+    fetch.mockReset();
+  });
+
+  it("getSavedViewMinimal", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({ savedView: { savedViewData: {} } }));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.getSavedViewMinimal({ savedViewId: "test_id" });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews/test_id",
+      method: "GET",
+      headers: { Prefer: PreferOptions.Minimal },
+    });
+  });
+
+  it("getSavedViewRepresentation", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({ savedView: { savedViewData: {} } }));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.getSavedViewRepresentation({ savedViewId: "test_id" });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews/test_id",
+      method: "GET",
+      headers: { Prefer: PreferOptions.Representation },
+    });
+  });
+
+  it("getAllSavedViewsMinimal", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({}));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.getAllSavedViewsMinimal({
+      iTwinId: "test_itwinid",
+      iModelId: "test_imodelid",
+      groupId: "test_groupid",
+      top: "test_top",
+      skip: "test_skip",
+    });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews/?iTwinId=test_itwinid&iModelId=test_imodelid&groupId=test_groupid&$top=test_top&$skip=test_skip",
+      method: "GET",
+      headers: { Prefer: PreferOptions.Minimal },
+    });
+  });
+
+  it("getAllSavedViewsRepresentation", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({ savedViews: [] }));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.getAllSavedViewsRepresentation({
+      iTwinId: "test_itwinid",
+      iModelId: "test_imodelid",
+      groupId: "test_groupid",
+      top: "test_top",
+      skip: "test_skip",
+    });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews?iTwinId=test_itwinid&iModelId=test_imodelid&groupId=test_groupid&$top=test_top&$skip=test_skip",
+      method: "GET",
+      headers: { Prefer: PreferOptions.Representation },
+    });
+  });
+
+  it("createSavedView", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({}));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.createSavedView({
+      iTwinId: "test_itwinid",
+      savedViewData: {} as ViewData,
+      displayName: "test_displayname",
+    });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews/",
+      method: "POST",
+      body: JSON.stringify({
+        iTwinId: "test_itwinid",
+        savedViewData: {},
+        displayName: "test_displayname",
+      }),
+    });
+  });
+
+  it("updateSavedView", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({}));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.updateSavedView({
+      savedViewId: "test_savedviewid",
+      savedViewData: {} as ViewData,
+      groupId: "test_groupid",
+      displayName: "test_displayname",
+      shared: true,
+      tagIds: ["test_tagid"],
+      extensions: [{ extensionName: "test_extensionname", href: "not_supposed_to_be_here" }],
+    });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews/test_savedviewid",
+      method: "PATCH",
+      body: JSON.stringify({
+        savedViewData: {},
+        groupId: "test_groupid",
+        displayName: "test_displayname",
+        shared: true,
+        tagIds: ["test_tagid"],
+        extensions: [{ extensionName: "test_extensionname", href: "not_supposed_to_be_here" }],
+      }),
+    });
+  });
+
+  it("deleteSavedView", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({}));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.deleteSavedView({ savedViewId: "test_savedviewid" });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews/test_savedviewid",
+      method: "DELETE",
+    });
+  });
+
+  it("getImage", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({}));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.getImage({ savedViewId: "test_savedviewid", size: "full" });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews/test_savedviewid/image?size=full",
+      method: "GET",
+    });
+  });
+
+  it("updateImage", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({}));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.updateImage({ savedViewId: "test_savedviewid", image: "test_base64imagedata" });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews/test_savedviewid/image",
+      method: "PUT",
+      body: JSON.stringify({ image: "test_base64imagedata" }),
+    });
+  });
+
+  it("getGroup", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({}));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.getGroup({ groupId: "test_groupid" });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews/groups/test_groupid",
+      method: "GET",
+    });
+  });
+
+  it("getAllGroups", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({}));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.getAllGroups({ iTwinId: "test_itwinid", iModelId: "test_imodelid" });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews/groups/?iTwinId=test_itwinid&iModelId=test_imodelid",
+      method: "GET",
+    });
+  });
+
+  it("createGroup", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({}));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.createGroup({
+      iTwinId: "test_itwinid",
+      iModelId: "test_imodelid",
+      displayName: "test_displayname",
+      shared: true,
+    });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews/groups/",
+      method: "POST",
+      body: JSON.stringify({
+        iTwinId: "test_itwinid",
+        iModelId: "test_imodelid",
+        displayName: "test_displayname",
+        shared: true,
+      }),
+    });
+  });
+
+  it("createGroup", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({}));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.updateGroup({
+      groupId: "test_groupid",
+      displayName: "test_displayname",
+      shared: true,
+    });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews/groups/test_groupid",
+      method: "PATCH",
+      body: JSON.stringify({
+        displayName: "test_displayname",
+        shared: true,
+      }),
+    });
+  });
+
+  it("deleteGroup", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({}));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.deleteGroup({ groupId: "test_groupid" });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews/groups/test_groupid",
+      method: "DELETE",
+    });
+  });
+
+  it("getExtension", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({}));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.getExtension({ savedViewId: "test_savedviewid", extensionName: "test_extensionname" });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews/test_savedviewid/extensions/test_extensionname",
+      method: "GET",
+    });
+  });
+
+  it("getAllExtensions", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({}));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.getAllExtensions({ savedViewId: "test_savedviewid" });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews/test_savedviewid/extensions/",
+      method: "GET",
+    });
+  });
+
+  it("createExtension", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({}));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.createExtension({
+      savedViewId: "test_savedviewid",
+      extensionName: "test_extensionname",
+      data: "test_extensiondata",
+    });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews/test_savedviewid/extensions/",
+      method: "PUT",
+      body: JSON.stringify({
+        extensionName: "test_extensionname",
+        data: "test_extensiondata",
+      }),
+    });
+  });
+
+  it("deleteExtension", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({}));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.deleteExtension({ savedViewId: "test_savedviewid", extensionName: "test_extensionname" });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews/test_savedviewid/extensions/test_extensionname",
+      method: "DELETE",
+    });
+  });
+
+  it("getTag", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({}));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.getTag({ tagId: "test_tagid" });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews/tags/test_tagid",
+      method: "GET",
+    });
+  });
+
+  it("getAllTags", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({}));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.getAllTags({ iTwinId: "test_itwinid", iModelId: "test_imodelid" });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews/tags/?iTwinId=test_itwinid&iModelId=test_imodelid",
+      method: "GET",
+    });
+  });
+
+  it("createTag", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({}));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.createTag({
+      iTwinId: "test_itwinid",
+      iModelId: "test_imodelid",
+      displayName: "test_displayname",
+    });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews/tags",
+      method: "POST",
+      body: JSON.stringify({
+        iTwinId: "test_itwinid",
+        iModelId: "test_imodelid",
+        displayName: "test_displayname",
+      }),
+    });
+  });
+
+  it("updateTag", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({}));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.updateTag({ tagId: "test_tagid", displayName: "test_displayname" });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews/tags/test_tagid",
+      method: "PATCH",
+      body: JSON.stringify({ displayName: "test_displayname" }),
+    });
+  });
+
+  it("deleteTag", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({}));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.deleteTag({ tagId: "test_tagid" });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews/tags/test_tagid",
+      method: "DELETE",
+    });
+  });
+
+  it("run failed request and check error output", async () => {
+    fetch.mockImplementation(() => createFailedResponse());
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.getSavedViewMinimal({ savedViewId: "test_savedviewid" }).catch((error) => {
+      expect(error.message).toBe("iTwin API request failed. Unexpected response status code: 500 Test.");
+    });
+  });
+
+  interface VerifyFetchArgs {
+    url: string;
+    method: "GET" | "PUT" | "PATCH" | "POST" | "DELETE";
+    headers?: Record<string, string>;
+    body?: string;
+  }
+
+  function verifyFetch(args: VerifyFetchArgs): void {
+    expect(fetch).toHaveBeenCalledOnce();
+    expect(fetch).toHaveBeenCalledWith(
+      args.url,
+      {
+        method: args.method,
+        headers: {
+          Authorization: "test_auth_token",
+          "Content-Type": "application/json",
+          ...args.headers,
+        },
+        body: args.body,
+      },
+    );
+  }
 });
 
-const callITwinApiTestRunner = async (
-  expectedQueryArgs: TestQueryParams, funcUnderTest: () => Promise<void>, mockFunc: (args: any) => Promise<any>) => {
-  global.fetch = vi.fn(() => { return mockFunc(expectedQueryArgs); });
-  await funcUnderTest();
-};
+async function getAccessToken(): Promise<string> {
+  return "test_auth_token";
+}
 
-const checkIfFetchIsReceivingExpectedParams = (expectedQueryArgs: TestQueryParams) => {
-  verifyCallITwinApiInfo(expectedQueryArgs);
-  return ({ ok: true, json: () => { } }) as any;
-};
+function createSuccessfulResponse(response: unknown): unknown {
+  return { ok: true, json: async () => response };
+}
 
-const createFailedRequest = () => {
-  return ({
+function createFailedResponse(): unknown {
+  return {
     ok: false,
     json: () => { },
     status: 500,
     statusText: "Test",
-  }) as any;
-};
-
-const verifyCallITwinApiInfo = (queryArgs: TestQueryParams) => {
-  return async (callITwinApiArgs: CallITwinApiParams) => {
-    confirmURL(callITwinApiArgs.url, queryArgs.urlParams);
-    expect(callITwinApiArgs.body).toEqual(queryArgs.body);
-    expect(callITwinApiArgs.headers).toEqual(queryArgs.headers);
-    expect(callITwinApiArgs.signal).toEqual(queryArgs.signal);
-    expect(callITwinApiArgs.method).toBe(queryArgs.method);
-    expect(await callITwinApiArgs.getAccessToken()).toBe(authToken);
-    return {} as any;
   };
-};
-
-const confirmURL = (url: string, urlParams: string[]) => {
-  expect(url.startsWith(baseUrl)).toBe(true);
-  urlParams.forEach((urlParam) => { expect(url.includes(urlParam)).toBe(true); });
-};
-
-describe("ITwinSavedViewsClient tests for callITwinApi information transference", () => {
-
-  it("getSavedViewMinimal", async () => {
-    const savedViewId = "savedViewComboId";
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: [savedViewId],
-      method: "GET",
-      headers: {
-        Prefer: PreferOptions.Minimal,
-      },
-      body: undefined,
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.getSavedViewMinimal({
-        savedViewId: savedViewId,
-        signal: new AbortSignal(),
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("getSavedViewRepresentation", async () => {
-    const savedViewId = "savedViewComboId";
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: [savedViewId],
-      method: "GET",
-      headers: {
-        Prefer: PreferOptions.Representation,
-      },
-      body: undefined,
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.getSavedViewRepresentation({
-        savedViewId: savedViewId,
-        signal: new AbortSignal(),
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("getAllSavedViewsMinimal", async () => {
-    const iTwinId = "iTwinId";
-    const iModelId = "iModelId";
-    const groupId = "groupId";
-    const top = "top";
-    const skip = "skip";
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: [iTwinId, iModelId, groupId, top, skip],
-      method: "GET",
-      headers: {
-        Prefer: PreferOptions.Minimal,
-      },
-      body: undefined,
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.getAllSavedViewsMinimal({
-        iTwinId, iModelId, groupId, top, skip, signal: new AbortSignal(),
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("getAllSavedViewsRepresentation", async () => {
-    const iTwinId = "iTwinId";
-    const iModelId = "iModelId";
-    const groupId = "groupId";
-    const top = "top";
-    const skip = "skip";
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: [iTwinId, iModelId, groupId, top, skip],
-      method: "GET",
-      headers: {
-        Prefer: PreferOptions.Representation,
-      },
-      body: undefined,
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.getAllSavedViewsRepresentation({
-        iTwinId, iModelId, groupId, top, skip, signal: new AbortSignal(),
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("createSavedView", async () => {
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: [],
-      method: "POST",
-      headers: {},
-      body: {
-        savedViewData: {},
-        displayName: "Test View",
-      },
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.createSavedView({
-        iTwinId: "",
-        signal: new AbortSignal(),
-        savedViewData: {} as ViewData,
-        displayName: "Test View",
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("updateSavedView", async () => {
-    const savedViewId = "savedViewComboId";
-    const body = {
-      savedViewData: {} as ViewData,
-      groupId: "groupId",
-      displayName: "displayName",
-      shared: true,
-      tagIds: ["tagId"],
-      extensions: [{ extensionName: "extensionName", href: "link" }],
-    };
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: [savedViewId],
-      method: "PATCH",
-      headers: {},
-      body: body,
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.updateSavedView({
-        savedViewId,
-        ...body,
-        signal: new AbortSignal(),
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("deleteSavedView", async () => {
-    const savedViewId = "savedViewComboId";
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: [savedViewId],
-      method: "DELETE",
-      headers: {},
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.deleteSavedView({
-        savedViewId,
-        signal: new AbortSignal(),
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("getImage", async () => {
-    const savedViewId = "savedViewComboId";
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: [savedViewId, "full"],
-      method: "GET",
-      headers: {},
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.getImage({
-        size: "full",
-        savedViewId: savedViewId,
-        signal: new AbortSignal(),
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("updateImage", async () => {
-    const savedViewId = "savedViewComboId";
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: [savedViewId, "image"],
-      method: "PUT",
-      body: {
-        image: "image",
-      },
-      headers: {},
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.updateImage({
-        image: "image",
-        savedViewId: savedViewId,
-        signal: new AbortSignal(),
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("getGroup", async () => {
-    const groupId = "groupId";
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: [groupId, "groups"],
-      method: "GET",
-      headers: {},
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.getGroup({
-        groupId,
-        signal: new AbortSignal(),
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("getAllGroups", async () => {
-    const iTwinId = "iTwinId";
-    const iModelId = "iModelId";
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: [iModelId, iTwinId, "groups"],
-      method: "GET",
-      headers: {},
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.getAllGroups({
-        iTwinId,
-        iModelId,
-        signal: new AbortSignal(),
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("createGroup", async () => {
-    const body = {
-      iTwinId: "iTwinId",
-      iModelId: "iModelId",
-      displayName: "displayName",
-      shared: true,
-    };
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: ["groups"],
-      method: "POST",
-      body,
-      headers: {},
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.createGroup({
-        ...body,
-        signal: new AbortSignal(),
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("createGroup", async () => {
-    const groupId = "groupId";
-    const body = {
-      displayName: "displayName",
-      shared: true,
-    };
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: ["groups", groupId],
-      method: "PATCH",
-      body,
-      headers: {},
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.updateGroup({
-        ...body,
-        groupId,
-        signal: new AbortSignal(),
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("deleteGroup", async () => {
-    const groupId = "groupId";
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: ["groups", groupId],
-      method: "DELETE",
-      headers: {},
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.deleteGroup({
-        groupId,
-        signal: new AbortSignal(),
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("getExtension", async () => {
-    const savedViewId = "savedViewComboId";
-    const extensionName = "name";
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: ["extensions", savedViewId, extensionName],
-      method: "GET",
-      headers: {},
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.getExtension({
-        savedViewId,
-        extensionName,
-        signal: new AbortSignal(),
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("getExtension", async () => {
-    const savedViewId = "savedViewComboId";
-    const extensionName = "name";
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: ["extensions", savedViewId, extensionName],
-      method: "GET",
-      headers: {},
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.getExtension({
-        savedViewId,
-        extensionName,
-        signal: new AbortSignal(),
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("getAllExtensions", async () => {
-    const savedViewId = "savedViewComboId";
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: ["extensions", savedViewId],
-      method: "GET",
-      headers: {},
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.getAllExtensions({
-        savedViewId,
-        signal: new AbortSignal(),
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("createExtension", async () => {
-    const savedViewId = "savedViewComboId";
-    const extensionName = "name";
-    const body = {
-      extensionName,
-      data: "data",
-    };
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: ["extensions", savedViewId],
-      method: "PUT",
-      body,
-      headers: {},
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.createExtension({
-        savedViewId,
-        ...body,
-        signal: new AbortSignal(),
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("deleteExtension", async () => {
-    const savedViewId = "savedViewComboId";
-    const extensionName = "name";
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: ["extensions", savedViewId, extensionName],
-      method: "DELETE",
-      headers: {},
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.deleteExtension({
-        savedViewId,
-        extensionName,
-        signal: new AbortSignal(),
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("getTag", async () => {
-    const tagId = "TagId";
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: ["tags", tagId],
-      method: "GET",
-      headers: {},
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.getTag({
-        tagId,
-        signal: new AbortSignal(),
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("getAllTags", async () => {
-    const iTwinId = "iTwinId";
-    const iModelId = "iModelId";
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: ["tags", iTwinId, iModelId],
-      method: "GET",
-      headers: {},
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.getAllTags({
-        iTwinId,
-        iModelId,
-        signal: new AbortSignal(),
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("createTag", async () => {
-    const body = {
-      iTwinId: "iTwinId",
-      iModelId: "iModelId",
-      displayName: "displayName",
-    };
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: ["tags"],
-      method: "POST",
-      body,
-      headers: {},
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.createTag({
-        ...body,
-        signal: new AbortSignal(),
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("updateTag", async () => {
-    const tagId = "tagId";
-    const body = {
-      displayName: "displayName",
-    };
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: ["tags", tagId],
-      method: "PATCH",
-      body,
-      headers: {},
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.updateTag({
-        tagId,
-        ...body,
-        signal: new AbortSignal(),
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("deleteTag", async () => {
-    const tagId = "TagId";
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: ["tags", tagId],
-      method: "DELETE",
-      headers: {},
-      signal: new AbortSignal(),
-    };
-
-    await callITwinApiTestRunner(expectedQueryParams, async () => {
-      await systemUnderTest.deleteTag({
-        tagId,
-        signal: new AbortSignal(),
-      });
-    }, checkIfFetchIsReceivingExpectedParams);
-  });
-
-  it("run failed request and check error output", async () => {
-    const savedViewId = "savedViewComboId";
-    const expectedQueryParams: TestQueryParams = {
-      urlParams: [savedViewId],
-      method: "GET",
-      headers: {
-        Prefer: PreferOptions.Minimal,
-      },
-      body: undefined,
-      signal: new AbortSignal(),
-    };
-
-    try {
-      await callITwinApiTestRunner(expectedQueryParams, async () => {
-        await systemUnderTest.getSavedViewMinimal({
-          savedViewId: savedViewId,
-          signal: new AbortSignal(),
-        });
-      }, createFailedRequest);
-    } catch (error: any) {
-      expect(error.message).toBe("iTwin API request failed. Unexpected response status code: 500 Test.");
-    }
-  });
-});
+}
