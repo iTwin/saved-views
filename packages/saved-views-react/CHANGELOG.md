@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased](https://github.com/iTwin/saved-views/tree/HEAD/packages/saved-views-react)
 
+## [0.2.0](https://github.com/iTwin/saved-views/tree/v0.2.0-react/packages/saved-views-react) - 2024-04-08
+
 ### Breaking changes
 
 * Component CSS styles are now scoped to `itwin-svr` CSS layer
