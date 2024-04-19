@@ -104,7 +104,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     const skip = args.skip && `$skip=${args.skip}`;
     const query = [iTwinId, iModelId, groupId, top, skip].filter((param) => param).join("&");
     const response = await this.queryITwinApi({
-      url: `${this.baseUrl}?${query}`,
+      url: `${this.baseUrl}/?${query}`,
       method: "GET",
       headers: {
         Prefer: PreferOptions.Representation,

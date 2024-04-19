@@ -95,7 +95,7 @@ describe("ITwinSavedViewsClient", () => {
     });
 
     verifyFetch({
-      url: "https://api.bentley.com/savedviews?iTwinId=test_itwinid&iModelId=test_imodelid&groupId=test_groupid&$top=test_top&$skip=test_skip",
+      url: "https://api.bentley.com/savedviews/?iTwinId=test_itwinid&iModelId=test_imodelid&groupId=test_groupid&$top=test_top&$skip=test_skip",
       method: "GET",
       headers: { Prefer: PreferOptions.Representation },
     });
