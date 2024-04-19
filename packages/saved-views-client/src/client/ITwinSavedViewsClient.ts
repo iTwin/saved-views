@@ -80,12 +80,14 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   }
 
   async getAllSavedViewsMinimal(args: GetSavedViewsParams): Promise<SavedViewListMinimalResponse> {
-    const iModelId = args.iModelId ? `&iModelId=${args.iModelId}` : "";
-    const groupId = args.groupId ? `&groupId=${args.groupId}` : "";
-    const top = args.top ? `&$top=${args.top}` : "";
-    const skip = args.skip ? `&$skip=${args.skip}` : "";
+    const iTwinId = args.iTwinId && `iTwinId=${args.iTwinId}`;
+    const iModelId = args.iModelId && `iModelId=${args.iModelId}`;
+    const groupId = args.groupId && `groupId=${args.groupId}`;
+    const top = args.top && `$top=${args.top}`;
+    const skip = args.skip && `$skip=${args.skip}`;
+    const query = [iTwinId, iModelId, groupId, top, skip].filter((param) => param).join("&");
     return this.queryITwinApi({
-      url: `${this.baseUrl}/?iTwinId=${args.iTwinId}${iModelId}${groupId}${top}${skip}`,
+      url: `${this.baseUrl}/?${query}`,
       method: "GET",
       headers: {
         Prefer: PreferOptions.Minimal,
@@ -102,7 +104,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     const skip = args.skip && `$skip=${args.skip}`;
     const query = [iTwinId, iModelId, groupId, top, skip].filter((param) => param).join("&");
     const response = await this.queryITwinApi({
-      url: `${this.baseUrl}?${query}`,
+      url: `${this.baseUrl}/?${query}`,
       method: "GET",
       headers: {
         Prefer: PreferOptions.Representation,

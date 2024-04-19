@@ -67,6 +67,21 @@ describe("ITwinSavedViewsClient", () => {
     });
   });
 
+  it("getAllSavedViewsMinimal | groupId only", async () => {
+    fetch.mockImplementation(() => createSuccessfulResponse({}));
+
+    const client = new ITwinSavedViewsClient({ getAccessToken });
+    await client.getAllSavedViewsMinimal({
+      groupId: "test_groupid",
+    });
+
+    verifyFetch({
+      url: "https://api.bentley.com/savedviews/?groupId=test_groupid",
+      method: "GET",
+      headers: { Prefer: PreferOptions.Minimal },
+    });
+  });
+
   it("getAllSavedViewsRepresentation", async () => {
     fetch.mockImplementation(() => createSuccessfulResponse({ savedViews: [] }));
 
@@ -80,7 +95,7 @@ describe("ITwinSavedViewsClient", () => {
     });
 
     verifyFetch({
-      url: "https://api.bentley.com/savedviews?iTwinId=test_itwinid&iModelId=test_imodelid&groupId=test_groupid&$top=test_top&$skip=test_skip",
+      url: "https://api.bentley.com/savedviews/?iTwinId=test_itwinid&iModelId=test_imodelid&groupId=test_groupid&$top=test_top&$skip=test_skip",
       method: "GET",
       headers: { Prefer: PreferOptions.Representation },
     });
