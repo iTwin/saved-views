@@ -125,6 +125,10 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   }
 
   public async deleteGroup(args: DeleteGroupParams): Promise<void> {
+    const savedViews = await this.client.getAllSavedViewsMinimal({ groupId: args.groupId, signal: args.signal });
+    await Promise.all(
+      savedViews.savedViews.map(({ id }) => this.client.deleteSavedView({ savedViewId: id, signal: args.signal })),
+    );
     await this.client.deleteGroup({ groupId: args.groupId, signal: args.signal });
   }
 
@@ -158,6 +162,7 @@ function savedViewResponseToSavedView(response: Omit<SavedViewMinimal, "savedVie
     displayName: response.displayName,
     tagIds: response.tags?.map((tag) => tag.id),
     groupId: response._links.group?.href.split("/").at(-1),
+    creatorId: response._links.creator?.href.split("/").at(-1),
     shared: response.shared,
     thumbnail: undefined,
   };
@@ -167,6 +172,7 @@ function groupResponseToSavedViewGroup(response: Group): SavedViewGroup {
   return {
     id: response.id,
     displayName: response.displayName,
+    creatorId: response._links.creator?.href.split("/").at(-1),
     shared: response.shared,
   };
 }

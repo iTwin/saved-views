@@ -9,3 +9,4 @@ export {
   applyExtensionsToViewport, translateLegacySavedViewToITwinJsViewState,
   translateSavedViewResponseToLegacySavedViewResponse,
 } from "./api/utilities/translation/SavedViewTranslation.js";
+export { ModelCategoryOverrideProvider } from "./ui/viewlist/ModelCategoryOverrideProvider.js";

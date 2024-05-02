@@ -60,10 +60,10 @@ importers:
         specifier: ^2.4.0
         version: 2.8.0(react-dom@17.0.2)(react@17.0.2)
       '@itwin/itwinui-react':
-        specifier: ^3.0.11
-        version: 3.5.0(react-dom@17.0.2)(react@17.0.2)
+        specifier: ^3.8.1
+        version: 3.9.1(react-dom@17.0.2)(react@17.0.2)
       '@itwin/saved-views-client':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../saved-views-client
       fuse.js:
         specifier: ^6.6.2
@@ -208,8 +208,8 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0(react-dom@17.0.2)(react@17.0.2)
       '@itwin/itwinui-react':
-        specifier: ^3.0.11
-        version: 3.5.0(react-dom@17.0.2)(react@17.0.2)
+        specifier: ^3.8.1
+        version: 3.9.1(react-dom@17.0.2)(react@17.0.2)
       '@itwin/saved-views-react':
         specifier: workspace:*
         version: link:../saved-views-react
@@ -697,8 +697,8 @@ packages:
       react-dom: 17.0.2(react@17.0.2)
     dev: false
 
-  /@floating-ui/react@0.26.9(react-dom@17.0.2)(react@17.0.2):
-    resolution: {integrity: sha512-p86wynZJVEkEq2BBjY/8p2g3biQ6TlgT4o/3KgFKyTWoJLU1GZ8wpctwRqtkEl2tseYA+kw7dBAIDFcednfI5w==}
+  /@floating-ui/react@0.26.13(react-dom@17.0.2)(react@17.0.2):
+    resolution: {integrity: sha512-kBa9wntpugzrZ8t/4yWelvSmEKZdeTXTJzrxqyrLmcU/n1SM4nvse8yQh2e1b37rJGvtu0EplV9+IkBrCJ1vkw==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
@@ -774,7 +774,7 @@ packages:
       '@itwin/core-bentley': 4.4.3
       '@itwin/core-react': 4.10.0(@itwin/appui-abstract@4.4.3)(@itwin/core-bentley@4.4.3)(react-dom@17.0.2)(react@17.0.2)
       '@itwin/itwinui-icons-react': 2.8.0(react-dom@17.0.2)(react@17.0.2)
-      '@itwin/itwinui-react': 3.5.0(react-dom@17.0.2)(react@17.0.2)
+      '@itwin/itwinui-react': 3.9.1(react-dom@17.0.2)(react@17.0.2)
       '@itwin/itwinui-variables': 3.1.0
       '@types/shortid': 0.0.32
       classnames: 2.3.1
@@ -911,7 +911,7 @@ packages:
       '@itwin/appui-abstract': 4.4.3(@itwin/core-bentley@4.4.3)
       '@itwin/core-bentley': 4.4.3
       '@itwin/itwinui-icons-react': 2.8.0(react-dom@17.0.2)(react@17.0.2)
-      '@itwin/itwinui-react': 3.5.0(react-dom@17.0.2)(react@17.0.2)
+      '@itwin/itwinui-react': 3.9.1(react-dom@17.0.2)(react@17.0.2)
       '@itwin/itwinui-variables': 3.1.0
       classnames: 2.3.1
       dompurify: 2.4.7
@@ -970,7 +970,7 @@ packages:
       '@itwin/core-quantity': 4.4.3(@itwin/core-bentley@4.4.3)
       '@itwin/core-react': 4.10.0(@itwin/appui-abstract@4.4.3)(@itwin/core-bentley@4.4.3)(react-dom@17.0.2)(react@17.0.2)
       '@itwin/itwinui-icons-react': 2.8.0(react-dom@17.0.2)(react@17.0.2)
-      '@itwin/itwinui-react': 3.5.0(react-dom@17.0.2)(react@17.0.2)
+      '@itwin/itwinui-react': 3.9.1(react-dom@17.0.2)(react@17.0.2)
       '@itwin/itwinui-variables': 3.1.0
       classnames: 2.3.1
       react: 17.0.2
@@ -1088,13 +1088,13 @@ packages:
       react-dom: 17.0.2(react@17.0.2)
     dev: false
 
-  /@itwin/itwinui-react@3.5.0(react-dom@17.0.2)(react@17.0.2):
-    resolution: {integrity: sha512-Xtdq8e4OzQiN0wGa9MRn92tdgp3jk7ITIMlV2hcFoZs16p6pBJVChhpX0ayA6wSDauT6cLg+0dK9K+24TEdQYw==}
+  /@itwin/itwinui-react@3.9.1(react-dom@17.0.2)(react@17.0.2):
+    resolution: {integrity: sha512-I8htRXXyUugVs4LdHCMWp5NdmSZAIfFeIhwl4SjVZONZhpyA9N/tAhgdtulPv3XnNuFk9295FsL69FPaL1SMvw==}
     peerDependencies:
       react: '>= 17.0.0 < 19.0.0'
       react-dom: '>=17.0.0 < 19.0.0'
     dependencies:
-      '@floating-ui/react': 0.26.9(react-dom@17.0.2)(react@17.0.2)
+      '@floating-ui/react': 0.26.13(react-dom@17.0.2)(react@17.0.2)
       '@itwin/itwinui-illustrations-react': 2.1.0(react-dom@17.0.2)(react@17.0.2)
       classnames: 2.3.2
       react: 17.0.2
