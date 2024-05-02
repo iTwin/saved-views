@@ -46,7 +46,7 @@ export interface LegacySavedView2d extends LegacySavedViewBase {
 /**
  * Format for a saved view setting instance in the service
  */
-export interface LegacySavedView extends LegacySavedViewBase {
+export interface LegacySavedView3d extends LegacySavedViewBase {
   displayStyleProps: DisplayStyle3dProps;
   modelSelectorProps: ModelSelectorProps;
   modelExtents?: Range3dProps;
