@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 * Add readOnly property to `CreateGroupParams`, `UpdateGroupParams`, and `Group` types
 
+### Fixes
+
+* Fix `ITwinSavedViewsClient.updateSavedView` failing when saved view data contains URL fields
+
 ## [0.2.0](https://github.com/iTwin/saved-views/tree/v0.2.0-client/packages/saved-views-client) - 2024-04-08
 
 ### Breaking changes
