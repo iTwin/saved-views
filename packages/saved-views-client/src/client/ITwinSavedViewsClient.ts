@@ -137,10 +137,18 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
 
   async updateSavedView(args: UpdateSavedViewParams): Promise<SavedViewMinimalResponse> {
     const { savedViewId, signal, ...body } = args;
+    const savedViewData = structuredClone(body.savedViewData);
+    if (savedViewData !== undefined) {
+      replaceAllUrlFields(savedViewData, toITwinApi);
+    }
+
     return this.queryITwinApi({
       url: `${this.baseUrl}/${savedViewId}`,
       method: "PATCH",
-      body,
+      body: {
+        ...body,
+        ...(savedViewData && { savedViewData }),
+      },
       signal,
     });
   }
@@ -322,13 +330,13 @@ function replaceAllUrlFields(savedViewData: ViewData, replace: (url: string) => 
       }
     }
 
-    for (const layer of mapImagery?.overlayLayers ?? []) {
+    for (const layer of mapImagery.overlayLayers ?? []) {
       if ("url" in layer && layer.url) {
         layer.url = replace(layer.url);
       }
     }
 
-    for (const layer of (mapImagery?.backgroundLayers ?? [])) {
+    for (const layer of mapImagery.backgroundLayers ?? []) {
       if ("url" in layer && layer.url) {
         layer.url = replace(layer.url);
       }
