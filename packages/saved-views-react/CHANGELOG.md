@@ -18,7 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 * `ITwinSavedViewsClient.deleteGroup`: Delete all views contained within group before attempting to delete the group itself
 * `LayeredDropdownMenu`: Improve keyboard navigation
 * `LayeredMenuItem`: Forward `className` property to wrapping HTML element
-* `LayeredMenuItem`: Increate spacing between label and right chevron
+* `LayeredMenuItem`: Increase spacing between label and right chevron
 * `SavedViewOptions`: Forward `className` property to wrapping HTML element
 * `useSavedViews`:
     * View and Group creation operations now sort stored locally stored Views / Groups
