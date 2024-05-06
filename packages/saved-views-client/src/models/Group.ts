@@ -8,6 +8,6 @@ export interface Group {
   id: string;
   displayName: string;
   shared: boolean;
-  readOnly: boolean;
+  readOnly?: boolean;
   _links: HalLinks<["savedViews", "iTwin"?, "project"?, "iModel"?, "creator"?]>;
 }
