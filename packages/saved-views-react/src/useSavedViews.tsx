@@ -46,7 +46,7 @@ export interface SavedViewActions {
     savedView: string | Partial<SavedView> & Pick<SavedView, "displayName">,
     savedViewData: ViewData,
   ) => Promise<string>;
-  renameSavedView: (savedViewId: string, newName: string) => void;
+  renameSavedView: (savedViewId: string, newName: string | undefined) => void;
   shareSavedView: (savedViewId: string, share: boolean) => void;
   deleteSavedView: (savedViewId: string) => void;
   createGroup: (groupName: string) => void;
@@ -258,7 +258,11 @@ function createSavedViewActions(
       },
     ),
     renameSavedView: actionWrapper(
-      async (savedViewId: string, newName: string) => {
+      async (savedViewId: string, newName: string | undefined) => {
+        if (!newName) {
+          return;
+        }
+
         const savedView = ref.current.mostRecentState.savedViews.get(savedViewId);
         if (!savedView || newName === savedView.displayName) {
           return;
