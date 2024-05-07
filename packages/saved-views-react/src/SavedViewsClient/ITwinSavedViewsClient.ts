@@ -42,7 +42,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
 
     return {
       savedViews: savedViews.map(savedViewResponseToSavedView),
-      groups,
+      groups: groups.map(groupResponseToSavedViewGroup),
       tags,
     };
   }
