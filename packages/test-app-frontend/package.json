@@ -28,7 +28,7 @@
     "@itwin/itwinui-illustrations-react": "^2.1.0",
     "@itwin/itwinui-layouts-css": "^0.2.0",
     "@itwin/itwinui-layouts-react": "^0.2.0",
-    "@itwin/itwinui-react": "^3.0.11",
+    "@itwin/itwinui-react": "^3.8.1",
     "@itwin/saved-views-react": "workspace:*",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
