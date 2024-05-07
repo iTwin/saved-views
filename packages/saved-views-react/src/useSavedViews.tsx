@@ -151,13 +151,14 @@ export function useSavedViews(args: UseSavedViewsParams): UseSavedViewsResult | 
           }
 
           setState({
-            savedViews: new Map(result.savedViews.map((savedView) => {
-              if (savedView.thumbnail === undefined) {
-                savedView.thumbnail = <ThumbnailPlaceholder savedViewId={savedView.id} observer={observer} />;
-              }
-
-              return [savedView.id, savedView];
-            })),
+            savedViews: new Map(result.savedViews.map((savedView) => [
+              savedView.id,
+              {
+                ...savedView,
+                thumbnail: savedView.thumbnail
+                  ?? <ThumbnailPlaceholder savedViewId={savedView.id} observer={observer} />,
+              },
+            ])),
             groups: new Map(result.groups.map((group) => [group.id, group])),
             tags: new Map(result.tags.map((tag) => [tag.id, tag])),
             thumbnails: new Map(),

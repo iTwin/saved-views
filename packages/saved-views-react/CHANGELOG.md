@@ -28,6 +28,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 * `SavedViewTile`: Fix context menu button not appearing when `options` prop receives a function with zero parameters
 * Fix text overflow issues in `SavedViewTile` and `StickyExpandableBlock` components by truncating titles with ellipses
+* Fix an issue with `useSavedViews` failing to load Saved View thumbnails when a cached data source is used
 
 ### Dependencies
 
