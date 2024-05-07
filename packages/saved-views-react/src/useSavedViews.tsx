@@ -42,8 +42,11 @@ interface UseSavedViewsResult {
 }
 
 export interface SavedViewActions {
-  createSavedView: (savedViewName: string, savedViewData: ViewData) => Promise<string>;
-  renameSavedView: (savedViewId: string, newName: string) => void;
+  submitSavedView: (
+    savedView: string | Partial<SavedView> & Pick<SavedView, "displayName">,
+    savedViewData: ViewData,
+  ) => Promise<string>;
+  renameSavedView: (savedViewId: string, newName: string | undefined) => void;
   shareSavedView: (savedViewId: string, share: boolean) => void;
   deleteSavedView: (savedViewId: string) => void;
   createGroup: (groupName: string) => void;
@@ -148,13 +151,14 @@ export function useSavedViews(args: UseSavedViewsParams): UseSavedViewsResult | 
           }
 
           setState({
-            savedViews: new Map(result.savedViews.map((savedView) => {
-              if (savedView.thumbnail === undefined) {
-                savedView.thumbnail = <ThumbnailPlaceholder savedViewId={savedView.id} observer={observer} />;
-              }
-
-              return [savedView.id, savedView];
-            })),
+            savedViews: new Map(result.savedViews.map((savedView) => [
+              savedView.id,
+              {
+                ...savedView,
+                thumbnail: savedView.thumbnail
+                  ?? <ThumbnailPlaceholder savedViewId={savedView.id} observer={observer} />,
+              },
+            ])),
             groups: new Map(result.groups.map((group) => [group.id, group])),
             tags: new Map(result.tags.map((tag) => [tag.id, tag])),
             thumbnails: new Map(),
@@ -171,7 +175,7 @@ export function useSavedViews(args: UseSavedViewsParams): UseSavedViewsResult | 
             onUpdateError,
           ));
         } catch (error) {
-          if ((error as { name: string; }).name !== "AbortError") {
+          if (!isAbortError(error)) {
             throw error;
           }
         }
@@ -224,23 +228,47 @@ function createSavedViewActions(
   const signal = ref.current.abortController.signal;
 
   return {
-    createSavedView: actionWrapper(
-      async (savedViewName: string, savedViewData: ViewData) => {
-        const savedView = await client.createSavedView({
-          iTwinId: iTwinId,
-          iModelId: iModelId,
-          savedView: {
-            displayName: savedViewName,
-          },
-          savedViewData,
-          signal,
+    submitSavedView: actionWrapper(
+      async (savedView: string | Partial<SavedView> & Pick<SavedView, "displayName">, savedViewData: ViewData) => {
+        let newSavedView: SavedView;
+        if (typeof savedView !== "string" && savedView.id) {
+          newSavedView = await client.updateSavedView(
+            {
+              // TypeScript cannot tell that `savedView` object contains `id` string without a little help
+              savedView: { id: savedView.id, ...savedView },
+              savedViewData,
+              signal,
+            },
+          );
+        } else {
+          newSavedView = await client.createSavedView({
+            iTwinId: iTwinId,
+            iModelId: iModelId,
+            savedView: typeof savedView === "string" ? { displayName: savedView } : savedView,
+            savedViewData,
+            signal,
+          });
+        }
+        updateSavedViews((savedViews) => {
+          const entries = Array.from(savedViews.values());
+          entries.push(newSavedView);
+          entries.sort((a, b) => a.displayName.localeCompare(b.displayName));
+          return new Map(entries.map((savedView) => [savedView.id, savedView]));
         });
-        updateSavedViews((savedViews) => savedViews.set(savedView.id, savedView));
-        return savedView.id;
+        return newSavedView.id;
       },
     ),
     renameSavedView: actionWrapper(
-      async (savedViewId: string, newName: string) => {
+      async (savedViewId: string, newName: string | undefined) => {
+        if (!newName) {
+          return;
+        }
+
+        const savedView = ref.current.mostRecentState.savedViews.get(savedViewId);
+        if (!savedView || newName === savedView.displayName) {
+          return;
+        }
+
         let prevName: string | undefined;
         updateSavedView(savedViewId, (savedView) => {
           prevName = savedView.displayName;
@@ -248,11 +276,10 @@ function createSavedViewActions(
         });
 
         try {
-          const savedView = await client.updateSavedView({
+          await client.updateSavedView({
             savedView: { id: savedViewId, displayName: newName },
             signal,
           });
-          updateSavedView(savedViewId, () => savedView);
         } catch (error) {
           if (prevName !== undefined) {
             const restoredDisplayName = prevName;
@@ -276,8 +303,7 @@ function createSavedViewActions(
         });
 
         try {
-          const savedView = await client.updateSavedView({ savedView: { id: savedViewId, shared: share }, signal });
-          updateSavedView(savedView.id, () => savedView);
+          await client.updateSavedView({ savedView: { id: savedViewId, shared: share }, signal });
         } catch (error) {
           updateSavedView(savedViewId, (savedView) => {
             savedView.shared = !share;
@@ -288,21 +314,19 @@ function createSavedViewActions(
     ),
     deleteSavedView: actionWrapper(
       async (savedViewId: string) => {
-        let prevSavedView: SavedView | undefined;
+        let prevSavedViews: Map<string, SavedView> | undefined;
         updateSavedViews((savedViews) => {
-          prevSavedView = savedViews.get(savedViewId);
+          prevSavedViews = new Map(savedViews);
           savedViews.delete(savedViewId);
         });
         try {
           await client.deleteSavedView({ savedViewId, signal });
-        } catch {
-          if (prevSavedView !== undefined) {
-            const restoredSavedView = prevSavedView;
-            updateSavedViews((savedViews) => {
-              // The deleted view will return at the last position in the enumeration
-              savedViews.set(savedViewId, restoredSavedView);
-            });
+        } catch (error) {
+          if (prevSavedViews !== undefined) {
+            updateSavedViews(() => prevSavedViews);
           }
+
+          throw error;
         }
       },
     ),
@@ -314,7 +338,12 @@ function createSavedViewActions(
           group: { displayName: groupName },
           signal,
         });
-        updateGroups((groups) => groups.set(group.id, group));
+        updateGroups((groups) => {
+          const entries = Array.from(groups.values());
+          entries.push(group);
+          entries.sort((a, b) => a.displayName.localeCompare(b.displayName));
+          return new Map(entries.map((group) => [group.id, group]));
+        });
       },
     ),
     renameGroup: actionWrapper(
@@ -367,8 +396,7 @@ function createSavedViewActions(
           savedView.groupId = groupId;
         });
         try {
-          const savedView = await client.updateSavedView({ savedView: { id: savedViewId, groupId }, signal });
-          updateSavedView(savedView.id, () => savedView);
+          await client.updateSavedView({ savedView: { id: savedViewId, groupId }, signal });
         } catch (error) {
           const restoredGroupId = prevGroupId;
           updateSavedView(savedViewId, (savedView) => {
@@ -397,8 +425,7 @@ function createSavedViewActions(
           savedView.groupId = group.id;
         });
         try {
-          const savedView = await client.updateSavedView({ savedView: { id: savedViewId, groupId: group.id }, signal });
-          updateSavedView(savedView.id, () => savedView);
+          await client.updateSavedView({ savedView: { id: savedViewId, groupId: group.id }, signal });
         } catch (error) {
           updateSavedView(savedViewId, (savedView) => {
             savedView.groupId = prevGroupId;
@@ -409,28 +436,25 @@ function createSavedViewActions(
     ),
     deleteGroup: actionWrapper(
       async (groupId: string) => {
-        let prevGroup: SavedViewGroup | undefined;
+        let prevGroups: Map<string, SavedViewGroup> | undefined;
         updateGroups((groups) => {
-          prevGroup = groups.get(groupId);
+          prevGroups = new Map(groups);
           groups.delete(groupId);
         });
         try {
           await client.deleteGroup({ groupId, signal });
         } catch (error) {
-          if (prevGroup) {
-            const restoredGroup = prevGroup;
-            updateGroups((groups) => {
-              // The deleted group will return at the last position in the enumeration
-              groups.set(groupId, restoredGroup);
-            });
+          if (prevGroups) {
+            updateGroups(() => prevGroups);
           }
+
           throw error;
         }
       },
     ),
     addTag: actionWrapper(
       async (savedViewId: string, tagId: string) => {
-        let savedView = ref.current.mostRecentState.savedViews.get(savedViewId);
+        const savedView = ref.current.mostRecentState.savedViews.get(savedViewId);
         if (!savedView) {
           return;
         }
@@ -450,8 +474,7 @@ function createSavedViewActions(
         });
 
         try {
-          savedView = await client.updateSavedView({ savedView: { id: savedViewId, tagIds }, signal });
-          updateSavedView(savedView.id, () => savedView);
+          await client.updateSavedView({ savedView: { id: savedViewId, tagIds }, signal });
         } catch (error) {
           updateSavedView(savedViewId, (savedView) => {
             savedView.tagIds = prevTagIds;
@@ -462,7 +485,7 @@ function createSavedViewActions(
     ),
     addNewTag: actionWrapper(
       async (savedViewId: string, tagName: string) => {
-        let savedView = ref.current.mostRecentState.savedViews.get(savedViewId);
+        const savedView = ref.current.mostRecentState.savedViews.get(savedViewId);
         if (!savedView) {
           return;
         }
@@ -492,8 +515,7 @@ function createSavedViewActions(
         });
 
         try {
-          savedView = await client.updateSavedView({ savedView: { id: savedViewId, tagIds }, signal });
-          updateSavedView(savedView.id, () => savedView);
+          await client.updateSavedView({ savedView: { id: savedViewId, tagIds }, signal });
         } catch (error) {
           updateSavedView(savedViewId, (savedView) => {
             savedView.tagIds = prevTagIds;
@@ -504,7 +526,7 @@ function createSavedViewActions(
     ),
     removeTag: actionWrapper(
       async (savedViewId: string, tagId: string) => {
-        let savedView = ref.current.mostRecentState.savedViews.get(savedViewId);
+        const savedView = ref.current.mostRecentState.savedViews.get(savedViewId);
         if (!savedView) {
           return;
         }
@@ -520,8 +542,7 @@ function createSavedViewActions(
           savedView.tagIds = tagIds;
         });
         try {
-          savedView = await client.updateSavedView({ savedView: { id: savedViewId, tagIds }, signal });
-          updateSavedView(savedView.id, () => savedView);
+          await client.updateSavedView({ savedView: { id: savedViewId, tagIds }, signal });
         } catch (error) {
           updateSavedView(savedViewId, (savedView) => {
             savedView.tagIds = prevTagIds;
@@ -542,9 +563,8 @@ function createSavedViewActions(
           await client.uploadThumbnail({ savedViewId, image: imageDataUrl, signal });
         } catch (error) {
           if (prevThumnbnail !== undefined) {
-            const restoredDisplayName = prevThumnbnail;
             updateSavedView(savedViewId, (savedView) => {
-              savedView.thumbnail = restoredDisplayName;
+              savedView.thumbnail = prevThumnbnail;
             });
           }
           throw error;
@@ -572,7 +592,7 @@ function createSavedViewActions(
           } catch (error) {
             reject(error);
 
-            if (error && typeof error === "object" && "name" in error && error.name === "AbortError") {
+            if (isAbortError(error)) {
               // It's a cancellation error, no need to report it
             } else {
               try {
@@ -598,15 +618,17 @@ function createSavedViewActions(
     };
   }
 
-  function updateSavedViews(callback: (mutableSavedViews: Map<string, SavedView>) => void): void {
+  function updateSavedViews(
+    callback: (mutableSavedViews: Map<string, SavedView>) => Map<string, SavedView> | void,
+  ): void {
     if (signal.aborted) {
       return;
     }
 
     setState((prev) => {
       const store = { ...prev };
-      store.savedViews = new Map(prev.savedViews);
-      callback(store.savedViews);
+      const savedViews = new Map(prev.savedViews);
+      store.savedViews = callback(savedViews) ?? savedViews;
       return store;
     });
   }
@@ -630,15 +652,17 @@ function createSavedViewActions(
     });
   }
 
-  function updateGroups(callback: (mutableGroups: Map<string, SavedViewGroup>) => void): void {
+  function updateGroups(
+    callback: (mutableGroups: Map<string, SavedViewGroup>) => Map<string, SavedViewGroup> | void,
+  ): void {
     if (signal.aborted) {
       return;
     }
 
     setState((prev) => {
       const store = { ...prev };
-      store.groups = new Map(prev.groups);
-      callback(store.groups);
+      const groups = new Map(prev.groups);
+      store.groups = callback(groups) ?? groups;
       return store;
     });
   }
@@ -674,6 +698,10 @@ function createSavedViewActions(
       return store;
     });
   }
+}
+
+function isAbortError(error: unknown): boolean {
+  return error instanceof DOMException && error.name === "AbortError";
 }
 
 interface ThumbnailPlaceholderProps {

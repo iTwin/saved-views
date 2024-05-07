@@ -51,7 +51,11 @@ export function useSavedViewData() {
   );
 
   const actions: Partial<SavedViewActions> = {
-    renameSavedView(savedViewId: string, newName: string): void {
+    renameSavedView(savedViewId: string, newName: string | undefined): void {
+      if (!newName) {
+        return;
+      }
+
       setState(
         produce((draft) => {
           const savedView = draft.savedViews.get(savedViewId);

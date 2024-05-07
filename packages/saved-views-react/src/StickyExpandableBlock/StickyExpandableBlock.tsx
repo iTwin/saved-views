@@ -4,7 +4,8 @@
 *--------------------------------------------------------------------------------------------*/
 import { ExpandableBlock } from "@itwin/itwinui-react";
 import {
-  useLayoutEffect, useRef, useState, type MouseEvent, type ReactElement, type ReactNode, type RefObject,
+  useLayoutEffect, useRef, useState, type KeyboardEvent, type MouseEvent, type ReactElement, type ReactNode,
+  type RefObject,
 } from "react";
 
 import "./StickyExpandableBlock.css";
@@ -60,6 +61,15 @@ export function StickyExpandableBlock(props: StickyExpandableBlockProps): ReactE
   const stickyRef = useRef<HTMLDivElement>(null);
   const stuck = useSticky(stickyRef);
 
+  // We are pretending that expandable block title is a button element for accessibility
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.target === e.currentTarget && e.key === "Enter" || e.key === " ") {
+      handleExpandToggle(!props.isExpanded);
+      // We don't want spacebar to cause scroll down
+      e.preventDefault();
+    }
+  };
+
   return (
     <ExpandableBlock.Wrapper
       className={props.className}
@@ -70,14 +80,18 @@ export function StickyExpandableBlock(props: StickyExpandableBlockProps): ReactE
       <div ref={scrollbackRef} />
       <ExpandableBlock.Trigger
         ref={stickyRef}
-        as="div"
         className="svr-expandable-block-header"
         data-stuck={stuck}
-        role="button"
       >
         <ExpandableBlock.ExpandIcon />
         <ExpandableBlock.LabelArea>
-          <ExpandableBlock.Title className={props.titleClassName}>
+          <ExpandableBlock.Title
+            as="div"
+            className={props.titleClassName}
+            tabIndex={0}
+            role="button"
+            onKeyDown={handleKeyDown}
+          >
             {props.title}
           </ExpandableBlock.Title>
         </ExpandableBlock.LabelArea>

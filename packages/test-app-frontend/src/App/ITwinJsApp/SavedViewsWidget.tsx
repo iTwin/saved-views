@@ -4,11 +4,12 @@
 *--------------------------------------------------------------------------------------------*/
 import { IModelConnection, Viewport, type ViewState } from "@itwin/core-frontend";
 import { Button, useToaster } from "@itwin/itwinui-react";
-import type { SavedViewRepresentation } from "@itwin/saved-views-client";
-import { captureSavedViewData, captureSavedViewThumbnail, ITwinSavedViewsClient, useSavedViews } from "@itwin/saved-views-react";
 import {
-  createSavedViewOptions, SavedViewsFolderWidget, translateLegacySavedViewToITwinJsViewState,
-  translateSavedViewResponseToLegacySavedViewResponse,
+  ITwinSavedViewsClient, captureSavedViewData, captureSavedViewThumbnail, useSavedViews,
+} from "@itwin/saved-views-react";
+import {
+  SavedViewsFolderWidget, createSavedViewOptions, translateLegacySavedViewToITwinJsViewState,
+  translateSavedViewToLegacySavedView, type LegacySavedViewBase,
 } from "@itwin/saved-views-react/experimental";
 import { ReactElement, useMemo, useState } from "react";
 
@@ -21,7 +22,7 @@ interface SavedViewsWidgetProps {
   iModelId: string;
   iModel: IModelConnection;
   viewport: Viewport;
-  onSavedViewSelect: (savedView: SavedViewRepresentation, viewState: ViewState) => void;
+  onSavedViewSelect: (savedView: LegacySavedViewBase, viewState: ViewState) => void;
 }
 
 export function SavedViewsWidget(props: SavedViewsWidgetProps): ReactElement {
@@ -59,10 +60,10 @@ export function SavedViewsWidget(props: SavedViewsWidgetProps): ReactElement {
     const { close } = toaster.informational("Opening Saved View...", { type: "persisting" });
     try {
       const savedViewResponse = await client.getSingularSavedView({ savedViewId });
-      const legacySavedViewResponse = await translateSavedViewResponseToLegacySavedViewResponse(savedViewResponse, props.iModel);
-      const viewState = await translateLegacySavedViewToITwinJsViewState(legacySavedViewResponse, props.iModel);
+      const savedView = await translateSavedViewToLegacySavedView(props.iModel, savedViewResponse);
+      const viewState = await translateLegacySavedViewToITwinJsViewState(savedView, props.iModel);
       if (viewState) {
-        props.onSavedViewSelect(legacySavedViewResponse, viewState);
+        props.onSavedViewSelect(savedView, viewState);
       }
     } finally {
       close();
@@ -75,7 +76,7 @@ export function SavedViewsWidget(props: SavedViewsWidgetProps): ReactElement {
 
   const handleCreateView = async () => {
     const savedViewData = await captureSavedViewData({ viewport: props.viewport });
-    const savedViewId = await savedViews.actions.createSavedView("0 Saved View Name", savedViewData);
+    const savedViewId = await savedViews.actions.submitSavedView("0 Saved View Name", savedViewData);
     const thumbnail = captureSavedViewThumbnail(props.viewport);
     if (thumbnail) {
       savedViews.actions.uploadThumbnail(savedViewId, thumbnail);

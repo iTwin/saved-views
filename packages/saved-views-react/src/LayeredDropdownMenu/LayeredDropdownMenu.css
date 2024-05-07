@@ -5,6 +5,10 @@
 @layer itwinui;
 
 @layer itwin-svr {
+  .svr-layered-menu-item--forward {
+    margin-left: var(--iui-size-2xs);
+  }
+
   .svr-layered-dropdown--back {
     display: flex;
     gap: var(--iui-size-s);

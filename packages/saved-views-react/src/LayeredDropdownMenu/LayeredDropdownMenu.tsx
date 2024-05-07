@@ -3,7 +3,7 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import { SvgChevronLeft, SvgChevronRight } from "@itwin/itwinui-icons-react";
-import { DropdownMenu, IconButton, ListItem, MenuDivider, MenuExtraContent } from "@itwin/itwinui-react";
+import { DropdownMenu, IconButton, ListItem, MenuDivider, MenuExtraContent, MenuItem } from "@itwin/itwinui-react";
 import { createContext, useContext, useMemo, useState, type ReactElement, type ReactNode } from "react";
 
 import "./LayeredDropdownMenu.css";
@@ -79,7 +79,10 @@ interface LayeredDropdownMenuItemProps {
   content: ReactNode;
 
   /** Menu item icon. */
-  icon?: ReactNode | undefined;
+  icon?: ReactElement | undefined;
+
+  /** Forwarded to the list item wrapper. */
+  className?: string | undefined;
 
   /** Menu item label. */
   children: ReactNode;
@@ -112,11 +115,15 @@ export function LayeredMenuItem(props: LayeredDropdownMenuItemProps): ReactEleme
   }
 
   return (
-    <ListItem tabIndex={-1} onClick={() => setActiveMenuItem(itemIdentifier)} actionable>
-      {props.icon && <ListItem.Icon>{props.icon}</ListItem.Icon>}
+    <MenuItem
+      className={props.className}
+      tabIndex={0}
+      startIcon={props.icon}
+      onClick={() => setActiveMenuItem(itemIdentifier)}
+    >
       <ListItem.Content>{props.children}</ListItem.Content>
-      <ListItem.Icon><SvgChevronRight /></ListItem.Icon>
-    </ListItem>
+      <ListItem.Icon className="svr-layered-menu-item--forward"><SvgChevronRight /></ListItem.Icon>
+    </MenuItem>
   );
 }
 

@@ -17,8 +17,7 @@ import { FrontendIModelsAccess } from "@itwin/imodels-access-frontend";
 import { IModelsClient } from "@itwin/imodels-client-management";
 import { PageLayout } from "@itwin/itwinui-layouts-react";
 import { useToaster } from "@itwin/itwinui-react";
-import { SavedViewRepresentation } from "@itwin/saved-views-client";
-import { applyExtensionsToViewport } from "@itwin/saved-views-react/experimental";
+import { applyExtensionsToViewport, type LegacySavedViewBase } from "@itwin/saved-views-react/experimental";
 import { useEffect, useRef, useState, type ReactElement } from "react";
 
 import { applyUrlPrefix } from "../../environment.js";
@@ -74,7 +73,7 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
   );
 
   const viewportRef = useRef<ScreenViewport>();
-  const handleSavedViewSelect = (savedView: SavedViewRepresentation, viewState: ViewState) => {
+  const handleSavedViewSelect = (savedView: LegacySavedViewBase, viewState: ViewState) => {
     setViewState(viewState);
     if (viewportRef.current) {
       applyExtensionsToViewport(viewportRef.current, savedView);
