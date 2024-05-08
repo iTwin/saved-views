@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased](https://github.com/iTwin/saved-views/tree/HEAD/packages/saved-views-react)
 
+## [0.3.0](https://github.com/iTwin/saved-views/tree/v0.3.0-react/packages/saved-views-react) - 2024-05-08
+
 ### Breaking changes
 
 * `SavedViewTile`: `onRename` callback can now receive `undefined` value for `newName` parameter to indicate that user has canceled rename operation
