@@ -161,7 +161,7 @@ function Rename(props: RenameProps): ReactElement {
   };
 
   return (
-    <MenuItem startIcon={props.icon} onClick={handleClick}>
+    <MenuItem className={props.className} startIcon={props.icon} onClick={handleClick}>
       {localization.rename}
     </MenuItem>
   );
@@ -192,6 +192,7 @@ function MoveToGroup(props: MoveToGroupProps): ReactElement {
 
   return (
     <LayeredMenuItem
+      className={props.className}
       icon={<SvgBlank />}
       content={
         <MoveToGroupSubmenu
@@ -287,6 +288,7 @@ function ManageTags(props: ManageTagsProps): ReactElement {
 
   return (
     <LayeredMenuItem
+      className={props.className}
       icon={props.icon}
       content={
         <ManageTagsSubmenu
@@ -425,7 +427,7 @@ function Delete(props: DeleteProps): ReactElement {
   const { localization } = useSavedViewsContext();
 
   return (
-    <MenuItem startIcon={props.icon} onClick={() => props.deleteSavedView(savedView.id)}>
+    <MenuItem className={props.className} startIcon={props.icon} onClick={() => props.deleteSavedView(savedView.id)}>
       {localization.delete}
     </MenuItem>
   );
@@ -434,4 +436,7 @@ function Delete(props: DeleteProps): ReactElement {
 interface CommonOptionProps {
   /** Icon to the left of this menu item. */
   icon?: ReactElement | undefined;
+
+  /** Forwarded to the wrapping component. */
+  className?: string | undefined;
 }

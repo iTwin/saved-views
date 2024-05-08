@@ -31,12 +31,16 @@ interface CaptureSavedViewDataArgs {
 
 export async function captureSavedViewData(args: CaptureSavedViewDataArgs): Promise<ViewData> {
   const { captureHiddenModelsAndCategories = true } = args;
-  const hiddenCategoriesPromise = captureHiddenModelsAndCategories ? getHiddenCategories(args.viewport) : undefined;
+  const hiddenCategoriesPromise = captureHiddenModelsAndCategories
+    ? getMissingCategories(args.viewport.iModel, new Set(args.viewport.view.categorySelector.toJSON().categories))
+    : undefined;
 
   if (args.viewport.view.isSpatialView()) {
     const [hiddenCategories, hiddenModels] = await Promise.all([
       hiddenCategoriesPromise,
-      captureHiddenModelsAndCategories ? getHiddenModels(args.viewport) : undefined,
+      captureHiddenModelsAndCategories
+        ? getMissingModels(args.viewport.iModel, new Set(args.viewport.view.modelSelector.toJSON().models))
+        : undefined,
     ]);
     return createSpatialSavedViewObject(args.viewport, hiddenCategories, hiddenModels);
   }
@@ -178,10 +182,9 @@ function toDegrees(angle: AngleProps): number | undefined {
   return undefined;
 }
 
-async function getHiddenModels(vp: Viewport): Promise<Id64Array> {
-  const allModels = await getAllModels(vp.iModel);
-  const visibleModels = new Set((vp.view as SpatialViewState).modelSelector.toJSON().models);
-  return allModels.map(({ id }) => id).filter((model) => !visibleModels.has(model));
+export async function getMissingModels(iModel: IModelConnection, knownModels: Set<string>): Promise<string[]> {
+  const allModels = await getAllModels(iModel);
+  return allModels.map(({ id }) => id).filter((model) => !knownModels.has(model));
 }
 
 async function getAllModels(iModel: IModelConnection): Promise<Array<{ id: string; }>> {
@@ -201,10 +204,9 @@ async function getAllModels(iModel: IModelConnection): Promise<Array<{ id: strin
   }
 }
 
-async function getHiddenCategories(vp: Viewport): Promise<Id64Array> {
-  const visibleCategories = new Set(vp.view.categorySelector.toJSON().categories);
-  const allCategories = await getAllCategories(vp.iModel);
-  return allCategories.map(({ id }) => id).filter((category) => !visibleCategories.has(category));
+export async function getMissingCategories(iModel: IModelConnection, knownCategories: Set<string>): Promise<Id64Array> {
+  const allCategories = await getAllCategories(iModel);
+  return allCategories.map(({ id }) => id).filter((category) => !knownCategories.has(category));
 }
 
 async function getAllCategories(iModel: IModelConnection): Promise<Array<{ id: string; }>> {

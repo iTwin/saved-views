@@ -16,6 +16,13 @@
   .svr-tile .svr-tile-name {
     height: calc(var(--iui-size-l) + 2px);
     user-select: unset;
+    min-width: 0;
+    text-wrap: nowrap;
+
+    > div {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 
   .svr-tile--metadata {

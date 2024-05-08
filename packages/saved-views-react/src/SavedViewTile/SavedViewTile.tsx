@@ -38,13 +38,14 @@ interface SavedViewTileProps {
 
   /**
    * Invoked when user submits a new name for the Saved View.
-   * @param savedViewId Id of the associated Saved View.
-   * @param newName User-submitted string for the Saved View title.
+   * @param savedViewId Id of the associated Saved View
+   * @param newName User-submitted string for the Saved View title. This value is `undefined` when user cancels rename
+   *                operaton.
    *
    * @example
    * <SavedViewTile savedView={savedView} onRename={handleRename} editable />
    */
-  onRename?: ((savedViewId: string, newName: string) => void) | undefined;
+  onRename?: ((savedViewId: string, newName: string | undefined) => void) | undefined;
 
   /**
    * Click handler meant for triggering the render of iModel onto the screen with the saved view applied
@@ -153,11 +154,9 @@ export function SavedViewTile(props: SavedViewTileProps): ReactElement {
             editing={editingName}
             actions={{
               onStartEditing: () => setEditingName(true),
-              onEndEditing: (newName) => {
+              onEndEditing: (newName, commit) => {
                 setEditingName(false);
-                if (newName !== props.savedView.displayName) {
-                  props.onRename?.(props.savedView.id, newName);
-                }
+                props.onRename?.(props.savedView.id, commit ? newName : undefined);
               },
             }}
             editable={props.editable || editingName}
@@ -179,7 +178,7 @@ export function SavedViewTile(props: SavedViewTileProps): ReactElement {
             {metadata}
           </Tile.Metadata>
           {
-            props.options && props.options.length > 0 &&
+            (typeof props.options === "function" || (props.options && props.options.length > 0)) &&
             <div className="svr-tile--more-options" onClick={(ev) => ev.stopPropagation()}>
               <LayeredDropdownMenu menuItems={props.options}>
                 <IconButton size="small" styleType="borderless"><SvgMore /></IconButton>
@@ -200,7 +199,7 @@ interface EditableTileNameProps {
   displayName: string;
   actions: {
     onStartEditing: () => void;
-    onEndEditing: (newName: string) => void;
+    onEndEditing: (newName: string, commit: boolean) => void;
   };
   editing?: boolean | undefined;
   editable?: boolean | undefined;
@@ -209,28 +208,28 @@ interface EditableTileNameProps {
 export function EditableTileName(props: EditableTileNameProps): ReactElement {
   const { actions } = props;
   if (!props.editable) {
-    return <>{props.displayName}</>;
+    return <div>{props.displayName}</div>;
   }
 
   if (props.editing) {
+    const handleEndEditing = (inputValue: string, commit: boolean) => {
+      const trimmedValue = trimInputString(inputValue);
+      actions.onEndEditing(trimmedValue.length === 0 ? props.displayName : trimmedValue, commit);
+    };
     const handleFocus = (ev: FocusEvent<HTMLInputElement>) => {
       ev.target.select();
     };
     const handleBlur = (ev: FocusEvent<HTMLInputElement>) => {
-      actions.onEndEditing(trimInputString(ev.target.value));
-    };
-    const handleEndEditing = (inputValue: string) => {
-      actions.onEndEditing(inputValue.length === 0 ? props.displayName : trimInputString(inputValue));
+      handleEndEditing(ev.target.value, true);
     };
     const handleKeyDown = (ev: KeyboardEvent<HTMLInputElement>) => {
       if (ev.key === "Enter") {
-        const value = (ev.target as HTMLInputElement).value;
-        handleEndEditing(value);
+        handleEndEditing((ev.target as HTMLInputElement).value, true);
         return;
       }
 
       if (ev.key === "Escape") {
-        actions.onEndEditing(props.displayName);
+        actions.onEndEditing(props.displayName, false);
         return;
       }
     };

@@ -8,7 +8,7 @@ import type {
   DisplayStyle3dSettingsProps, DisplayStyleSettingsProps, ViewITwin2d, ViewITwin3d,
 } from "@itwin/saved-views-client";
 
-import type { LegacySavedView, LegacySavedView2d } from "../SavedViewTypes.js";
+import type { LegacySavedView3d, LegacySavedView2d } from "../SavedViewTypes.js";
 import {
   applyExtraction, extractArray, extractArrayConditionally, extractBoolean, extractColor, extractColorLegacy,
   extractConditionally, extractNumber, extractNumberOrBool, extractObject, extractPlainTypedMap, extractRGB,
@@ -103,6 +103,19 @@ const displayStyleSubCategoryMappings: ExtractionFunc<void, void>[] = [
   extractNumber("transpFill", "transparencyFill"),
 ];
 
+const displayStyleSubCategoryLegacyMappings: ExtractionFunc<void, void>[] = [
+  extractString("subCategory"),
+  extractColorLegacy("color"),
+  extractColorLegacy("fill"),
+  extractBoolean("invisible"),
+  extractNumber("weight"),
+  extractString("style"),
+  extractNumber("priority"),
+  extractString("material"),
+  extractNumber("transp", "transparency"),
+  extractNumber("transpFill", "transparencyFill"),
+];
+
 export const featureAppearanceMappings: ExtractionFunc<void, void>[] = [
   extractRGB("rgb"),
   extractNumber("weight"),
@@ -128,8 +141,11 @@ const displayStyleModelAppearanceMappings: ExtractionFunc<void, void>[] = [
   extractString("modelId"),
 ];
 
-const displayStyleModelAppearanceLegacyMappings: ExtractionFunc<void, void>[] =
-  [...featureAppearanceLegacyMappings, extractString("modelId")];
+const displayStyleModelAppearanceLegacyMappings: ExtractionFunc<void, void>[] = [
+  ...featureAppearanceLegacyMappings,
+  extractString("modelId"),
+];
+
 const contextRealityModelsMappings: ExtractionFunc<void, void>[] = [
   extractObject(
     [
@@ -277,6 +293,30 @@ const mapImageryMapping: ExtractionFunc<void, void>[] = [
   ),
 ];
 
+const mapImageryLegacyMapping: ExtractionFunc<void, void>[] = [
+  extractConditionally(
+    [
+      { discriminator: isAnyColorFormat, mappings: extractColorLegacy },
+      { discriminator: "url", mappings: baseMapLayerPropsMapping },
+    ],
+    "backgroundBase",
+  ),
+  extractArrayConditionally(
+    [
+      { discriminator: "modelId", mappings: modelMapLayerPropsMapping },
+      { discriminator: "url", mappings: imageMapLayerPropsMapping },
+    ],
+    "backgroundLayers",
+  ),
+  extractArrayConditionally(
+    [
+      { discriminator: "modelId", mappings: modelMapLayerPropsMapping },
+      { discriminator: "url", mappings: imageMapLayerPropsMapping },
+    ],
+    "overlayLayers",
+  ),
+];
+
 const viewFlagOverridesMapping: ExtractionFunc<void, void>[] = [
   extractNumber("renderMode"),
   extractBoolean("dimensions"),
@@ -403,26 +443,14 @@ const displayStylesLegacyMapping: ExtractionFunc<void, void>[] = [
   extractNumber("monochromeMode"),
   extractString("renderTimeline"),
   extractNumber("timePoint"),
-  extractArray(
-    displayStyleSubCategoryMappings,
-    "subCategoryOvr",
-    "subCategoryOverrides",
-  ),
+  extractArray(displayStyleSubCategoryLegacyMappings, "subCategoryOvr", "subCategoryOverrides"),
   extractObject(backgroundMapMappings, "backgroundMap"),
   extractArray(contextRealityModelsLegacyMappings, "contextRealityModels"),
   extractStringOrArray("excludedElements"),
-  extractObject(mapImageryMapping, "mapImagery"),
-  extractArray(
-    displayStyleModelAppearanceLegacyMappings,
-    "modelOvr",
-    "modelOverrides",
-  ),
+  extractObject(mapImageryLegacyMapping, "mapImagery"),
+  extractArray(displayStyleModelAppearanceLegacyMappings, "modelOvr", "modelOverrides"),
   extractObject(clipStyleLegacyMappings, "clipStyle"),
-  extractArray(
-    displayStylePlanarClipMaskMappings,
-    "planarClipOvr",
-    "planarClipOverrides",
-  ),
+  extractArray(displayStylePlanarClipMaskMappings, "planarClipOvr", "planarClipOverrides"),
 ];
 
 const environmentMappings: ExtractionFunc<void, void>[] = [
@@ -526,6 +554,10 @@ const solarShadowMappings: ExtractionFunc<void, void>[] = [
   extractColor("color"),
 ];
 
+const solarShadowLegacyMappings: ExtractionFunc<void, void>[] = [
+  extractColorLegacy("color"),
+];
+
 const lightsMappings: ExtractionFunc<void, void>[] = [
   extractObject([extractNumber("intensity")], "portrait"),
   extractObject(
@@ -546,6 +578,34 @@ const lightsMappings: ExtractionFunc<void, void>[] = [
     "hemisphere",
   ),
   extractObject([extractColor("color"), extractNumber("intensity")], "ambient"),
+  extractNumber("specularIntensity"),
+  extractNumber("numCels"),
+  extractObject(
+    [extractNumber("intensity"), extractBoolean("invert")],
+    "fresnel",
+  ),
+];
+
+const lightsLegacyMappings: ExtractionFunc<void, void>[] = [
+  extractObject([extractNumber("intensity")], "portrait"),
+  extractObject(
+    [
+      extractNumber("intensity"),
+      extractSimpleArray(simpleTypeOf("number"), "direction"),
+      extractBoolean("alwaysEnabled"),
+      extractNumber("timePoint"),
+    ],
+    "solar",
+  ),
+  extractObject(
+    [
+      extractColorLegacy("upperColor"),
+      extractColorLegacy("lowerColor"),
+      extractNumber("intensity"),
+    ],
+    "hemisphere",
+  ),
+  extractObject([extractColorLegacy("color"), extractNumber("intensity")], "ambient"),
   extractNumber("specularIntensity"),
   extractNumber("numCels"),
   extractObject(
@@ -578,13 +638,9 @@ const displayStyle3dLegacyMapping: ExtractionFunc<void, void>[] = [
   ...displayStylesLegacyMapping,
   extractObject(environmentLegacyMappings, "environment"),
   extractObject(ambientOcclusionMappings, "ao", "ambientOcclusion"),
-  extractObject(solarShadowMappings, "solarShadows"),
-  extractObject(lightsMappings, "lights"),
-  extractPlainTypedMap(
-    planProjectionSettingsMappings,
-    simpleTypeOf("string"),
-    "planProjections",
-  ),
+  extractObject(solarShadowLegacyMappings, "solarShadows"),
+  extractObject(lightsLegacyMappings, "lights"),
+  extractPlainTypedMap(planProjectionSettingsMappings, simpleTypeOf("string"), "planProjections"),
 ];
 
 /**
@@ -630,7 +686,7 @@ export const extractDisplayStyle3d = (data: object) => {
     applyExtraction(styles, output, displayStyle3dMapping);
   }
   if ("displayStyleProps" in data) {
-    styles = (data as LegacySavedView).displayStyleProps.jsonProperties?.styles;
+    styles = (data as LegacySavedView3d).displayStyleProps.jsonProperties?.styles;
     applyExtraction(styles, output, displayStyle3dLegacyMapping);
   }
   if (styles === undefined) {

@@ -2,43 +2,88 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import type { Id64Array } from "@itwin/core-bentley";
+import type { CameraProps } from "@itwin/core-common";
 import { SheetViewState, type DrawingViewState, type SpatialViewState } from "@itwin/core-frontend";
 import type {
-  SavedViewRepresentation, SavedViewTag, ViewDataITwinDrawing, ViewDataITwinSheet, ViewDataITwin3d, ViewITwin2d,
+  SavedViewRepresentation, SavedViewTag, ViewDataITwin3d, ViewDataITwinDrawing, ViewDataITwinSheet, ViewITwin2d,
   ViewITwin3d,
 } from "@itwin/saved-views-client";
 
-import type { LegacySavedView, LegacySavedView2d, LegacyTag } from "../SavedViewTypes.js";
+import type { LegacySavedView3d, LegacySavedView2d, LegacyTag } from "../SavedViewTypes.js";
 import { extractClipVectors } from "./clipVectorsExtractor.js";
 import { extractDisplayStyle, extractDisplayStyle3d } from "./displayStyleExtractor.js";
-import { convertAllLegacyUrlsToUrls, urlToLegacyUrl } from "./urlConverter.js";
 
-const UNGROUPED_ID = "-1";
+export function savedViewITwin3dToLegacy3dSavedView(
+  savedViewRsp: SavedViewRepresentation,
+  seedSpatialViewState: SpatialViewState,
+): LegacySavedView3d {
+  const modelSelector = seedSpatialViewState.modelSelector;
+  const itwin3dView = (savedViewRsp.savedViewData as ViewDataITwin3d).itwin3dView;
+  const legacyView: LegacySavedView3d = {
+    id: savedViewRsp.id,
+    is2d: false,
+    groupId: savedViewRsp._links.group ? extractIdFromHref(savedViewRsp._links.group.href) : undefined,
+    tags: extractTags(savedViewRsp._links.creator?.href ?? "", savedViewRsp.tags),
+    name: savedViewRsp.displayName,
+    userId: extractIdFromHref(savedViewRsp._links.creator?.href ?? "") ?? "",
+    shared: savedViewRsp.shared,
+    thumbnailId: savedViewRsp.id ?? "",
+    viewDefinitionProps: {
+      origin: itwin3dView.origin,
+      extents: itwin3dView.extents,
+      angles: itwin3dView.angles ?? {},
+      camera: itwin3dView.camera as CameraProps,
+      jsonProperties: {
+        viewDetails: extractClipVectors(itwin3dView) ?? {},
+      },
+      classFullName: seedSpatialViewState.classFullName,
+      code: seedSpatialViewState.code,
+      model: seedSpatialViewState.model,
+      categorySelectorId: seedSpatialViewState.categorySelector.id,
+      displayStyleId: seedSpatialViewState.displayStyle.id,
+      cameraOn: itwin3dView.camera !== undefined,
+      modelSelectorId: seedSpatialViewState.modelSelector.id,
+    },
+    modelSelectorProps: {
+      classFullName: modelSelector.classFullName,
+      code: {
+        spec: modelSelector.code.spec,
+        scope: modelSelector.code.scope,
+        value: modelSelector.code.value,
+      },
+      model: modelSelector.model,
+      models: itwin3dView.models?.enabled ?? [],
+    },
+    categorySelectorProps: {
+      classFullName: seedSpatialViewState.categorySelector.classFullName,
+      categories: itwin3dView.categories?.enabled ?? [],
+      code: {
+        scope: seedSpatialViewState.categorySelector.code.scope,
+        spec: seedSpatialViewState.categorySelector.code.spec,
+        value: seedSpatialViewState.categorySelector.code.value,
+      },
+      model: seedSpatialViewState.categorySelector.model,
+    },
+    displayStyleProps: {
+      id: seedSpatialViewState.displayStyle.id,
+      classFullName: seedSpatialViewState.displayStyle.classFullName,
+      code: seedSpatialViewState.displayStyle.code,
+      model: seedSpatialViewState.displayStyle.model,
+      jsonProperties: {
+        styles: extractDisplayStyle3d((savedViewRsp.savedViewData as ViewDataITwin3d).itwin3dView),
+      },
+    },
+  };
+  appendHiddenCategoriesToLegacyView(itwin3dView, legacyView);
+  appendHiddenModelsTo3dLegacySavedView(itwin3dView, legacyView);
+  return legacyView;
+}
 
-/**
- * Extracts id from href
- * @param href
- */
-export const extractIdFromHref = (href: string) => {
-  return href.split("/").pop();
-};
-
-/**
- * Extract all the tags
- * @param creator href for the creator
- * @param tags the list of tags in the saved view
- * @returns
- */
-const extractTags = (creator: string, tags?: SavedViewTag[]) => {
-  return tags?.map<LegacyTag>((tag) => {
-    const legacyTag: LegacyTag = {
-      name: tag.displayName,
-      createdByUserId: extractIdFromHref(creator) ?? "",
-    };
-    return legacyTag;
-  });
-};
+function appendHiddenModelsTo3dLegacySavedView(view: ViewITwin3d, legacyView: LegacySavedView3d): void {
+  if (view.models?.disabled) {
+    legacyView.hiddenModels = view.models?.disabled;
+  }
+}
 
 /**
  * Transform a ViewDataITwinDrawing into a legacy SavedView if possible
@@ -50,15 +95,12 @@ export function savedViewItwinDrawingToLegacyDrawingView(
   savedViewRsp: SavedViewRepresentation,
   seedDrawingViewState: DrawingViewState,
 ): LegacySavedView2d {
-  convertAllLegacyUrlsToUrls(savedViewRsp.savedViewData, urlToLegacyUrl);
   const iTwinDrawingView = (savedViewRsp.savedViewData as ViewDataITwinDrawing).itwinDrawingView;
   seedDrawingViewState.displayStyle;
   const legacyView: LegacySavedView2d = {
     id: savedViewRsp.id,
     is2d: true,
-    groupId: savedViewRsp._links.group
-      ? extractIdFromHref(savedViewRsp._links.group.href)
-      : UNGROUPED_ID ?? "",
+    groupId: savedViewRsp._links.group ? extractIdFromHref(savedViewRsp._links.group.href) : undefined,
     tags: extractTags(savedViewRsp._links.creator?.href ?? "", savedViewRsp.tags),
     name: savedViewRsp.displayName,
     userId: extractIdFromHref(savedViewRsp._links.creator?.href ?? "") ?? "",
@@ -66,7 +108,7 @@ export function savedViewItwinDrawingToLegacyDrawingView(
     thumbnailId: savedViewRsp.id ?? "",
     categorySelectorProps: {
       classFullName: seedDrawingViewState.categorySelector.classFullName,
-      categories: (iTwinDrawingView.categories?.enabled ?? []) as Id64Array,
+      categories: iTwinDrawingView.categories?.enabled ?? [],
       code: {
         scope: seedDrawingViewState.categorySelector.code.scope,
         spec: seedDrawingViewState.categorySelector.code.spec,
@@ -82,7 +124,7 @@ export function savedViewItwinDrawingToLegacyDrawingView(
       id: seedDrawingViewState.id,
       jsonProperties: {
         viewDetails: {
-          gridOrient: seedDrawingViewState.getGridOrientation() ?? undefined,
+          gridOrient: seedDrawingViewState.getGridOrientation(),
         },
       },
       code: {
@@ -130,14 +172,11 @@ export function savedViewItwinSheetToLegacySheetSavedView(
   savedViewRsp: SavedViewRepresentation,
   seedSheetViewState: SheetViewState,
 ): LegacySavedView2d {
-  convertAllLegacyUrlsToUrls(savedViewRsp.savedViewData, urlToLegacyUrl);
   const itwinSheetView = (savedViewRsp.savedViewData as ViewDataITwinSheet).itwinSheetView;
   const legacyView: LegacySavedView2d = {
     id: savedViewRsp.id,
     is2d: true,
-    groupId: savedViewRsp._links.group
-      ? extractIdFromHref(savedViewRsp._links.group.href)
-      : UNGROUPED_ID,
+    groupId: savedViewRsp._links.group ? extractIdFromHref(savedViewRsp._links.group.href) : undefined,
     tags: extractTags(savedViewRsp._links.creator?.href ?? "", savedViewRsp.tags),
     name: savedViewRsp.displayName,
     userId: extractIdFromHref(savedViewRsp._links.creator?.href ?? "") ?? "",
@@ -145,7 +184,7 @@ export function savedViewItwinSheetToLegacySheetSavedView(
     thumbnailId: savedViewRsp.id ?? "",
     categorySelectorProps: {
       classFullName: seedSheetViewState.categorySelector.classFullName,
-      categories: (itwinSheetView.categories?.enabled ?? []) as Id64Array,
+      categories: itwinSheetView.categories?.enabled ?? [],
       code: {
         scope: seedSheetViewState.categorySelector.code.scope,
         spec: seedSheetViewState.categorySelector.code.spec,
@@ -211,121 +250,24 @@ export function savedViewItwinSheetToLegacySheetSavedView(
 }
 
 /**
- * Transform a ViewDataItwin3d into a legacy SavedView if possible
- * @param savedViewRsp
- * @param seedSpatialViewState
- * @returns SavedView
+ * Extract all the tags.
+ * @param creator href for the creator
+ * @param tags the list of tags in the saved view
  */
-export function savedViewITwin3dToLegacy3dSavedView(
-  savedViewRsp: SavedViewRepresentation,
-  seedSpatialViewState: SpatialViewState,
-): LegacySavedView {
-  convertAllLegacyUrlsToUrls(savedViewRsp.savedViewData, urlToLegacyUrl);
-  const modelSelector = seedSpatialViewState.modelSelector;
-  const itwin3dView = (savedViewRsp.savedViewData as ViewDataITwin3d).itwin3dView;
-  const legacyView: LegacySavedView = {
-    id: savedViewRsp.id,
-    is2d: false,
-    groupId: savedViewRsp._links.group
-      ? extractIdFromHref(savedViewRsp._links.group.href)
-      : UNGROUPED_ID,
-    tags: extractTags(savedViewRsp._links.creator?.href ?? "", savedViewRsp.tags),
-    name: savedViewRsp.displayName,
-    userId: extractIdFromHref(savedViewRsp._links.creator?.href ?? "") ?? "",
-    shared: savedViewRsp.shared,
-    thumbnailId: savedViewRsp.id ?? "",
-    viewDefinitionProps: {
-      origin: itwin3dView.origin,
-      extents: itwin3dView.extents,
-      angles: itwin3dView.angles ?? {},
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      camera: itwin3dView.camera!,
-      jsonProperties: {
-        viewDetails: extractClipVectors(itwin3dView) ?? {},
-      },
-      classFullName: seedSpatialViewState.classFullName,
-      code: seedSpatialViewState.code,
-      model: seedSpatialViewState.model,
-      categorySelectorId: seedSpatialViewState.categorySelector.id,
-      displayStyleId: seedSpatialViewState.displayStyle.id,
-      cameraOn: itwin3dView.camera !== undefined,
-      modelSelectorId: seedSpatialViewState.modelSelector.id,
-    },
-    modelSelectorProps: {
-      classFullName: modelSelector.classFullName,
-      code: {
-        spec: modelSelector.code.spec,
-        scope: modelSelector.code.scope,
-        value: modelSelector.code.value,
-      },
-      model: modelSelector.model,
-      models: (itwin3dView.models?.enabled ?? []) as Id64Array,
-    },
-    categorySelectorProps: {
-      classFullName: seedSpatialViewState.categorySelector.classFullName,
-      categories: (itwin3dView.categories?.enabled ?? []) as Id64Array,
-      code: {
-        scope: seedSpatialViewState.categorySelector.code.scope,
-        spec: seedSpatialViewState.categorySelector.code.spec,
-        value: seedSpatialViewState.categorySelector.code.value,
-      },
-      model: seedSpatialViewState.categorySelector.model,
-    },
-    displayStyleProps: {
-      id: seedSpatialViewState.displayStyle.id,
-      classFullName: seedSpatialViewState.displayStyle.classFullName,
-      code: seedSpatialViewState.displayStyle.code,
-      model: seedSpatialViewState.displayStyle.model,
-      jsonProperties: {
-        styles: extractDisplayStyle3d((savedViewRsp.savedViewData as ViewDataITwin3d).itwin3dView),
-      },
-    },
-  };
-  appendHiddenCategoriesToLegacyView(itwin3dView, legacyView);
-  appendHiddenModelsTo3dLegacySavedView(itwin3dView, legacyView);
-  return legacyView;
+function extractTags(creator: string, tags?: SavedViewTag[]): LegacyTag[] | undefined {
+  const createdByUserId = extractIdFromHref(creator) ?? "";
+  return tags?.map((tag) => ({ name: tag.displayName, createdByUserId }));
 }
 
-/** Append Hidden Categories Or Models To Legacy Saved View. */
+function extractIdFromHref(href: string): string | undefined {
+  return href.split("/").pop();
+}
+
 function appendHiddenCategoriesToLegacyView(
   iTwinView: ViewITwin2d | ViewITwin3d,
-  legacyView: LegacySavedView | LegacySavedView2d,
+  legacyView: LegacySavedView3d | LegacySavedView2d,
 ): void {
-  if (iTwinView.categories && iTwinView.categories.disabled) {
-    legacyView.hiddenCategories = iTwinView.categories.disabled as Id64Array;
+  if (iTwinView.categories?.disabled) {
+    legacyView.hiddenCategories = iTwinView.categories.disabled;
   }
 }
-
-/**
- * append Hidden Categories Or Models To Legacy Saved View
- * @param view new schema
- * @param legacyView
- * @returns iModelViewData
- */
-function appendHiddenModelsTo3dLegacySavedView(
-  view: ViewITwin3d,
-  legacyView: LegacySavedView,
-) {
-  if (view.models && view.models.disabled) {
-    legacyView.hiddenModels = view.models?.disabled as Id64Array;
-  }
-}
-
-/**
- * removes null and undefined from legacy view model selectors props models
- * @param savedView
- * @returns SavedViewWithData
- */
-export const cleanLegacyViewModelSelectorPropsModels = (
-  savedView: SavedViewRepresentation,
-) => {
-  if ((savedView.savedViewData.legacyView as LegacySavedView)?.modelSelectorProps) {
-    const savedViewCopy = structuredClone(savedView);
-    const legacyView = (savedViewCopy.savedViewData.legacyView as LegacySavedView);
-    legacyView.modelSelectorProps.models =
-      legacyView.modelSelectorProps.models.filter((model) => !!model);
-    savedViewCopy.savedViewData.legacyView = legacyView;
-    return savedViewCopy;
-  }
-  return savedView;
-};

@@ -82,7 +82,7 @@ export function SavedViewTileEditableName(): ReactElement {
 
   return (
     <div style={{ placeSelf: "center" }}>
-      <SavedViewTile savedView={savedView} onRename={(_, newName) => setDisplayName(newName)} editable />
+      <SavedViewTile savedView={savedView} onRename={(_, newName) => newName && setDisplayName(newName)} editable />
     </div>
   );
 }
