@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased](https://github.com/iTwin/saved-views/tree/HEAD/packages/saved-views-client)
 
+### Minor changes
+
+* Add optional readOnly property to `CreateGroupParams`, `UpdateGroupParams`, and `Group` types
+
 ## [0.2.1](https://github.com/iTwin/saved-views/tree/v0.2.1-client/packages/saved-views-client) - 2024-05-07
 
 ### Fixes
