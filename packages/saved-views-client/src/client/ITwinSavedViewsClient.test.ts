@@ -220,6 +220,7 @@ describe("ITwinSavedViewsClient", () => {
       iModelId: "test_imodelid",
       displayName: "test_displayname",
       shared: true,
+      readOnly: false,
     });
 
     verifyFetch({
@@ -230,6 +231,7 @@ describe("ITwinSavedViewsClient", () => {
         iModelId: "test_imodelid",
         displayName: "test_displayname",
         shared: true,
+        readOnly: false,
       }),
     });
   });
@@ -242,6 +244,7 @@ describe("ITwinSavedViewsClient", () => {
       groupId: "test_groupid",
       displayName: "test_displayname",
       shared: true,
+      readOnly: false,
     });
 
     verifyFetch({
@@ -250,6 +253,7 @@ describe("ITwinSavedViewsClient", () => {
       body: JSON.stringify({
         displayName: "test_displayname",
         shared: true,
+        readOnly: false,
       }),
     });
   });
