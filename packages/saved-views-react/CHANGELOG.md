@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased](https://github.com/iTwin/saved-views/tree/HEAD/packages/saved-views-react)
 
+### Fixes
+
+* `LayeredMenuItem`: Fix chevron not aligning itself with item content
+
 ## [0.3.0](https://github.com/iTwin/saved-views/tree/v0.3.0-react/packages/saved-views-react) - 2024-05-08
 
 ### Breaking changes
