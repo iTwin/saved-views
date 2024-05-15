@@ -19,8 +19,8 @@ export interface SavedView {
   id: string;
   displayName: string;
   shared: boolean;
-  creationTime: string,
-  lastModified: string,
+  creationTime: string;
+  lastModified: string;
   tags?: SavedViewTag[];
   savedViewData: ViewData & { legacyView: unknown; };
   _links: HalLinks<["image", "thumbnail", "iTwin"?, "project"?, "imodel"?, "creator"?, "group"?]>;
