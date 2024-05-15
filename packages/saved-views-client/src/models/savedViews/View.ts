@@ -19,7 +19,9 @@ export interface SavedView {
   id: string;
   displayName: string;
   shared: boolean;
+  /** Time the saved view was created as an ISO8601 string, `"YYYY-MM-DDTHH:mm:ss.sssZ"` */
   creationTime: string;
+  /** Time the saved view was last modified as an ISO8601 string, `"YYYY-MM-DDTHH:mm:ss.sssZ"` */
   lastModified: string;
   tags?: SavedViewTag[];
   savedViewData: ViewData & { legacyView: unknown; };
