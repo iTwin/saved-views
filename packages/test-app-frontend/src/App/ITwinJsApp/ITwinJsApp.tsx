@@ -17,7 +17,7 @@ import { FrontendIModelsAccess } from "@itwin/imodels-access-frontend";
 import { IModelsClient } from "@itwin/imodels-client-management";
 import { PageLayout } from "@itwin/itwinui-layouts-react";
 import { useToaster } from "@itwin/itwinui-react";
-import { applyExtensionsToViewport, type LegacySavedViewBase } from "@itwin/saved-views-react/experimental";
+import { ModelCategoryOverrideProvider, applyExtensionsToViewport, type LegacySavedViewBase } from "@itwin/saved-views-react/experimental";
 import { useEffect, useRef, useState, type ReactElement } from "react";
 
 import { applyUrlPrefix } from "../../environment.js";
@@ -73,10 +73,11 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
   );
 
   const viewportRef = useRef<ScreenViewport>();
-  const handleSavedViewSelect = (savedView: LegacySavedViewBase, viewState: ViewState) => {
+  const handleSavedViewSelect = async (savedView: LegacySavedViewBase, viewState: ViewState) => {
     setViewState(viewState);
-    if (viewportRef.current) {
-      applyExtensionsToViewport(viewportRef.current, savedView);
+    if (iModel && viewportRef.current) {
+      await clearAllOverrides(iModel, viewportRef.current);
+      await applyExtensionsToViewport(viewportRef.current, savedView);
     }
   };
 
@@ -205,4 +206,13 @@ async function getStoredViewState(iModel: IModelConnection): Promise<ViewState |
   }
 
   return viewId ? iModel.views.load(viewId) : undefined;
+}
+
+async function clearAllOverrides(iModel: IModelConnection, viewport: Viewport): Promise<void> {
+  const subcatProvider = viewport.findFeatureOverrideProviderOfType(ModelCategoryOverrideProvider);
+  if (subcatProvider) {
+    viewport.dropFeatureOverrideProvider(subcatProvider);
+  }
+
+  iModel.selectionSet.emptyAll();
 }
