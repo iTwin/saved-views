@@ -4,8 +4,8 @@
 *--------------------------------------------------------------------------------------------*/
 import { IModelReadRpcInterface, type ViewQueryParams, type ViewStateProps } from "@itwin/core-common";
 import {
-  DisplayStyle3dState, DrawingViewState, EmphasizeElements, SheetViewState, SpatialViewState, type BlankConnection,
-  type IModelConnection, type ViewState, type Viewport,
+  DisplayStyle3dState, DrawingViewState, EmphasizeElements, SheetViewState, SpatialViewState, type IModelConnection,
+  type ViewState, type Viewport,
 } from "@itwin/core-frontend";
 import {
   isViewDataITwin3d, isViewDataITwinDrawing, isViewDataITwinSheet, type SavedViewRepresentation,
@@ -255,10 +255,14 @@ async function fetchIModelViewData(iModel: IModelConnection, viewClassName: View
   }
 
   const viewId = await getDefaultViewIdFromClassName(iModel, viewClassName);
+  if (viewId === "") {
+    return manufactureEmptyViewState(iModel, viewClassName);
+  }
+
   return iModel.views.load(viewId);
 }
 
-function manufactureEmptyViewState(iModel: BlankConnection, viewClassName: ViewTypes): ViewState {
+function manufactureEmptyViewState(iModel: IModelConnection, viewClassName: ViewTypes): ViewState {
   const blankViewState = SpatialViewState.createBlank(
     iModel,
     { x: 0, y: 0, z: 0 },
