@@ -119,12 +119,14 @@ export interface CreateGroupParams extends CommonRequestParams {
   iModelId?: string;
   displayName: string;
   shared?: boolean;
+  readOnly?: boolean;
 }
 
 export interface UpdateGroupParams extends CommonRequestParams {
   groupId: string;
   displayName?: string;
   shared?: boolean;
+  readOnly?: boolean;
 }
 
 export interface GroupResponse {

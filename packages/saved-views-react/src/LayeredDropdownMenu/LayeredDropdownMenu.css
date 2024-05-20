@@ -5,6 +5,12 @@
 @layer itwinui;
 
 @layer itwin-svr {
+  :has(> .svr-layered-menu-item--forward) {
+    display: flex;
+    align-items: center;
+    gap: var(--iui-size-xs);
+  }
+
   .svr-layered-menu-item--forward {
     margin-left: var(--iui-size-2xs);
   }
