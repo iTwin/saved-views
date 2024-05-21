@@ -7,7 +7,6 @@ export { SavedViewsExpandableBlockWidget } from "./SavedViewsWidget/SavedViewsEx
 export { SavedViewsFolderWidget } from "./SavedViewsWidget/SavedViewsFolderWidget.js";
 export type { LegacySavedViewBase } from "./api/utilities/SavedViewTypes.js";
 export {
-  applyExtensionsToViewport, augmentWithScheduleScript, translateLegacySavedViewToITwinJsViewState,
-  translateSavedViewToLegacySavedView,
+  applyExtensionsToViewport, createViewState,
 } from "./api/utilities/translation/SavedViewTranslation.js";
 export { ModelCategoryOverrideProvider } from "./ui/viewlist/ModelCategoryOverrideProvider.js";

@@ -12,6 +12,8 @@ export interface SavedView {
   tagIds?: string[] | undefined;
   shared?: boolean | undefined;
   thumbnail?: ReactNode | string | undefined;
+  /** `extensionName` and `data` pairs. */
+  extensions?: Map<string, string> | undefined;
 }
 
 export interface SavedViewTag {
