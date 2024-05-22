@@ -14,9 +14,9 @@ import {
   type SavedViewRepresentation, type ViewITwin3d,
 } from "@itwin/saved-views-client";
 
-import { extractClipVectors } from "./api/utilities/translation/clipVectorsExtractor.js";
-import { extractDisplayStyle, extractDisplayStyle3d } from "./api/utilities/translation/displayStyleExtractor.js";
 import { getMissingCategories, getMissingModels } from "./captureSavedViewData.js";
+import { extractClipVectors } from "./translation/clipVectorsExtractor.js";
+import { extractDisplayStyle, extractDisplayStyle3d } from "./translation/displayStyleExtractor.js";
 
 export async function createViewState(
   iModel: IModelConnection,

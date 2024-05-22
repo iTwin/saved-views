@@ -9,7 +9,7 @@ import type {
 } from "@itwin/core-common";
 import type { Range3dProps } from "@itwin/core-geometry";
 
-import type { ModelCategoryOverrideProviderProps } from "../../ui/viewlist/ModelCategoryOverrideProvider.js";
+import type { ModelCategoryOverrideProviderProps } from "../ModelCategoryOverrideProvider.js";
 
 export interface LegacySavedView3d extends LegacySavedViewBase {
   displayStyleProps: DisplayStyle3dProps;

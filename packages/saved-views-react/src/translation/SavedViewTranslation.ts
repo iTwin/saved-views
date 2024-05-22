@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 import { EmphasizeElements, type Viewport } from "@itwin/core-frontend";
 
-import type { SavedView } from "../../../SavedView.js";
+import type { SavedView } from "../SavedView.js";
 import { SavedViewsExtensionHandlers } from "./SavedViewsExtensionHandlers.js";
 
 /** Apply extension data (overrides) onto the supplied viewport. Only works with legacy-formatted extension data. */
