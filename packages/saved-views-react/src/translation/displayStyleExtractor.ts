@@ -8,7 +8,7 @@ import type {
   DisplayStyle3dSettingsProps, DisplayStyleSettingsProps, ViewITwin2d, ViewITwin3d,
 } from "@itwin/saved-views-client";
 
-import type { LegacySavedView3d, LegacySavedView2d } from "../SavedViewTypes.js";
+import type { LegacySavedView3d, LegacySavedView2d } from "./SavedViewTypes.js";
 import {
   applyExtraction, extractArray, extractArrayConditionally, extractBoolean, extractColor, extractColorLegacy,
   extractConditionally, extractNumber, extractNumberOrBool, extractObject, extractPlainTypedMap, extractRGB,

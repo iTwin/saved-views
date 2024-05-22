@@ -5,12 +5,9 @@
 import { IModelConnection, Viewport, type ViewState } from "@itwin/core-frontend";
 import { Button, useToaster } from "@itwin/itwinui-react";
 import {
-  ITwinSavedViewsClient, captureSavedViewData, captureSavedViewThumbnail, useSavedViews,
+  ITwinSavedViewsClient, SavedView, captureSavedViewData, captureSavedViewThumbnail, useSavedViews,
 } from "@itwin/saved-views-react";
-import {
-  SavedViewsFolderWidget, createSavedViewOptions, translateLegacySavedViewToITwinJsViewState,
-  translateSavedViewToLegacySavedView, type LegacySavedViewBase,
-} from "@itwin/saved-views-react/experimental";
+import { SavedViewsFolderWidget, createSavedViewOptions, createViewState } from "@itwin/saved-views-react/experimental";
 import { ReactElement, useMemo, useState } from "react";
 
 import { applyUrlPrefix } from "../../environment.js";
@@ -22,7 +19,7 @@ interface SavedViewsWidgetProps {
   iModelId: string;
   iModel: IModelConnection;
   viewport: Viewport;
-  onSavedViewSelect: (savedView: LegacySavedViewBase, viewState: ViewState) => void;
+  onSavedViewSelect: (savedView: SavedView, viewState: ViewState) => void;
 }
 
 export function SavedViewsWidget(props: SavedViewsWidgetProps): ReactElement {
@@ -58,12 +55,22 @@ export function SavedViewsWidget(props: SavedViewsWidgetProps): ReactElement {
   // (but code has not been created for that yet).
   const handleTileClick = async (savedViewId: string) => {
     const { close } = toaster.informational("Opening Saved View...", { type: "persisting" });
+    const savedView = savedViews?.savedViews.get(savedViewId);
+    if (!savedView) {
+      return;
+    }
+
     try {
       const savedViewResponse = await client.getSingularSavedView({ savedViewId });
-      const savedView = await translateSavedViewToLegacySavedView(props.iModel, savedViewResponse);
-      const viewState = await translateLegacySavedViewToITwinJsViewState(savedView, props.iModel);
+      const viewState = await createViewState(props.iModel, savedViewResponse);
       if (viewState) {
-        props.onSavedViewSelect(savedView, viewState);
+        props.onSavedViewSelect(
+          {
+            ...savedView,
+            extensions: new Map(savedViewResponse.extensions?.map(({ extensionName, data }) => [extensionName, data])),
+          },
+          viewState,
+        );
       }
     } finally {
       close();

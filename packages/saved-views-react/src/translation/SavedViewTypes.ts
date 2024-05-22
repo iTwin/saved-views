@@ -9,13 +9,29 @@ import type {
 } from "@itwin/core-common";
 import type { Range3dProps } from "@itwin/core-geometry";
 
-import type { ModelCategoryOverrideProviderProps } from "../../ui/viewlist/ModelCategoryOverrideProvider.js";
+import type { ModelCategoryOverrideProviderProps } from "../ModelCategoryOverrideProvider.js";
 
-/** Per Model Category Visibility Props */
+export interface LegacySavedView3d extends LegacySavedViewBase {
+  displayStyleProps: DisplayStyle3dProps;
+  modelSelectorProps: ModelSelectorProps;
+  modelExtents?: Range3dProps;
+  viewDefinitionProps: SpatialViewDefinitionProps;
+  perModelCategoryVisibility?: PerModelCategoryVisibilityProps[];
+  hiddenModels?: Id64Array;
+}
+
 export interface PerModelCategoryVisibilityProps {
   modelId: string;
   categoryId: string;
   visible: boolean;
+}
+
+export interface LegacySavedView2d extends LegacySavedViewBase {
+  viewDefinitionProps: ViewDefinition2dProps;
+  displayStyleProps: DisplayStyleProps;
+  sectionDrawing?: SectionDrawingViewProps;
+  sheetProps?: SheetProps;
+  sheetAttachments?: Id64Array;
 }
 
 export interface LegacySavedViewBase {
@@ -33,26 +49,6 @@ export interface LegacySavedViewBase {
   tags?: LegacyTag[];
   hiddenCategories?: Id64Array;
   extensions?: Map<string, string>; // Map of extension data with key of the extensionName
-}
-
-export interface LegacySavedView2d extends LegacySavedViewBase {
-  viewDefinitionProps: ViewDefinition2dProps;
-  displayStyleProps: DisplayStyleProps;
-  sectionDrawing?: SectionDrawingViewProps;
-  sheetProps?: SheetProps;
-  sheetAttachments?: Id64Array;
-}
-
-/**
- * Format for a saved view setting instance in the service
- */
-export interface LegacySavedView3d extends LegacySavedViewBase {
-  displayStyleProps: DisplayStyle3dProps;
-  modelSelectorProps: ModelSelectorProps;
-  modelExtents?: Range3dProps;
-  viewDefinitionProps: SpatialViewDefinitionProps;
-  perModelCategoryVisibility?: PerModelCategoryVisibilityProps[];
-  hiddenModels?: Id64Array;
 }
 
 export interface LegacyTag {

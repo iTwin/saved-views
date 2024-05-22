@@ -13,10 +13,10 @@ import {
   type ViewYawPitchRoll,
 } from "@itwin/saved-views-client";
 
-import { extractClipVectorsFromLegacy } from "./api/utilities/translation/clipVectorsLegacyExtractor.js";
+import { extractClipVectorsFromLegacy } from "./translation/clipVectorsLegacyExtractor.js";
 import {
   extractDisplayStyle2dFromLegacy, extractDisplayStyle3dFromLegacy,
-} from "./api/utilities/translation/displayStyleExtractor.js";
+} from "./translation/displayStyleExtractor.js";
 
 interface CaptureSavedViewDataArgs {
   /** Viewport to capture the view from. */

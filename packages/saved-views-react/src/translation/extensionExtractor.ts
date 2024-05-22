@@ -4,8 +4,8 @@
 *--------------------------------------------------------------------------------------------*/
 import { type EmphasizeElementsProps } from "@itwin/core-common";
 
-import { ModelCategoryOverrideProviderProps } from "../../../ui/viewlist/ModelCategoryOverrideProvider.js";
-import type { PerModelCategoryVisibilityProps } from "../SavedViewTypes.js";
+import { ModelCategoryOverrideProviderProps } from "../ModelCategoryOverrideProvider.js";
+import type { PerModelCategoryVisibilityProps } from "./SavedViewTypes.js";
 import { featureAppearanceMappings } from "./displayStyleExtractor.js";
 import {
   applyExtraction, extractArray, extractBoolean, extractColor, extractNumber, extractObject, extractSimpleArray,

@@ -5,7 +5,7 @@
 import type { EmphasizeElementsProps } from "@itwin/core-common";
 import { EmphasizeElements, PerModelCategoryVisibility, type Viewport } from "@itwin/core-frontend";
 
-import { ModelCategoryOverrideProvider } from "../../../ui/viewlist/ModelCategoryOverrideProvider.js";
+import { ModelCategoryOverrideProvider } from "../ModelCategoryOverrideProvider.js";
 import {
   extractEmphasizeElements, extractPerModelCategoryVisibility, extractVisibilityOverride,
 } from "./extensionExtractor.js";
