@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased](https://github.com/iTwin/saved-views/tree/HEAD/packages/saved-views-react)
 
+### Minor changes
+
+* Add `extensions` property to `SavedView` type
+
 ## [0.3.1](https://github.com/iTwin/saved-views/tree/v0.3.1-react/packages/saved-views-react) - 2024-05-20
 
 ### Fixes
