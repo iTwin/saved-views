@@ -10,8 +10,8 @@ import {
   DrawingViewState, SheetViewState, SpatialViewState, type IModelConnection, type ViewState,
 } from "@itwin/core-frontend";
 import {
-  isViewDataITwin3d, isViewDataITwinDrawing, isViewDataITwinSheet, type SavedViewRepresentation, type ViewDataITwin3d,
-  type ViewDataITwinDrawing, type ViewDataITwinSheet,
+  ViewITwinDrawing, ViewITwinSheet, isViewDataITwin3d, isViewDataITwinDrawing, isViewDataITwinSheet,
+  type SavedViewRepresentation, type ViewITwin3d,
 } from "@itwin/saved-views-client";
 
 import { extractClipVectors } from "./api/utilities/translation/clipVectorsExtractor.js";
@@ -32,48 +32,200 @@ export async function createViewState(
   return viewState;
 }
 
-async function createViewStateVariant(iModel: IModelConnection, savedViewRsp: SavedViewRepresentation): Promise<ViewState> {
+async function createViewStateVariant(
+  iModel: IModelConnection,
+  savedViewRsp: SavedViewRepresentation,
+): Promise<ViewState> {
   if (isViewDataITwinDrawing(savedViewRsp.savedViewData)) {
-    const viewState = await fetchIModelViewData(iModel, ViewTypes.DrawingViewDefinition) as DrawingViewState;
-    return createDrawingViewState(iModel, savedViewRsp, viewState);
+    return createDrawingViewState(iModel, savedViewRsp.savedViewData.itwinDrawingView);
   }
 
   if (isViewDataITwinSheet(savedViewRsp.savedViewData)) {
-    const viewState = await fetchIModelViewData(iModel, ViewTypes.SheetViewDefinition) as SheetViewState;
-    return createSheetViewState(iModel, savedViewRsp, viewState);
+    return createSheetViewState(iModel, savedViewRsp.savedViewData.itwinSheetView);
   }
 
-  const viewState = await fetchIModelViewData(iModel, ViewTypes.ViewDefinition3d) as SpatialViewState;
-  return createSpatialViewState(iModel, savedViewRsp, viewState);
+  return createSpatialViewState(iModel, savedViewRsp.savedViewData.itwin3dView);
 }
 
-enum ViewTypes {
-  SheetViewDefinition,
-  ViewDefinition3d,
-  DrawingViewDefinition,
+interface SpatialViewStateProps extends ViewStateProps {
+  viewDefinitionProps: SpatialViewDefinitionProps;
 }
 
-async function fetchIModelViewData(iModel: IModelConnection, viewClassName: ViewTypes): Promise<ViewState> {
+async function createSpatialViewState(iModel: IModelConnection, viewData: ViewITwin3d): Promise<SpatialViewState> {
+  const seedViewState = await fetchIModelViewData(iModel, SpatialViewState.classFullName) as SpatialViewState;
+  const props: SpatialViewStateProps = {
+    viewDefinitionProps: {
+      origin: viewData.origin,
+      extents: viewData.extents,
+      angles: viewData.angles,
+      camera: viewData.camera ?? new Camera(),
+      jsonProperties: {
+        viewDetails: extractClipVectors(viewData),
+      },
+      classFullName: seedViewState.classFullName,
+      code: seedViewState.code,
+      model: seedViewState.model,
+      categorySelectorId: seedViewState.categorySelector.id,
+      displayStyleId: seedViewState.displayStyle.id,
+      cameraOn: viewData.camera !== undefined,
+      modelSelectorId: seedViewState.modelSelector.id,
+    },
+    categorySelectorProps: {
+      classFullName: seedViewState.categorySelector.classFullName,
+      categories: viewData.categories?.enabled ?? [],
+      code: cloneCode(seedViewState.categorySelector.code),
+      model: seedViewState.categorySelector.model,
+    },
+    modelSelectorProps: {
+      classFullName: seedViewState.modelSelector.classFullName,
+      code: cloneCode(seedViewState.modelSelector.code),
+      model: seedViewState.modelSelector.model,
+      models: viewData.models?.enabled ?? [],
+    },
+    displayStyleProps: {
+      id: seedViewState.displayStyle.id,
+      classFullName: seedViewState.displayStyle.classFullName,
+      code: seedViewState.displayStyle.code,
+      model: seedViewState.displayStyle.model,
+      jsonProperties: {
+        styles: extractDisplayStyle3d(viewData),
+      },
+    },
+  };
+  return SpatialViewState.createFromProps(props, iModel);
+}
+
+interface DrawingViewStateProps extends ViewStateProps {
+  viewDefinitionProps: ViewDefinition2dProps;
+}
+
+async function createDrawingViewState(iModel: IModelConnection, viewData: ViewITwinDrawing): Promise<DrawingViewState> {
+  const seedViewState = await fetchIModelViewData(iModel, DrawingViewState.classFullName) as DrawingViewState;
+  const props: DrawingViewStateProps = {
+    viewDefinitionProps: {
+      classFullName: seedViewState.classFullName,
+      id: seedViewState.id,
+      jsonProperties: {
+        viewDetails: {
+          gridOrient: seedViewState.getGridOrientation(),
+        },
+      },
+      code: cloneCode(seedViewState.code),
+      model: seedViewState.model,
+      federationGuid: seedViewState.federationGuid,
+      categorySelectorId: seedViewState.categorySelector.id,
+      displayStyleId: seedViewState.displayStyle.id,
+      isPrivate: seedViewState.isPrivate,
+      description: seedViewState.description,
+      origin: viewData.origin,
+      delta: viewData.delta,
+      angle: viewData.angle,
+      baseModelId: viewData.baseModelId,
+    },
+    categorySelectorProps: {
+      classFullName: seedViewState.categorySelector.classFullName,
+      categories: viewData.categories?.enabled ?? [],
+      code: cloneCode(seedViewState.categorySelector.code),
+      model: seedViewState.categorySelector.model,
+      federationGuid: seedViewState.categorySelector.federationGuid,
+      id: seedViewState.categorySelector.id,
+    },
+    displayStyleProps: {
+      classFullName: seedViewState.displayStyle.classFullName,
+      id: seedViewState.displayStyle.id,
+      jsonProperties: {
+        styles: extractDisplayStyle(viewData, seedViewState),
+      },
+      code: cloneCode(seedViewState.displayStyle.code),
+      model: seedViewState.displayStyle.model,
+      federationGuid: seedViewState.displayStyle.federationGuid,
+    },
+  };
+  return DrawingViewState.createFromProps(props, iModel);
+}
+
+interface SheetViewStateProps extends ViewStateProps {
+  viewDefinitionProps: ViewDefinition2dProps;
+}
+
+async function createSheetViewState(iModel: IModelConnection, viewData: ViewITwinSheet): Promise<SheetViewState> {
+  const seedViewState = await fetchIModelViewData(iModel, SheetViewState.classFullName) as SheetViewState;
+  const props: SheetViewStateProps = {
+    viewDefinitionProps: {
+      classFullName: seedViewState.classFullName,
+      id: seedViewState.id,
+      jsonProperties: {
+        viewDetails: {
+          gridOrient: seedViewState.getGridOrientation(),
+        },
+      },
+      code: cloneCode(seedViewState.code),
+      model: seedViewState.model,
+      federationGuid: seedViewState.federationGuid,
+      categorySelectorId: seedViewState.categorySelector.id,
+      displayStyleId: seedViewState.displayStyle.id,
+      isPrivate: seedViewState.isPrivate,
+      description: seedViewState.description,
+      origin: viewData.origin,
+      delta: viewData.delta,
+      angle: viewData.angle,
+      baseModelId: viewData.baseModelId,
+    },
+    categorySelectorProps: {
+      classFullName: seedViewState.categorySelector.classFullName,
+      categories: viewData.categories?.enabled ?? [],
+      code: cloneCode(seedViewState.categorySelector.code),
+      model: seedViewState.categorySelector.model,
+      federationGuid: seedViewState.categorySelector.federationGuid,
+      id: seedViewState.categorySelector.id,
+    },
+    displayStyleProps: {
+      classFullName: seedViewState.displayStyle.classFullName,
+      id: seedViewState.displayStyle.id,
+      jsonProperties: {
+        styles: extractDisplayStyle(viewData, seedViewState),
+      },
+      code: cloneCode(seedViewState.displayStyle.code),
+      model: seedViewState.displayStyle.model,
+      federationGuid: seedViewState.displayStyle.federationGuid,
+    },
+    sheetProps: {
+      width: viewData.width,
+      height: viewData.height,
+      model: seedViewState.displayStyle.model,
+      classFullName: SheetViewState.classFullName,
+      code: {
+        spec: seedViewState.displayStyle.code.spec,
+        scope: seedViewState.displayStyle.code.scope,
+        value: "",
+      },
+    },
+    sheetAttachments: viewData.sheetAttachments,
+  };
+  return SheetViewState.createFromProps(props, iModel);
+}
+
+async function fetchIModelViewData(iModel: IModelConnection, viewClassName: string): Promise<ViewState> {
   if (iModel.isBlankConnection()) {
-    return manufactureEmptyViewState(iModel, viewClassName);
+    return createEmptyViewState(iModel, viewClassName);
   }
 
   const viewId = await getDefaultViewIdFromClassName(iModel, viewClassName);
   if (viewId === "") {
-    return manufactureEmptyViewState(iModel, viewClassName);
+    return createEmptyViewState(iModel, viewClassName);
   }
 
   return iModel.views.load(viewId);
 }
 
-function manufactureEmptyViewState(iModel: IModelConnection, viewClassName: ViewTypes): ViewState {
+function createEmptyViewState(iModel: IModelConnection, viewClassName: string): ViewState {
   const blankViewState = SpatialViewState.createBlank(
     iModel,
     { x: 0, y: 0, z: 0 },
     { x: 0, y: 0, z: 0 },
   );
 
-  if (viewClassName === ViewTypes.ViewDefinition3d) {
+  if (viewClassName === SpatialViewState.classFullName) {
     return blankViewState;
   }
 
@@ -84,35 +236,20 @@ function manufactureEmptyViewState(iModel: IModelConnection, viewClassName: View
   };
 
   switch (viewClassName) {
-    case ViewTypes.DrawingViewDefinition:
+    case DrawingViewState.classFullName:
       return DrawingViewState.createFromProps(blankViewStateProps, iModel);
-    case ViewTypes.SheetViewDefinition:
+    case SheetViewState.classFullName:
       return SheetViewState.createFromProps(blankViewStateProps, iModel);
     default:
       return blankViewState;
   }
 }
 
-async function getDefaultViewIdFromClassName(iModel: IModelConnection, savedViewType: ViewTypes): Promise<string> {
-  let viewFullName = undefined;
-  switch (savedViewType) {
-    case ViewTypes.ViewDefinition3d:
-      viewFullName = SpatialViewState.classFullName;
-      break;
-    case ViewTypes.DrawingViewDefinition:
-      viewFullName = DrawingViewState.classFullName;
-      break;
-    case ViewTypes.SheetViewDefinition:
-      viewFullName = SheetViewState.classFullName;
-      break;
-    default:
-      throw new Error("Unrecognized View Type");
-  }
-
+async function getDefaultViewIdFromClassName(iModel: IModelConnection, viewClassName: string): Promise<string> {
   // Check validity of default view
   const viewId = await iModel.views.queryDefaultViewId();
   const params: ViewQueryParams = {};
-  params.from = viewFullName;
+  params.from = viewClassName;
   params.where = "ECInstanceId=" + viewId;
   const viewProps = await IModelReadRpcInterface.getClient().queryElementProps(iModel.getRpcProps(), params);
   if (viewProps.length > 0) {
@@ -120,7 +257,7 @@ async function getDefaultViewIdFromClassName(iModel: IModelConnection, savedView
   }
 
   // Return the first view we can find
-  const viewList = await iModel.views.getViewList({ from: viewFullName, wantPrivate: false });
+  const viewList = await iModel.views.getViewList({ from: viewClassName, wantPrivate: false });
   if (viewList.length === 0) {
     return "";
   }
@@ -128,182 +265,8 @@ async function getDefaultViewIdFromClassName(iModel: IModelConnection, savedView
   return viewList[0].id;
 }
 
-interface SpatialViewStateProps extends ViewStateProps {
-  viewDefinitionProps: SpatialViewDefinitionProps;
-}
-
-async function createSpatialViewState(
-  iModel: IModelConnection,
-  savedViewRsp: SavedViewRepresentation,
-  seedSpatialViewState: SpatialViewState,
-): Promise<SpatialViewState> {
-  const modelSelector = seedSpatialViewState.modelSelector;
-  const itwin3dView = (savedViewRsp.savedViewData as ViewDataITwin3d).itwin3dView;
-  const props: SpatialViewStateProps = {
-    viewDefinitionProps: {
-      origin: itwin3dView.origin,
-      extents: itwin3dView.extents,
-      angles: itwin3dView.angles,
-      camera: itwin3dView.camera ?? new Camera(),
-      jsonProperties: {
-        viewDetails: extractClipVectors(itwin3dView),
-      },
-      classFullName: seedSpatialViewState.classFullName,
-      code: seedSpatialViewState.code,
-      model: seedSpatialViewState.model,
-      categorySelectorId: seedSpatialViewState.categorySelector.id,
-      displayStyleId: seedSpatialViewState.displayStyle.id,
-      cameraOn: itwin3dView.camera !== undefined,
-      modelSelectorId: seedSpatialViewState.modelSelector.id,
-    },
-    categorySelectorProps: {
-      classFullName: seedSpatialViewState.categorySelector.classFullName,
-      categories: itwin3dView.categories?.enabled ?? [],
-      code: cloneCode(seedSpatialViewState.categorySelector.code),
-      model: seedSpatialViewState.categorySelector.model,
-    },
-    modelSelectorProps: {
-      classFullName: modelSelector.classFullName,
-      code: cloneCode(modelSelector.code),
-      model: modelSelector.model,
-      models: itwin3dView.models?.enabled ?? [],
-    },
-    displayStyleProps: {
-      id: seedSpatialViewState.displayStyle.id,
-      classFullName: seedSpatialViewState.displayStyle.classFullName,
-      code: seedSpatialViewState.displayStyle.code,
-      model: seedSpatialViewState.displayStyle.model,
-      jsonProperties: {
-        styles: extractDisplayStyle3d(itwin3dView),
-      },
-    },
-  };
-  const viewState = SpatialViewState.createFromProps(props, iModel);
-  return viewState;
-}
-
-interface DrawingViewStateProps extends ViewStateProps {
-  viewDefinitionProps: ViewDefinition2dProps;
-}
-
-async function createDrawingViewState(
-  iModel: IModelConnection,
-  savedViewRsp: SavedViewRepresentation,
-  seedDrawingViewState: DrawingViewState,
-): Promise<DrawingViewState> {
-  const iTwinDrawingView = (savedViewRsp.savedViewData as ViewDataITwinDrawing).itwinDrawingView;
-  const props: DrawingViewStateProps = {
-    viewDefinitionProps: {
-      classFullName: seedDrawingViewState.classFullName,
-      id: seedDrawingViewState.id,
-      jsonProperties: {
-        viewDetails: {
-          gridOrient: seedDrawingViewState.getGridOrientation(),
-        },
-      },
-      code: cloneCode(seedDrawingViewState.code),
-      model: seedDrawingViewState.model,
-      federationGuid: seedDrawingViewState.federationGuid,
-      categorySelectorId: seedDrawingViewState.categorySelector.id,
-      displayStyleId: seedDrawingViewState.displayStyle.id,
-      isPrivate: seedDrawingViewState.isPrivate,
-      description: seedDrawingViewState.description,
-      origin: iTwinDrawingView.origin,
-      delta: iTwinDrawingView.delta,
-      angle: iTwinDrawingView.angle,
-      baseModelId: iTwinDrawingView.baseModelId,
-    },
-    categorySelectorProps: {
-      classFullName: seedDrawingViewState.categorySelector.classFullName,
-      categories: iTwinDrawingView.categories?.enabled ?? [],
-      code: cloneCode(seedDrawingViewState.categorySelector.code),
-      model: seedDrawingViewState.categorySelector.model,
-      federationGuid: seedDrawingViewState.categorySelector.federationGuid,
-      id: seedDrawingViewState.categorySelector.id,
-    },
-    displayStyleProps: {
-      classFullName: seedDrawingViewState.displayStyle.classFullName,
-      id: seedDrawingViewState.displayStyle.id,
-      jsonProperties: {
-        styles: extractDisplayStyle(iTwinDrawingView, seedDrawingViewState),
-      },
-      code: cloneCode(seedDrawingViewState.displayStyle.code),
-      model: seedDrawingViewState.displayStyle.model,
-      federationGuid: seedDrawingViewState.displayStyle.federationGuid,
-    },
-  };
-  const viewState = DrawingViewState.createFromProps(props, iModel) as DrawingViewState;
-  return viewState;
-}
-
-interface SheetViewStateProps extends ViewStateProps {
-  viewDefinitionProps: ViewDefinition2dProps;
-}
-
-async function createSheetViewState(
-  iModel: IModelConnection,
-  savedViewRsp: SavedViewRepresentation,
-  seedSheetViewState: ViewState,
-): Promise<SheetViewState> {
-  const itwinSheetView = (savedViewRsp.savedViewData as ViewDataITwinSheet).itwinSheetView;
-  const props: SheetViewStateProps = {
-    viewDefinitionProps: {
-      classFullName: seedSheetViewState.classFullName,
-      id: seedSheetViewState.id,
-      jsonProperties: {
-        viewDetails: {
-          gridOrient: seedSheetViewState.getGridOrientation(),
-        },
-      },
-      code: cloneCode(seedSheetViewState.code),
-      model: seedSheetViewState.model,
-      federationGuid: seedSheetViewState.federationGuid,
-      categorySelectorId: seedSheetViewState.categorySelector.id,
-      displayStyleId: seedSheetViewState.displayStyle.id,
-      isPrivate: seedSheetViewState.isPrivate,
-      description: seedSheetViewState.description,
-      origin: itwinSheetView.origin,
-      delta: itwinSheetView.delta,
-      angle: itwinSheetView.angle,
-      baseModelId: itwinSheetView.baseModelId,
-    },
-    categorySelectorProps: {
-      classFullName: seedSheetViewState.categorySelector.classFullName,
-      categories: itwinSheetView.categories?.enabled ?? [],
-      code: cloneCode(seedSheetViewState.categorySelector.code),
-      model: seedSheetViewState.categorySelector.model,
-      federationGuid: seedSheetViewState.categorySelector.federationGuid,
-      id: seedSheetViewState.categorySelector.id,
-    },
-    displayStyleProps: {
-      classFullName: seedSheetViewState.displayStyle.classFullName,
-      id: seedSheetViewState.displayStyle.id,
-      jsonProperties: {
-        styles: extractDisplayStyle(itwinSheetView, seedSheetViewState),
-      },
-      code: cloneCode(seedSheetViewState.displayStyle.code),
-      model: seedSheetViewState.displayStyle.model,
-      federationGuid: seedSheetViewState.displayStyle.federationGuid,
-    },
-    sheetProps: {
-      width: itwinSheetView.width,
-      height: itwinSheetView.height,
-      model: seedSheetViewState.displayStyle.model,
-      classFullName: SheetViewState.classFullName,
-      code: {
-        spec: seedSheetViewState.displayStyle.code.spec,
-        scope: seedSheetViewState.displayStyle.code.scope,
-        value: "",
-      },
-    },
-    sheetAttachments: itwinSheetView.sheetAttachments,
-  };
-  const viewState = SheetViewState.createFromProps(props, iModel);
-  return viewState;
-}
-
-function cloneCode(code: CodeProps): CodeProps {
-  return { spec: code.spec, scope: code.scope, value: code.value };
+function cloneCode({ spec, scope, value }: CodeProps): CodeProps {
+  return { spec, scope, value };
 }
 
 async function applyHiddenModelsAndCategories(
@@ -321,13 +284,13 @@ async function applyHiddenModelsAndCategories(
       return;
     }
 
-    const visible = {
-      categories: await getMissingCategories(iModel, new Set(savedViewData.categories.disabled)),
-      models: await getMissingModels(iModel, new Set(savedViewData.models.disabled)),
-    };
+    const [visibleCategories, visibleModels] = await Promise.all([
+      getMissingCategories(iModel, new Set(savedViewData.categories.disabled)),
+      getMissingModels(iModel, new Set(savedViewData.models.disabled)),
+    ]);
 
-    viewState.categorySelector.addCategories(visible.categories);
-    viewState.modelSelector.addModels(visible.models);
+    viewState.categorySelector.addCategories(visibleCategories);
+    viewState.modelSelector.addModels(visibleModels);
     return;
   }
 
