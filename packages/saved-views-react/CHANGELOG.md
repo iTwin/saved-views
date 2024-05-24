@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Minor changes
 
 * Add `extensions` property to `SavedView` type
+* Add `creationTime` and `lastModified` properties to `SavedView` type
+* Update `ITwinSavedViewsClient` to include `creationTime` and `lastModified` in `getSavedViewInfo`, `getSingularSavedView`, `createSavedView`, and `updateSavedView` responses
 
 ## [0.3.1](https://github.com/iTwin/saved-views/tree/v0.3.1-react/packages/saved-views-react) - 2024-05-20
 

@@ -165,6 +165,8 @@ function savedViewResponseToSavedView(response: Omit<SavedViewMinimal, "savedVie
     creatorId: response._links.creator?.href.split("/").at(-1),
     shared: response.shared,
     thumbnail: undefined,
+    creationTime: response.creationTime,
+    lastModified: response.lastModified,
   };
 }
 
