@@ -14,6 +14,10 @@ export interface SavedView {
   thumbnail?: ReactNode | string | undefined;
   /** `extensionName` and `data` pairs. */
   extensions?: Map<string, string> | undefined;
+  /** Time the saved view was created as an ISO8601 string, `"YYYY-MM-DDTHH:mm:ss.sssZ"` */
+  creationTime?: string;
+  /** Time the saved view was last modified as an ISO8601 string, `"YYYY-MM-DDTHH:mm:ss.sssZ"` */
+  lastModified?: string;
 }
 
 export interface SavedViewTag {
