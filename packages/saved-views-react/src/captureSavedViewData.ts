@@ -19,28 +19,20 @@ import {
 } from "./translation/displayStyleExtractor.js";
 
 interface CaptureSavedViewDataArgs {
-  /** Viewport to capture the view from. */
+  /** Viewport to capture. */
   viewport: Viewport;
-
-  /**
-   * Collect a list of models and categories that are currently not enabled in the {@linkcode viewport}.
-   * @default true
-   */
-  captureHiddenModelsAndCategories?: boolean | undefined;
 }
 
 export async function captureSavedViewData(args: CaptureSavedViewDataArgs): Promise<ViewData> {
-  const { captureHiddenModelsAndCategories = true } = args;
-  const hiddenCategoriesPromise = captureHiddenModelsAndCategories
-    ? getMissingCategories(args.viewport.iModel, new Set(args.viewport.view.categorySelector.toJSON().categories))
-    : undefined;
+  const hiddenCategoriesPromise = getMissingCategories(
+    args.viewport.iModel,
+    new Set(args.viewport.view.categorySelector.toJSON().categories),
+  );
 
   if (args.viewport.view.isSpatialView()) {
     const [hiddenCategories, hiddenModels] = await Promise.all([
       hiddenCategoriesPromise,
-      captureHiddenModelsAndCategories
-        ? getMissingModels(args.viewport.iModel, new Set(args.viewport.view.modelSelector.toJSON().models))
-        : undefined,
+      getMissingModels(args.viewport.iModel, new Set(args.viewport.view.modelSelector.toJSON().models)),
     ]);
     return createSpatialSavedViewObject(args.viewport, hiddenCategories, hiddenModels);
   }

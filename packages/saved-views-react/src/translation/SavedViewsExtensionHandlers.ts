@@ -2,43 +2,40 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import type { EmphasizeElementsProps } from "@itwin/core-common";
 import { EmphasizeElements, PerModelCategoryVisibility, type Viewport } from "@itwin/core-frontend";
 
-import { ModelCategoryOverrideProvider } from "../ModelCategoryOverrideProvider.js";
-import {
-  extractEmphasizeElements, extractPerModelCategoryVisibility, extractVisibilityOverride,
-} from "./extensionExtractor.js";
+import { extractEmphasizeElements, extractPerModelCategoryVisibility } from "./extensionExtractor.js";
 
 export interface ExtensionHandler {
   extensionName: string;
-  onViewApply: (extensionData: string, vp: Viewport) => Promise<void>;
+  apply: (extensionData: string, viewport: Viewport) => void;
+  reset: (viewport: Viewport) => void;
 }
 
-/**
- * Collection of default extension handlers
- */
-export class SavedViewsExtensionHandlers {
-  public static EmphasizeElements: ExtensionHandler = {
+export const extensionHandlers = {
+  emphasizeElements: {
     extensionName: "EmphasizeElements",
-    onViewApply: async (extensionData: string, vp: Viewport) => {
+    apply: (extensionData, viewport) => {
       if (extensionData) {
-        const props: EmphasizeElementsProps | undefined =
-          extractEmphasizeElements(extensionData);
+        const props = extractEmphasizeElements(extensionData);
         if (props !== undefined) {
-          EmphasizeElements.getOrCreate(vp).fromJSON(props, vp);
+          EmphasizeElements.getOrCreate(viewport).fromJSON(props, viewport);
         }
       }
     },
-  };
-
-  public static PerModelCategoryVisibility: ExtensionHandler = {
+    reset: (viewport) => {
+      if (EmphasizeElements.get(viewport)) {
+        EmphasizeElements.clear(viewport);
+        viewport.isFadeOutActive = false;
+      }
+    },
+  } satisfies ExtensionHandler,
+  perModelCategoryVisibility: {
     extensionName: "PerModelCategoryVisibility",
-    onViewApply: async (extensionData: string, vp: Viewport) => {
+    apply: (extensionData, viewport) => {
       const props = extractPerModelCategoryVisibility(extensionData) ?? [];
-      vp.perModelCategoryVisibility.clearOverrides();
       for (const override of props) {
-        vp.perModelCategoryVisibility.setOverride(
+        viewport.perModelCategoryVisibility.setOverride(
           override.modelId,
           override.categoryId,
           override.visible
@@ -47,17 +44,8 @@ export class SavedViewsExtensionHandlers {
         );
       }
     },
-  };
-
-  public static VisibilityOverride: ExtensionHandler = {
-    extensionName: "VisibilityOverride",
-    onViewApply: async (extensionData: string, vp: Viewport) => {
-      if (extensionData) {
-        const props = extractVisibilityOverride(extensionData);
-        if (props !== undefined) {
-          ModelCategoryOverrideProvider.getOrCreate(vp).fromJSON(props);
-        }
-      }
+    reset: (viewport) => {
+      viewport.perModelCategoryVisibility.clearOverrides();
     },
-  };
-}
+  } satisfies ExtensionHandler,
+};

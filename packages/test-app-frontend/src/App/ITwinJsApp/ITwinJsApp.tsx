@@ -8,7 +8,7 @@ import {
   type AuthorizationClient,
 } from "@itwin/core-common";
 import {
-  CheckpointConnection, IModelApp, IModelConnection, ScreenViewport, ViewCreator3d, ViewState, Viewport,
+  CheckpointConnection, IModelApp, ViewCreator3d, type IModelConnection, type ViewState, type Viewport,
 } from "@itwin/core-frontend";
 import { ITwinLocalization } from "@itwin/core-i18n";
 import { UiCore } from "@itwin/core-react";
@@ -17,9 +17,7 @@ import { FrontendIModelsAccess } from "@itwin/imodels-access-frontend";
 import { IModelsClient } from "@itwin/imodels-client-management";
 import { PageLayout } from "@itwin/itwinui-layouts-react";
 import { useToaster } from "@itwin/itwinui-react";
-import { SavedView } from "@itwin/saved-views-react";
-import { ModelCategoryOverrideProvider, applyExtensionsToViewport } from "@itwin/saved-views-react/experimental";
-import { useEffect, useRef, useState, type ReactElement } from "react";
+import { useEffect, useState, type ReactElement } from "react";
 
 import { applyUrlPrefix } from "../../environment.js";
 import { useAuthorization } from "../Authorization.js";
@@ -73,15 +71,6 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
     [iModel],
   );
 
-  const viewportRef = useRef<ScreenViewport>();
-  const handleSavedViewSelect = async (savedView: SavedView, viewState: ViewState) => {
-    if (iModel && viewportRef.current) {
-      viewportRef.current.changeView(viewState);
-      await clearAllOverrides(iModel, viewportRef.current);
-      await applyExtensionsToViewport(viewportRef.current, savedView);
-    }
-  };
-
   const [viewport, setViewport] = useState<Viewport>();
 
   if (loadingState === "rendering-imodel") {
@@ -106,7 +95,7 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
         <ViewportComponent
           imodel={iModel}
           viewState={viewState}
-          viewportRef={(v) => (setViewport(v), viewportRef.current = v)}
+          viewportRef={setViewport}
         />
         {
           viewport &&
@@ -114,7 +103,6 @@ export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
             iTwinId={props.iTwinId}
             iModelId={props.iModelId}
             iModel={iModel}
-            onSavedViewSelect={handleSavedViewSelect}
             viewport={viewport}
           />
         }
@@ -207,13 +195,4 @@ async function getStoredViewState(iModel: IModelConnection): Promise<ViewState |
   }
 
   return viewId ? iModel.views.load(viewId) : undefined;
-}
-
-async function clearAllOverrides(iModel: IModelConnection, viewport: Viewport): Promise<void> {
-  const subcatProvider = viewport.findFeatureOverrideProviderOfType(ModelCategoryOverrideProvider);
-  if (subcatProvider) {
-    viewport.dropFeatureOverrideProvider(subcatProvider);
-  }
-
-  iModel.selectionSet.emptyAll();
 }
