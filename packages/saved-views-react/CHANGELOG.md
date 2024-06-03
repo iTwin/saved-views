@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased](https://github.com/iTwin/saved-views/tree/HEAD/packages/saved-views-react)
 
+## [0.5.0](https://github.com/iTwin/saved-views/tree/v0.5.0-react/packages/saved-views-react) - 2024-06-03
+
 ### Breaking changes
 
 * `captureSavedViewData`: Remove `captureHiddenModelsAndCategories` setting from parameter bag. This function now behaves as if its value is always `true`.
