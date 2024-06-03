@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased](https://github.com/iTwin/saved-views/tree/HEAD/packages/saved-views-react)
 
+### Breaking changes
+
+* `captureSavedViewData`: Remove `captureHiddenModelsAndCategories` setting from parameter bag. This function now behaves as if its value is always `true`.
+* `createViewState`: Change function signature to take `ViewData` instead of `SavedViewRepresentation` and use parameter bag for additional settings
+* Remove experimental `ModelCategoryOverrideProvider` class
+* Remove experimental `applyExtensionsToViewport` function
+
+### Major changes
+
+* Add `applySavedView` function
+* Promote `createViewState` to public API
+
 ## [0.4.1](https://github.com/iTwin/saved-views/tree/v0.4.1-react/packages/saved-views-react) - 2024-05-28
 
 * Expose parameter types used in `SavedViewsClient` methods

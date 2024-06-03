@@ -10,41 +10,59 @@ import {
   DrawingViewState, SheetViewState, SpatialViewState, type IModelConnection, type ViewState,
 } from "@itwin/core-frontend";
 import {
-  ViewITwinDrawing, ViewITwinSheet, isViewDataITwin3d, isViewDataITwinDrawing, isViewDataITwinSheet,
-  type SavedViewRepresentation, type ViewITwin3d,
+  ViewData, ViewITwinDrawing, ViewITwinSheet, isViewDataITwin3d, isViewDataITwinDrawing, isViewDataITwinSheet,
+  type ViewITwin3d,
 } from "@itwin/saved-views-client";
 
 import { getMissingCategories, getMissingModels } from "./captureSavedViewData.js";
 import { extractClipVectors } from "./translation/clipVectorsExtractor.js";
 import { extractDisplayStyle, extractDisplayStyle3d } from "./translation/displayStyleExtractor.js";
 
+export interface ViewStateCreateSettings {
+  /**
+   * Normally before {@link createViewState} function returns a {@link ViewState}, its {@linkcode ViewState.load} method
+   * is called and awaited. You may skip this step if you intend to perform it later.
+   * @default false
+   */
+  skipViewStateLoad?: boolean | undefined;
+
+  /**
+   * How to handle visibility of models and categories that exist in iModel but are not captured in Saved View data.
+   * @default "hidden"
+   */
+  modelAndCategoryVisibilityFallback?: "visible" | "hidden" | undefined;
+}
+
 export async function createViewState(
   iModel: IModelConnection,
-  savedViewRsp: SavedViewRepresentation,
-  useHiddenModelsAndCategories = true,
-): Promise<ViewState | undefined> {
-  const viewState = await createViewStateVariant(iModel, savedViewRsp);
-  if (useHiddenModelsAndCategories) {
-    await applyHiddenModelsAndCategories(iModel, viewState, savedViewRsp);
+  savedViewData: ViewData,
+  settings: ViewStateCreateSettings = {},
+): Promise<ViewState> {
+  const viewState = await createViewStateVariant(iModel, savedViewData);
+  if (settings.modelAndCategoryVisibilityFallback === "visible") {
+    await unhideNewModelsAndCategories(iModel, viewState, savedViewData);
   }
 
-  await viewState.load();
+  if (!settings.skipViewStateLoad) {
+    await viewState.load();
+  }
+
   return viewState;
 }
 
 async function createViewStateVariant(
   iModel: IModelConnection,
-  savedViewRsp: SavedViewRepresentation,
+  savedViewData: ViewData,
 ): Promise<ViewState> {
-  if (isViewDataITwinDrawing(savedViewRsp.savedViewData)) {
-    return createDrawingViewState(iModel, savedViewRsp.savedViewData.itwinDrawingView);
+  if (isViewDataITwinDrawing(savedViewData)) {
+    return createDrawingViewState(iModel, savedViewData.itwinDrawingView);
   }
 
-  if (isViewDataITwinSheet(savedViewRsp.savedViewData)) {
-    return createSheetViewState(iModel, savedViewRsp.savedViewData.itwinSheetView);
+  if (isViewDataITwinSheet(savedViewData)) {
+    return createSheetViewState(iModel, savedViewData.itwinSheetView);
   }
 
-  return createSpatialViewState(iModel, savedViewRsp.savedViewData.itwin3dView);
+  return createSpatialViewState(iModel, savedViewData.itwin3dView);
 }
 
 interface SpatialViewStateProps extends ViewStateProps {
@@ -269,24 +287,24 @@ function cloneCode({ spec, scope, value }: CodeProps): CodeProps {
   return { spec, scope, value };
 }
 
-async function applyHiddenModelsAndCategories(
+async function unhideNewModelsAndCategories(
   iModel: IModelConnection,
   viewState: ViewState,
-  savedViewRsp: SavedViewRepresentation,
+  savedViewData: ViewData,
 ): Promise<void> {
-  if (isViewDataITwin3d(savedViewRsp.savedViewData)) {
+  if (isViewDataITwin3d(savedViewData)) {
     if (!viewState.isSpatialView()) {
       return;
     }
 
-    const savedViewData = savedViewRsp.savedViewData.itwin3dView;
-    if (!savedViewData.categories?.disabled || !savedViewData.models?.disabled) {
+    const viewData = savedViewData.itwin3dView;
+    if (!viewData.categories?.disabled || !viewData.models?.disabled) {
       return;
     }
 
     const [visibleCategories, visibleModels] = await Promise.all([
-      getMissingCategories(iModel, new Set(savedViewData.categories.disabled)),
-      getMissingModels(iModel, new Set(savedViewData.models.disabled)),
+      getMissingCategories(iModel, new Set(viewData.categories.disabled)),
+      getMissingModels(iModel, new Set(viewData.models.disabled)),
     ]);
 
     viewState.categorySelector.addCategories(visibleCategories);
@@ -294,14 +312,14 @@ async function applyHiddenModelsAndCategories(
     return;
   }
 
-  const savedViewData = isViewDataITwinDrawing(savedViewRsp.savedViewData)
-    ? savedViewRsp.savedViewData.itwinDrawingView
-    : savedViewRsp.savedViewData.itwinSheetView;
+  const viewData = isViewDataITwinDrawing(savedViewData)
+    ? savedViewData.itwinDrawingView
+    : savedViewData.itwinSheetView;
 
-  if (!savedViewData.categories?.disabled) {
+  if (!viewData.categories?.disabled) {
     return;
   }
 
-  const visibleCategories = await getMissingCategories(iModel, new Set(savedViewData.categories.disabled));
+  const visibleCategories = await getMissingCategories(iModel, new Set(viewData.categories.disabled));
   viewState.categorySelector.addCategories(visibleCategories);
 }

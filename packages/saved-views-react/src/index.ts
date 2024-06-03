@@ -16,7 +16,9 @@ export type {
 export { SavedViewsContextProvider, type SavedViewsContext } from "./SavedViewsContext.js";
 export { StickyExpandableBlock } from "./StickyExpandableBlock/StickyExpandableBlock.js";
 export { TileGrid } from "./TileGrid/TileGrid.js";
+export { applySavedView, type ApplySavedViewSettings } from "./applySavedView.js";
 export { captureSavedViewData } from "./captureSavedViewData.js";
 export { captureSavedViewThumbnail } from "./captureSavedViewThumbnail.js";
+export { createViewState, type ViewStateCreateSettings } from "./createViewState.js";
 export { defaultLocalization, type LocalizationStrings } from "./localization.js";
 export { useSavedViews, type SavedViewActions } from "./useSavedViews.js";

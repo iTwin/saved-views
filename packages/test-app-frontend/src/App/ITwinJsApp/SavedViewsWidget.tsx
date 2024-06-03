@@ -2,12 +2,12 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { IModelConnection, Viewport, type ViewState } from "@itwin/core-frontend";
+import type { IModelConnection, Viewport } from "@itwin/core-frontend";
 import { Button, useToaster } from "@itwin/itwinui-react";
 import {
-  ITwinSavedViewsClient, SavedView, captureSavedViewData, captureSavedViewThumbnail, useSavedViews,
+  ITwinSavedViewsClient, applySavedView, captureSavedViewData, captureSavedViewThumbnail, useSavedViews,
 } from "@itwin/saved-views-react";
-import { SavedViewsFolderWidget, createSavedViewOptions, createViewState } from "@itwin/saved-views-react/experimental";
+import { SavedViewsFolderWidget, createSavedViewOptions } from "@itwin/saved-views-react/experimental";
 import { ReactElement, useMemo, useState } from "react";
 
 import { applyUrlPrefix } from "../../environment.js";
@@ -19,7 +19,6 @@ interface SavedViewsWidgetProps {
   iModelId: string;
   iModel: IModelConnection;
   viewport: Viewport;
-  onSavedViewSelect: (savedView: SavedView, viewState: ViewState) => void;
 }
 
 export function SavedViewsWidget(props: SavedViewsWidgetProps): ReactElement {
@@ -48,30 +47,16 @@ export function SavedViewsWidget(props: SavedViewsWidgetProps): ReactElement {
     },
   });
 
-  // This function converts a saved view from the Saved View API into a legacy view, then converts the legacy view into
-  // an iTwin.js-style ViewState.
-  //
-  // Once legacy views are officially retired, a straight translation from Saved View to ViewState can be done instead
-  // (but code has not been created for that yet).
   const handleTileClick = async (savedViewId: string) => {
     const { close } = toaster.informational("Opening Saved View...", { type: "persisting" });
-    const savedView = savedViews?.savedViews.get(savedViewId);
-    if (!savedView) {
-      return;
-    }
-
     try {
-      const savedViewResponse = await client.getSingularSavedView({ savedViewId });
-      const viewState = await createViewState(props.iModel, savedViewResponse);
-      if (viewState) {
-        props.onSavedViewSelect(
-          {
-            ...savedView,
-            extensions: new Map(savedViewResponse.extensions?.map(({ extensionName, data }) => [extensionName, data])),
-          },
-          viewState,
-        );
+      const savedView = savedViews?.savedViews.get(savedViewId);
+      if (!savedView) {
+        return;
       }
+
+      const savedViewResponse = await client.getSingularSavedView({ savedViewId });
+      await applySavedView(props.iModel, props.viewport, savedViewResponse);
     } finally {
       close();
     }
