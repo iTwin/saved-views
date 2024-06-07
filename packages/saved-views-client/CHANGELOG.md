@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixes
 
-Remove `extensions` property from `UpdateSavedViewParams` because extensions are immutable
+* Remove `extensions` property from `UpdateSavedViewParams` because extensions are immutable
 
 ## [0.3.0](https://github.com/iTwin/saved-views/tree/v0.3.0-client/packages/saved-views-client) - 2024-05-16
 
