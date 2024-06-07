@@ -5,11 +5,13 @@
 import { EmphasizeElements, PerModelCategoryVisibility, type Viewport } from "@itwin/core-frontend";
 
 import { extractEmphasizeElements, extractPerModelCategoryVisibility } from "./extensionExtractor.js";
+import type { PerModelCategoryVisibilityProps } from "./SavedViewTypes.js";
 
 export interface ExtensionHandler {
   extensionName: string;
   apply: (extensionData: string, viewport: Viewport) => void;
   reset: (viewport: Viewport) => void;
+  capture: (viewport: Viewport) => string | undefined;
 }
 
 export const extensionHandlers = {
@@ -29,6 +31,10 @@ export const extensionHandlers = {
         viewport.isFadeOutActive = false;
       }
     },
+    capture: (viewport) => {
+      const emphasizeElementsProps = EmphasizeElements.get(viewport)?.toJSON(viewport);
+      return emphasizeElementsProps ? JSON.stringify({ emphasizeElementsProps }) : undefined;
+    },
   } satisfies ExtensionHandler,
   perModelCategoryVisibility: {
     extensionName: "PerModelCategoryVisibility",
@@ -46,6 +52,18 @@ export const extensionHandlers = {
     },
     reset: (viewport) => {
       viewport.perModelCategoryVisibility.clearOverrides();
+    },
+    capture: (viewport) => {
+      if (!viewport.view.isSpatialView()) {
+        return undefined;
+      }
+
+      const props: PerModelCategoryVisibilityProps[] = [];
+      for (const { modelId, categoryId, visible } of viewport.perModelCategoryVisibility) {
+        props.push({ modelId, categoryId, visible });
+      }
+
+      return props.length > 0 ? JSON.stringify({ perModelCategoryVisibilityProps: props }) : undefined;
     },
   } satisfies ExtensionHandler,
 };

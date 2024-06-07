@@ -2,11 +2,10 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import type {
-  ExtensionMin, ExtensionSavedViewCreate, SavedViewRepresentation, ViewData,
-} from "@itwin/saved-views-client";
+import type { SavedViewRepresentation } from "@itwin/saved-views-client";
 
-import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedView.js";
+import type { SavedView, SavedViewGroup, SavedViewTag, WriteableSavedViewProperties } from "../SavedView.js";
+import type { PartialExcept } from "../utils.js";
 
 export interface SavedViewInfo {
   savedViews: SavedView[];
@@ -52,15 +51,11 @@ export interface UploadThumbnailParams extends CommonParams {
 export interface CreateSavedViewParams extends CommonParams {
   iTwinId: string;
   iModelId?: string | undefined;
-  savedView: Pick<SavedView, "displayName" | "tagIds" | "groupId" | "shared">;
-  savedViewData: ViewData;
-  extensions?: ExtensionSavedViewCreate[] | undefined;
+  savedView: PartialExcept<WriteableSavedViewProperties, "displayName" | "viewData">;
 }
 
 export interface UpdateSavedViewParams extends CommonParams {
-  savedView: Pick<SavedView, "id"> & Partial<SavedView>;
-  savedViewData?: ViewData | undefined;
-  extensions?: ExtensionMin[] | undefined;
+  savedView: Partial<WriteableSavedViewProperties> & { id: string; };
 }
 
 export interface DeleteSavedViewParams extends CommonParams {

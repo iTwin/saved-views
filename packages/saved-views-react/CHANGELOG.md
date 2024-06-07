@@ -6,6 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased](https://github.com/iTwin/saved-views/tree/HEAD/packages/saved-views-react)
 
+### Breaking changes
+
+* `captureSavedViewData` now also captures extension data thus return type has now changed to `{ viewData: ViewData; extensions: SavedViewExtension[] | undefined }`
+* `SavedViewsClient.createSavedView`: Update parameter bag to reflect `SavedView` change (see minor changes)
+* `SavedViewsClient.updateSavedView`: Update parameter bag to reflect `SavedView` change (see minor changes)
+* `useSavedViews`: Update `submitSavedView` action parameters to reflect `SavedView` change (see minor changes)
+
+### Minor changes
+
+* `SavedView` now also contains `viewData` and `extension` properties
+
+### Fixes
+
+* `ITwinSavedViewsClient.createSavedView`: Extension data now is no longer ignored
+* `ITwinSavedViewsClient.updateSavedView`: Fix extension data not being updated
+
+### Dependencies
+
+* Bump `@itwin/saved-views-client` package version from `^0.3.0` to `^0.3.1`
+
 ## [0.5.0](https://github.com/iTwin/saved-views/tree/v0.5.0-react/packages/saved-views-react) - 2024-06-03
 
 ### Breaking changes

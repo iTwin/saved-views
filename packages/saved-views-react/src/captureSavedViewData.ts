@@ -13,6 +13,8 @@ import {
   type ViewYawPitchRoll,
 } from "@itwin/saved-views-client";
 
+import type { SavedViewExtension } from "./SavedView.js";
+import { extensionHandlers } from "./translation/SavedViewsExtensionHandlers.js";
 import { extractClipVectorsFromLegacy } from "./translation/clipVectorsLegacyExtractor.js";
 import {
   extractDisplayStyle2dFromLegacy, extractDisplayStyle3dFromLegacy,
@@ -21,27 +23,59 @@ import {
 interface CaptureSavedViewDataArgs {
   /** Viewport to capture. */
   viewport: Viewport;
+
+  /**
+   * Whether to skip capturing data for `"EmphasizeElements"` extension.
+   * @default false
+   */
+  omitEmphasis?: boolean | undefined;
+
+  /**
+   * Whether to skip capturing data for `"PerModelCategoryVisibility"` extension.
+   * @default false
+   */
+  omitPerModelCategoryVisibility?: boolean | undefined;
 }
 
-export async function captureSavedViewData(args: CaptureSavedViewDataArgs): Promise<ViewData> {
+interface CaptureSavedViewDataResult {
+  viewData: ViewData;
+
+  /** Value is `undefined` when no extension data is captured. */
+  extensions: SavedViewExtension[] | undefined;
+}
+
+/** Captures current viewport state into serializable format. */
+export async function captureSavedViewData(args: CaptureSavedViewDataArgs): Promise<CaptureSavedViewDataResult> {
+  return {
+    viewData: await createSavedViewVariant(args.viewport),
+    extensions: [extensionHandlers.emphasizeElements, extensionHandlers.perModelCategoryVisibility]
+      .map((extension) => ({
+        extensionName: extension.extensionName,
+        data: extension.capture(args.viewport),
+      }))
+      .filter(({ data }) => data !== undefined) as Array<{ extensionName: string; data: string; }>,
+  };
+}
+
+async function createSavedViewVariant(viewport: Viewport): Promise<ViewData> {
   const hiddenCategoriesPromise = getMissingCategories(
-    args.viewport.iModel,
-    new Set(args.viewport.view.categorySelector.toJSON().categories),
+    viewport.iModel,
+    new Set(viewport.view.categorySelector.toJSON().categories),
   );
 
-  if (args.viewport.view.isSpatialView()) {
+  if (viewport.view.isSpatialView()) {
     const [hiddenCategories, hiddenModels] = await Promise.all([
       hiddenCategoriesPromise,
-      getMissingModels(args.viewport.iModel, new Set(args.viewport.view.modelSelector.toJSON().models)),
+      getMissingModels(viewport.iModel, new Set(viewport.view.modelSelector.toJSON().models)),
     ]);
-    return createSpatialSavedViewObject(args.viewport, hiddenCategories, hiddenModels);
+    return createSpatialSavedViewObject(viewport, hiddenCategories, hiddenModels);
   }
 
-  if (args.viewport.view.isDrawingView()) {
-    return createDrawingSavedViewObject(args.viewport, await hiddenCategoriesPromise);
+  if (viewport.view.isDrawingView()) {
+    return createDrawingSavedViewObject(viewport, await hiddenCategoriesPromise);
   }
 
-  return createSheetSavedViewObject(args.viewport, await hiddenCategoriesPromise);
+  return createSheetSavedViewObject(viewport, await hiddenCategoriesPromise);
 }
 
 function createSpatialSavedViewObject(
