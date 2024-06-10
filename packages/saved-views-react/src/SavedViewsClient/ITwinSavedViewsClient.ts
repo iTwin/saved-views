@@ -80,7 +80,8 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       tagIds: args.savedView.tagIds,
       groupId: args.savedView.groupId,
       shared: args.savedView.shared,
-      savedViewData: args.savedViewData,
+      savedViewData: args.savedView.viewData,
+      extensions: args.savedView.extensions,
       signal: args.signal,
     });
     return savedViewResponseToSavedView(savedView);
@@ -93,10 +94,18 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       tagIds: args.savedView.tagIds,
       groupId: args.savedView.groupId,
       shared: args.savedView.shared,
-      savedViewData: args.savedViewData,
-      extensions: args.extensions,
+      savedViewData: args.savedView.viewData,
       signal: args.signal,
     });
+
+    await Promise.all((args.savedView.extensions ?? []).map(
+      ({ extensionName, data }) => this.client.createExtension({
+        savedViewId: args.savedView.id,
+        extensionName,
+        data,
+      }),
+    ));
+
     return savedViewResponseToSavedView(savedView);
   }
 
@@ -160,11 +169,13 @@ function savedViewResponseToSavedView(response: Omit<SavedViewMinimal, "savedVie
   return {
     id: response.id,
     displayName: response.displayName,
+    viewData: undefined,
     tagIds: response.tags?.map((tag) => tag.id),
     groupId: response._links.group?.href.split("/").at(-1),
     creatorId: response._links.creator?.href.split("/").at(-1),
     shared: response.shared,
     thumbnail: undefined,
+    extensions: undefined,
     creationTime: response.creationTime,
     lastModified: response.lastModified,
   };

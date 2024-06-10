@@ -2,7 +2,7 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import type { Extension, ExtensionListItem, ExtensionMin, ExtensionSavedViewCreate } from "../models/Extension.js";
+import type { Extension, ExtensionListItem, ExtensionSavedViewCreate } from "../models/Extension.js";
 import type { Group } from "../models/Group.js";
 import type { HalLinks } from "../models/Links.js";
 import type { Tag } from "../models/Tag.js";
@@ -68,7 +68,6 @@ export interface UpdateSavedViewParams extends CommonRequestParams {
   displayName?: string;
   shared?: boolean;
   tagIds?: string[];
-  extensions?: ExtensionMin[];
 }
 
 export interface SavedViewMinimalResponse {

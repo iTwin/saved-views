@@ -133,7 +133,6 @@ describe("ITwinSavedViewsClient", () => {
       displayName: "test_displayname",
       shared: true,
       tagIds: ["test_tagid"],
-      extensions: [{ extensionName: "test_extensionname", href: "not_supposed_to_be_here" }],
     });
 
     verifyFetch({
@@ -145,7 +144,6 @@ describe("ITwinSavedViewsClient", () => {
         displayName: "test_displayname",
         shared: true,
         tagIds: ["test_tagid"],
-        extensions: [{ extensionName: "test_extensionname", href: "not_supposed_to_be_here" }],
       }),
     });
   });

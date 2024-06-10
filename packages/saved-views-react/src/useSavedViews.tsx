@@ -2,14 +2,14 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import type { ViewData } from "@itwin/saved-views-client";
 import {
   useCallback, useEffect, useRef, useState, type MutableRefObject, type ReactElement, type ReactNode,
   type SetStateAction,
 } from "react";
 
-import type { SavedView, SavedViewGroup, SavedViewTag } from "./SavedView.js";
+import type { SavedView, SavedViewGroup, SavedViewTag, WriteableSavedViewProperties } from "./SavedView.js";
 import type { SavedViewsClient } from "./SavedViewsClient/SavedViewsClient.js";
+import type { PartialExcept } from "./utils.js";
 
 interface UseSavedViewsParams {
   /** iTwin identifier. */
@@ -42,10 +42,7 @@ interface UseSavedViewsResult {
 }
 
 export interface SavedViewActions {
-  submitSavedView: (
-    savedView: string | Partial<SavedView> & Pick<SavedView, "displayName">,
-    savedViewData: ViewData,
-  ) => Promise<string>;
+  submitSavedView: (savedView: SavedViewCreationProps | SavedViewUpdateProps) => Promise<string>;
   renameSavedView: (savedViewId: string, newName: string | undefined) => void;
   shareSavedView: (savedViewId: string, share: boolean) => void;
   deleteSavedView: (savedViewId: string) => void;
@@ -60,6 +57,9 @@ export interface SavedViewActions {
   removeTag: (savedViewId: string, tagId: string) => void;
   uploadThumbnail: (savedViewId: string, imageDataUrl: string) => void;
 }
+
+type SavedViewCreationProps = PartialExcept<WriteableSavedViewProperties, "displayName" | "viewData">;
+type SavedViewUpdateProps = WriteableSavedViewProperties & { id: string; };
 
 /**
  * Pulls Saved View data from a store and provides means to update and synchronize the data back to it. Interaction with
@@ -229,26 +229,11 @@ function createSavedViewActions(
 
   return {
     submitSavedView: actionWrapper(
-      async (savedView: string | Partial<SavedView> & Pick<SavedView, "displayName">, savedViewData: ViewData) => {
-        let newSavedView: SavedView;
-        if (typeof savedView !== "string" && savedView.id) {
-          newSavedView = await client.updateSavedView(
-            {
-              // TypeScript cannot tell that `savedView` object contains `id` string without a little help
-              savedView: { id: savedView.id, ...savedView },
-              savedViewData,
-              signal,
-            },
-          );
-        } else {
-          newSavedView = await client.createSavedView({
-            iTwinId: iTwinId,
-            iModelId: iModelId,
-            savedView: typeof savedView === "string" ? { displayName: savedView } : savedView,
-            savedViewData,
-            signal,
-          });
-        }
+      async (savedView: SavedViewCreationProps | SavedViewUpdateProps) => {
+        const newSavedView = "id" in savedView
+          ? await client.updateSavedView({ savedView, signal })
+          : await client.createSavedView({ iTwinId, iModelId, savedView, signal });
+
         updateSavedViews((savedViews) => {
           const entries = Array.from(savedViews.values());
           entries.push(newSavedView);
