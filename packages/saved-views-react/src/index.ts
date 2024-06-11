@@ -10,8 +10,8 @@ export { useSavedViewTileContext, type SavedViewTileContext } from "./SavedViewT
 export { ITwinSavedViewsClient } from "./SavedViewsClient/ITwinSavedViewsClient.js";
 export type {
   CreateGroupParams, CreateSavedViewParams, CreateTagParams, DeleteGroupParams, DeleteSavedViewParams, DeleteTagParams,
-  GetSavedViewInfoParams, GetSingularSavedViewParams, GetThumbnailUrlParams, SavedViewInfo, SavedViewsClient,
-  UpdateGroupParams, UpdateSavedViewParams, UpdateTagParams, UploadThumbnailParams,
+  GetAllGroupsParams, GetAllSavedViewsParams, GetAllTagsParams, GetSavedViewParams, GetThumbnailUrlParams,
+  SavedViewsClient, UpdateGroupParams, UpdateSavedViewParams, UpdateTagParams, UploadThumbnailParams,
 } from "./SavedViewsClient/SavedViewsClient.js";
 export { SavedViewsContextProvider, type SavedViewsContext } from "./SavedViewsContext.js";
 export { StickyExpandableBlock } from "./StickyExpandableBlock/StickyExpandableBlock.js";

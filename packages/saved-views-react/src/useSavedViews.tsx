@@ -141,11 +141,7 @@ export function useSavedViews(args: UseSavedViewsParams): UseSavedViewsResult | 
 
       void (async () => {
         try {
-          const result = await args.client.getSavedViewInfo({
-            iTwinId: args.iTwinId,
-            iModelId: args.iModelId,
-            signal: signal,
-          });
+          const result = await getSavedViewInfo(args.client, args.iTwinId, args.iModelId, signal);
           if (signal.aborted) {
             return;
           }
@@ -207,6 +203,38 @@ function useEvent<T extends unknown[], U>(handleEvent: (...args: T) => U): (...a
   const handleEventRef = useRef(handleEvent);
   handleEventRef.current = handleEvent;
   return useCallback((...args) => handleEventRef.current(...args), []);
+}
+
+interface SavedViewInfo {
+  savedViews: SavedView[];
+  groups: SavedViewGroup[];
+  tags: SavedViewTag[];
+}
+
+async function getSavedViewInfo(
+  client: SavedViewsClient,
+  iTwinId: string,
+  iModelId: string,
+  signal: AbortSignal,
+): Promise<SavedViewInfo> {
+  const args = { iTwinId, iModelId, signal };
+
+  const collectSavedViews = async () => {
+    let savedViews: SavedView[] = [];
+    const iterable = client.getAllSavedViews(args);
+    for await (const page of iterable) {
+      savedViews = savedViews.concat(page);
+    }
+
+    return savedViews;
+  }
+
+  const [savedViews, groups, tags] = await Promise.all([
+    collectSavedViews(),
+    client.getAllGroups(args),
+    client.getAllTags(args),
+  ]);
+  return { savedViews, groups, tags };
 }
 
 interface ActionsRef {

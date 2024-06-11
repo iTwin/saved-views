@@ -2,10 +2,7 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import type { DisplayStyleSettingsProps } from "../models/savedViews/DisplayStyles.js";
-import {
-  isViewDataITwin3d, isViewDataITwinDrawing, isViewDataITwinSheet, type ViewData,
-} from "../models/savedViews/View.js";
+import type { HalLinks } from "../models/Links.js";
 import { callITwinApi } from "./ApiUtils.js";
 import type {
   CreateExtensionParams, CreateGroupParams, CreateSavedViewParams, CreateTagParams, ExtensionListResponse,
@@ -79,47 +76,54 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     return response;
   }
 
-  async getAllSavedViewsMinimal(args: GetSavedViewsParams): Promise<SavedViewListMinimalResponse> {
+  getAllSavedViewsMinimal(args: GetSavedViewsParams): AsyncIterableIterator<SavedViewListMinimalResponse> {
     const iTwinId = args.iTwinId && `iTwinId=${args.iTwinId}`;
     const iModelId = args.iModelId && `iModelId=${args.iModelId}`;
     const groupId = args.groupId && `groupId=${args.groupId}`;
     const top = args.top && `$top=${args.top}`;
     const skip = args.skip && `$skip=${args.skip}`;
     const query = [iTwinId, iModelId, groupId, top, skip].filter((param) => param).join("&");
-    return this.queryITwinApi({
-      url: `${this.baseUrl}/?${query}`,
-      method: "GET",
-      headers: {
-        Prefer: PreferOptions.Minimal,
-      },
-      signal: args.signal,
-    });
+    return iteratePagedEndpoint(
+      `${this.baseUrl}/?${query}`,
+      (url) => this.queryITwinApi({
+        url,
+        method: "GET",
+        headers: {
+          Prefer: PreferOptions.Minimal,
+        },
+        signal: args.signal,
+      }),
+    );
   }
 
-  async getAllSavedViewsRepresentation(args: GetSavedViewsParams): Promise<SavedViewListRepresentationResponse> {
+  getAllSavedViewsRepresentation(args: GetSavedViewsParams): AsyncIterableIterator<SavedViewListRepresentationResponse> {
     const iTwinId = args.iTwinId && `iTwinId=${args.iTwinId}`;
     const iModelId = args.iModelId && `iModelId=${args.iModelId}`;
     const groupId = args.groupId && `groupId=${args.groupId}`;
     const top = args.top && `$top=${args.top}`;
     const skip = args.skip && `$skip=${args.skip}`;
     const query = [iTwinId, iModelId, groupId, top, skip].filter((param) => param).join("&");
-    const response = await this.queryITwinApi({
-      url: `${this.baseUrl}/?${query}`,
-      method: "GET",
-      headers: {
-        Prefer: PreferOptions.Representation,
+    return iteratePagedEndpoint(
+      `${this.baseUrl}/?${query}`,
+      async (url) => {
+        const response: SavedViewListRepresentationResponse = await this.queryITwinApi({
+          url,
+          method: "GET",
+          headers: {
+            Prefer: PreferOptions.Representation,
+          },
+          signal: args.signal,
+        });
+        for (const savedView of response.savedViews) {
+          replaceAllUrlFields(savedView.savedViewData, fromITwinApi);
+        }
+
+        return response;
       },
-      signal: args.signal,
-    }) as SavedViewListRepresentationResponse;
-
-    for (const savedView of response.savedViews) {
-      replaceAllUrlFields(savedView.savedViewData, fromITwinApi);
-    }
-
-    return response;
+    );
   }
 
-  async createSavedView(args: CreateSavedViewParams): Promise<SavedViewMinimalResponse> {
+  async createSavedView(args: CreateSavedViewParams): Promise<SavedViewRepresentationResponse> {
     const { signal, ...body } = args;
     const savedViewData = structuredClone(body.savedViewData);
     replaceAllUrlFields(savedViewData, toITwinApi);
@@ -135,7 +139,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     });
   }
 
-  async updateSavedView(args: UpdateSavedViewParams): Promise<SavedViewMinimalResponse> {
+  async updateSavedView(args: UpdateSavedViewParams): Promise<SavedViewRepresentationResponse> {
     const { savedViewId, signal, ...body } = args;
     const savedViewData = structuredClone(body.savedViewData);
     if (savedViewData !== undefined) {
@@ -319,55 +323,31 @@ interface QueryParams {
   signal?: AbortSignal | undefined;
 }
 
-function replaceAllUrlFields(savedViewData: ViewData, replace: (url: string) => string): void {
-  const displayStyle = getDisplayStyle(savedViewData);
-  const mapImagery = displayStyle?.mapImagery;
-  if (mapImagery) {
-    if (mapImagery.backgroundBase && "url" in mapImagery.backgroundBase) {
-      const baseUrl = mapImagery.backgroundBase.url;
-      if (baseUrl) {
-        mapImagery.backgroundBase.url = replace(baseUrl);
+function replaceAllUrlFields(input: unknown, callback: (value: string) => string): void {
+  if (!input || typeof input !== "object") {
+    return;
+  }
+
+  if (Array.isArray(input)) {
+    for (let i = 0; i < input.length; ++i) {
+      if (typeof input[i] === "string") {
+        input[i] = callback(input[i]);
+      } else {
+        replaceAllUrlFields(input[i], callback);
       }
     }
 
-    for (const layer of mapImagery.overlayLayers ?? []) {
-      if ("url" in layer && layer.url) {
-        layer.url = replace(layer.url);
-      }
-    }
-
-    for (const layer of mapImagery.backgroundLayers ?? []) {
-      if ("url" in layer && layer.url) {
-        layer.url = replace(layer.url);
-      }
-    }
+    return;
   }
 
-  for (const model of displayStyle?.contextRealityModels ?? []) {
-    if (model.tilesetUrl) {
-      model.tilesetUrl = replace(model.tilesetUrl);
-    }
-
-    if (model.description) {
-      model.description = replace(model.description);
+  const object = input as Record<string, unknown>;
+  for (const key of Object.getOwnPropertyNames(object)) {
+    if (typeof object[key] === "string") {
+      object[key] = callback(object[key] as string);
+    } else {
+      replaceAllUrlFields(object[key], callback);
     }
   }
-}
-
-function getDisplayStyle(savedViewData: ViewData): DisplayStyleSettingsProps | undefined {
-  if (isViewDataITwin3d(savedViewData)) {
-    return savedViewData.itwin3dView.displayStyle;
-  }
-
-  if (isViewDataITwinDrawing(savedViewData)) {
-    return savedViewData.itwinDrawingView.displayStyle;
-  }
-
-  if (isViewDataITwinSheet(savedViewData)) {
-    return savedViewData.itwinSheetView.displayStyle;
-  }
-
-  return undefined;
 }
 
 function toITwinApi(url: string): string {
@@ -380,4 +360,16 @@ function fromITwinApi(url: string): string {
   return url
     .replaceAll("++and++", "&")
     .replaceAll("++dot++", ".");
+}
+
+async function* iteratePagedEndpoint<T extends { _links: HalLinks<["next"?]>; }>(
+  initialUrl: string,
+  fetch: (url: string) => Promise<T>,
+): AsyncIterableIterator<T> {
+  let url: string | undefined = initialUrl;
+  while (url) {
+    const response = await fetch(url);
+    yield response;
+    url = response._links.next?.href;
+  }
 }

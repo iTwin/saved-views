@@ -58,7 +58,7 @@ describe("ITwinSavedViewsClient", () => {
       groupId: "test_groupid",
       top: "test_top",
       skip: "test_skip",
-    });
+    }).next();
 
     verifyFetch({
       url: "https://api.bentley.com/savedviews/?iTwinId=test_itwinid&iModelId=test_imodelid&groupId=test_groupid&$top=test_top&$skip=test_skip",
@@ -73,7 +73,7 @@ describe("ITwinSavedViewsClient", () => {
     const client = new ITwinSavedViewsClient({ getAccessToken });
     await client.getAllSavedViewsMinimal({
       groupId: "test_groupid",
-    });
+    }).next();
 
     verifyFetch({
       url: "https://api.bentley.com/savedviews/?groupId=test_groupid",
@@ -92,7 +92,7 @@ describe("ITwinSavedViewsClient", () => {
       groupId: "test_groupid",
       top: "test_top",
       skip: "test_skip",
-    });
+    }).next();
 
     verifyFetch({
       url: "https://api.bentley.com/savedviews/?iTwinId=test_itwinid&iModelId=test_imodelid&groupId=test_groupid&$top=test_top&$skip=test_skip",
