@@ -488,7 +488,7 @@ const displayStylesMapping: ExtractionFunc<void, void>[] = [
   extractArray(
     displayStyleSubCategoryMappings,
     "subCategoryOverrides",
-    "subCategoryOvr"
+    "subCategoryOvr",
   ),
   extractObject(backgroundMapMappings, "backgroundMap"),
   extractArray(contextRealityModelsMappings, "contextRealityModels"),
@@ -766,7 +766,7 @@ export const extractDisplayStyle = (data: object, viewState?: ViewState) => {
 };
 
 export function extractDisplayStyle2dFromLegacy(
-  data: DisplayStyleProps
+  data: DisplayStyleProps,
 ): DisplayStyleSettingsProps {
   const styles = data.jsonProperties?.styles;
   const output = {};
@@ -795,7 +795,7 @@ export const extractDisplayStyle3d = (data: object) => {
 };
 
 export function extractDisplayStyle3dFromLegacy(
-  data: DisplayStyle3dProps
+  data: DisplayStyle3dProps,
 ): DisplayStyle3dSettingsProps {
   const output = {} as DisplayStyle3dSettingsProps;
   const styles = data.jsonProperties?.styles;
