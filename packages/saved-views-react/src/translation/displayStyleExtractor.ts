@@ -121,7 +121,7 @@ const backgroundMapMappings: ExtractionFunc<void, void>[] = [
       extractNumber("heightOrigin"),
       extractNumber("heightOriginMode"),
     ],
-    "terrainSettings"
+    "terrainSettings",
   ),
   extractNumber("globeMode"),
   extractBoolean("nonLocatable"),
@@ -191,7 +191,7 @@ const contextRealityModelsMappings: ExtractionFunc<void, void>[] = [
       extractString("iTwinId"),
     ],
     "rdSourceKey",
-    "realityDataSourceKey"
+    "realityDataSourceKey",
   ),
   extractString("tilesetUrl"),
   extractString("realityDataId"),
@@ -207,12 +207,12 @@ const contextRealityModelsMappings: ExtractionFunc<void, void>[] = [
           extractNumber("outside"),
           extractBoolean("isVolumeClassifier"),
         ],
-        "flags"
+        "flags",
       ),
       extractString("name"),
       extractBoolean("isActive"),
     ],
-    "classifiers"
+    "classifiers",
   ),
   extractObject(planarClipMaskMappings, "planarClipMask"),
   extractObject(featureAppearanceMappings, "appearanceOverrides"),
@@ -227,7 +227,7 @@ const contextRealityModelsLegacyMappings: ExtractionFunc<void, void>[] = [
       extractString("iTwinId"),
     ],
     "rdSourceKey",
-    "realityDataSourceKey"
+    "realityDataSourceKey",
   ),
   extractString("tilesetUrl"),
   extractString("realityDataId"),
@@ -243,12 +243,12 @@ const contextRealityModelsLegacyMappings: ExtractionFunc<void, void>[] = [
           extractNumber("outside"),
           extractBoolean("isVolumeClassifier"),
         ],
-        "flags"
+        "flags",
       ),
       extractString("name"),
       extractBoolean("isActive"),
     ],
-    "classifiers"
+    "classifiers",
   ),
   extractObject(planarClipMaskMappings, "planarClipMask"),
   extractObject(featureAppearanceLegacyMappings, "appearanceOverrides"),
@@ -299,7 +299,7 @@ const mapImageryMapping: ExtractionFunc<void, void>[] = [
         mappings: baseMapLayerPropsMapping,
       },
     ],
-    "backgroundBase"
+    "backgroundBase",
   ),
   extractArrayConditionally(
     [
@@ -312,7 +312,7 @@ const mapImageryMapping: ExtractionFunc<void, void>[] = [
         mappings: imageMapLayerPropsMapping,
       },
     ],
-    "backgroundLayers"
+    "backgroundLayers",
   ),
   extractArrayConditionally(
     [
@@ -325,7 +325,7 @@ const mapImageryMapping: ExtractionFunc<void, void>[] = [
         mappings: imageMapLayerPropsMapping,
       },
     ],
-    "overlayLayers"
+    "overlayLayers",
   ),
 ];
 
@@ -335,21 +335,21 @@ const mapImageryLegacyMapping: ExtractionFunc<void, void>[] = [
       { discriminator: isAnyColorFormat, mappings: extractColorLegacy },
       { discriminator: "url", mappings: baseMapLayerPropsMapping },
     ],
-    "backgroundBase"
+    "backgroundBase",
   ),
   extractArrayConditionally(
     [
       { discriminator: "modelId", mappings: modelMapLayerPropsMapping },
       { discriminator: "url", mappings: imageMapLayerPropsMapping },
     ],
-    "backgroundLayers"
+    "backgroundLayers",
   ),
   extractArrayConditionally(
     [
       { discriminator: "modelId", mappings: modelMapLayerPropsMapping },
       { discriminator: "url", mappings: imageMapLayerPropsMapping },
     ],
-    "overlayLayers"
+    "overlayLayers",
   ),
 ];
 
@@ -497,13 +497,13 @@ const displayStylesMapping: ExtractionFunc<void, void>[] = [
   extractArray(
     displayStyleModelAppearanceMappings,
     "modelOverrides",
-    "modelOvr"
+    "modelOvr",
   ),
   extractObject(clipStyleMappings, "clipStyle"),
   extractArray(
     displayStylePlanarClipMaskMappings,
     "planarClipOverrides",
-    "planarClipOvr"
+    "planarClipOvr",
   ),
 ];
 
@@ -517,7 +517,7 @@ const displayStylesLegacyMapping: ExtractionFunc<void, void>[] = [
   extractArray(
     displayStyleSubCategoryLegacyMappings,
     "subCategoryOvr",
-    "subCategoryOverrides"
+    "subCategoryOverrides",
   ),
   extractObject(backgroundMapMappings, "backgroundMap"),
   extractArray(contextRealityModelsLegacyMappings, "contextRealityModels"),
@@ -526,13 +526,13 @@ const displayStylesLegacyMapping: ExtractionFunc<void, void>[] = [
   extractArray(
     displayStyleModelAppearanceLegacyMappings,
     "modelOvr",
-    "modelOverrides"
+    "modelOverrides",
   ),
   extractObject(clipStyleLegacyMappings, "clipStyle"),
   extractArray(
     displayStylePlanarClipMaskMappings,
     "planarClipOvr",
-    "planarClipOverrides"
+    "planarClipOverrides",
   ),
 ];
 
@@ -544,7 +544,7 @@ const environmentMappings: ExtractionFunc<void, void>[] = [
       extractColor("aboveColor"),
       extractColor("belowColor"),
     ],
-    "ground"
+    "ground",
   ),
   extractObject(
     [
@@ -569,13 +569,13 @@ const environmentMappings: ExtractionFunc<void, void>[] = [
               extractString("right"),
               extractString("left"),
             ],
-            "textures"
+            "textures",
           ),
         ],
-        "image"
+        "image",
       ),
     ],
-    "sky"
+    "sky",
   ),
 ];
 
@@ -587,7 +587,7 @@ const environmentLegacyMappings: ExtractionFunc<void, void>[] = [
       extractColorLegacy("aboveColor"),
       extractColorLegacy("belowColor"),
     ],
-    "ground"
+    "ground",
   ),
   extractObject(
     [
@@ -612,13 +612,13 @@ const environmentLegacyMappings: ExtractionFunc<void, void>[] = [
               extractString("right"),
               extractString("left"),
             ],
-            "textures"
+            "textures",
           ),
         ],
-        "image"
+        "image",
       ),
     ],
-    "sky"
+    "sky",
   ),
 ];
 
@@ -650,7 +650,7 @@ const lightsMappings: ExtractionFunc<void, void>[] = [
       extractBoolean("alwaysEnabled"),
       extractNumber("timePoint"),
     ],
-    "solar"
+    "solar",
   ),
   extractObject(
     [
@@ -658,14 +658,14 @@ const lightsMappings: ExtractionFunc<void, void>[] = [
       extractColor("lowerColor"),
       extractNumber("intensity"),
     ],
-    "hemisphere"
+    "hemisphere",
   ),
   extractObject([extractColor("color"), extractNumber("intensity")], "ambient"),
   extractNumber("specularIntensity"),
   extractNumber("numCels"),
   extractObject(
     [extractNumber("intensity"), extractBoolean("invert")],
-    "fresnel"
+    "fresnel",
   ),
 ];
 
@@ -678,7 +678,7 @@ const lightsLegacyMappings: ExtractionFunc<void, void>[] = [
       extractBoolean("alwaysEnabled"),
       extractNumber("timePoint"),
     ],
-    "solar"
+    "solar",
   ),
   extractObject(
     [
@@ -686,17 +686,17 @@ const lightsLegacyMappings: ExtractionFunc<void, void>[] = [
       extractColorLegacy("lowerColor"),
       extractNumber("intensity"),
     ],
-    "hemisphere"
+    "hemisphere",
   ),
   extractObject(
     [extractColorLegacy("color"), extractNumber("intensity")],
-    "ambient"
+    "ambient",
   ),
   extractNumber("specularIntensity"),
   extractNumber("numCels"),
   extractObject(
     [extractNumber("intensity"), extractBoolean("invert")],
-    "fresnel"
+    "fresnel",
   ),
 ];
 
@@ -716,7 +716,7 @@ const displayStyle3dMapping: ExtractionFunc<void, void>[] = [
   extractPlainTypedMap(
     planProjectionSettingsMappings,
     simpleTypeOf("string"),
-    "planProjections"
+    "planProjections",
   ),
   extractObject(thematicDisplaySettingsMappings, "thematic"),
   extractObject(hiddenLineSettingsMappings, "hiddenLine", "hline"),
@@ -731,7 +731,7 @@ const displayStyle3dLegacyMapping: ExtractionFunc<void, void>[] = [
   extractPlainTypedMap(
     planProjectionSettingsMappings,
     simpleTypeOf("string"),
-    "planProjections"
+    "planProjections",
   ),
   extractObject(thematicDisplaySettingsMappings, "thematic"),
   extractObject(hiddenLineSettingsLegacyMappings, "hline", "hiddenLine"),
@@ -806,7 +806,7 @@ export function extractDisplayStyle3dFromLegacy(
 function appendAcsAndGridViewFlagsToOutput(
   drawingViewState: ViewState,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  output: any
+  output: any,
 ) {
   output.viewflags.acs = false;
   output.viewflags.grid = true;
