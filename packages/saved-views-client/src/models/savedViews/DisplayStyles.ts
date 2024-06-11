@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 
 /** JSON representation of settings associated with a DisplayStyle3dProps. */
 export interface DisplayStyle3dSettingsProps extends DisplayStyleSettingsProps {
@@ -10,7 +10,9 @@ export interface DisplayStyle3dSettingsProps extends DisplayStyleSettingsProps {
   ambientOcclusion?: AmbientOcclusionProps;
   solarShadows?: SolarShadowSettingsProps;
   lights?: LightSettingsProps;
-  planProjections?: { [modelId: string]: PlanProjectionSettingsProps; };
+  planProjections?: { [modelId: string]: PlanProjectionSettingsProps };
+  thematic?: ThematicDisplaySettingsProps;
+  hiddenLine?: HiddenLineSettingsProps;
 }
 
 export interface AmbientOcclusionProps {
@@ -150,7 +152,6 @@ export interface HemisphereLightsProps {
   intensity?: number;
 }
 
-
 /**
  * Wire format for the solar directional light associated with a {@linkcode LightSettingsProps}. The light is colored
  * white and oriented in any direction in world coordinates. It will cast shadows if it is above the world XY plane and
@@ -230,6 +231,15 @@ export interface ViewFlagProps {
   renderMode?: RenderMode;
   backgroundMap?: boolean;
   ambientOcclusion?: boolean;
+  acs?: boolean;
+  noSolarLight?: boolean;
+  noSourceLights?: boolean;
+  noCameraLights?: boolean;
+  grid?: boolean;
+  thematicDisplay?: boolean;
+  wiremesh?: boolean;
+  forceSurfaceDiscard?: boolean;
+  noWhiteOnWhiteReversal?: boolean;
 }
 
 /**
@@ -361,7 +371,6 @@ export interface SpatialClassifierProps {
   name: string;
   isActive?: boolean;
 }
-
 
 /** JSON representation of SpatialClassifierFlags. */
 export interface SpatialClassifierFlagsProps {
@@ -550,6 +559,77 @@ export interface FeatureAppearanceProps {
   ignoresMaterial?: true | undefined;
   nonLocatable?: true | undefined;
   emphasized?: true | undefined;
+}
+
+/** The thematic display mode. This determines how to apply the thematic color gradient to the geometry. */
+export enum ThematicDisplayMode {
+  Height = 0,
+  InverseDistanceWeightedSensors = 1,
+  Slope = 2,
+  HillShade = 3,
+}
+
+/** A thematic gradient mode used to generate and apply a thematic effect to a scene. */
+export enum ThematicGradientMode {
+  Smooth = 0,
+  Stepped = 1,
+  SteppedWithDelimiter = 2,
+  IsoLines = 3,
+}
+
+/** A color scheme used to generate the colors of a thematic gradient within an applied range.*/
+export enum ThematicGradientColorScheme {
+  BlueRed = 0,
+  RedBlue = 1,
+  Monochrome = 2,
+  Topographic = 3,
+  SeaMountain = 4,
+  Custom = 5,
+}
+
+/** The margin color used at the extremes of the gradient, when outside the applied range. Defaults to a black color with no arguments. */
+export interface KeyColorProps {
+  value: number;
+  color: RgbColorProps;
+}
+
+/** Describes how transparency is computed when applying a thematic gradient to a surface. */
+export enum ThematicGradientTransparencyMode {
+  SurfaceOnly = 0,
+  MultiplySurfaceAndGradient = 1,
+}
+
+/** The settings used to create a color gradient applied to the geometry. */
+export interface ThematicGradientSettingsProps {
+  mode?: ThematicGradientMode;
+  stepCount?: number;
+  marginColor?: RgbColorProps;
+  colorScheme?: ThematicGradientColorScheme;
+  customKeys?: KeyColorProps[];
+  colorMix?: number;
+  transparencyMode?: ThematicGradientTransparencyMode;
+}
+
+/** JSON representation of a ThematicDisplaySensor. */
+export interface ThematicDisplaySensorProps {
+  position?: [x: number, y: number, z: number]; // XYZProps
+  value?: number;
+}
+
+/** JSON representation of a ThematicDisplaySensorSettings for InverseDistanceWeightedSensors. */
+export interface ThematicDisplaySensorSettingsProps {
+  sensors?: ThematicDisplaySensorProps[];
+  distanceCutoff?: number;
+}
+
+/** Settings controlling thematic display. */
+export interface ThematicDisplaySettingsProps {
+  displayMode?: ThematicDisplayMode;
+  gradientSettings?: ThematicGradientSettingsProps;
+  range?: [low: number, high: number]; // Range1dProps
+  axis?: [x: number, y: number, z: number]; // XYZProps
+  sunDirection?: [x: number, y: number, z: number]; // XYZProps
+  sensorSettings?: ThematicDisplaySensorSettingsProps;
 }
 
 /** Describes the settings for hidden lines. */
