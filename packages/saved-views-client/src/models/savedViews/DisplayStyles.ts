@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
- * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
- * See LICENSE.md in the project root for license terms and full copyright notice.
- *--------------------------------------------------------------------------------------------*/
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
 
 /** JSON representation of settings associated with a DisplayStyle3dProps. */
 export interface DisplayStyle3dSettingsProps extends DisplayStyleSettingsProps {
@@ -151,6 +151,7 @@ export interface HemisphereLightsProps {
   lowerColor?: RgbColorProps;
   intensity?: number;
 }
+
 
 /**
  * Wire format for the solar directional light associated with a {@linkcode LightSettingsProps}. The light is colored
@@ -371,6 +372,7 @@ export interface SpatialClassifierProps {
   name: string;
   isActive?: boolean;
 }
+
 
 /** JSON representation of SpatialClassifierFlags. */
 export interface SpatialClassifierFlagsProps {

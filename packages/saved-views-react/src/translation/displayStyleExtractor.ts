@@ -1,41 +1,19 @@
 /*---------------------------------------------------------------------------------------------
- * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
- * See LICENSE.md in the project root for license terms and full copyright notice.
- *--------------------------------------------------------------------------------------------*/
-import type {
-  DisplayStyle3dProps,
-  DisplayStyleProps,
-} from "@itwin/core-common";
+* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+* See LICENSE.md in the project root for license terms and full copyright notice.
+*--------------------------------------------------------------------------------------------*/
+import type { DisplayStyle3dProps, DisplayStyleProps } from "@itwin/core-common";
 import type { ViewState } from "@itwin/core-frontend";
 import type {
-  DisplayStyle3dSettingsProps,
-  DisplayStyleSettingsProps,
-  ViewITwin2d,
-  ViewITwin3d,
+  DisplayStyle3dSettingsProps, DisplayStyleSettingsProps, ViewITwin2d, ViewITwin3d,
 } from "@itwin/saved-views-client";
 
 import type { LegacySavedView3d, LegacySavedView2d } from "./SavedViewTypes.js";
 import {
-  applyExtraction,
-  extractArray,
-  extractArrayConditionally,
-  extractBoolean,
-  extractColor,
-  extractColorLegacy,
-  extractConditionally,
-  extractNumber,
-  extractNumberOrBool,
-  extractObject,
-  extractPlainTypedMap,
-  extractRGB,
-  extractSimpleArray,
-  extractString,
-  extractStringOrArray,
-  extractStringOrNumber,
-  extractStringOrNumberArray,
-  isAnyColorFormat,
-  simpleTypeOf,
-  type ExtractionFunc,
+  applyExtraction, extractArray, extractArrayConditionally, extractBoolean, extractColor, extractColorLegacy,
+  extractConditionally, extractNumber, extractNumberOrBool, extractObject, extractPlainTypedMap, extractRGB,
+  extractSimpleArray, extractString, extractStringOrArray, extractStringOrNumber, extractStringOrNumberArray,
+  isAnyColorFormat, simpleTypeOf, type ExtractionFunc,
 } from "./extractionUtilities.js";
 
 const viewFlagMappings: ExtractionFunc<void, void>[] = [
@@ -179,8 +157,10 @@ const displayStyleModelAppearanceMappings: ExtractionFunc<void, void>[] = [
   extractString("modelId"),
 ];
 
-const displayStyleModelAppearanceLegacyMappings: ExtractionFunc<void, void>[] =
-  [...featureAppearanceLegacyMappings, extractString("modelId")];
+const displayStyleModelAppearanceLegacyMappings: ExtractionFunc<void, void>[] = [
+  ...featureAppearanceLegacyMappings,
+  extractString("modelId"),
+];
 
 const contextRealityModelsMappings: ExtractionFunc<void, void>[] = [
   extractObject(
@@ -405,15 +385,30 @@ const hiddenLineSettingsLegacyMappings: ExtractionFunc<void, void>[] = [
 
 const keyColorPropsMappings: ExtractionFunc<void, void>[] = [
   extractNumber("value"),
+  extractColor("color"),
+];
+
+const keyColorPropsLegacyMappings: ExtractionFunc<void, void>[] = [
+  extractNumber("value"),
   extractColorLegacy("color"),
 ];
 
 const thematicGradientSettingsPropsMappings: ExtractionFunc<void, void>[] = [
   extractNumber("mode"),
   extractNumber("stepCount"),
-  extractColorLegacy("marginColor"),
+  extractColor("marginColor"),
   extractNumber("colorScheme"),
   extractArray(keyColorPropsMappings, "customKeys"),
+  extractNumber("colorMix"),
+  extractNumber("transparencyMode"),
+];
+
+const thematicGradientSettingsPropsLegacyMappings: ExtractionFunc<void, void>[] = [
+  extractNumber("mode"),
+  extractNumber("stepCount"),
+  extractColorLegacy("marginColor"),
+  extractNumber("colorScheme"),
+  extractArray(keyColorPropsLegacyMappings, "customKeys"),
   extractNumber("colorMix"),
   extractNumber("transparencyMode"),
 ];
@@ -432,6 +427,15 @@ const thematicDisplaySensorSettingsPropsMappings: ExtractionFunc<void, void>[] =
 const thematicDisplaySettingsMappings: ExtractionFunc<void, void>[] = [
   extractNumber("displayMode"),
   extractObject(thematicGradientSettingsPropsMappings, "gradientSettings"),
+  extractSimpleArray(simpleTypeOf("number"), "range"),
+  extractSimpleArray(simpleTypeOf("number"), "axis"),
+  extractSimpleArray(simpleTypeOf("number"), "sunDirection"),
+  extractObject(thematicDisplaySensorSettingsPropsMappings, "gradientSettings"),
+];
+
+const thematicDisplaySettingsLegacyMappings: ExtractionFunc<void, void>[] = [
+  extractNumber("displayMode"),
+  extractObject(thematicGradientSettingsPropsLegacyMappings, "gradientSettings"),
   extractSimpleArray(simpleTypeOf("number"), "range"),
   extractSimpleArray(simpleTypeOf("number"), "axis"),
   extractSimpleArray(simpleTypeOf("number"), "sunDirection"),
@@ -514,26 +518,14 @@ const displayStylesLegacyMapping: ExtractionFunc<void, void>[] = [
   extractNumber("monochromeMode"),
   extractString("renderTimeline"),
   extractNumber("timePoint"),
-  extractArray(
-    displayStyleSubCategoryLegacyMappings,
-    "subCategoryOvr",
-    "subCategoryOverrides",
-  ),
+  extractArray(displayStyleSubCategoryLegacyMappings, "subCategoryOvr", "subCategoryOverrides"),
   extractObject(backgroundMapMappings, "backgroundMap"),
   extractArray(contextRealityModelsLegacyMappings, "contextRealityModels"),
   extractStringOrArray("excludedElements"),
   extractObject(mapImageryLegacyMapping, "mapImagery"),
-  extractArray(
-    displayStyleModelAppearanceLegacyMappings,
-    "modelOvr",
-    "modelOverrides",
-  ),
+  extractArray(displayStyleModelAppearanceLegacyMappings, "modelOvr", "modelOverrides"),
   extractObject(clipStyleLegacyMappings, "clipStyle"),
-  extractArray(
-    displayStylePlanarClipMaskMappings,
-    "planarClipOvr",
-    "planarClipOverrides",
-  ),
+  extractArray(displayStylePlanarClipMaskMappings, "planarClipOvr", "planarClipOverrides"),
 ];
 
 const environmentMappings: ExtractionFunc<void, void>[] = [
@@ -688,10 +680,7 @@ const lightsLegacyMappings: ExtractionFunc<void, void>[] = [
     ],
     "hemisphere",
   ),
-  extractObject(
-    [extractColorLegacy("color"), extractNumber("intensity")],
-    "ambient",
-  ),
+  extractObject([extractColorLegacy("color"), extractNumber("intensity")], "ambient"),
   extractNumber("specularIntensity"),
   extractNumber("numCels"),
   extractObject(
@@ -728,12 +717,8 @@ const displayStyle3dLegacyMapping: ExtractionFunc<void, void>[] = [
   extractObject(ambientOcclusionMappings, "ao", "ambientOcclusion"),
   extractObject(solarShadowLegacyMappings, "solarShadows"),
   extractObject(lightsLegacyMappings, "lights"),
-  extractPlainTypedMap(
-    planProjectionSettingsMappings,
-    simpleTypeOf("string"),
-    "planProjections",
-  ),
-  extractObject(thematicDisplaySettingsMappings, "thematic"),
+  extractPlainTypedMap(planProjectionSettingsMappings, simpleTypeOf("string"), "planProjections"),
+  extractObject(thematicDisplaySettingsLegacyMappings, "thematic"),
   extractObject(hiddenLineSettingsLegacyMappings, "hline", "hiddenLine"),
 ];
 
@@ -752,8 +737,7 @@ export const extractDisplayStyle = (data: object, viewState?: ViewState) => {
     applyExtraction(styles, output, displayStylesMapping);
   }
   if ("displayStyleProps" in data) {
-    styles = (data as LegacySavedView2d).displayStyleProps.jsonProperties
-      ?.styles;
+    styles = (data as LegacySavedView2d).displayStyleProps.jsonProperties?.styles;
     applyExtraction(styles, output, displayStylesLegacyMapping);
   }
   if (styles === undefined) {
@@ -765,9 +749,7 @@ export const extractDisplayStyle = (data: object, viewState?: ViewState) => {
   return output;
 };
 
-export function extractDisplayStyle2dFromLegacy(
-  data: DisplayStyleProps,
-): DisplayStyleSettingsProps {
+export function extractDisplayStyle2dFromLegacy(data: DisplayStyleProps): DisplayStyleSettingsProps {
   const styles = data.jsonProperties?.styles;
   const output = {};
   applyExtraction(styles, output, displayStyle3dLegacyMapping);
@@ -783,8 +765,7 @@ export const extractDisplayStyle3d = (data: object) => {
     applyExtraction(styles, output, displayStyle3dMapping);
   }
   if ("displayStyleProps" in data) {
-    styles = (data as LegacySavedView3d).displayStyleProps.jsonProperties
-      ?.styles;
+    styles = (data as LegacySavedView3d).displayStyleProps.jsonProperties?.styles;
     applyExtraction(styles, output, displayStyle3dLegacyMapping);
   }
   if (styles === undefined) {
@@ -794,9 +775,7 @@ export const extractDisplayStyle3d = (data: object) => {
   return output;
 };
 
-export function extractDisplayStyle3dFromLegacy(
-  data: DisplayStyle3dProps,
-): DisplayStyle3dSettingsProps {
+export function extractDisplayStyle3dFromLegacy(data: DisplayStyle3dProps): DisplayStyle3dSettingsProps {
   const output = {} as DisplayStyle3dSettingsProps;
   const styles = data.jsonProperties?.styles;
   applyExtraction(styles, output, displayStyle3dLegacyMapping);
