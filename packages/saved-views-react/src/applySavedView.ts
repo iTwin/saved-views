@@ -3,8 +3,8 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import { ViewState, type IModelConnection, type Viewport } from "@itwin/core-frontend";
-import { type SavedViewRepresentation } from "@itwin/saved-views-client";
 
+import type { SavedView } from "./SavedView.js";
 import { createViewState } from "./createViewState.js";
 import { extensionHandlers, type ExtensionHandler } from "./translation/SavedViewsExtensionHandlers.js";
 
