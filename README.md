@@ -4,9 +4,11 @@
 
 ## Packages
 
-[@itwin/saved-views-client](./packages/saved-views-client/)
+| Repository                                                  | npmjs                                                           |
+| ----------------------------------------------------------- | --------------------------------------------------------------- |
+| [@itwin/saved-views-client](./packages/saved-views-client/) | [link](https://www.npmjs.com/package/@itwin/saved-views-client) |
+| [@itwin/saved-views-react](./packages/saved-views-react/)   | [link](https://www.npmjs.com/package/@itwin/saved-views-react)  |
 
-[@itwin/saved-views-react](./packages/saved-views-react/)
 
 ## Development setup
 
@@ -22,7 +24,7 @@
   npm start
   ```
 
-* You can now edit TypeScript and CSS source files and the changes will automatically be reflected in the test app.
+* You can now edit TypeScript and CSS source files and changes will automatically be reflected in the test app.
 
 ## Top-level commands
 

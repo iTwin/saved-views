@@ -44,7 +44,20 @@ interface CaptureSavedViewDataResult {
   extensions: SavedViewExtension[] | undefined;
 }
 
-/** Captures current viewport state into serializable format. */
+/**
+ * Captures current {@link Viewport} state into serializable format. The returned data can later be used to restore
+ * viewport's view.
+ *
+ * @example
+ * import { captureSavedViewData, captureSavedViewThumbnail } from "@itwin/saved-views-react";
+ *
+ * async function saveViewport(viewport) {
+ *   const { viewData, extensions = [] } = await captureSavedViewData({ viewport });
+ *   const myExtensions = captureMyCustomState(viewport);
+ *   const thumbnail = captureSavedViewThumbnail(viewport);
+ *   return { thumbnail, viewData, extensions: extensions.concat(myExtensions) };
+ * }
+ */
 export async function captureSavedViewData(args: CaptureSavedViewDataArgs): Promise<CaptureSavedViewDataResult> {
   return {
     viewData: await createSavedViewVariant(args.viewport),

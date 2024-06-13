@@ -11,10 +11,23 @@ import { ITwinSavedViewsClient } from "@itwin/saved-views-client";
 
 const client = new ITwinSavedViewsClient({
   // auth_token should have access to savedviews:read and savedviews:modify OIDC scopes
-  getAccessToken: async () => "auth_token",
+  getAccessToken: async () => "<auth_token>",
 });
 
-const response = await client.getSavedViewMinimal({ savedViewId: "id" });
+const { savedView } = await client.getSavedViewMinimal({ savedViewId: "<saved_view_id>" });
+console.log(savedView); /*
+{
+  id: "<saved_view_id>",
+  displayName: "Saved View",
+  creationTime: "2024-01-01T10:00:00.000Z",
+  lastModified: "2024-01-01T10:01:00.000Z",
+  groupId: undefined,
+  shared: false,
+  tags: [...],
+  savedViewData: { itwin3dView: {...} },
+  extensions: [...],
+  _links: {...}
+} */
 ```
 
 ## Contributing

@@ -22,7 +22,24 @@ export interface SavedView {
 }
 
 export interface SavedViewExtension {
+  /** Extension identifier. Saved View cannot contain multiple extensions that share the same `extensionName`. */
   extensionName: string;
+
+  /**
+   * Serialized extension data.
+   *
+   * @example
+   * const extension = {
+   *   // Unique identifier makes extension data format portable between applications because it avoids collision
+   *   // with different implementations
+   *   extensionName: "CustomHighlight_$5be36494-ae03-4400-bb80-24ffd9db2a87",
+   *   data: JSON.stringify({
+   *     description: "For illustrative purposes only. We do not provide implementation for this extensionName."
+   *     highlightColor: "#f05599",
+   *     models: ["0x20000000006"],
+   *   }),
+   * };
+   */
   data: string;
 }
 

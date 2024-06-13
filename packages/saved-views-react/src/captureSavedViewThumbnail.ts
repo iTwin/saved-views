@@ -6,7 +6,14 @@ import type { ImageBuffer } from "@itwin/core-common";
 import { getCenteredViewRect, imageBufferToCanvas, type Viewport } from "@itwin/core-frontend";
 import { Point2d } from "@itwin/core-geometry";
 
-/** Generates Saved View thumbnail based on what is currently visible in the {@linkcode viewport}. */
+/**
+ * Generates Saved View thumbnail based on what is currently displayed on the {@linkcode viewport}.
+ * @returns base64-encoded URL string
+ * 
+ * @example
+ * const thumbnail = captureSavedViewThumbnail(viewport);
+ * console.log(thumbnail); // "data:image/png;base64,iVBORw0KGoAAAANSUhEUg..."
+ */
 export function captureSavedViewThumbnail(viewport: Viewport, width = 280, height = 200): string | undefined {
   const thumbnail = getThumbnail(viewport, width, height);
   if (!thumbnail) {

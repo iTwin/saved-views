@@ -20,8 +20,8 @@ export interface ApplySavedViewSettings {
   all?: ApplyStrategy | undefined;
 
   /**
-   * How to handle captured {@link ViewState} data. The default behavior is to generate a new `ViewState` object and
-   * apply it to viewport.
+   * How to handle captured {@link ViewState} data. The default behavior is to generate a new `ViewState` object out of
+   * {@linkcode SavedView.viewData} and apply it to viewport.
    *
    * You can optionally provide a pre-made `ViewState` instance to conserve resources. It is usually obtained from
    * {@link createViewState} result.
@@ -34,6 +34,9 @@ export interface ApplySavedViewSettings {
    *   applySavedView(iModel, viewport1, savedView, { viewState }),
    *   applySavedView(iModel, viewport2, savedView, { viewState }),
    * ]);
+   *
+   * @remarks
+   * When neither `SavedView.viewData` nor `ViewState` is provided, current {@linkcode Viewport.view} is preserved.
    */
   viewState?: ApplyStrategy | ViewState | undefined;
 
@@ -70,8 +73,8 @@ type ApplyStrategy = "apply" | "reset" | "keep";
  * // e.g. when applying the same Saved View to multiple viewports
  * const viewState = await createViewState(iModel, savedView);
  * await Promise.all([
- *   applySavedView(iModel, firstViewport, savedView, { viewState }),
- *   applySavedView(iModel, secondViewport, savedView, { viewState }),
+ *   applySavedView(iModel, viewport1, savedView, { viewState }),
+ *   applySavedView(iModel, viewport2, savedView, { viewState }),
  * ]);
  */
 export async function applySavedView(

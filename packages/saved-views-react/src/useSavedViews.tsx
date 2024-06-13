@@ -66,6 +66,7 @@ type SavedViewUpdateProps = WriteableSavedViewProperties & { id: string; };
  * the store is performed via {@linkcode SavedViewsClient} interface which could communicate, for instance, with
  * [iTwin Saved Views API](https://developer.bentley.com/apis/savedviews/overview/) using `ITwinSavedViewsClient`.
  *
+ * @remarks
  * Note on the current implementation limitations. While the result of the first update action is reflected immediately,
  * subsequent actions are put in a queue and executed serially. This may cause the UI to feel sluggish when user makes
  * changes to Saved Views faster than the Saved Views store can be updated.

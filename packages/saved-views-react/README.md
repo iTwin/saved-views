@@ -2,9 +2,58 @@
 
 ## About
 
-A collection of React components for building applications that deal with [Saved Views](https://developer.bentley.com/apis/savedviews/overview/).
+A collection of utilities and React components for building iTwin applications that deal with [Saved Views](https://developer.bentley.com/apis/savedviews/overview/).
 
 ## Documentation
+
+### [captureSavedViewData](./src/captureSavedViewData.ts)
+
+Captures current viewport state into serializable format. The returned data can later be used to restore viewport's view.
+
+```ts
+const { viewData, extensions = [] } = await captureSavedViewData({ viewport });
+extensions.push(myCustomExtension(viewport));
+console.log({ viewData, extensions }); /*
+{
+  viewData: { itwin3dView: {...} },
+  extensions: {
+    { extensionName: "EmphasizeElements", data: "{...}" },
+    { extensionName: "MyCustomExtension", data: "my_custom_extension_data" },
+  }
+} */
+```
+
+### [captureSavedViewThumbnail](./src/captureSavedViewThumbnail.ts)
+
+Generates Saved View thumbnail based on what is currently displayed on the viewport.
+
+```ts
+const thumbnail = captureSavedViewThumbnail(viewport);
+console.log(thumbnail); // "data:image/png;base64,iVBORw0KGoAAAANSUhEUg..."
+```
+
+### [applySavedView](./src/applySavedView.ts)
+
+Updates viewport state to match captured Saved View.
+
+```ts
+// Capture viewport state
+const savedViewData = await captureSavedViewData({ viewport });
+// Restore viewport state
+await applySavedView(iModel, viewport, savedViewData);
+```
+
+### [createViewState](./src/createViewState.ts)
+
+Creates ViewState object out of Saved View data. It provides a lower-level access to view data for advanced use.
+
+```ts
+const viewState = await createViewState(iModel, savedViewData.viewData);
+await applySavedView(iModel, viewport, savedViewData, { viewState });
+
+// The two lines above are equivalent to
+await applySavedView(iModel, viewport, savedViewData);
+```
 
 ### React components
 
@@ -42,7 +91,7 @@ export function SavedViewsWidget(props) {
 }
 ```
 
-### useSavedViews
+### [useSavedViews](./src/useSavedViews.tsx)
 
 [useSavedViews](./src/useSavedViews.tsx) React hook provides basic functionality to jump-start your Saved Views widget. It accepts [`ITwinSavedViewsClient`](./src/SavedViewsClient/ITwinSavedViewsClient.ts) which is used to pull Saved View data and synchronize it back to the [Saved Views service](https://developer.bentley.com/apis/savedviews/overview/).
 

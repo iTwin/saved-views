@@ -20,9 +20,14 @@ import { extractDisplayStyle, extractDisplayStyle3d } from "./translation/displa
 
 export interface ViewStateCreateSettings {
   /**
-   * Normally before {@link createViewState} function returns a {@link ViewState}, its {@linkcode ViewState.load} method
-   * is called and awaited. You may skip this step if you intend to perform it later.
+   * Normally {@link createViewState} function invokes and awaits {@linkcode ViewState.load} method before returning.
+   * You may skip this step if you intend to perform it later.
    * @default false
+   *
+   * @example
+   * const viewState = await createViewState(iModel, savedView.viewdata, { skipViewStateLoad: true });
+   * viewState.categorySelector.addCategories("<additional_category_id>");
+   * await viewState.load();
    */
   skipViewStateLoad?: boolean | undefined;
 
@@ -33,14 +38,25 @@ export interface ViewStateCreateSettings {
   modelAndCategoryVisibilityFallback?: "visible" | "hidden" | undefined;
 }
 
+/**
+ * Creates {@link ViewState} object out of Saved View data. It provides a lower-level access to view data for advanced
+ * use.
+ *
+ * @example
+ * const viewState = await createViewState(iModel, savedViewData.viewData);
+ * await applySavedView(iModel, viewport, savedViewData, { viewState });
+ *
+ * // The two lines above are equivalent to
+ * await applySavedView(iModel, viewport, savedViewData);
+ */
 export async function createViewState(
   iModel: IModelConnection,
-  savedViewData: ViewData,
+  viewData: ViewData,
   settings: ViewStateCreateSettings = {},
 ): Promise<ViewState> {
-  const viewState = await createViewStateVariant(iModel, savedViewData);
+  const viewState = await createViewStateVariant(iModel, viewData);
   if (settings.modelAndCategoryVisibilityFallback === "visible") {
-    await unhideNewModelsAndCategories(iModel, viewState, savedViewData);
+    await unhideNewModelsAndCategories(iModel, viewState, viewData);
   }
 
   if (!settings.skipViewStateLoad) {
