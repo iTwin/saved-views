@@ -3,8 +3,8 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import { ViewState, type IModelConnection, type Viewport } from "@itwin/core-frontend";
-import { type SavedViewRepresentation } from "@itwin/saved-views-client";
 
+import type { SavedView } from "./SavedView.js";
 import { createViewState } from "./createViewState.js";
 import { extensionHandlers, type ExtensionHandler } from "./translation/SavedViewsExtensionHandlers.js";
 
@@ -35,7 +35,7 @@ export interface ApplySavedViewSettings {
    *   applySavedView(iModel, viewport2, savedView, { viewState }),
    * ]);
    */
-  viewState?: Exclude<ApplyStrategy, "reset"> | ViewState | undefined;
+  viewState?: ApplyStrategy | ViewState | undefined;
 
   /**
    * How to handle visibility of models and categories that exist in iModel but are not captured in Saved View data. Has
@@ -77,7 +77,7 @@ type ApplyStrategy = "apply" | "reset" | "keep";
 export async function applySavedView(
   iModel: IModelConnection,
   viewport: Viewport,
-  savedView: Pick<SavedViewRepresentation, "savedViewData" | "extensions">,
+  savedViewData: Pick<SavedView, "viewData" | "extensions">,
   settings: ApplySavedViewSettings | undefined = {},
 ): Promise<void> {
   const defaultStrategy = settings.all ?? "apply";
@@ -85,14 +85,14 @@ export async function applySavedView(
   if ((settings.viewState ?? defaultStrategy) !== "keep") {
     if (settings.viewState instanceof ViewState) {
       viewport.changeView(settings.viewState);
-    } else {
+    } else if (savedViewData.viewData) {
       const { modelAndCategoryVisibilityFallback } = settings;
-      const viewState = await createViewState(iModel, savedView.savedViewData, { modelAndCategoryVisibilityFallback });
+      const viewState = await createViewState(iModel, savedViewData.viewData, { modelAndCategoryVisibilityFallback });
       viewport.changeView(viewState);
     }
   }
 
-  const extensions = new Map(savedView.extensions?.map(({ extensionName, data }) => [extensionName, data]));
+  const extensions = new Map(savedViewData.extensions?.map(({ extensionName, data }) => [extensionName, data]));
   const processExtension = (extensionHandler: ExtensionHandler, strategy: ApplyStrategy = defaultStrategy) => {
     if (strategy === "keep") {
       return;

@@ -55,8 +55,7 @@ export function SavedViewsWidget(props: SavedViewsWidgetProps): ReactElement {
         return;
       }
 
-      const savedViewResponse = await client.getSingularSavedView({ savedViewId });
-      await applySavedView(props.iModel, props.viewport, savedViewResponse);
+      await applySavedView(props.iModel, props.viewport, savedView);
     } finally {
       close();
     }

@@ -8,19 +8,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Breaking changes
 
+* `SavedViewsClient` interface changes
+  * Remove `getSavedViewInfo` method
+  * Add `getAllSavedViews`, `getAllGroups`, and `getAllTags` methods as replacement for `getSavedViewInfo`
+  * Rename `getSingularSavedView` method to `getSavedView`
 * `captureSavedViewData` now also captures extension data thus return type has now changed to `{ viewData: ViewData; extensions: SavedViewExtension[] | undefined }`
 * `SavedViewsClient.createSavedView`: Update parameter bag to reflect `SavedView` change (see minor changes)
 * `SavedViewsClient.updateSavedView`: Update parameter bag to reflect `SavedView` change (see minor changes)
 * `useSavedViews`: Update `submitSavedView` action parameters to reflect `SavedView` change (see minor changes)
+* Update `applySavedView` parameter types. `savedViewData` is now a subset of `SavedView` object.
 
 ### Minor changes
 
-* `SavedView` now also contains `viewData` and `extension` properties
+* `SavedView` now also contains optional `viewData` and `extension` properties. Objects returned by `ITwinSavedViewsClient` will have these fields populated.
+* Permit `ApplySavedViewSettings.viewState` value to be `"reset"`. Due to technicalities, it has the same semantics as `"apply"`.
 
 ### Fixes
 
 * `ITwinSavedViewsClient.createSavedView`: Extension data now is no longer ignored
 * `ITwinSavedViewsClient.updateSavedView`: Fix extension data not being updated
+* `ITwinSavedViewsClient.deleteGroup` now correctly attempts to delete multiple pages of Saved Views
 
 ### Dependencies
 

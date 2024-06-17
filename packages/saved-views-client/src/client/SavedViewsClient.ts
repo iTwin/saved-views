@@ -11,10 +11,10 @@ import type { SavedViewMinimal, SavedViewRepresentation, ViewData } from "../mod
 export interface SavedViewsClient {
   getSavedViewMinimal(args: SingleSavedViewParams): Promise<SavedViewMinimalResponse>;
   getSavedViewRepresentation(args: SingleSavedViewParams): Promise<SavedViewRepresentationResponse>;
-  getAllSavedViewsMinimal(args: GetSavedViewsParams): Promise<SavedViewListMinimalResponse>;
-  getAllSavedViewsRepresentation(args: GetSavedViewsParams): Promise<SavedViewListRepresentationResponse>;
-  createSavedView(args: CreateSavedViewParams): Promise<SavedViewMinimalResponse>;
-  updateSavedView(args: UpdateSavedViewParams): Promise<SavedViewMinimalResponse>;
+  getAllSavedViewsMinimal(args: GetSavedViewsParams): AsyncIterableIterator<SavedViewListMinimalResponse>;
+  getAllSavedViewsRepresentation(args: GetSavedViewsParams): AsyncIterableIterator<SavedViewListRepresentationResponse>;
+  createSavedView(args: CreateSavedViewParams): Promise<SavedViewRepresentationResponse>;
+  updateSavedView(args: UpdateSavedViewParams): Promise<SavedViewRepresentationResponse>;
   deleteSavedView(args: SingleSavedViewParams): Promise<void>;
 
   getImage(args: GetImageParams): Promise<ImageResponse>;

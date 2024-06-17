@@ -6,9 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased](https://github.com/iTwin/saved-views/tree/HEAD/packages/saved-views-client)
 
+### Breaking changes
+
+* `SavedViewsClient` interface changes
+  * `getAllSavedViewsMinimal` and `getAllSavedViewsRepresentation` now return `AsyncIterableIterator` to better emphasize that results are delivered in pages
+  * `createSavedView` and `updateSavedView` now return `SavedViewRepresentationResponse` to match the current iTwin API behavior
+
 ### Fixes
 
 * Remove `extensions` property from `UpdateSavedViewParams` because extensions are immutable
+* `ITwinSavedViewsClient`: Fix fetch requests failing when request body contains forbidden characters
 
 ## [0.3.0](https://github.com/iTwin/saved-views/tree/v0.3.0-client/packages/saved-views-client) - 2024-05-16
 
