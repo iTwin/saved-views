@@ -142,7 +142,7 @@ async function selectPackageToPublish(): Promise<PackageInfo> {
         }
 
         return true;
-      }
+      },
     });
     eligiblePrefixes.push(selectedPrefix.slice(0, -1));
   }
@@ -247,7 +247,7 @@ async function selectVersionBump(packageToPublish: PackageInfo): Promise<semver.
 }
 
 function makeVersionBumpDescription(version: semver.SemVer, bumpKind: semver.ReleaseType): string {
-  return `\n${chalk.gray(`${version} -> ${highlightVersionDifference(version, bumpKind)}`)}`;
+  return `\n${chalk.gray(`${version.toString()} -> ${highlightVersionDifference(version, bumpKind)}`)}`;
 }
 
 function highlightVersionDifference(version: semver.SemVer, bumpKind: semver.ReleaseType): string {
@@ -466,7 +466,7 @@ async function bumpPackageVersion(
   const output = await exec(`npm version ${versionBump} --no-git-tag-version`, { cwd: packageToPublish.directory });
   const newVersion = semver.clean(output) ?? "";
   console.log(
-    `Bumped ${highlightPath(path.join(packageToPublish.directory, "package.json"))} to version ${highlight(newVersion)} (up from ${packageToPublish.version})`,
+    `Bumped ${highlightPath(path.join(packageToPublish.directory, "package.json"))} to version ${highlight(newVersion)} (up from ${packageToPublish.version.toString()})`,
   );
   return {
     version: newVersion,
@@ -583,6 +583,7 @@ interface MatchedOccurence<T extends string> {
 }
 
 /** Converts regex capturing group names into object properties. Does not support nested capturing groups. */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type NamedCapturingGroups<T extends string> = T extends `${infer _A}(?<${infer B}>${infer _B})${infer C}`
   ? { [P in B]: string; } & NamedCapturingGroups<C>
   : unknown;
@@ -591,6 +592,7 @@ type NamedCapturingGroups<T extends string> = T extends `${infer _A}(?<${infer B
 function findAllOccurences<T extends string>(pattern: T, input: string): MatchedOccurence<T>[] {
   const result: MatchedOccurence<T>[] = [];
   const regex = new RegExp(pattern, "gm");
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     const match = regex.exec(input);
     if (!match) {
