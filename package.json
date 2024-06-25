@@ -15,7 +15,7 @@
     "typecheck:backend": "npm run typecheck --prefix packages/test-app-backend",
     "typecheck:frontend": "npm run typecheck --prefix packages/test-app-frontend",
     "release": "tsx scripts/release.ts",
-    "post-release": "tsx scripts/post-release.ts"
+    "post-release": "tsx scripts/release.ts -- post-release"
   },
   "engines": {
     "pnpm": ">=8",
@@ -23,12 +23,14 @@
     "node": ">=18"
   },
   "dependencies": {
+    "@commander-js/extra-typings": "^12.1.0",
     "@inquirer/prompts": "^5.0.5",
     "@types/node": "^18.11.9",
     "@types/semver": "^7.5.8",
     "@typescript-eslint/eslint-plugin": "^6.1.0",
     "@typescript-eslint/parser": "^6.1.0",
     "chalk": "^5.3.0",
+    "commander": "^12.1.0",
     "eslint": "^8.45.0",
     "eslint-plugin-react": "^7.33.0",
     "eslint-plugin-react-hooks": "^4.6.0",
