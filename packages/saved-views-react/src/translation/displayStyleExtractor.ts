@@ -34,6 +34,14 @@ const viewFlagMappings: ExtractionFunc<void, void>[] = [
   extractBoolean("monochrome"),
   extractBoolean("backgroundMap"),
   extractBoolean("ambientOcclusion"),
+  extractBoolean("acs"),
+  extractBoolean("thematicDisplay"),
+  extractBoolean("wiremesh"),
+  extractBoolean("forceSurfaceDiscard"),
+  extractBoolean("noWhiteOnWhiteReversal"),
+  extractBoolean("noSolarLight"),
+  extractBoolean("noSourceLights"),
+  extractBoolean("noCameraLights"),
 ];
 
 const viewFlagLegacyMappings: ExtractionFunc<void, void>[] = [
@@ -54,6 +62,14 @@ const viewFlagLegacyMappings: ExtractionFunc<void, void>[] = [
   extractBoolean("monochrome"),
   extractBoolean("backgroundMap"),
   extractBoolean("ambientOcclusion"),
+  extractBoolean("acs"),
+  extractBoolean("thematicDisplay"),
+  extractBoolean("wiremesh"),
+  extractBoolean("forceSurfaceDiscard"),
+  extractBoolean("noWhiteOnWhiteReversal"),
+  extractBoolean("noSolarLight"),
+  extractBoolean("noSourceLights"),
+  extractBoolean("noCameraLights"),
 ];
 
 const planarClipMaskMappings: ExtractionFunc<void, void>[] = [
@@ -367,6 +383,65 @@ const hiddenLineSettingsLegacyMappings: ExtractionFunc<void, void>[] = [
   extractNumber("transThreshold", "transparencyThreshold"),
 ];
 
+const keyColorPropsMappings: ExtractionFunc<void, void>[] = [
+  extractNumber("value"),
+  extractColor("color"),
+];
+
+const keyColorPropsLegacyMappings: ExtractionFunc<void, void>[] = [
+  extractNumber("value"),
+  extractColorLegacy("color"),
+];
+
+const thematicGradientSettingsPropsMappings: ExtractionFunc<void, void>[] = [
+  extractNumber("mode"),
+  extractNumber("stepCount"),
+  extractColor("marginColor"),
+  extractNumber("colorScheme"),
+  extractArray(keyColorPropsMappings, "customKeys"),
+  extractNumber("colorMix"),
+  extractNumber("transparencyMode"),
+];
+
+const thematicGradientSettingsPropsLegacyMappings: ExtractionFunc<void, void>[] = [
+  extractNumber("mode"),
+  extractNumber("stepCount"),
+  extractColorLegacy("marginColor"),
+  extractNumber("colorScheme"),
+  extractArray(keyColorPropsLegacyMappings, "customKeys"),
+  extractNumber("colorMix"),
+  extractNumber("transparencyMode"),
+];
+
+const thematicDisplaySensorPropsMappings: ExtractionFunc<void, void>[] = [
+  extractSimpleArray(simpleTypeOf("number"), "position"),
+  extractNumber("value"),
+];
+
+const thematicDisplaySensorSettingsPropsMappings: ExtractionFunc<void, void>[] =
+  [
+    extractArray(thematicDisplaySensorPropsMappings, "sensors"),
+    extractNumber("distanceCutoff"),
+  ];
+
+const thematicDisplaySettingsMappings: ExtractionFunc<void, void>[] = [
+  extractNumber("displayMode"),
+  extractObject(thematicGradientSettingsPropsMappings, "gradientSettings"),
+  extractSimpleArray(simpleTypeOf("number"), "range"),
+  extractSimpleArray(simpleTypeOf("number"), "axis"),
+  extractSimpleArray(simpleTypeOf("number"), "sunDirection"),
+  extractObject(thematicDisplaySensorSettingsPropsMappings, "gradientSettings"),
+];
+
+const thematicDisplaySettingsLegacyMappings: ExtractionFunc<void, void>[] = [
+  extractNumber("displayMode"),
+  extractObject(thematicGradientSettingsPropsLegacyMappings, "gradientSettings"),
+  extractSimpleArray(simpleTypeOf("number"), "range"),
+  extractSimpleArray(simpleTypeOf("number"), "axis"),
+  extractSimpleArray(simpleTypeOf("number"), "sunDirection"),
+  extractObject(thematicDisplaySensorSettingsPropsMappings, "gradientSettings"),
+];
+
 const cutStyleMappings: ExtractionFunc<void, void>[] = [
   extractObject(viewFlagOverridesMapping, "viewflags"),
   extractObject(hiddenLineSettingsMappings, "hiddenLine"),
@@ -632,6 +707,8 @@ const displayStyle3dMapping: ExtractionFunc<void, void>[] = [
     simpleTypeOf("string"),
     "planProjections",
   ),
+  extractObject(thematicDisplaySettingsMappings, "thematic"),
+  extractObject(hiddenLineSettingsMappings, "hiddenLine", "hline"),
 ];
 
 const displayStyle3dLegacyMapping: ExtractionFunc<void, void>[] = [
@@ -641,6 +718,8 @@ const displayStyle3dLegacyMapping: ExtractionFunc<void, void>[] = [
   extractObject(solarShadowLegacyMappings, "solarShadows"),
   extractObject(lightsLegacyMappings, "lights"),
   extractPlainTypedMap(planProjectionSettingsMappings, simpleTypeOf("string"), "planProjections"),
+  extractObject(thematicDisplaySettingsLegacyMappings, "thematic"),
+  extractObject(hiddenLineSettingsLegacyMappings, "hline", "hiddenLine"),
 ];
 
 /**
