@@ -14,8 +14,8 @@
     "typecheck:client": "npm run typecheck --prefix packages/saved-views-client",
     "typecheck:backend": "npm run typecheck --prefix packages/test-app-backend",
     "typecheck:frontend": "npm run typecheck --prefix packages/test-app-frontend",
-    "release": "ts-node --esm scripts/release.ts",
-    "post-release": "ts-node --esm scripts/post-release.ts"
+    "release": "tsx scripts/release.ts",
+    "post-release": "tsx scripts/release.ts -- post-release"
   },
   "engines": {
     "pnpm": ">=8",
@@ -23,14 +23,21 @@
     "node": ">=18"
   },
   "dependencies": {
+    "@commander-js/extra-typings": "^12.1.0",
+    "@inquirer/prompts": "^5.0.5",
     "@types/node": "^18.11.9",
+    "@types/semver": "^7.5.8",
     "@typescript-eslint/eslint-plugin": "^6.1.0",
     "@typescript-eslint/parser": "^6.1.0",
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
     "eslint": "^8.45.0",
     "eslint-plugin-react": "^7.33.0",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "glob": "^10.4.1",
     "npm-run-all": "^4.1.5",
-    "ts-node": "^10.9.1",
+    "semver": "^7.6.2",
+    "tsx": "^4.15.4",
     "typescript": "^5.3.3"
   }
 }

@@ -8,7 +8,7 @@
     "url": "https://www.bentley.com"
   },
   "scripts": {
-    "start": "ts-node-dev --transpile-only --respawn -- src/main.ts",
+    "start": "tsx watch src/main.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -21,7 +21,7 @@
     "@types/dotenv-flow": "^3.2.0",
     "@types/node": "^18.0.0",
     "dotenv-flow": "^3.2.0",
-    "ts-node-dev": "^2.0.0",
+    "tsx": "^4.15.4",
     "typescript": "^5.3.3"
   }
 }
