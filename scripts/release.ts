@@ -107,7 +107,7 @@ async function release(): Promise<void> {
   await updateChangelog(packageToPublish, releaseInfo);
   await commitChanges(packageToPublish, releaseInfo);
 
-  await confirmToProceed(`Push ${highlight(releaseBranchName)} to remote?`);
+  await confirmToProceed(`Push branch ${highlight(releaseBranchName)} to remote ${packageToPublish.repositoryUrl}?`);
   await pushBranch(releaseBranchName);
   console.log(`Release tag: ${highlight(releaseInfo.releaseTag)}`);
 }
@@ -149,7 +149,7 @@ async function postRelease(releaseBranchOpt: string | undefined): Promise<void> 
   await fixChangelog(releasedPackage);
   const changelog = await validateChangelog(releasedPackage, { unreleasedHeader: "present" });
   await exec(`git commit --amend --no-edit ${changelog.filepath}`);
-  await confirmToProceed(`Push ${highlight(releaseBranchName)} to remote ${highlight(releasedPackage.repositoryUrl)}?`);
+  await confirmToProceed(`Push branch ${highlight(postReleaseBranchName)} to remote ${releasedPackage.repositoryUrl}?`);
   await pushBranch(postReleaseBranchName);
   await switchBranch(originalBranchName);
 }
@@ -687,9 +687,7 @@ async function fixChangelog(publishedPackage: PackageInfo): Promise<void> {
 /** Executes `git push` on the given branch. */
 async function pushBranch(branchName: string): Promise<void> {
   await exec(`git push origin ${branchName}`);
-  // We have mutated remote repository, it's critical to inform the user
-  const originUrl = await exec("git remote get-url origin").catch(() => "the remote repository");
-  console.log(`Branch ${highlight(branchName)} has been pushed to ${highlight(originUrl)}`);
+  console.log(`Branch ${highlight(branchName)} has been pushed to remote`);
 }
 
 /** Determines the branch of a past release, prompting the user if required. */
@@ -773,7 +771,7 @@ async function findReleasedPackage(releaseBranchName: string): Promise<PackageIn
     );
   }
 
-  const releaseBranchRegex = "release\\(/(?<identifier>.+))?\\/\\d+\\.\\d+\\.x";
+  const releaseBranchRegex = "release(\\/(?<identifier>.+))?\\/\\d+\\.\\d+\\.x";
   const releaseIdentifier = matchRegex(releaseBranchRegex, releaseBranchName)?.groups.identifier ?? "";
   if (eligiblePackages.length === 1) {
     if (!releaseIdentifier) {
