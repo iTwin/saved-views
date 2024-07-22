@@ -94,7 +94,7 @@ async function release(): Promise<void> {
   // ```
 
   const packageToPublish = await selectPackageToPublish();
-  await validateChangelog(packageToPublish, { unreleasedHeader: "present" });
+  await validateChangelog(packageToPublish);
   const versionBump = await selectVersionBump(packageToPublish);
   const newVersion = semver.inc(packageToPublish.version, versionBump) ?? "";
   const releaseBranchName = await prepareReleaseBranch(packageToPublish, newVersion);
@@ -141,13 +141,13 @@ async function postRelease(releaseBranchOpt: string | undefined): Promise<void> 
 
   await exec(`git fetch origin ${releaseBranchName}`);
   await switchAndPullBranch(releaseBranchName);
-  await validateChangelog(releasedPackage, { unreleasedHeader: "absent" });
+  await validateChangelog(releasedPackage, { expectAbsentUnreleasedHeader: true });
 
   await switchAndPullBranch("master");
   await exec(`git switch -c ${postReleaseBranchName}`);
   await mergeBranch(releaseBranchName);
   await fixChangelog(releasedPackage);
-  const changelog = await validateChangelog(releasedPackage, { unreleasedHeader: "present" });
+  const changelog = await validateChangelog(releasedPackage, { expectEmptyReleaseNotes: true });
   await exec(`git commit --amend --no-edit ${changelog.filepath}`);
   await confirmToProceed(`Push branch ${highlight(postReleaseBranchName)} to remote ${releasedPackage.repositoryUrl}?`);
   await pushBranch(postReleaseBranchName);
@@ -173,7 +173,7 @@ async function selectPackageToPublish(): Promise<PackageInfo> {
     if (validPrefixes.length > 0) {
       console.log(
         `Could not match package name ${highlight(selectedPackage.name)} with a valid prefix. None of the following matched:`
-        + highlight(validPrefixes.map((prefix) => `\n\t*-${prefix}`).join("")),
+        + highlight(validPrefixes.map((prefix) => `\n\t${prefix}-v*.*.*`).join("")),
       );
     } else {
       console.log(
@@ -504,16 +504,18 @@ async function getBranchDivergence(
 }
 
 interface ValidateChangelogConfig {
-  unreleasedHeader: "present" | "absent";
+  expectAbsentUnreleasedHeader?: boolean;
+  expectEmptyReleaseNotes?: boolean;
 }
 
 /** Parses CHANEGLOG.md file and looks for obvious errors, e.g. duplicate release titles. */
 async function validateChangelog(
   packageToPublish: PackageInfo,
-  config: ValidateChangelogConfig,
+  config?: ValidateChangelogConfig,
 ): Promise<ChangelogInfo> {
   const changelog = await parseChangelog(packageToPublish);
   const changelogFilepath = changelog.filepath;
+  const firstHeadingTitle = changelog.headings[0].title;
 
   const seenTitles = new Set<string>();
   for (const { title } of changelog.headings) {
@@ -526,18 +528,16 @@ async function validateChangelog(
     seenTitles.add(title);
   }
 
-  if (config.unreleasedHeader === "present") {
-    if (changelog.headings[0].title !== "Unreleased") {
-      throw new RuntimeError(
-        `${highlightPath(changelogFilepath)} does not start with ${highlight("## Unreleased")} section.`,
-      );
-    }
-  } else {
+  if (config?.expectAbsentUnreleasedHeader) {
     if (seenTitles.has("Unreleased")) {
       throw new RuntimeError(
         `${highlightPath(changelogFilepath)} should not contain ${highlight("## Unreleased")} section.`,
       );
     }
+  } else if (firstHeadingTitle !== "Unreleased") {
+    throw new RuntimeError(
+      `${highlightPath(changelogFilepath)} does not start with ${highlight("## Unreleased")} section.`,
+    );
   }
 
   if (!seenTitles.has(packageToPublish.version.toString())) {
@@ -549,7 +549,13 @@ async function validateChangelog(
   const changesInThisVersion = changelog.content
     .substring(changelog.headings[0].offset + changelog.headings[0].value.length, changelog.headings[1]?.offset)
     .trim();
-  if (changesInThisVersion.length === 0) {
+  if (config?.expectEmptyReleaseNotes) {
+    if (changesInThisVersion.length > 0) {
+      throw new RuntimeError(
+        `${highlightPath(changelogFilepath)} ${`## ${firstHeadingTitle}`} section should have no release notes.`,
+      );
+    }
+  } else if (changesInThisVersion.length === 0) {
     throw new RuntimeError(
       `${highlightPath(changelogFilepath)} does not explain what has changed since the last version.`,
     );
@@ -672,14 +678,14 @@ async function fixChangelog(publishedPackage: PackageInfo): Promise<void> {
     return;
   }
 
-  if (changelog.headings[0].value !== changelog.headings[1].value) {
-    throw new RuntimeError(
-      `Could not fix changelog file ${highlightPath(changelog.filepath)}. First heading must be ${highlight("## Unreleased")}`,
-    );
-  }
-
   const unreleasedUrl = `${publishedPackage.repositoryUrl.replace(".git", "")}/tree/HEAD/${publishedPackage.directory}`;
-  const fixedChangelog = changelog.content.replace(changelog.headings[0].value, `## [Unreleased](${unreleasedUrl})\n`);
+
+  // We have observed the following types of merge failures where ## Unreleased header is missing:
+  //   * The latest release header is duplicated and takes place of ## Unreleased header
+  //   * The ## Unreleased header is just missing, no other anomalies
+  const isDuplicated = changelog.headings[0].value === changelog.headings[1].value;
+  const replacement = `## [Unreleased](${unreleasedUrl})\n${isDuplicated ? "" : `\n${changelog.headings[0].value}`}`;
+  const fixedChangelog = changelog.content.replace(changelog.headings[0].value, replacement);
   await fs.writeFile(changelog.filepath, fixedChangelog);
   console.log(`Fixed ${highlightPath(changelog.filepath)} after a bad merge`);
 }
