@@ -22,6 +22,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 * `SavedView` now also contains optional `viewData` and `extension` properties. Objects returned by `ITwinSavedViewsClient` will have these fields populated.
 * Permit `ApplySavedViewSettings.viewState` value to be `"reset"`. Due to technicalities, it has the same semantics as `"apply"`.
+* `SavedViewTile`: Update placeholder icon
 
 ### Fixes
 
@@ -31,7 +32,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Dependencies
 
-* Bump `@itwin/saved-views-client` package version from `^0.3.0` to `^0.3.1`
+* Bump `@itwin/itwinui-icons-react` version requirement from `^2.4.0` to `^2.9.0`
+* Bump `@itwin/saved-views-client` version requirement from `^0.3.0` to `^0.3.1`
 
 ## [0.5.0](https://github.com/iTwin/saved-views/tree/v0.5.0-react/packages/saved-views-react) - 2024-06-03
 

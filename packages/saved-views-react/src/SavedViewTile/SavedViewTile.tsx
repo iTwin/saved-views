@@ -2,7 +2,7 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { SvgEdit, SvgImageFrame, SvgMore, SvgShare, SvgTag } from "@itwin/itwinui-icons-react";
+import { SvgEdit, SvgMore, SvgSavedView, SvgShare, SvgTag } from "@itwin/itwinui-icons-react";
 import { Button, IconButton, Input, Text, Tile } from "@itwin/itwinui-react";
 import {
   useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type FocusEvent, type KeyboardEvent,
@@ -168,7 +168,7 @@ export function SavedViewTile(props: SavedViewTileProps): ReactElement {
               ? <Tile.ThumbnailPicture url={props.savedView.thumbnail} />
               : props.savedView.thumbnail
                 ? props.savedView.thumbnail
-                : <Tile.ThumbnailPicture><SvgImageFrame /></Tile.ThumbnailPicture>
+                : <Tile.ThumbnailPicture><SvgSavedView /></Tile.ThumbnailPicture>
           }
           <TileIconContainer style={{ placeSelf: "start" }} icons={props.leftIcons} />
           <TileIconContainer style={{ placeSelf: "start end" }} icons={rightIcons} />
