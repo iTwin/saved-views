@@ -33,7 +33,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Dependencies
 
 * Bump `@itwin/itwinui-icons-react` version requirement from `^2.4.0` to `^2.9.0`
-* Bump `@itwin/saved-views-client` version requirement from `^0.3.0` to `^0.3.1`
+* Bump `@itwin/saved-views-client` version requirement from `^0.3.0` to `^0.4.0`
 
 ## [0.5.0](https://github.com/iTwin/saved-views/tree/v0.5.0-react/packages/saved-views-react) - 2024-06-03
 
