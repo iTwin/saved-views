@@ -678,14 +678,14 @@ async function fixChangelog(publishedPackage: PackageInfo): Promise<void> {
     return;
   }
 
-  if (changelog.headings[0].value !== changelog.headings[1].value) {
-    throw new RuntimeError(
-      `Could not fix changelog file ${highlightPath(changelog.filepath)}. First heading must be ${highlight("## Unreleased")}`,
-    );
-  }
-
   const unreleasedUrl = `${publishedPackage.repositoryUrl.replace(".git", "")}/tree/HEAD/${publishedPackage.directory}`;
-  const fixedChangelog = changelog.content.replace(changelog.headings[0].value, `## [Unreleased](${unreleasedUrl})\n`);
+
+  // We have observed the following types of merge failures where ## Unreleased header is missing:
+  //   * The latest release header is duplicated and takes place of ## Unreleased header
+  //   * The ## Unreleased header is just missing, no other anomalies
+  const isDuplicated = changelog.headings[0].value === changelog.headings[1].value;
+  const replacement = `## [Unreleased](${unreleasedUrl})\n${isDuplicated ? "" : `\n${changelog.headings[0].value}`}`;
+  const fixedChangelog = changelog.content.replace(changelog.headings[0].value, replacement);
   await fs.writeFile(changelog.filepath, fixedChangelog);
   console.log(`Fixed ${highlightPath(changelog.filepath)} after a bad merge`);
 }
