@@ -173,7 +173,7 @@ async function selectPackageToPublish(): Promise<PackageInfo> {
     if (validPrefixes.length > 0) {
       console.log(
         `Could not match package name ${highlight(selectedPackage.name)} with a valid prefix. None of the following matched:`
-        + highlight(validPrefixes.map((prefix) => `\n\t*-${prefix}`).join("")),
+        + highlight(validPrefixes.map((prefix) => `\n\t${prefix}-v*.*.*`).join("")),
       );
     } else {
       console.log(
