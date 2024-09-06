@@ -9,12 +9,10 @@ import {
 import {
   DrawingViewState, SheetViewState, SpatialViewState, type IModelConnection, type ViewState,
 } from "@itwin/core-frontend";
-import {
-  ViewData, ViewITwinDrawing, ViewITwinSheet, isViewDataITwin3d, isViewDataITwinDrawing, isViewDataITwinSheet,
-  type ViewITwin3d,
-} from "@itwin/saved-views-client";
+import type { ViewITwin3d, ViewITwinDrawing, ViewITwinSheet } from "@itwin/saved-views-client";
 
 import { getMissingCategories, getMissingModels } from "./captureSavedViewData.js";
+import type { ViewData } from "./SavedView.js";
 import { extractClipVectors } from "./translation/clipVectorsExtractor.js";
 import { extractDisplayStyle, extractDisplayStyle3d } from "./translation/displayStyleExtractor.js";
 
@@ -25,7 +23,7 @@ export interface ViewStateCreateSettings {
    * @default false
    *
    * @example
-   * const viewState = await createViewState(iModel, savedView.viewdata, { skipViewStateLoad: true });
+   * const viewState = await createViewState(iModel, savedViewData.viewData, { skipViewStateLoad: true });
    * viewState.categorySelector.addCategories("<additional_category_id>");
    * await viewState.load();
    */
@@ -68,17 +66,17 @@ export async function createViewState(
 
 async function createViewStateVariant(
   iModel: IModelConnection,
-  savedViewData: ViewData,
+  viewData: ViewData,
 ): Promise<ViewState> {
-  if (isViewDataITwinDrawing(savedViewData)) {
-    return createDrawingViewState(iModel, savedViewData.itwinDrawingView);
+  if (viewData.type === "iTwinDrawing") {
+    return createDrawingViewState(iModel, viewData);
   }
 
-  if (isViewDataITwinSheet(savedViewData)) {
-    return createSheetViewState(iModel, savedViewData.itwinSheetView);
+  if (viewData.type === "iTwinSheet") {
+    return createSheetViewState(iModel, viewData);
   }
 
-  return createSpatialViewState(iModel, savedViewData.itwin3dView);
+  return createSpatialViewState(iModel, viewData);
 }
 
 interface SpatialViewStateProps extends ViewStateProps {
@@ -306,14 +304,13 @@ function cloneCode({ spec, scope, value }: CodeProps): CodeProps {
 async function unhideNewModelsAndCategories(
   iModel: IModelConnection,
   viewState: ViewState,
-  savedViewData: ViewData,
+  viewData: ViewData,
 ): Promise<void> {
-  if (isViewDataITwin3d(savedViewData)) {
+  if (viewData.type === "iTwin3d") {
     if (!viewState.isSpatialView()) {
       return;
     }
 
-    const viewData = savedViewData.itwin3dView;
     if (!viewData.categories?.disabled || !viewData.models?.disabled) {
       return;
     }
@@ -327,10 +324,6 @@ async function unhideNewModelsAndCategories(
     viewState.modelSelector.addModels(visibleModels);
     return;
   }
-
-  const viewData = isViewDataITwinDrawing(savedViewData)
-    ? savedViewData.itwinDrawingView
-    : savedViewData.itwinSheetView;
 
   if (!viewData.categories?.disabled) {
     return;

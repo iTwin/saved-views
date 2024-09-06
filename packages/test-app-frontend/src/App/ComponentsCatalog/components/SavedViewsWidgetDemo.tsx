@@ -11,19 +11,29 @@ import { ReactElement } from "react";
 import { useSavedViewData } from "../useSavedViewData.js";
 
 export function SavedViewsExpandableBlockWidgetDemo(): ReactElement {
-  const { state: { savedViews, groups, tags, editing }, actions, setEditing } = useSavedViewData();
+  const { state: { savedViews, groups, tags, editing, thumbnails }, actions, setEditing } = useSavedViewData();
 
   const options = createSavedViewOptions({
     renameSavedView: true,
     groupActions: actions.moveToGroup && {
       groups: [...groups.values()],
       moveToGroup: actions.moveToGroup,
-      moveToNewGroup: actions.moveToNewGroup,
+      moveToNewGroup: async (savedViewId, groupName) => {
+        if (actions.createGroup && actions.moveToGroup) {
+          const groupId = await actions.createGroup(groupName);
+          await actions.moveToGroup(savedViewId, groupId);
+        }
+      },
     },
     tagActions: actions.addTag && actions.removeTag && {
       tags: [...tags.values()],
       addTag: actions.addTag,
-      addNewTag: actions.addNewTag,
+      addNewTag: async (savedViewId, tagName) => {
+        if (actions.createTag && actions.addTag) {
+          const tagId = await actions.createTag(tagName);
+          await actions.addTag(savedViewId, tagId);
+        }
+      },
       removeTag: actions.removeTag,
     },
   });
@@ -35,6 +45,7 @@ export function SavedViewsExpandableBlockWidgetDemo(): ReactElement {
           savedViews={savedViews}
           groups={groups}
           tags={tags}
+          thumbnails={thumbnails}
           editable={editing}
           actions={actions}
           options={() => options}
@@ -65,19 +76,29 @@ export function SavedViewsExpandableBlockWidgetDemo(): ReactElement {
 }
 
 export function SavedViewsFolderWidgetDemo(): ReactElement {
-  const { state: { savedViews, groups, tags }, actions } = useSavedViewData();
+  const { state: { savedViews, groups, tags, thumbnails }, actions } = useSavedViewData();
 
   const options = createSavedViewOptions({
     renameSavedView: true,
     groupActions: actions.moveToGroup && {
       groups: [...groups.values()],
       moveToGroup: actions.moveToGroup,
-      moveToNewGroup: actions.moveToNewGroup,
+      moveToNewGroup: async (savedViewId, groupName) => {
+        if (actions.createGroup && actions.moveToGroup) {
+          const groupId = await actions.createGroup(groupName);
+          await actions.moveToGroup(savedViewId, groupId);
+        }
+      },
     },
     tagActions: actions.addTag && actions.removeTag && {
       tags: [...tags.values()],
       addTag: actions.addTag,
-      addNewTag: actions.addNewTag,
+      addNewTag: async (savedViewId, tagName) => {
+        if (actions.createTag && actions.addTag) {
+          const tagId = await actions.createTag(tagName);
+          await actions.addTag(savedViewId, tagId);
+        }
+      },
       removeTag: actions.removeTag,
     },
   });
@@ -88,6 +109,7 @@ export function SavedViewsFolderWidgetDemo(): ReactElement {
         savedViews={savedViews}
         groups={groups}
         tags={tags}
+        thumbnails={thumbnails}
         actions={actions}
         options={() => options}
       />

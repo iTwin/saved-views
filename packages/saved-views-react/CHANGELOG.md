@@ -6,6 +6,43 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased](https://github.com/iTwin/saved-views/tree/HEAD/packages/saved-views-react)
 
+### Beaking changes
+
+* `SavedView` interface changes
+  * Rename `id` property to `savedViewId`
+  * Remove `thumbnail` property
+  * Move `viewData` and `extensions` properties `SavedViewData` type
+    * Type of `viewData` has been changed and definition has moved to `@itwin/saved-views-react`
+  * Change type of `creationTime` and `lastModifier` properties to `Date | undefined`
+* `useSavedViews` hook rework
+  * No longer implements optimistic behaviour
+  * Lazily loads Saved View thumbnails and `SavedViewData`
+  * Can utilize user-supplied external state store
+  * All actions now return a promise that resolves on action completion
+  * All creation actions now return id of the created entity
+  * Rename `SavedViewActions` type to `SavedViewsActions`
+  * Split `submitSavedView` into `createSavedView` and `updateSavedView`
+  * Add `lookupSavedViewData` action
+  * Remove `moveToNewGroup` and `addNewTag` actions
+* `SavedViewTag`: Rename `id` property to `tagId`
+* `SavedViewGroup`: Rename `id` property to `groupId`
+* `SavedViewsClient` interface changes
+  * Rename methods
+    * `getAllSavedViews` -> `getSavedViews`
+    * `getAllGroups` -> `getGroups`
+    * `getAllTags` -> `getTags`
+    * `getSavedView` -> `getSavedViewById`
+  * Add `getSavedViewDataById` method
+  * Method argument types now instead of ending in `*Params` now end in `*Args`, e.g. `CreateSavedViewParams` -> `CreateSavedViewArgs`
+  * You can now query all Saved Views that are assigned to a particular group using `SavedViewsClient.getSavedViews`
+  * `CreateSavedViewArgs`, `UpdateSavedViewArgs`: Inline properties previously nested within `savedView` property
+  * `CreateGroupArgs`, `UpdateGroupArgs`: Inline properties previously nested within `group` property
+  * `UpdateTagArgs`: Inline properties previously nested within `tag` property
+* `<SavedViewTile />` changes
+  * Add `thumbnail` prop
+  * Thumbnails that were specified as image URLs now need to be explicitly passed as `<img src={url} />`
+  * `onRename` callback will no longer send `undefined` for `newName` argument
+
 ## [0.6.0](https://github.com/iTwin/saved-views/tree/react-v0.6.0/packages/saved-views-react/) - 2024-07-22
 
 ### Breaking changes
