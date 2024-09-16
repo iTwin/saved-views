@@ -5,14 +5,14 @@
 import { SvgImodelHollow, SvgPalette, SvgUser } from "@itwin/itwinui-icons-react";
 import { PageLayout } from "@itwin/itwinui-layouts-react";
 import { Button, SideNavigation, SidenavButton, Surface, ThemeProvider } from "@itwin/itwinui-react";
-import { PropsWithChildren, ReactElement, useEffect, useState } from "react";
+import { type ReactElement, useEffect, useState } from "react";
 import { Navigate, Outlet, Route, Routes, useMatch, useNavigate, useParams } from "react-router-dom";
 
 import { applyUrlPrefix, clientId } from "../environment.js";
-import { AppContext, appContext } from "./AppContext.js";
+import { type AppContext, appContext } from "./AppContext.js";
 import { AppHeader } from "./AppHeader.js";
 import {
-  AuthorizationState, SignInCallback, SignInSilent, SignInSilentCallback, createAuthorizationProvider, useAuthorization,
+  AuthorizationProvider, AuthorizationState, SignInCallback, SignInSilent, SignInSilentCallback, useAuthorization,
 } from "./Authorization.js";
 import { ComponentsCatalogRoutes } from "./ComponentsCatalog/ComponentsCatalog.js";
 import type { ITwinJsApp } from "./ITwinJsApp/ITwinJsApp.js";
@@ -33,7 +33,14 @@ export function App(): ReactElement {
   return (
     <appContext.Provider value={appContextValue}>
       <ThemeProvider theme={appContextValue.theme}>
-        <AuthorizationProvider>
+        <AuthorizationProvider
+          authority={applyUrlPrefix("https://ims.bentley.com")}
+          clientId={clientId === "spa-xxxxxxxxxxxxxxxxxxxxxxxxx" ? undefined : clientId}
+          redirectUri="/auth/callback"
+          silentRedirectUri="/auth/silent"
+          postLogoutRedirectUri="/"
+          scope="itwins:read users:read savedviews:modify savedviews:read imodels:read imodelaccess:read"
+        >
           <PageLayout>
             <PageLayout.Header>
               <AppHeader />
@@ -49,18 +56,6 @@ export function App(): ReactElement {
     </appContext.Provider>
   );
 }
-
-const AuthorizationProvider = clientId === "spa-xxxxxxxxxxxxxxxxxxxxxxxxx"
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  ? (props: PropsWithChildren<{}>) => <>{props.children}</>
-  : createAuthorizationProvider({
-    authority: applyUrlPrefix("https://ims.bentley.com"),
-    client_id: clientId,
-    redirect_uri: "/auth/callback",
-    silent_redirect_uri: "/auth/silent",
-    post_logout_redirect_uri: "/",
-    scope: "itwins:read users:read savedviews:modify savedviews:read imodels:read imodelaccess:read",
-  });
 
 function Main(): ReactElement {
   const iTwinJsApp = useBackgroundITwinJsAppLoading();
