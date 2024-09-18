@@ -5,7 +5,7 @@
 import { Id64Array } from "@itwin/core-bentley";
 import { QueryRowFormat, type SpatialViewDefinitionProps } from "@itwin/core-common";
 import {
-  type DrawingViewState, type IModelConnection, type SheetViewState, type SpatialViewState, type Viewport,
+  type DrawingViewState, type IModelConnection, type SheetViewState, type SpatialViewState, type Viewport
 } from "@itwin/core-frontend";
 import { type AngleProps, type XYProps, type XYZProps, type YawPitchRollProps } from "@itwin/core-geometry";
 import {
