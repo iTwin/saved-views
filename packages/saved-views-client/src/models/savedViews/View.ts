@@ -85,7 +85,7 @@ export interface ViewITwinDrawing extends ViewITwin2d {
     [qx: number, qy: number, qz: number, ax: number],
     [qx: number, qy: number, qz: number, ax: number],
   ];
-  modelExtents: [
+  modelExtents?: [
     low: [x: number, y: number, z: number],
     high: [x: number, y: number, z: number],
   ];

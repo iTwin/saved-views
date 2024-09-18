@@ -160,7 +160,6 @@ function createDrawingSavedViewObject(vp: Viewport, hiddenCategories: Id64Array 
 
   return {
     itwinDrawingView: {
-      modelExtents: {} as ViewITwinDrawing["modelExtents"],
       baseModelId: viewDefinitionProps.baseModelId,
       origin: toArrayVector2d(viewDefinitionProps.origin),
       delta: toArrayVector2d(viewDefinitionProps.delta),
