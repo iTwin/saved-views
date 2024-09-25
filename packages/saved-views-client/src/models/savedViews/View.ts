@@ -139,7 +139,7 @@ export interface ClipPrimitiveShapeProps {
 /** Contains the shape/polygon used to clip the view. */
 export interface ShapeProps {
   points: number[][];
-  transform: [
+  transform?: [
     [qx: number, qy: number, qz: number, ax: number],
     [qx: number, qy: number, qz: number, ax: number],
     [qx: number, qy: number, qz: number, ax: number],
