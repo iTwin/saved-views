@@ -5,12 +5,12 @@
 import { Id64Array } from "@itwin/core-bentley";
 import { QueryRowFormat, type SpatialViewDefinitionProps } from "@itwin/core-common";
 import {
-  type DrawingViewState, type IModelConnection, type SheetViewState, type SpatialViewState, type Viewport
+  type DrawingViewState, type IModelConnection, type SheetViewState, type SpatialViewState, type Viewport,
 } from "@itwin/core-frontend";
 import { type AngleProps, type XYProps, type XYZProps, type YawPitchRollProps } from "@itwin/core-geometry";
 import {
   type ViewData, type ViewDataITwin3d, type ViewDataITwinDrawing, type ViewDataITwinSheet,
-  type ViewYawPitchRoll
+  type ViewYawPitchRoll,
 } from "@itwin/saved-views-client";
 
 import type { SavedViewExtension } from "./SavedView.js";
