@@ -85,7 +85,7 @@ export interface ViewITwinDrawing extends ViewITwin2d {
     [qx: number, qy: number, qz: number, ax: number],
     [qx: number, qy: number, qz: number, ax: number],
   ];
-  modelExtents: [
+  modelExtents?: [
     low: [x: number, y: number, z: number],
     high: [x: number, y: number, z: number],
   ];
@@ -139,7 +139,7 @@ export interface ClipPrimitiveShapeProps {
 /** Contains the shape/polygon used to clip the view. */
 export interface ShapeProps {
   points: number[][];
-  transform: [
+  transform?: [
     [qx: number, qy: number, qz: number, ax: number],
     [qx: number, qy: number, qz: number, ax: number],
     [qx: number, qy: number, qz: number, ax: number],

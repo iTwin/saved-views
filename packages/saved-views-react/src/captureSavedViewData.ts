@@ -9,7 +9,7 @@ import {
 } from "@itwin/core-frontend";
 import { type AngleProps, type XYProps, type XYZProps, type YawPitchRollProps } from "@itwin/core-geometry";
 import {
-  type ViewData, type ViewDataITwin3d, type ViewDataITwinDrawing, type ViewDataITwinSheet, type ViewITwinDrawing,
+  type ViewData, type ViewDataITwin3d, type ViewDataITwinDrawing, type ViewDataITwinSheet,
   type ViewYawPitchRoll,
 } from "@itwin/saved-views-client";
 
@@ -160,7 +160,6 @@ function createDrawingSavedViewObject(vp: Viewport, hiddenCategories: Id64Array 
 
   return {
     itwinDrawingView: {
-      modelExtents: {} as ViewITwinDrawing["modelExtents"],
       baseModelId: viewDefinitionProps.baseModelId,
       origin: toArrayVector2d(viewDefinitionProps.origin),
       delta: toArrayVector2d(viewDefinitionProps.delta),

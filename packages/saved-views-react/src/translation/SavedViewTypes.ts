@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import type { Id64Array } from "@itwin/core-bentley";
 import type {
   CategorySelectorProps, DisplayStyle3dProps, DisplayStyleProps, EmphasizeElementsProps, ModelSelectorProps,
@@ -12,7 +12,6 @@ import type { Range3dProps } from "@itwin/core-geometry";
 export interface LegacySavedView3d extends LegacySavedViewBase {
   displayStyleProps: DisplayStyle3dProps;
   modelSelectorProps: ModelSelectorProps;
-  modelExtents?: Range3dProps;
   viewDefinitionProps: SpatialViewDefinitionProps;
   perModelCategoryVisibility?: PerModelCategoryVisibilityProps[];
   hiddenModels?: Id64Array;
@@ -30,6 +29,7 @@ export interface LegacySavedView2d extends LegacySavedViewBase {
   sectionDrawing?: SectionDrawingViewProps;
   sheetProps?: SheetProps;
   sheetAttachments?: Id64Array;
+  modelExtents?: Range3dProps;
 }
 
 export interface LegacySavedViewBase {
