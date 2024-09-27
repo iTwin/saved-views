@@ -6,8 +6,8 @@ import type { AuthorizationClient } from "@itwin/core-common";
 import { Button, Code, useToaster } from "@itwin/itwinui-react";
 import { UserManager, WebStorageStateStore, type User } from "oidc-client-ts";
 import {
-  Fragment, createContext, useContext, useEffect, useMemo, useRef, useState, type ComponentType, type PropsWithChildren,
-  type ReactElement, type ReactNode,
+  Fragment, createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactElement,
+  type ReactNode,
 } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -15,114 +15,133 @@ import { applyUrlPrefix } from "../environment.js";
 import { LoadingScreen } from "./common/LoadingScreen.js";
 import { ErrorPage } from "./errors/ErrorPage.js";
 
-export interface AuthorizationProviderConfig {
+interface AuthorizationProviderProps {
   authority: string;
-  client_id: string;
-  redirect_uri: string;
-  silent_redirect_uri: string;
-  post_logout_redirect_uri: string;
+  clientId: string | undefined;
+  redirectUri: string;
+  silentRedirectUri: string;
+  postLogoutRedirectUri: string;
   scope: string;
+  children: ReactNode;
 }
 
-/** Creates a context provider for authorization state. */
-// eslint-disable-next-line @typescript-eslint/ban-types
-export function createAuthorizationProvider(config: AuthorizationProviderConfig): ComponentType<PropsWithChildren<{}>> {
-  const userManager = new UserManager({
-    authority: config.authority,
-    client_id: config.client_id,
-    redirect_uri: `${window.location.origin}${config.redirect_uri}`,
-    silent_redirect_uri: `${window.location.origin}${config.silent_redirect_uri}`,
-    post_logout_redirect_uri: `${window.location.origin}${config.post_logout_redirect_uri}`,
-    scope: config.scope,
+export function AuthorizationProvider(props: AuthorizationProviderProps): ReactElement {
+  const { clientId } = props;
+  if (clientId === undefined) {
+    return <>{props.children}</>;
+  }
+
+  return <InternalAuthorizationProvider {...props} clientId={clientId} />;
+}
+
+function InternalAuthorizationProvider(props: AuthorizationProviderProps & { clientId: string; }): ReactElement {
+  const [userManager] = useState(() => new UserManager({
+    authority: props.authority,
+    client_id: props.clientId,
+    redirect_uri: `${window.location.origin}${props.redirectUri}`,
+    silent_redirect_uri: `${window.location.origin}${props.silentRedirectUri}`,
+    post_logout_redirect_uri: `${window.location.origin}${props.postLogoutRedirectUri}`,
+    scope: props.scope,
     response_type: "code",
     automaticSilentRenew: true,
     accessTokenExpiringNotificationTimeInSeconds: 120,
     userStore: new WebStorageStateStore({ store: localStorage }),
+  }));
+
+  useEffect(
+    () => {
+      return () => { userManager.events.unload(); };
+    },
+    [userManager],
+  );
+
+  const signIn = useCallback(
+    async () => {
+      await userManager.signinRedirect({
+        state: window.location.pathname + window.location.search + window.location.hash,
+      });
+    },
+    [userManager],
+  );
+  const signOut = useCallback(async () => userManager.signoutRedirect(), [userManager]);
+
+  const toaster = useToaster();
+  const authorizationClient = useMemo(
+    () => new AuthClient(userManager, toaster, signIn),
+    [userManager, toaster, signIn],
+  );
+
+  const [authorizationContextValue, setAuthorizationContextValue] = useState<AuthorizationContext>({
+    state: AuthorizationState.Pending,
+    user: undefined,
+    authorizationClient,
+    signIn,
+    signOut,
   });
 
-  const signIn = async () => {
-    await userManager.signinRedirect({
-      state: window.location.pathname + window.location.search + window.location.hash,
-    });
-  };
-  const signOut = async () => userManager.signoutRedirect();
+  const [internalAuthorizationContextValue] = useState<InternalAuthorizationContext>({
+    userManager,
+    loadUser: (user) => {
+      setAuthorizationContextValue({
+        state: AuthorizationState.SignedIn,
+        user,
+        authorizationClient,
+        signIn,
+        signOut,
+      });
+    },
+  });
 
-  return function AuthorizationProvider(props: PropsWithChildren<unknown>): ReactElement {
-    const toaster = useToaster();
-    const authorizationClient = useMemo(() => new AuthClient(userManager, toaster, signIn), [toaster]);
+  useEffect(
+    () => {
+      const handleSilentRenewError = (error: unknown) => {
+        // eslint-disable-next-line no-console
+        console.warn(error);
+      };
 
-    const [authorizationContextValue, setAuthorizationContextValue] = useState<AuthorizationContext>({
-      state: AuthorizationState.Pending,
-      user: undefined,
-      authorizationClient,
-      signIn,
-      signOut,
-    });
+      const handleAccessTokenExpiring = async () => {
+        try {
+          await userManager.signinSilent();
+        } catch (error) {
+          toaster.informational(
+            <SignInPopupPrompt text="Access token is expiring." onClick={signIn} />,
+            { type: "persisting", hasCloseButton: true },
+          );
+        }
+      };
 
-    const internalAuthorizationContextValue = useRef<InternalAuthorizationContext>({
-      userManager,
-      loadUser: (user) => {
+      const handleUserUnloaded = () => {
         setAuthorizationContextValue({
-          state: AuthorizationState.SignedIn,
-          user,
+          state: AuthorizationState.SignedOut,
+          user: undefined,
           authorizationClient,
           signIn,
           signOut,
         });
-      },
-    }).current;
+      };
 
-    useEffect(
-      () => {
-        const handleSilentRenewError = (error: unknown) => {
-          // eslint-disable-next-line no-console
-          console.warn(error);
-        };
+      userManager.events.addSilentRenewError(handleSilentRenewError);
+      userManager.events.addAccessTokenExpiring(handleAccessTokenExpiring);
+      userManager.events.addUserLoaded(internalAuthorizationContextValue.loadUser);
+      userManager.events.addUserUnloaded(handleUserUnloaded);
 
-        const handleAccessTokenExpiring = async () => {
-          try {
-            await userManager.signinSilent();
-          } catch (error) {
-            toaster.informational(
-              <SignInPopupPrompt text="Access token is expiring." onClick={signIn} />,
-              { type: "persisting", hasCloseButton: true },
-            );
-          }
-        };
+      return () => {
+        userManager.events.removeSilentRenewError(handleSilentRenewError);
+        userManager.events.removeAccessTokenExpiring(handleAccessTokenExpiring);
+        userManager.events.removeUserLoaded(internalAuthorizationContextValue.loadUser);
+        userManager.events.removeUserUnloaded(handleUserUnloaded);
+      };
+    },
+    [authorizationClient, internalAuthorizationContextValue, toaster, userManager, signIn, signOut],
+  );
 
-        const handleUserUnloaded = () => {
-          setAuthorizationContextValue({
-            state: AuthorizationState.SignedOut,
-            user: undefined,
-            authorizationClient,
-            signIn,
-            signOut,
-          });
-        };
-
-        userManager.events.addSilentRenewError(handleSilentRenewError);
-        userManager.events.addAccessTokenExpiring(handleAccessTokenExpiring);
-        userManager.events.addUserLoaded(internalAuthorizationContextValue.loadUser);
-        userManager.events.addUserUnloaded(handleUserUnloaded);
-
-        return () => {
-          userManager.events.removeSilentRenewError(handleSilentRenewError);
-          userManager.events.removeAccessTokenExpiring(handleAccessTokenExpiring);
-          userManager.events.removeUserLoaded(internalAuthorizationContextValue.loadUser);
-          userManager.events.removeUserUnloaded(handleUserUnloaded);
-        };
-      },
-      [internalAuthorizationContextValue, authorizationClient, toaster],
-    );
-
-    return (
-      <authorizationContext.Provider value={authorizationContextValue}>
-        <internalAuthorizationContext.Provider value={internalAuthorizationContextValue}>
-          {props.children}
-        </internalAuthorizationContext.Provider>
-      </authorizationContext.Provider>
-    );
-  };
+  return (
+    <authorizationContext.Provider value={authorizationContextValue}>
+      <internalAuthorizationContext.Provider value={internalAuthorizationContextValue}>
+        {props.children}
+      </internalAuthorizationContext.Provider>
+    </authorizationContext.Provider>
+  );
 }
 
 interface SignInPopupPromptProps {
@@ -174,24 +193,37 @@ export enum AuthorizationState {
 }
 
 class AuthClient implements AuthorizationClient {
-  constructor(
-    private userManager: UserManager,
-    private toaster: ReturnType<typeof useToaster>,
-    private signIn: () => Promise<void>,
-  ) { }
+  #userManager: UserManager;
+  #toaster: ReturnType<typeof useToaster>;
+  #signIn: () => Promise<void>;
+  #toastPromise: Promise<string> | undefined;
+
+  constructor(userManager: UserManager, toaster: ReturnType<typeof useToaster>, signIn: () => Promise<void>) {
+    this.#userManager = userManager;
+    this.#toaster = toaster;
+    this.#signIn = signIn;
+  }
 
   public async getAccessToken(): Promise<string> {
-    const user = await this.userManager.getUser();
+    const user = await this.#userManager.getUser();
     if (user?.expired) {
-      return new Promise((resolve, reject) => {
-        const { close } = this.toaster.informational(
+      if (this.#toastPromise === undefined) {
+        const { promise, resolve, reject } = Promise.withResolvers<string>();
+        const { close } = this.#toaster.informational(
           <SignInPopupPrompt
             text="You are not signed in."
-            onClick={() => this.signIn().then(() => resolve(this.getAccessToken())).then(close)}
+            onClick={() => this.#signIn().then(() => resolve(this.getAccessToken()))}
           />,
           { type: "persisting", hasCloseButton: true, onRemove: reject },
         );
-      });
+        promise.finally(() => {
+          this.#toastPromise = undefined;
+          close();
+        });
+        this.#toastPromise = promise;
+      }
+
+      return this.#toastPromise;
     }
 
     return user ? `${user.token_type} ${user.access_token}` : "";
