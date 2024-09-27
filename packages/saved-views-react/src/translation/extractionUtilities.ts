@@ -289,7 +289,7 @@ export const extractNumber = (
  */
 export const extractLinePixels = (
   from: string,
-  to?: string
+  to?: string,
 ): ExtractionFunc<void, void> => {
   return createExtractionFunc(
     from,
@@ -303,7 +303,7 @@ export const extractLinePixels = (
         return LinePixels.Invalid;
 
       return value;
-    }
+    },
   );
 };
 
