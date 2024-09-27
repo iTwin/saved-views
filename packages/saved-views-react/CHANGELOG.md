@@ -11,9 +11,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 * `SavedView` interface changes
   * Rename `id` property to `savedViewId`
   * Remove `thumbnail` property
-  * Move `viewData` and `extensions` properties `SavedViewData` type
-    * Type of `viewData` has been changed and definition has moved to `@itwin/saved-views-react`
-  * Change type of `creationTime` and `lastModifier` properties to `Date | undefined`
+  * Move `viewData` and `extensions` properties to `SavedViewData` type
+    * Type of `viewData` has changed and definition has moved to `@itwin/saved-views-react`
+  * Change type of `creationTime` and `lastModified` properties to `Date | undefined`
 * `useSavedViews` hook rework
   * No longer implements optimistic behaviour
   * Lazily loads Saved View thumbnails and `SavedViewData`
