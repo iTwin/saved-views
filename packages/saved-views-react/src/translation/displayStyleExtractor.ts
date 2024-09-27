@@ -11,7 +11,7 @@ import type {
 import type { LegacySavedView3d, LegacySavedView2d } from "./SavedViewTypes.js";
 import {
   applyExtraction, extractArray, extractArrayConditionally, extractBoolean, extractColor, extractColorLegacy,
-  extractConditionally, extractNumber, extractNumberOrBool, extractObject, extractPlainTypedMap, extractRGB,
+  extractConditionally, extractLinePixels, extractNumber, extractNumberOrBool, extractObject, extractPlainTypedMap, extractRGB,
   extractSimpleArray, extractString, extractStringOrArray, extractStringOrNumber, extractStringOrNumberArray,
   isAnyColorFormat, simpleTypeOf, type ExtractionFunc,
 } from "./extractionUtilities.js";
@@ -138,7 +138,7 @@ export const featureAppearanceMappings: ExtractionFunc<void, void>[] = [
   extractRGB("rgb"),
   extractNumber("weight"),
   extractNumber("transparency"),
-  extractNumber("linePixels"),
+  extractLinePixels("linePixels"),
   extractBoolean("ignoresMaterial"),
   extractBoolean("nonLocatable"),
   extractBoolean("emphasized"),
@@ -148,7 +148,7 @@ export const featureAppearanceLegacyMappings: ExtractionFunc<void, void>[] = [
   extractColorLegacy("rgb"),
   extractNumber("weight"),
   extractNumber("transparency"),
-  extractNumber("linePixels"),
+  extractLinePixels("linePixels"),
   extractBoolean("ignoresMaterial"),
   extractBoolean("nonLocatable"),
   extractBoolean("emphasized"),

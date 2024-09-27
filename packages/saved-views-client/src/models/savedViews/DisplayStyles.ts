@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 
 /** JSON representation of settings associated with a DisplayStyle3dProps. */
 export interface DisplayStyle3dSettingsProps extends DisplayStyleSettingsProps {
@@ -10,7 +10,7 @@ export interface DisplayStyle3dSettingsProps extends DisplayStyleSettingsProps {
   ambientOcclusion?: AmbientOcclusionProps;
   solarShadows?: SolarShadowSettingsProps;
   lights?: LightSettingsProps;
-  planProjections?: { [modelId: string]: PlanProjectionSettingsProps; };
+  planProjections?: { [modelId: string]: PlanProjectionSettingsProps };
   thematic?: ThematicDisplaySettingsProps;
   hiddenLine?: HiddenLineSettingsProps;
 }
@@ -702,7 +702,7 @@ export interface PlanarClipMaskProps {
   mode: PlanarClipMaskMode;
   modelIds?: string;
   subCategoryOrElementIds?: string;
-  priority?: PlanarClipMaskPriority;
+  priority?: number;
   transparency?: number;
   invert?: boolean;
 }
