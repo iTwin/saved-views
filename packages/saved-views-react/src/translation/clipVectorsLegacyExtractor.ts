@@ -7,7 +7,7 @@ import type { ClipPrimitivePlaneProps, ClipPrimitiveShapeProps, ViewITwin3d } fr
 
 import {
   applyExtraction, extractArray2d, extractArrayConditionally, extractBoolean, extractNumber, extractObject,
-  extractSimpleArray, simpleTypeOf,
+  extractSimpleArray, filterArray, simpleTypeOf,
 } from "./extractionUtilities.js";
 
 export function extractClipVectorsFromLegacy(
@@ -20,6 +20,11 @@ export function extractClipVectorsFromLegacy(
 
   const output = {} as ViewITwin3d;
   applyExtraction(viewDetails, output, clipVectorLegacyMappings);
+  filterArray("clipVectors", output, (value: any) => {
+    const planes: Object = value?.planes;
+    return !planes || Object.keys(planes).length > 0;
+  });
+
   return output.clipVectors;
 }
 

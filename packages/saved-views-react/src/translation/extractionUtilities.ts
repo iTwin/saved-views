@@ -735,3 +735,56 @@ export const applyExtraction = (
     func(input, output),
   );
 };
+
+/**
+ * Interacts with object property given a path to that property
+ * @param path path to property in object
+ * @param obj object to interact with
+ * @param interactFunc function to interact with property
+ * @returns return type or undefined
+ */
+export const interactWithPropertyByPath = <returnType>(
+  path: string,
+  obj: Record<string, any>,
+  interactFunc: (propertyName: string, obj: object) => returnType
+): returnType | undefined => {
+  const pathParts = path.split(".");
+  const lastPart = pathParts[pathParts.length - 1];
+  let currentObj = obj;
+
+  // get property in object to interact with
+  pathParts.forEach((part) => {
+    if (
+      currentObj &&
+      Object.prototype.hasOwnProperty.call(currentObj, part) &&
+      part !== lastPart
+    ) {
+      currentObj = currentObj[part];
+    }
+  });
+
+  if (
+    currentObj &&
+    Object.prototype.hasOwnProperty.call(currentObj, lastPart)
+  ) {
+    return interactFunc(lastPart, currentObj);
+  }
+  return undefined;
+};
+
+/**
+ * filters out items in obj array
+ * @param pathToPropToRemove path to property in object
+ * @param obj object to interact with
+ * @param filter function to use to filter array
+ */
+export const filterArray = (
+  pathToPropToRemove: string,
+  obj: Record<string, any>,
+  filter: (value: any) => boolean
+): void => {
+  const deleteArrayItem = (propertyName: string, obj: Record<string, any>) => {
+    obj[propertyName] = obj[propertyName].filter(filter);
+  };
+  interactWithPropertyByPath(pathToPropToRemove, obj, deleteArrayItem);
+};
