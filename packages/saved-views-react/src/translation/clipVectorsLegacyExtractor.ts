@@ -26,7 +26,7 @@ export function extractClipVectorsFromLegacy(
       return (
         !hasPlanes || (value.planes && Object.keys(value.planes).length > 0)
       );
-    }
+    },
   );
 
   return output.clipVectors;
