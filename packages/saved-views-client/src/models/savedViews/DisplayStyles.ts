@@ -702,7 +702,7 @@ export interface PlanarClipMaskProps {
   mode: PlanarClipMaskMode;
   modelIds?: string;
   subCategoryOrElementIds?: string;
-  priority?: PlanarClipMaskPriority;
+  priority?: number;
   transparency?: number;
   invert?: boolean;
 }

@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Minor changes
 
+- Change `priority` property from `PlanarClipMaskProps` to be a number instead of restricted to the enum `PlanarClipMaskPriority`
 - Change `transformation` property from `ShapeProps` and `modelExtents` property from `ViewITwinDrawing` to be optional
 
 ## [0.4.0](https://github.com/iTwin/saved-views/tree/client-v0.4.0/packages/saved-views-client/) - 2024-07-22

@@ -5,6 +5,7 @@
 import { ColorDef } from "@itwin/core-common";
 
 import type { Rgba, RgbatColorProps } from "./RgbColor.js";
+import { LinePixels } from "@itwin/saved-views-client";
 
 /**
  * Returns a function that does a simple typeof check on a value
@@ -277,6 +278,33 @@ export const extractNumber = (
   to?: string,
 ): ExtractionFunc<void, void> => {
   return createExtractionFunc(from, to ?? from, simpleTypeOf("number"));
+};
+
+/**
+ * Creates a extraction function that will extract a number from the given accessor, transform it into a LinePixels enum, and put it
+ * in the given accessor if provided
+ * @param from Accessor that will be used on input to access value
+ * @param to Accessor that will be used to stored the value in the output object
+ * @returns Function that extracts a number value and type checks it
+ */
+export const extractLinePixels = (
+  from: string,
+  to?: string,
+): ExtractionFunc<void, void> => {
+  return createExtractionFunc(
+    from,
+    to ?? from,
+    simpleTypeOf("number"),
+    (value: unknown) => {
+      if (
+        typeof value !== "number" ||
+        !Object.keys(LinePixels).includes(value.toString())
+      )
+        return LinePixels.Invalid;
+
+      return value;
+    },
+  );
 };
 
 /**

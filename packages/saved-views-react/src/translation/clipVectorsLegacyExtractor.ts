@@ -20,6 +20,15 @@ export function extractClipVectorsFromLegacy(
 
   const output = {} as ViewITwin3d;
   applyExtraction(viewDetails, output, clipVectorLegacyMappings);
+  output.clipVectors = output.clipVectors?.filter(
+    (value: ClipPrimitivePlaneProps | ClipPrimitiveShapeProps) => {
+      const hasPlanes = "planes" in value;
+      return (
+        !hasPlanes || (value.planes && Object.keys(value.planes).length > 0)
+      );
+    },
+  );
+
   return output.clipVectors;
 }
 
