@@ -4,17 +4,14 @@
 *--------------------------------------------------------------------------------------------*/
 import { Id64Array } from "@itwin/core-bentley";
 import { QueryRowFormat, type SpatialViewDefinitionProps } from "@itwin/core-common";
-import {
-  type DrawingViewState, type IModelConnection, type SheetViewState, type SpatialViewState, type Viewport,
+import type {
+  DrawingViewState, IModelConnection, SheetViewState, SpatialViewState, Viewport,
 } from "@itwin/core-frontend";
-import { type AngleProps, type XYProps, type XYZProps, type YawPitchRollProps } from "@itwin/core-geometry";
-import {
-  type ViewData, type ViewDataITwin3d, type ViewDataITwinDrawing, type ViewDataITwinSheet,
-  type ViewYawPitchRoll,
-} from "@itwin/saved-views-client";
+import type { AngleProps, XYProps, XYZProps, YawPitchRollProps } from "@itwin/core-geometry";
+import type { ViewITwinDrawing, ViewYawPitchRoll } from "@itwin/saved-views-client";
 
-import type { SavedViewExtension } from "./SavedView.js";
-import { extensionHandlers } from "./translation/SavedViewsExtensionHandlers.js";
+import type { ITwin3dViewData, ITwinDrawingdata, ITwinSheetData, SavedViewData, ViewData } from "./SavedView.js";
+import { ExtensionHandler, extensionHandlers } from "./translation/SavedViewsExtensionHandlers.js";
 import { extractClipVectorsFromLegacy } from "./translation/clipVectorsLegacyExtractor.js";
 import {
   extractDisplayStyle2dFromLegacy, extractDisplayStyle3dFromLegacy,
@@ -37,13 +34,6 @@ interface CaptureSavedViewDataArgs {
   omitPerModelCategoryVisibility?: boolean | undefined;
 }
 
-interface CaptureSavedViewDataResult {
-  viewData: ViewData;
-
-  /** Value is `undefined` when no extension data is captured. */
-  extensions: SavedViewExtension[] | undefined;
-}
-
 /**
  * Captures current {@link Viewport} state into serializable format. The returned data can later be used to restore
  * viewport's view.
@@ -58,10 +48,19 @@ interface CaptureSavedViewDataResult {
  *   return { thumbnail, viewData, extensions: extensions.concat(myExtensions) };
  * }
  */
-export async function captureSavedViewData(args: CaptureSavedViewDataArgs): Promise<CaptureSavedViewDataResult> {
+export async function captureSavedViewData(args: CaptureSavedViewDataArgs): Promise<SavedViewData> {
+  const extensions: ExtensionHandler[] = [];
+  if (!args.omitEmphasis) {
+    extensions.push(extensionHandlers.emphasizeElements);
+  }
+
+  if (!args.omitPerModelCategoryVisibility) {
+    extensions.push(extensionHandlers.perModelCategoryVisibility);
+  }
+
   return {
     viewData: await createSavedViewVariant(args.viewport),
-    extensions: [extensionHandlers.emphasizeElements, extensionHandlers.perModelCategoryVisibility]
+    extensions: extensions
       .map((extension) => ({
         extensionName: extension.extensionName,
         data: extension.capture(args.viewport),
@@ -95,7 +94,7 @@ function createSpatialSavedViewObject(
   vp: Viewport,
   hiddenCategories: Id64Array | undefined,
   hiddenModels: Id64Array | undefined,
-): ViewDataITwin3d {
+): ITwin3dViewData {
   const viewState = vp.view as SpatialViewState;
 
   const displayStyleProps = viewState.displayStyle.toJSON();
@@ -115,26 +114,25 @@ function createSpatialSavedViewObject(
   const viewDefinitionProps = viewState.toJSON() as SpatialViewDefinitionProps;
 
   return {
-    itwin3dView: {
-      origin: toArrayVector3d(viewDefinitionProps.origin),
-      extents: toArrayVector3d(viewDefinitionProps.extents),
-      angles: viewDefinitionProps.angles && toYawPitchRoll(viewDefinitionProps.angles),
-      camera: viewDefinitionProps.cameraOn ? {
-        lens: toDegrees(viewDefinitionProps.camera.lens) ?? 0,
-        focusDist: viewDefinitionProps.camera.focusDist,
-        eye: toArrayVector3d(viewDefinitionProps.camera.eye),
-      } : undefined,
-      categories: {
-        enabled: viewState.categorySelector.toJSON().categories,
-        disabled: hiddenCategories,
-      },
-      models: {
-        enabled: viewState.modelSelector.toJSON().models,
-        disabled: hiddenModels,
-      },
-      displayStyle: extractDisplayStyle3dFromLegacy(displayStyleProps),
-      clipVectors: extractClipVectorsFromLegacy(viewDefinitionProps),
+    type: "iTwin3d",
+    origin: toArrayVector3d(viewDefinitionProps.origin),
+    extents: toArrayVector3d(viewDefinitionProps.extents),
+    angles: viewDefinitionProps.angles && toYawPitchRoll(viewDefinitionProps.angles),
+    camera: viewDefinitionProps.cameraOn ? {
+      lens: toDegrees(viewDefinitionProps.camera.lens) ?? 0,
+      focusDist: viewDefinitionProps.camera.focusDist,
+      eye: toArrayVector3d(viewDefinitionProps.camera.eye),
+    } : undefined,
+    categories: {
+      enabled: viewState.categorySelector.toJSON().categories,
+      disabled: hiddenCategories,
     },
+    models: {
+      enabled: viewState.modelSelector.toJSON().models,
+      disabled: hiddenModels,
+    },
+    displayStyle: extractDisplayStyle3dFromLegacy(displayStyleProps),
+    clipVectors: extractClipVectorsFromLegacy(viewDefinitionProps),
   };
 }
 
@@ -154,44 +152,43 @@ function toYawPitchRoll(angles: YawPitchRollProps): ViewYawPitchRoll {
   };
 }
 
-function createDrawingSavedViewObject(vp: Viewport, hiddenCategories: Id64Array | undefined): ViewDataITwinDrawing {
+function createDrawingSavedViewObject(vp: Viewport, hiddenCategories: Id64Array | undefined): ITwinDrawingdata {
   const viewState = vp.view as DrawingViewState;
   const viewDefinitionProps = viewState.toJSON();
 
   return {
-    itwinDrawingView: {
-      baseModelId: viewDefinitionProps.baseModelId,
-      origin: toArrayVector2d(viewDefinitionProps.origin),
-      delta: toArrayVector2d(viewDefinitionProps.delta),
-      angle: toDegrees(viewDefinitionProps.angle) ?? 0,
-      displayStyle: extractDisplayStyle2dFromLegacy(viewState.displayStyle.toJSON()),
-      categories: {
-        enabled: viewState.categorySelector.toJSON().categories,
-        disabled: hiddenCategories,
-      },
+    type: "iTwinDrawing",
+    modelExtents: {} as ViewITwinDrawing["modelExtents"],
+    baseModelId: viewDefinitionProps.baseModelId,
+    origin: toArrayVector2d(viewDefinitionProps.origin),
+    delta: toArrayVector2d(viewDefinitionProps.delta),
+    angle: toDegrees(viewDefinitionProps.angle) ?? 0,
+    displayStyle: extractDisplayStyle2dFromLegacy(viewState.displayStyle.toJSON()),
+    categories: {
+      enabled: viewState.categorySelector.toJSON().categories,
+      disabled: hiddenCategories,
     },
   };
 }
 
-function createSheetSavedViewObject(vp: Viewport, hiddenCategories: Id64Array | undefined): ViewDataITwinSheet {
+function createSheetSavedViewObject(vp: Viewport, hiddenCategories: Id64Array | undefined): ITwinSheetData {
   const viewState = vp.view as SheetViewState;
   const viewDefinitionProps = viewState.toJSON();
 
   return {
-    itwinSheetView: {
-      baseModelId: viewDefinitionProps.baseModelId,
-      origin: toArrayVector2d(viewDefinitionProps.origin),
-      delta: toArrayVector2d(viewDefinitionProps.delta),
-      angle: toDegrees(viewDefinitionProps.angle) ?? 0,
-      displayStyle: extractDisplayStyle2dFromLegacy(viewState.displayStyle.toJSON()),
-      categories: {
-        enabled: viewState.categorySelector.toJSON().categories,
-        disabled: hiddenCategories,
-      },
-      width: viewState.sheetSize.x,
-      height: viewState.sheetSize.y,
-      sheetAttachments: viewState.attachmentIds,
+    type: "iTwinSheet",
+    baseModelId: viewDefinitionProps.baseModelId,
+    origin: toArrayVector2d(viewDefinitionProps.origin),
+    delta: toArrayVector2d(viewDefinitionProps.delta),
+    angle: toDegrees(viewDefinitionProps.angle) ?? 0,
+    displayStyle: extractDisplayStyle2dFromLegacy(viewState.displayStyle.toJSON()),
+    categories: {
+      enabled: viewState.categorySelector.toJSON().categories,
+      disabled: hiddenCategories,
     },
+    width: viewState.sheetSize.x,
+    height: viewState.sheetSize.y,
+    sheetAttachments: viewState.attachmentIds,
   };
 }
 

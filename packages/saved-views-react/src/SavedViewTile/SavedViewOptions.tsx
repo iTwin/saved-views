@@ -8,7 +8,7 @@ import Fuse from "fuse.js";
 import { useMemo, useState, type ChangeEvent, type ComponentProps, type ReactElement, type ReactNode } from "react";
 
 import { LayeredMenuItem } from "../LayeredDropdownMenu/LayeredDropdownMenu.js";
-import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedView.js";
+import type { SavedViewGroup, SavedView, SavedViewTag } from "../SavedView.js";
 import { useSavedViewsContext } from "../SavedViewsContext.js";
 import { trimInputString } from "../utils.js";
 import { useSavedViewTileContext } from "./SavedViewTileContext.js";
@@ -220,17 +220,18 @@ function MoveToGroupSubmenu(props: MoveToGroupSubmenuProps): ReactElement {
   const { localization: { moveToGroupMenu } } = useSavedViewsContext();
 
   const handleMoveToGroup = (groupId: string) => {
-    props.moveToGroup(props.savedView.id, groupId);
+    props.moveToGroup(props.savedView.savedViewId, groupId);
   };
 
   const { moveToNewGroup } = props;
   const handleCreate = moveToNewGroup && ((groupName: string) => {
-    moveToNewGroup(props.savedView.id, groupName);
+    moveToNewGroup(props.savedView.savedViewId, groupName);
   });
 
   return (
     <SearchableSubmenu
       collection={props.groups}
+      indexer="groupId"
       placeholder={props.moveToNewGroup ? moveToGroupMenu.findOrCreateGroup : moveToGroupMenu.findGroup}
       creationLabel={moveToGroupMenu.createGroup}
       onCreate={handleCreate}
@@ -238,15 +239,15 @@ function MoveToGroupSubmenu(props: MoveToGroupSubmenuProps): ReactElement {
       {(searchResults) =>
         searchResults.map((group) => (
           <MenuItem
-            key={group.id}
+            key={group.groupId}
             className="svr-searchable-submenu-item"
             startIcon={group.shared ? <SvgShare /> : <SvgBlank />}
-            onClick={() => handleMoveToGroup(group.id)}
-            disabled={group.id === props.savedView.groupId}
+            onClick={() => handleMoveToGroup(group.groupId)}
+            disabled={group.groupId === props.savedView.groupId}
           >
             {group.displayName}
             {
-              group.id === props.savedView.groupId &&
+              group.groupId === props.savedView.groupId &&
               <Text style={{ marginLeft: "var(--iui-size-xs)" }} as="span">{moveToGroupMenu.current}</Text>
             }
           </MenuItem>
@@ -319,20 +320,21 @@ function ManageTagsSubmenu(props: ManageTagsSubmenuProps): ReactElement {
 
   const handleTagClick = (tagId: string) => {
     if (props.savedView.tagIds?.includes(tagId)) {
-      props.removeTag(props.savedView.id, tagId);
+      props.removeTag(props.savedView.savedViewId, tagId);
     } else {
-      props.addTag(props.savedView.id, tagId);
+      props.addTag(props.savedView.savedViewId, tagId);
     }
   };
 
   const { addNewTag } = props;
   const handleCreate = addNewTag && ((tagName: string) => {
-    addNewTag(props.savedView.id, tagName);
+    addNewTag(props.savedView.savedViewId, tagName);
   });
 
   return (
     <SearchableSubmenu
       collection={props.tags}
+      indexer="tagId"
       placeholder={props.addNewTag ? localization.tagsMenu.findOrCreateTag : localization.tagsMenu.findTag}
       creationLabel={localization.tagsMenu.createTag}
       onCreate={handleCreate}
@@ -340,10 +342,10 @@ function ManageTagsSubmenu(props: ManageTagsSubmenuProps): ReactElement {
       {(searchResults) =>
         searchResults.map((tag) => (
           <MenuItem
-            key={tag.id}
+            key={tag.tagId}
             className="svr-searchable-submenu-item"
-            startIcon={props.savedView.tagIds?.includes(tag.id) ? <SvgCheckmarkSmall /> : <SvgBlank />}
-            onClick={() => handleTagClick(tag.id)}
+            startIcon={props.savedView.tagIds?.includes(tag.tagId) ? <SvgCheckmarkSmall /> : <SvgBlank />}
+            onClick={() => handleTagClick(tag.tagId)}
           >
             {tag.displayName}
           </MenuItem>
@@ -353,25 +355,25 @@ function ManageTagsSubmenu(props: ManageTagsSubmenuProps): ReactElement {
   );
 }
 
-interface SearchableSubmenuProps<T> {
-  collection: T[];
+interface SearchableSubmenuProps<T extends string, U> {
+  collection: U[];
+  indexer: T;
   placeholder: string;
   creationLabel: string;
   onCreate?: ((value: string) => void) | undefined;
-  children: (searchResult: T[]) => ReactNode[];
+  children: (searchResult: U[]) => ReactNode[];
 }
 
-interface Indexable {
-  id: string;
-  displayName: string;
-}
+type Indexable<T extends string> = { [K in T]: string; } & { displayName: string; };
 
-function SearchableSubmenu<T extends Indexable>(props: SearchableSubmenuProps<T>): ReactElement {
+function SearchableSubmenu<Indexer extends string, Collection extends Indexable<Indexer>>(
+  props: SearchableSubmenuProps<Indexer, Collection>,
+): ReactElement {
   const { localization } = useSavedViewsContext();
 
   const fuse = useMemo(
-    () => new Fuse(props.collection, { keys: ["displayName"], threshold: 0.5 }),
-    [props.collection],
+    () => new Fuse(props.collection, { keys: [props.indexer], threshold: 0.5 }),
+    [props.collection, props.indexer],
   );
 
   const [inputValue, setInputValue] = useState("");
@@ -427,7 +429,11 @@ function Delete(props: DeleteProps): ReactElement {
   const { localization } = useSavedViewsContext();
 
   return (
-    <MenuItem className={props.className} startIcon={props.icon} onClick={() => props.deleteSavedView(savedView.id)}>
+    <MenuItem
+      className={props.className}
+      startIcon={props.icon}
+      onClick={() => props.deleteSavedView(savedView.savedViewId)}
+    >
       {localization.delete}
     </MenuItem>
   );

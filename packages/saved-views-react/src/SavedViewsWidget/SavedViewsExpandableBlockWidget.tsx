@@ -10,7 +10,7 @@ import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedView.js";
 import { SavedViewTile } from "../SavedViewTile/SavedViewTile.js";
 import { StickyExpandableBlock } from "../StickyExpandableBlock/StickyExpandableBlock.js";
 import { TileGrid } from "../TileGrid/TileGrid.js";
-import type { SavedViewActions } from "../useSavedViews.js";
+import type { SavedViewsActions } from "../useSavedViews.js";
 
 import "./SavedViewsExpandableBlockWidget.css";
 
@@ -18,7 +18,8 @@ interface SavedViewsExpandableBlockWidgetProps {
   savedViews: Map<string, SavedView>;
   groups: Map<string, SavedViewGroup>;
   tags: Map<string, SavedViewTag>;
-  actions?: Partial<SavedViewActions> | undefined;
+  thumbnails: Map<string, ReactNode>;
+  actions?: Partial<SavedViewsActions> | undefined;
   editable?: boolean | undefined;
   options?: ((savedView: SavedView) => (((close: () => void) => ReactElement[]) | ReactElement[])) | undefined;
 }
@@ -32,6 +33,7 @@ export function SavedViewsExpandableBlockWidget(props: SavedViewsExpandableBlock
         actions={props.actions}
         groups={props.groups}
         tags={props.tags}
+        thumbnails={props.thumbnails}
         editable={props.editable}
         options={props.options}
         expanded
@@ -39,11 +41,12 @@ export function SavedViewsExpandableBlockWidget(props: SavedViewsExpandableBlock
       {
         [...props.groups.values()].map((group) =>
           <SavedViewsGroup
-            key={group.id}
+            key={group.groupId}
             group={group}
             savedViews={props.savedViews}
             groups={props.groups}
             tags={props.tags}
+            thumbnails={props.thumbnails}
             actions={props.actions}
             editable={props.editable}
             options={props.options}
@@ -59,14 +62,15 @@ interface SavedViewsGroupProps {
   savedViews: Map<string, SavedView>;
   groups: Map<string, SavedViewGroup>;
   tags: Map<string, SavedViewTag>;
+  thumbnails: Map<string, ReactNode>;
   expanded?: boolean | undefined;
-  actions?: Partial<SavedViewActions> | undefined;
+  actions?: Partial<SavedViewsActions> | undefined;
   editable?: boolean | undefined;
   options?: ((savedView: SavedView) => (((close: () => void) => ReactElement[]) | ReactElement[])) | undefined;
 }
 
 export function SavedViewsGroup(props: SavedViewsGroupProps): ReactElement {
-  const savedViews = [...props.savedViews.values()].filter(({ groupId }) => groupId === props.group?.id);
+  const savedViews = [...props.savedViews.values()].filter(({ groupId }) => groupId === props.group?.groupId);
   return (
     <BorderlessExpandableBlock
       displayName={props.group?.displayName ?? "Ungrouped"}
@@ -79,8 +83,9 @@ export function SavedViewsGroup(props: SavedViewsGroupProps): ReactElement {
         {
           (savedView) => (
             <SavedViewTile
-              key={savedView.id}
+              key={savedView.savedViewId}
               savedView={savedView}
+              thumbnail={props.thumbnails.get(savedView.savedViewId)}
               tags={props.tags}
               editable={props.editable}
               onRename={props.actions?.renameSavedView}

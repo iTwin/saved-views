@@ -41,8 +41,6 @@ export function SavedViewGroupTile(props: SavedViewGroupTileProps): ReactElement
     [],
   );
 
-  const dispatchOpenGroup = () => props.onOpen(props.group.id);
-
   const savedViewGroupTileContext = useMemo<SavedViewGroupTileContext>(
     () => ({ group: props.group, setEditingName }),
     [props.group],
@@ -64,7 +62,7 @@ export function SavedViewGroupTile(props: SavedViewGroupTileProps): ReactElement
                 onEndEditing: (newName) => {
                   setEditingName(false);
                   if (newName !== props.group.displayName) {
-                    props.onRename?.(props.group.id, newName);
+                    props.onRename?.(props.group.groupId, newName);
                   }
                 },
               }}
@@ -73,7 +71,7 @@ export function SavedViewGroupTile(props: SavedViewGroupTileProps): ReactElement
           thumbnail={<SvgFolder className="iui-thumbnail-icon" />}
           isActionable={!props.editable && !editingName}
           moreOptions={(props.options && props.options.length > 0) ? props.options : undefined}
-          onClick={dispatchOpenGroup}
+          onClick={() => props.onOpen(props.group.groupId)}
         >
           <Text isMuted>{props.numItems} items</Text>
         </Tile>

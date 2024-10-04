@@ -2,47 +2,48 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import type { SavedView, SavedViewGroup, SavedViewTag, WriteableSavedViewProperties } from "../SavedView.js";
-import type { PartialExcept } from "../utils.js";
+import type { SavedViewData, SavedViewGroup, SavedView, SavedViewTag } from "../SavedView.js";
 
 export interface SavedViewsClient {
-  getAllSavedViews: (args: GetAllSavedViewsParams) => AsyncIterableIterator<SavedView[]>;
-  getAllGroups: (args: GetAllGroupsParams) => Promise<SavedViewGroup[]>;
-  getAllTags: (args: GetAllTagsParams) => Promise<SavedViewTag[]>;
-  getThumbnailUrl: (args: GetThumbnailUrlParams) => Promise<string | undefined>;
-  uploadThumbnail: (args: UploadThumbnailParams) => Promise<void>;
-  getSavedView: (args: GetSavedViewParams) => Promise<SavedView>;
-  createSavedView: (args: CreateSavedViewParams) => Promise<SavedView>;
-  updateSavedView: (args: UpdateSavedViewParams) => Promise<SavedView>;
-  deleteSavedView: (args: DeleteSavedViewParams) => Promise<void>;
-  createGroup: (args: CreateGroupParams) => Promise<SavedViewGroup>;
-  updateGroup: (args: UpdateGroupParams) => Promise<SavedViewGroup>;
-  deleteGroup: (args: DeleteGroupParams) => Promise<void>;
-  createTag: (args: CreateTagParams) => Promise<SavedViewTag>;
-  updateTag: (args: UpdateTagParams) => Promise<SavedViewTag>;
-  deleteTag: (args: DeleteTagParams) => Promise<void>;
+  getSavedViews: (args: GetSavedViewsArgs) => AsyncIterableIterator<SavedView[]>;
+  getGroups: (args: GetGroupsArgs) => Promise<SavedViewGroup[]>;
+  getTags: (args: GetTagsArgs) => Promise<SavedViewTag[]>;
+  getThumbnailUrl: (args: GetThumbnailUrlArgs) => Promise<string | undefined>;
+  uploadThumbnail: (args: UploadThumbnailArgs) => Promise<void>;
+  getSavedViewById: (args: GetSavedViewByIdArgs) => Promise<SavedView>;
+  getSavedViewDataById: (args: GetSavedViewDataByIdArgs) => Promise<SavedViewData>;
+  createSavedView: (args: CreateSavedViewArgs) => Promise<SavedView>;
+  updateSavedView: (args: UpdateSavedViewArgs) => Promise<SavedView>;
+  deleteSavedView: (args: DeleteSavedViewArgs) => Promise<void>;
+  createGroup: (args: CreateGroupArgs) => Promise<SavedViewGroup>;
+  updateGroup: (args: UpdateGroupArgs) => Promise<SavedViewGroup>;
+  deleteGroup: (args: DeleteGroupArgs) => Promise<void>;
+  createTag: (args: CreateTagArgs) => Promise<SavedViewTag>;
+  updateTag: (args: UpdateTagArgs) => Promise<SavedViewTag>;
+  deleteTag: (args: DeleteTagArgs) => Promise<void>;
 }
 
-export interface GetAllSavedViewsParams extends CommonParams {
+export interface GetSavedViewsArgs extends CommonParams {
+  iTwinId: string;
+  iModelId?: string | undefined;
+  groupId?: string | undefined;
+}
+
+export interface GetGroupsArgs extends CommonParams {
   iTwinId: string;
   iModelId?: string | undefined;
 }
 
-export interface GetAllGroupsParams extends CommonParams {
+export interface GetTagsArgs extends CommonParams {
   iTwinId: string;
   iModelId?: string | undefined;
 }
 
-export interface GetAllTagsParams extends CommonParams {
-  iTwinId: string;
-  iModelId?: string | undefined;
-}
-
-export interface GetThumbnailUrlParams extends CommonParams {
+export interface GetThumbnailUrlArgs extends CommonParams {
   savedViewId: string;
 }
 
-export interface UploadThumbnailParams extends CommonParams {
+export interface UploadThumbnailArgs extends CommonParams {
   savedViewId: string;
   /**
    * Image data encoded as base64 data URL.
@@ -53,49 +54,66 @@ export interface UploadThumbnailParams extends CommonParams {
   image: string;
 }
 
-export interface GetSavedViewParams extends CommonParams {
+export interface GetSavedViewByIdArgs extends CommonParams {
   savedViewId: string;
 }
 
-export interface CreateSavedViewParams extends CommonParams {
-  iTwinId: string;
-  iModelId?: string | undefined;
-  savedView: PartialExcept<WriteableSavedViewProperties, "displayName" | "viewData">;
-}
-
-export interface UpdateSavedViewParams extends CommonParams {
-  savedView: Partial<WriteableSavedViewProperties> & { id: string; };
-}
-
-export interface DeleteSavedViewParams extends CommonParams {
+export interface GetSavedViewDataByIdArgs extends CommonParams {
   savedViewId: string;
 }
 
-export interface CreateGroupParams extends CommonParams {
+export interface CreateSavedViewArgs extends CommonParams {
   iTwinId: string;
   iModelId?: string | undefined;
-  group: Pick<SavedViewGroup, "displayName" | "shared">;
+  displayName: string;
+  groupId?: string | undefined;
+  tagIds?: string[] | undefined;
+  shared?: boolean | undefined;
+  savedViewData: SavedViewData;
 }
 
-export interface UpdateGroupParams extends CommonParams {
-  group: Pick<SavedViewGroup, "id"> & Partial<SavedViewGroup>;
+export interface UpdateSavedViewArgs extends CommonParams {
+  savedViewId: string;
+  displayName?: string | undefined;
+  groupId?: string | undefined;
+  tagIds?: string[] | undefined;
+  shared?: boolean | undefined;
+  savedViewData?: SavedViewData | undefined;
 }
 
-export interface DeleteGroupParams extends CommonParams {
+export interface DeleteSavedViewArgs extends CommonParams {
+  savedViewId: string;
+}
+
+export interface CreateGroupArgs extends CommonParams {
+  iTwinId: string;
+  iModelId?: string | undefined;
+  displayName: string;
+  shared?: boolean | undefined;
+}
+
+export interface UpdateGroupArgs extends CommonParams {
+  groupId: string;
+  displayName?: string | undefined;
+  shared?: boolean | undefined;
+}
+
+export interface DeleteGroupArgs extends CommonParams {
   groupId: string;
 }
 
-export interface CreateTagParams extends CommonParams {
+export interface CreateTagArgs extends CommonParams {
   iTwinId: string;
   iModelId?: string;
   displayName: string;
 }
 
-export interface UpdateTagParams extends CommonParams {
-  tag: Pick<SavedViewTag, "id"> & Partial<SavedViewTag>;
+export interface UpdateTagArgs extends CommonParams {
+  tagId: string;
+  displayName?: string | undefined;
 }
 
-export interface DeleteTagParams extends CommonParams {
+export interface DeleteTagArgs extends CommonParams {
   tagId: string;
 }
 

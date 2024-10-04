@@ -2,60 +2,30 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import type { SavedView, SavedViewActions, SavedViewGroup, SavedViewTag } from "@itwin/saved-views-react";
+import type { SavedView, SavedViewGroup, SavedViewsActions, SavedViewTag } from "@itwin/saved-views-react";
 import { enableMapSet, produce } from "immer";
-import { useEffect, useState } from "react";
+import { type ReactElement, type ReactNode, useEffect, useState } from "react";
 
 enableMapSet();
 
 export function useSavedViewData() {
   const [state, setState] = useState(() => {
-    const tags = new Map(Array.from({ length: 10 }).map(() => createTag()).map((tag) => [tag.id, tag]));
+    const tags = new Map(Array.from({ length: 10 }).map(() => createTag()).map((tag) => [tag.tagId, tag]));
     const groups = new Map(
-      Array.from({ length: 10 }).map(() => createSavedViewGroup()).map((group) => [group.id, group]),
+      Array.from({ length: 10 }).map(() => createSavedViewGroup()).map((group) => [group.groupId, group]),
     );
     const savedViews = new Map<string, SavedView>([
       ...createSavedViews(undefined, [...tags.keys()], 100),
       ...[...groups.keys()].map((groupId) => createSavedViews(groupId, [...tags.keys()], 10)).flat(),
     ]);
-    return { savedViews, groups, tags, editing: false };
+    const thumbnails = new Map<string, ReactNode>(
+      Array.from(savedViews.keys()).map((savedViewId) => [savedViewId, <MockThumbnail key={savedViewId} />]),
+    );
+    return { savedViews, groups, tags, thumbnails, editing: false };
   });
 
-  useEffect(
-    () => {
-      let disposed = false;
-      void (async () => {
-        for (const savedViewId of state.savedViews.keys()) {
-          const thumbnail = await getThumbnailImage();
-          if (disposed) {
-            return;
-          }
-
-          setState(
-            produce((draft) => {
-              const savedView = draft.savedViews.get(savedViewId);
-              if (!savedView) {
-                return;
-              }
-
-              savedView.thumbnail = thumbnail;
-            }),
-          );
-        }
-      })();
-
-      return () => { disposed = true; };
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
-
-  const actions: Partial<SavedViewActions> = {
-    renameSavedView(savedViewId: string, newName: string | undefined): void {
-      if (!newName) {
-        return;
-      }
-
+  const actions: Partial<SavedViewsActions> = {
+    async renameSavedView(savedViewId, newName) {
       setState(
         produce((draft) => {
           const savedView = draft.savedViews.get(savedViewId);
@@ -68,7 +38,7 @@ export function useSavedViewData() {
         }),
       );
     },
-    renameGroup(groupId: string, newName: string): void {
+    async renameGroup(groupId, newName) {
       setState(
         produce((draft) => {
           const group = draft.groups.get(groupId);
@@ -81,7 +51,7 @@ export function useSavedViewData() {
         }),
       );
     },
-    moveToGroup(savedViewId: string, groupId: string): void {
+    async moveToGroup(savedViewId, groupId) {
       setState(
         produce((draft) => {
           const savedView = draft.savedViews.get(savedViewId);
@@ -94,32 +64,7 @@ export function useSavedViewData() {
         }),
       );
     },
-    moveToNewGroup(savedViewId: string, groupName: string): void {
-      setState((prev) => {
-        return produce(
-          prev,
-          (draft) => {
-            const savedView = draft.savedViews.get(savedViewId);
-            if (!savedView) {
-              return;
-            }
-
-            const newGroup: SavedViewGroup = {
-              id: crypto.randomUUID(),
-              displayName: groupName,
-              shared: false,
-            };
-            savedView.groupId = newGroup.id;
-            const groups = [...prev.groups.values(), newGroup]
-              .sort((a, b) => a.displayName.localeCompare(b.displayName))
-              .map((group) => [group.id, group] as const);
-            draft.groups = new Map(groups);
-            draft.editing = true;
-          },
-        );
-      });
-    },
-    addTag(savedViewId: string, tagId: string): void {
+    async addTag(savedViewId, tagId) {
       setState(
         produce((draft) => {
           const savedView = draft.savedViews.get(savedViewId);
@@ -133,30 +78,7 @@ export function useSavedViewData() {
         }),
       );
     },
-    addNewTag(savedViewId: string, tagName: string): void {
-      setState((prev) => {
-        return produce(
-          prev,
-          (draft) => {
-            const savedView = draft.savedViews.get(savedViewId);
-            if (!savedView) {
-              return;
-            }
-
-            const newTag: SavedViewTag = {
-              id: crypto.randomUUID(),
-              displayName: tagName,
-            };
-            savedView.tagIds ??= [];
-            savedView.tagIds.push(newTag.id);
-            const tags = [...prev.tags.values(), newTag].sort((a, b) => a.displayName.localeCompare(b.displayName));
-            draft.tags = new Map(tags.map((tag) => [tag.id, tag]));
-            draft.editing = true;
-          },
-        );
-      });
-    },
-    removeTag(savedViewId: string, tagId: string): void {
+    async removeTag(savedViewId, tagId) {
       setState(
         produce((draft) => {
           const savedView = draft.savedViews.get(savedViewId);
@@ -186,7 +108,7 @@ export function useSavedViewData() {
 
 function createSavedViewGroup(): SavedViewGroup {
   const id = ++lastSavedViewGroupId;
-  return { id: id.toString(), displayName: `Group ${id}`, shared: Math.random() > 0.8 };
+  return { groupId: id.toString(), displayName: `Group ${id}`, shared: Math.random() > 0.8 };
 }
 
 let lastSavedViewGroupId = 0;
@@ -195,18 +117,17 @@ function createSavedViews(groupId: string | undefined, tagIds: string[], amount:
   return Array
     .from({ length: amount })
     .map(() => createSavedView(groupId, tagIds))
-    .map((savedView) => [savedView.id, savedView]);
+    .map((savedView) => [savedView.savedViewId, savedView]);
 }
 
 function createSavedView(groupId: string | undefined, tagIds: string[]): SavedView {
   const id = ++lastSavedViewId;
   return {
-    id: id.toString(),
+    savedViewId: id.toString(),
     displayName: `Saved View ${id}`,
     shared: Math.random() > 0.8,
     tagIds: pickRandomItems(Math.floor(8.0 * (Math.random() ** 2)), tagIds),
     groupId,
-    thumbnail: undefined,
   };
 }
 
@@ -214,7 +135,7 @@ let lastSavedViewId = 0;
 
 function createTag(): SavedViewTag {
   const id = ++lastTagId;
-  return { id: id.toString(), displayName: `Tag ${id}` };
+  return { tagId: id.toString(), displayName: `Tag ${id}` };
 }
 
 let lastTagId = 0;
@@ -233,15 +154,15 @@ function pickRandomItems<T>(n: number, items: T[]): T[] {
   return [...result];
 }
 
-export function useThumbnailImage(): string | undefined {
-  const [thumbnail, setThumbnail] = useState<string | undefined>("");
+export function MockThumbnail(): ReactElement {
+  const [thumbnailUrl, setThumbnailUrl] = useState<string>();
   useEffect(
     () => {
       let disposed = false;
       void (async () => {
         const thumbnail = await getThumbnailImage();
         if (!disposed) {
-          setThumbnail(thumbnail);
+          setThumbnailUrl(URL.createObjectURL(thumbnail));
         }
       })();
 
@@ -250,15 +171,26 @@ export function useThumbnailImage(): string | undefined {
     [],
   );
 
-  return thumbnail;
+  useEffect(
+    () => {
+      return () => {
+        if (thumbnailUrl) {
+          URL.revokeObjectURL(thumbnailUrl);
+        }
+      };
+    },
+    [thumbnailUrl],
+  );
+
+  return <img src={thumbnailUrl} />;
 }
 
-async function getThumbnailImage(): Promise<string | undefined> {
+async function getThumbnailImage(): Promise<Blob> {
   const canvas = new OffscreenCanvas(400, 300);
 
   const ctx = canvas.getContext("2d");
   if (!ctx) {
-    return undefined;
+    throw new Error("Could not obtain 2d context from offscreen canvas.");
   }
 
   // Normalize coordates, put (0; 0) at the center, and flip the Y axis
@@ -273,8 +205,7 @@ async function getThumbnailImage(): Promise<string | undefined> {
   const hue = Math.floor(Math.random() * 360);
   paintCube(ctx, `oklch(60% 0.25 ${hue})`);
 
-  const imageBlob = await canvas.convertToBlob();
-  return URL.createObjectURL(imageBlob);
+  return canvas.convertToBlob();
 }
 
 function paintCube(ctx: OffscreenCanvasRenderingContext2D, color: string): void {

@@ -2,23 +2,36 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import type { ViewData } from "@itwin/saved-views-client";
-import type { ReactNode } from "react";
+import type { ViewITwin3d, ViewITwinDrawing, ViewITwinSheet } from "@itwin/saved-views-client";
 
 export interface SavedView {
-  id: string;
+  savedViewId: string;
   displayName: string;
-  viewData?: ViewData | undefined;
   groupId?: string | undefined;
   creatorId?: string | undefined;
   tagIds?: string[] | undefined;
   shared?: boolean | undefined;
-  thumbnail?: ReactNode | string | undefined;
+  creationTime?: Date | undefined;
+  lastModified?: Date | undefined;
+}
+
+export interface SavedViewData {
+  viewData: ViewData;
   extensions?: SavedViewExtension[] | undefined;
-  /** Time the saved view was created as an ISO8601 string, `"YYYY-MM-DDTHH:mm:ss.sssZ"` */
-  creationTime?: string | undefined;
-  /** Time the saved view was last modified as an ISO8601 string, `"YYYY-MM-DDTHH:mm:ss.sssZ"` */
-  lastModified?: string | undefined;
+}
+
+export type ViewData = ITwin3dViewData | ITwinDrawingdata | ITwinSheetData;
+
+export interface ITwin3dViewData extends ViewITwin3d {
+  type: "iTwin3d";
+}
+
+export interface ITwinDrawingdata extends ViewITwinDrawing {
+  type: "iTwinDrawing";
+}
+
+export interface ITwinSheetData extends ViewITwinSheet {
+  type: "iTwinSheet";
 }
 
 export interface SavedViewExtension {
@@ -44,15 +57,15 @@ export interface SavedViewExtension {
 }
 
 export interface SavedViewTag {
-  id: string;
+  tagId: string;
   displayName: string;
 }
 
 export interface SavedViewGroup {
-  id: string;
+  groupId: string;
   displayName: string;
   creatorId?: string | undefined;
   shared?: boolean | undefined;
 }
 
-export type WriteableSavedViewProperties = Omit<SavedView, "id" | "creatorId" | "creationTime" | "lastModified">;
+export type WriteableSavedViewProperties = Pick<SavedView, "displayName" | "groupId" | "tagIds" | "shared">;
