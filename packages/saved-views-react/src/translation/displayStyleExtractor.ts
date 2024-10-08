@@ -741,13 +741,6 @@ export const extractDisplayStyle = (data: object, viewState?: ViewState) => {
   if ("displayStyleProps" in data) {
     styles = (data as LegacySavedView2d).displayStyleProps.jsonProperties?.styles;
     applyExtraction(styles, output, displayStylesLegacyMapping);
-    if (output?.thematic?.range) {
-      output.thematic.range =
-        Array.isArray(output.thematic.range) &&
-        output.thematic.range.length === 0
-          ? undefined
-          : output.thematic.range;
-    }
   }
   if (styles === undefined) {
     return undefined;
@@ -777,6 +770,11 @@ export const extractDisplayStyle3d = (data: object) => {
     styles = (data as LegacySavedView3d).displayStyleProps.jsonProperties?.styles;
     applyExtraction(styles, output, displayStyle3dLegacyMapping);
   }
+  const range = output?.thematic?.range;
+    if (range && Array.isArray(range) && range.length === 0) {
+      // Range is optional, so delete it if it's empty
+      delete output.thematic.range;
+    }
   if (styles === undefined) {
     return undefined;
   }
