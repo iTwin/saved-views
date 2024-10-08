@@ -741,6 +741,13 @@ export const extractDisplayStyle = (data: object, viewState?: ViewState) => {
   if ("displayStyleProps" in data) {
     styles = (data as LegacySavedView2d).displayStyleProps.jsonProperties?.styles;
     applyExtraction(styles, output, displayStylesLegacyMapping);
+    if (output?.thematic?.range) {
+      output.thematic.range =
+        Array.isArray(output.thematic.range) &&
+        output.thematic.range.length === 0
+          ? undefined
+          : output.thematic.range;
+    }
   }
   if (styles === undefined) {
     return undefined;
