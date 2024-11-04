@@ -4,12 +4,12 @@
 *--------------------------------------------------------------------------------------------*/
 import { SvgChevronLeft, SvgHome } from "@itwin/itwinui-icons-react";
 import { Breadcrumbs, Button, DropdownButton, IconButton, MenuItem } from "@itwin/itwinui-react";
-import { useCallback, useMemo, useState, type ReactElement } from "react";
+import { useCallback, useMemo, useState, type ReactElement, type ReactNode } from "react";
 
-import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedView.js";
+import type { SavedViewGroup, SavedView, SavedViewTag } from "../SavedView.js";
 import { SavedViewTile } from "../SavedViewTile/SavedViewTile.js";
 import { TileGrid } from "../TileGrid/TileGrid.js";
-import type { SavedViewActions } from "../useSavedViews.js";
+import type { SavedViewsActions } from "../useSavedViews.js";
 import { SavedViewGroupOptions } from "./SavedViewGroupTile/SavedViewGroupOptions.js";
 import { SavedViewGroupTile } from "./SavedViewGroupTile/SavedViewGroupTile.js";
 import { BorderlessExpandableBlock } from "./SavedViewsExpandableBlockWidget.js";
@@ -18,7 +18,8 @@ interface SavedViewsFolderWidgetProps {
   savedViews: Map<string, SavedView>;
   groups: Map<string, SavedViewGroup>;
   tags: Map<string, SavedViewTag>;
-  actions?: Partial<SavedViewActions> | undefined;
+  thumbnails: Map<string, ReactNode>;
+  actions?: Partial<SavedViewsActions> | undefined;
   editable?: boolean | undefined;
   options?: ((savedView: SavedView) => (((close: () => void) => ReactElement[]) | ReactElement[])) | undefined;
   onTileClick?: ((selectedViewId: string) => void) | undefined;
@@ -59,6 +60,7 @@ export function SavedViewsFolderWidget(props: SavedViewsFolderWidgetProps): Reac
         groupedSavedViews={groupedSavedViews}
         groups={props.groups}
         tags={props.tags}
+        thumbnails={props.thumbnails}
         focusedGroupId={state.focusedGroupId}
         clearFocusedGroup={() => setState(({ activeGroupId }) => ({ activeGroupId, focusedGroupId: undefined }))}
         onGroupOpen={handleGroupOpen}
@@ -74,11 +76,12 @@ export function SavedViewsFolderWidget(props: SavedViewsFolderWidgetProps): Reac
 
   return (
     <SavedViewsGroupScreen
-      key={activeGroup.id}
+      key={activeGroup.groupId}
       activeGroup={activeGroup}
       groups={props.groups}
       tags={props.tags}
-      savedViews={groupedSavedViews.get(activeGroup.id) ?? []}
+      thumbnails={props.thumbnails}
+      savedViews={groupedSavedViews.get(activeGroup.groupId) ?? []}
       setActiveGroup={(activeGroupId) => setState({ activeGroupId, focusedGroupId: state.activeGroupId })}
       actions={props.actions}
       editable={props.editable}
@@ -97,12 +100,13 @@ interface SavedViewsHomeScreenProps {
   groupedSavedViews: Map<string | undefined, SavedView[]>;
   groups: Map<string, SavedViewGroup>;
   tags: Map<string, SavedViewTag>;
+  thumbnails: Map<string, ReactNode>;
   focusedGroupId?: string | undefined;
   clearFocusedGroup?: () => void;
   onGroupOpen: (groupId: string) => void;
   initialScrollTop: number;
   storeScrollOffset: (offset: number) => void;
-  actions?: Partial<SavedViewActions> | undefined;
+  actions?: Partial<SavedViewsActions> | undefined;
   editable?: boolean | undefined;
   savedViewOptions?: ((savedView: SavedView) => (((close: () => void) => ReactElement[]) | ReactElement[])) | undefined;
   onTileClick?: ((selectedViewId: string) => void) | undefined;
@@ -114,16 +118,16 @@ function SavedViewsHomeScreen(props: SavedViewsHomeScreenProps): ReactElement {
   const groupTiles = useMemo(
     () => [...props.groups.values()].map((group) =>
       <SavedViewGroupTile
-        key={group.id}
+        key={group.groupId}
         group={group}
-        numItems={props.groupedSavedViews.get(group.id)?.length ?? 0}
+        numItems={props.groupedSavedViews.get(group.groupId)?.length ?? 0}
         onOpen={props.onGroupOpen}
-        focused={group.id === props.focusedGroupId}
+        focused={group.groupId === props.focusedGroupId}
         initialScrollTop={props.initialScrollTop}
         editable={props.editable}
         options={[
           <SavedViewGroupOptions.Rename key="rename" />,
-          <MenuItem key="delete" onClick={() => props.actions?.deleteGroup?.(group.id)}>Delete</MenuItem>,
+          <MenuItem key="delete" onClick={() => props.actions?.deleteGroup?.(group.groupId)}>Delete</MenuItem>,
         ]}
         onRename={props.actions?.renameGroup}
       />,
@@ -150,8 +154,9 @@ function SavedViewsHomeScreen(props: SavedViewsHomeScreenProps): ReactElement {
           {
             (savedView) =>
               <SavedViewTile
-                key={savedView.id}
+                key={savedView.savedViewId}
                 savedView={savedView}
+                thumbnail={props.thumbnails.get(savedView.savedViewId)}
                 tags={props.tags}
                 editable={props.editable}
                 onRename={props.actions?.renameSavedView}
@@ -181,9 +186,10 @@ interface SavedViewsGroupScreenProps {
   activeGroup: SavedViewGroup;
   groups: Map<string, SavedViewGroup>;
   tags: Map<string, SavedViewTag>;
+  thumbnails: Map<string, ReactNode>;
   savedViews: SavedView[];
   setActiveGroup: (groupId: string | undefined) => void;
-  actions?: Partial<SavedViewActions> | undefined;
+  actions?: Partial<SavedViewsActions> | undefined;
   editable?: boolean | undefined;
   options?: ((savedView: SavedView) => (((close: () => void) => ReactElement[]) | ReactElement[])) | undefined;
   onTileClick?: ((selectedViewId: string) => void) | undefined;
@@ -212,7 +218,7 @@ function SavedViewsGroupScreen(props: SavedViewsGroupScreenProps): ReactElement 
             styleType="borderless"
             menuItems={(close) =>
               groups.map((group) =>
-                <MenuItem key={group.id} onClick={() => { close(); props.setActiveGroup(group.id); }}>
+                <MenuItem key={group.groupId} onClick={() => { close(); props.setActiveGroup(group.groupId); }}>
                   {group.displayName}
                 </MenuItem>,
               )
@@ -227,8 +233,9 @@ function SavedViewsGroupScreen(props: SavedViewsGroupScreenProps): ReactElement 
           {
             (savedView) => (
               <SavedViewTile
-                key={savedView.id}
+                key={savedView.savedViewId}
                 savedView={savedView}
+                thumbnail={props.thumbnails.get(savedView.savedViewId)}
                 tags={props.tags}
                 editable={props.editable}
                 options={props.options?.(savedView)}

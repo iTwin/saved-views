@@ -3,14 +3,15 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import {
-  ITwinSavedViewsClient as Client, type Group, type SavedViewRepresentation, type Tag,
+  ITwinSavedViewsClient as Client, isViewDataITwin3d, isViewDataITwinDrawing, type Group, type SavedViewMinimal,
+  type SavedViewRepresentation, type Tag, type ViewData,
 } from "@itwin/saved-views-client";
 
-import type { SavedView, SavedViewGroup, SavedViewTag } from "../SavedView.js";
+import type { SavedView, SavedViewData, SavedViewGroup, SavedViewTag } from "../SavedView.js";
 import type {
-  CreateGroupParams, CreateSavedViewParams, CreateTagParams, DeleteGroupParams, DeleteSavedViewParams, DeleteTagParams,
-  GetAllGroupsParams, GetAllSavedViewsParams, GetAllTagsParams, GetSavedViewParams, GetThumbnailUrlParams,
-  SavedViewsClient, UpdateGroupParams, UpdateSavedViewParams, UpdateTagParams, UploadThumbnailParams,
+  CreateGroupArgs, CreateSavedViewArgs, CreateTagArgs, DeleteGroupArgs, DeleteSavedViewArgs, DeleteTagArgs,
+  GetGroupsArgs, GetSavedViewByIdArgs, GetSavedViewDataByIdArgs, GetSavedViewsArgs, GetTagsArgs, GetThumbnailUrlArgs,
+  SavedViewsClient, UpdateGroupArgs, UpdateSavedViewArgs, UpdateTagArgs, UploadThumbnailArgs,
 } from "./SavedViewsClient.js";
 
 interface ITwinSavedViewsClientParams {
@@ -18,10 +19,10 @@ interface ITwinSavedViewsClientParams {
    * Authorization token that grants access to iTwin Saved Views API. The token should be valid for `savedviews:read`
    * and `savedviews:modify` OIDC scopes.
   */
- getAccessToken: () => Promise<string>;
+  getAccessToken: () => Promise<string>;
 
- /** @default "https://api.bentley.com/savedviews"  */
- baseUrl?: string | undefined;
+  /** @default "https://api.bentley.com/savedviews" */
+  baseUrl?: string | undefined;
 }
 
 export class ITwinSavedViewsClient implements SavedViewsClient {
@@ -31,10 +32,11 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     this.#client = new Client(args);
   }
 
-  async *getAllSavedViews(args: GetAllSavedViewsParams): AsyncIterableIterator<SavedView[]> {
-    const iterable = this.#client.getAllSavedViewsRepresentation({
+  async *getSavedViews(args: GetSavedViewsArgs): AsyncIterableIterator<SavedView[]> {
+    const iterable = this.#client.getAllSavedViewsMinimal({
       iTwinId: args.iTwinId,
       iModelId: args.iModelId,
+      groupId: args.groupId,
       signal: args.signal,
     });
     for await (const page of iterable) {
@@ -42,7 +44,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     }
   }
 
-  async getAllGroups(args: GetAllGroupsParams): Promise<SavedViewGroup[]> {
+  async getGroups(args: GetGroupsArgs): Promise<SavedViewGroup[]> {
     const response = await this.#client.getAllGroups({
       iTwinId: args.iTwinId,
       iModelId: args.iModelId,
@@ -51,7 +53,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     return response.groups.map(groupResponseToSavedViewGroup);
   }
 
-  async getAllTags(args: GetAllTagsParams): Promise<SavedViewTag[]> {
+  async getTags(args: GetTagsArgs): Promise<SavedViewTag[]> {
     const response = await this.#client.getAllTags({
       iTwinId: args.iTwinId,
       iModelId: args.iModelId,
@@ -60,7 +62,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     return response.tags.map(tagResponseToSavedViewTag);
   }
 
-  async getThumbnailUrl(args: GetThumbnailUrlParams): Promise<string | undefined> {
+  async getThumbnailUrl(args: GetThumbnailUrlArgs): Promise<string | undefined> {
     const response = await this.#client.getImage({
       savedViewId: args.savedViewId,
       size: "thumbnail",
@@ -69,7 +71,7 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     return response.href;
   }
 
-  async uploadThumbnail(args: UploadThumbnailParams): Promise<void> {
+  async uploadThumbnail(args: UploadThumbnailArgs): Promise<void> {
     await this.#client.updateImage({
       savedViewId: args.savedViewId,
       image: args.image,
@@ -77,86 +79,100 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     });
   }
 
-  async getSavedView(args: GetSavedViewParams): Promise<SavedView> {
-    const response = await this.#client.getSavedViewRepresentation({
+  async getSavedViewById(args: GetSavedViewByIdArgs): Promise<SavedView> {
+    const response = await this.#client.getSavedViewMinimal({
       savedViewId: args.savedViewId,
       signal: args.signal,
     });
     return savedViewResponseToSavedView(response.savedView);
   }
-  async createSavedView(args: CreateSavedViewParams): Promise<SavedView> {
+
+  async getSavedViewDataById(args: GetSavedViewDataByIdArgs): Promise<SavedViewData> {
+    const response = await this.#client.getSavedViewRepresentation({
+      savedViewId: args.savedViewId, signal: args.signal,
+    });
+
+    return {
+      viewData: getViewData(response.savedView),
+      extensions: response.savedView.extensions,
+    };
+  }
+
+  async createSavedView(args: CreateSavedViewArgs): Promise<SavedView> {
+    const savedViewData = toApiSavedViewData(args.savedViewData.viewData);
     const { savedView } = await this.#client.createSavedView({
       iTwinId: args.iTwinId,
       iModelId: args.iModelId,
-      displayName: args.savedView.displayName,
-      tagIds: args.savedView.tagIds,
-      groupId: args.savedView.groupId,
-      shared: args.savedView.shared,
-      savedViewData: args.savedView.viewData,
-      extensions: args.savedView.extensions,
+      displayName: args.displayName,
+      groupId: args.groupId,
+      tagIds: args.tagIds,
+      shared: args.shared,
+      savedViewData,
+      extensions: args.savedViewData.extensions,
       signal: args.signal,
     });
     return savedViewResponseToSavedView(savedView);
   }
 
-  async updateSavedView(args: UpdateSavedViewParams): Promise<SavedView> {
+  async updateSavedView(args: UpdateSavedViewArgs): Promise<SavedView> {
+    const savedViewData = args.savedViewData && toApiSavedViewData(args.savedViewData.viewData);
     const { savedView } = await this.#client.updateSavedView({
-      savedViewId: args.savedView.id,
-      displayName: args.savedView.displayName,
-      tagIds: args.savedView.tagIds,
-      groupId: args.savedView.groupId,
-      shared: args.savedView.shared,
-      savedViewData: args.savedView.viewData,
+      savedViewId: args.savedViewId,
+      displayName: args.displayName,
+      tagIds: args.tagIds,
+      groupId: args.groupId,
+      shared: args.shared,
+      savedViewData,
       signal: args.signal,
     });
 
-    await Promise.all((args.savedView.extensions ?? []).map(
-      ({ extensionName, data }) => this.#client.createExtension({
-        savedViewId: args.savedView.id,
+    await Promise.all((args.savedViewData?.extensions ?? []).map(({ extensionName, data }) => {
+      this.#client.createExtension({
+        savedViewId: args.savedViewId,
         extensionName,
         data,
-      }),
-    ));
+      });
+    }));
 
     return savedViewResponseToSavedView(savedView);
   }
 
-  async deleteSavedView(args: DeleteSavedViewParams): Promise<void> {
+  async deleteSavedView(args: DeleteSavedViewArgs): Promise<void> {
     await this.#client.deleteSavedView({ savedViewId: args.savedViewId, signal: args.signal });
   }
 
-  async createGroup(args: CreateGroupParams): Promise<SavedViewGroup> {
+  async createGroup(args: CreateGroupArgs): Promise<SavedViewGroup> {
     const { group } = await this.#client.createGroup({
       iTwinId: args.iTwinId,
       iModelId: args.iModelId,
-      displayName: args.group.displayName,
+      displayName: args.displayName,
       signal: args.signal,
     });
     return groupResponseToSavedViewGroup(group);
   }
 
-  async updateGroup(args: UpdateGroupParams): Promise<SavedViewGroup> {
+  async updateGroup(args: UpdateGroupArgs): Promise<SavedViewGroup> {
     const { group } = await this.#client.updateGroup({
-      groupId: args.group.id,
-      displayName: args.group.displayName,
-      shared: args.group.shared,
+      groupId: args.groupId,
+      displayName: args.displayName,
+      shared: args.shared,
       signal: args.signal,
     });
     return groupResponseToSavedViewGroup(group);
   }
 
-  async deleteGroup(args: DeleteGroupParams): Promise<void> {
+  async deleteGroup(args: DeleteGroupArgs): Promise<void> {
     const savedViewPages = this.#client.getAllSavedViewsMinimal({ groupId: args.groupId, signal: args.signal });
-    for await (const savedViews of savedViewPages) {
+    for await (const { savedViews } of savedViewPages) {
       await Promise.all(
-        savedViews.savedViews.map(({ id }) => this.#client.deleteSavedView({ savedViewId: id, signal: args.signal })),
+        savedViews.map(({ id }) => this.#client.deleteSavedView({ savedViewId: id, signal: args.signal })),
       );
     }
 
     await this.#client.deleteGroup({ groupId: args.groupId, signal: args.signal });
   }
 
-  async createTag(args: CreateTagParams): Promise<SavedViewTag> {
+  async createTag(args: CreateTagArgs): Promise<SavedViewTag> {
     const { tag } = await this.#client.createTag({
       iTwinId: args.iTwinId,
       iModelId: args.iModelId,
@@ -166,39 +182,36 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     return tagResponseToSavedViewTag(tag);
   }
 
-  async updateTag(args: UpdateTagParams): Promise<SavedViewTag> {
+  async updateTag(args: UpdateTagArgs): Promise<SavedViewTag> {
     const { tag } = await this.#client.updateTag({
-      tagId: args.tag.id,
-      displayName: args.tag.displayName,
+      tagId: args.tagId,
+      displayName: args.displayName,
       signal: args.signal,
     });
     return tagResponseToSavedViewTag(tag);
   }
 
-  async deleteTag(args: DeleteTagParams): Promise<void> {
+  async deleteTag(args: DeleteTagArgs): Promise<void> {
     await this.#client.deleteTag({ tagId: args.tagId, signal: args.signal });
   }
 }
 
-function savedViewResponseToSavedView(response: SavedViewRepresentation): SavedView {
+function savedViewResponseToSavedView(response: Omit<SavedViewMinimal, "savedViewData" | "extensions">): SavedView {
   return {
-    id: response.id,
+    savedViewId: response.id,
     displayName: response.displayName,
-    viewData: response.savedViewData,
     tagIds: response.tags?.map((tag) => tag.id),
     groupId: response._links.group?.href.split("/").at(-1),
     creatorId: response._links.creator?.href.split("/").at(-1),
     shared: response.shared,
-    thumbnail: undefined,
-    extensions: response.extensions,
-    creationTime: response.creationTime,
-    lastModified: response.lastModified,
+    creationTime: new Date(response.creationTime),
+    lastModified: new Date(response.lastModified),
   };
 }
 
 function groupResponseToSavedViewGroup(response: Group): SavedViewGroup {
   return {
-    id: response.id,
+    groupId: response.id,
     displayName: response.displayName,
     creatorId: response._links.creator?.href.split("/").at(-1),
     shared: response.shared,
@@ -207,7 +220,44 @@ function groupResponseToSavedViewGroup(response: Group): SavedViewGroup {
 
 function tagResponseToSavedViewTag(response: Tag): SavedViewTag {
   return {
-    id: response.id,
+    tagId: response.id,
     displayName: response.displayName,
   };
+}
+
+function getViewData(savedView: SavedViewRepresentation): SavedViewData["viewData"] {
+  if (isViewDataITwin3d(savedView.savedViewData)) {
+    return {
+      type: "iTwin3d",
+      ...savedView.savedViewData.itwin3dView,
+    };
+  }
+
+  if (isViewDataITwinDrawing(savedView.savedViewData)) {
+    return {
+      type: "iTwinDrawing",
+      ...savedView.savedViewData.itwinDrawingView,
+    };
+  }
+
+  return {
+    type: "iTwinSheet",
+    ...savedView.savedViewData.itwinSheetView,
+  };
+}
+
+function toApiSavedViewData(viewData: SavedViewData["viewData"]): ViewData {
+  if (viewData.type === "iTwin3d") {
+    const { type, ...rest } = viewData;
+    return { itwin3dView: rest };
+  }
+
+  if (viewData.type === "iTwinDrawing") {
+    const { type, ...rest } = viewData;
+
+    return { itwinDrawingView: rest };
+  }
+
+  const { type, ...rest } = viewData;
+  return { itwinSheetView: rest };
 }

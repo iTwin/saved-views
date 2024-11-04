@@ -4,7 +4,7 @@
 *--------------------------------------------------------------------------------------------*/
 import { ViewState, type IModelConnection, type Viewport } from "@itwin/core-frontend";
 
-import type { SavedView } from "./SavedView.js";
+import type { SavedViewData } from "./SavedView.js";
 import { createViewState } from "./createViewState.js";
 import { extensionHandlers, type ExtensionHandler } from "./translation/SavedViewsExtensionHandlers.js";
 
@@ -21,7 +21,7 @@ export interface ApplySavedViewSettings {
 
   /**
    * How to handle captured {@link ViewState} data. The default behavior is to generate a new `ViewState` object out of
-   * {@linkcode SavedView.viewData} and apply it to viewport.
+   * {@linkcode SavedViewData.viewData} and apply it to viewport.
    *
    * You can optionally provide a pre-made `ViewState` instance to conserve resources. It is usually obtained from
    * {@link createViewState} result.
@@ -29,7 +29,7 @@ export interface ApplySavedViewSettings {
    * @example
    * import { applySavedView, createViewState } from "@itwin/saved-views-react";
    *
-   * const viewState = await createViewState(iModel, savedView);
+   * const viewState = await createViewState(iModel, savedViewData);
    * await Promise.all([
    *   applySavedView(iModel, viewport1, savedView, { viewState }),
    *   applySavedView(iModel, viewport2, savedView, { viewState }),
@@ -71,7 +71,7 @@ type ApplyStrategy = "apply" | "reset" | "keep";
  * @example
  * // Optionally, you can create and manage ViewState object yourself to avoid redundant work,
  * // e.g. when applying the same Saved View to multiple viewports
- * const viewState = await createViewState(iModel, savedView);
+ * const viewState = await createViewState(iModel, savedViewData);
  * await Promise.all([
  *   applySavedView(iModel, viewport1, savedView, { viewState }),
  *   applySavedView(iModel, viewport2, savedView, { viewState }),
@@ -80,7 +80,7 @@ type ApplyStrategy = "apply" | "reset" | "keep";
 export async function applySavedView(
   iModel: IModelConnection,
   viewport: Viewport,
-  savedViewData: Pick<SavedView, "viewData" | "extensions">,
+  savedViewData: SavedViewData,
   settings: ApplySavedViewSettings | undefined = {},
 ): Promise<void> {
   const defaultStrategy = settings.all ?? "apply";
