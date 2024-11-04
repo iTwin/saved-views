@@ -3,8 +3,7 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import {
-  Camera, IModelReadRpcInterface, type CodeProps, type SpatialViewDefinitionProps, type ViewDefinition2dProps,
-  type ViewQueryParams, type ViewStateProps,
+  Camera, type CodeProps, type SpatialViewDefinitionProps, type ViewDefinition2dProps, type ViewStateProps,
 } from "@itwin/core-common";
 import {
   DrawingViewState, SheetViewState, SpatialViewState, type IModelConnection, type ViewState,
@@ -280,10 +279,7 @@ function createEmptyViewState(iModel: IModelConnection, viewClassName: string): 
 async function getDefaultViewIdFromClassName(iModel: IModelConnection, viewClassName: string): Promise<string> {
   // Check validity of default view
   const viewId = await iModel.views.queryDefaultViewId();
-  const params: ViewQueryParams = {};
-  params.from = viewClassName;
-  params.where = "ECInstanceId=" + viewId;
-  const viewProps = await IModelReadRpcInterface.getClient().queryElementProps(iModel.getRpcProps(), params);
+  const viewProps = await iModel.elements.queryProps({ from: viewClassName, where: "ECInstanceId=" + viewId });
   if (viewProps.length > 0) {
     return viewId;
   }
