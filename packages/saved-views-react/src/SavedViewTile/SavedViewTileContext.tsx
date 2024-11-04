@@ -25,7 +25,7 @@ export const SavedViewTileContextProvider = savedViewTileContext.Provider;
 export function useSavedViewTileContext(): SavedViewTileContext {
   const contextValue = useContext(savedViewTileContext);
   return contextValue ?? {
-    savedView: { id: "SavedViewTileContext_NoContext", displayName: "" },
+    savedView: { savedViewId: "SavedViewTileContext_NoContext", displayName: "" },
     setEditingName: () => { },
   };
 }

@@ -47,7 +47,7 @@ export function ComponentsCatalogRoutes(): ReactElement {
   return (
     <StrictMode>
       <Routes>
-        <Route index element={<Navigate to={`${firstCategory}/${firstComponent.name}`} />} />
+        <Route index element={<Navigate replace to={`${firstCategory}/${firstComponent.name}`} />} />
         <Route path=":category/:component/*" element={<ComponentsCatalog />} />
       </Routes>
     </StrictMode>

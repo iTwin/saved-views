@@ -8,7 +8,7 @@ import {
   ITwinSavedViewsClient, applySavedView, captureSavedViewData, captureSavedViewThumbnail, useSavedViews,
 } from "@itwin/saved-views-react";
 import { SavedViewsFolderWidget, createSavedViewOptions } from "@itwin/saved-views-react/experimental";
-import { ReactElement, useMemo, useState } from "react";
+import { type ReactElement, useEffect, useMemo, useState } from "react";
 
 import { applyUrlPrefix } from "../../environment.js";
 import { useAuthorization } from "../Authorization.js";
@@ -33,67 +33,84 @@ export function SavedViewsWidget(props: SavedViewsWidgetProps): ReactElement {
 
   const toaster = useToaster();
 
-  const [updatingSavedViews, setUpdatingSavedViews] = useState(false);
-  const savedViews = useSavedViews({
-    iTwinId: props.iTwinId,
-    iModelId: props.iModelId,
-    client,
-    onUpdateInProgress: () => setUpdatingSavedViews(true),
-    onUpdateComplete: () => setUpdatingSavedViews(false),
-    onUpdateError: (error) => {
-      toaster.negative("Failed to update saved views.");
-      // eslint-disable-next-line no-console
-      console.error(error);
+  let savedViews = useSavedViews({ iTwinId: props.iTwinId, iModelId: props.iModelId, client });
+  const [operationsInProgress, setOperationsInProgress] = useState(0);
+  savedViews = wrapAsyncFunctions(
+    savedViews,
+    async (func) => {
+      setOperationsInProgress((prev) => prev + 1);
+      return func()
+        .catch((error) => {
+          toaster.negative("Failed to update saved views.");
+          // eslint-disable-next-line no-console
+          console.error(error);
+          throw error;
+        })
+        .finally(() => setOperationsInProgress((prev) => prev - 1));
     },
-  });
+  );
+
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(
+    () => (0, savedViews.startLoadingData)(() => setIsLoading(false)),
+    [savedViews.startLoadingData],
+  );
 
   const handleTileClick = async (savedViewId: string) => {
     const { close } = toaster.informational("Opening Saved View...", { type: "persisting" });
     try {
-      const savedView = savedViews?.savedViews.get(savedViewId);
-      if (!savedView) {
-        return;
-      }
-
-      await applySavedView(props.iModel, props.viewport, savedView);
+      const savedViewData = await savedViews.lookupSavedViewData(savedViewId);
+      await applySavedView(props.iModel, props.viewport, savedViewData);
     } finally {
       close();
     }
   };
 
-  if (!savedViews) {
+  if (isLoading) {
     return <LoadingScreen>Loading saved views...</LoadingScreen>;
   }
 
   const handleCreateView = async () => {
-    const { viewData, extensions } = await captureSavedViewData({ viewport: props.viewport });
-    const savedViewId = await savedViews.actions.submitSavedView({
-      displayName: "0 Saved View Name",
-      viewData,
-      extensions,
-    });
+    const savedViewData = await captureSavedViewData({ viewport: props.viewport });
+    const savedViewId = await savedViews.createSavedView({ displayName: "0 Saved View Name" }, savedViewData);
     const thumbnail = captureSavedViewThumbnail(props.viewport);
     if (thumbnail) {
-      savedViews.actions.uploadThumbnail(savedViewId, thumbnail);
+      savedViews.uploadThumbnail(savedViewId, thumbnail);
     }
   };
 
-  const groups = [...savedViews.groups.values()];
-  const tags = [...savedViews.tags.values()];
+  const groups = Array.from(savedViews.store.groups.values());
+  const tags = Array.from(savedViews.store.tags.values());
   const tileOptions = createSavedViewOptions({
     renameSavedView: true,
     groupActions: {
       groups,
-      moveToGroup: savedViews.actions.moveToGroup,
-      moveToNewGroup: savedViews.actions.moveToNewGroup,
+      moveToGroup: savedViews.moveToGroup,
+      moveToNewGroup: async (savedViewId, groupName) => {
+        try {
+          setOperationsInProgress((prev) => prev + 1);
+          const groupId = await savedViews.createGroup(groupName);
+          await savedViews.moveToGroup(savedViewId, groupId);
+        } finally {
+          setOperationsInProgress((prev) => prev - 1);
+        }
+      },
     },
     tagActions: {
       tags,
-      addTag: savedViews.actions.addTag,
-      addNewTag: savedViews.actions.addNewTag,
-      removeTag: savedViews.actions.removeTag,
+      addTag: savedViews.addTag,
+      addNewTag: async (savedViewId, tagName) => {
+        try {
+          setOperationsInProgress((prev) => prev + 1);
+          const tagId = await savedViews.createTag(tagName);
+          await savedViews.addTag(savedViewId, tagId);
+        } finally {
+          setOperationsInProgress((prev) => prev - 1);
+        }
+      },
+      removeTag: savedViews.removeTag,
     },
-    deleteSavedView: savedViews.actions.deleteSavedView,
+    deleteSavedView: savedViews.deleteSavedView,
   });
 
   return (
@@ -109,17 +126,27 @@ export function SavedViewsWidget(props: SavedViewsWidgetProps): ReactElement {
     }}>
       <div style={{ display: "flex", gap: "var(--iui-size-s)", paddingTop: "var(--iui-size-s)", alignItems: "center" }}>
         <Button onClick={handleCreateView}>Create saved view</Button>
-        <Button onClick={() => savedViews.actions.createGroup("0 Group")}>Create group</Button>
-        {updatingSavedViews && "Updating saved views..."}
+        <Button onClick={() => savedViews.createGroup("0 Group")}>Create group</Button>
+        {operationsInProgress > 0 && "Updating saved views..."}
       </div>
       <SavedViewsFolderWidget
-        savedViews={savedViews.savedViews}
-        groups={savedViews.groups}
-        tags={savedViews.tags}
-        actions={savedViews.actions}
+        savedViews={savedViews.store.savedViews}
+        groups={savedViews.store.groups}
+        tags={savedViews.store.tags}
+        thumbnails={savedViews.store.thumbnails}
+        actions={savedViews}
         options={() => tileOptions}
         onTileClick={handleTileClick}
       />
     </div>
   );
+}
+
+function wrapAsyncFunctions<T extends object>(obj: T, callback: (func: () => Promise<unknown>) => Promise<unknown>): T {
+  return Object.fromEntries(Object.entries(obj).map(([key, value]) => [
+    key,
+    typeof value === "function" && value.constructor.name === "AsyncFunction"
+      ? (...args: unknown[]) => callback(() => value(...args))
+      : value,
+  ])) as T;
 }

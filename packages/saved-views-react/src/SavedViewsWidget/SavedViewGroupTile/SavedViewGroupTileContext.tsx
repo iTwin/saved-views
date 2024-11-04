@@ -25,7 +25,7 @@ export const SavedViewGroupTileContextProvider = savedViewGroupTileContext.Provi
 export function useSavedViewGroupTileContext(): SavedViewGroupTileContext {
   const contextValue = useContext(savedViewGroupTileContext);
   return contextValue ?? {
-    group: { id: "SavedViewGroupTileContext_NoContext", displayName: "" },
+    group: { groupId: "SavedViewGroupTileContext_NoContext", displayName: "" },
     setEditingName: () => { },
   };
 }

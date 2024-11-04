@@ -21,6 +21,9 @@ interface SavedViewTileProps {
   /** A Saved View that is being represented by the tile. */
   savedView: SavedView;
 
+  /** Image to be displayed on the tile. */
+  thumbnail?: ReactNode | undefined;
+
   /** A collection of available Saved View tags. Used for displaying tags on the tile. */
   tags?: Map<string, SavedViewTag> | undefined;
 
@@ -39,13 +42,12 @@ interface SavedViewTileProps {
   /**
    * Invoked when user submits a new name for the Saved View.
    * @param savedViewId Id of the associated Saved View
-   * @param newName User-submitted string for the Saved View title. This value is `undefined` when user cancels rename
-   *                operaton.
+   * @param newName User-submitted string for the Saved View title
    *
    * @example
    * <SavedViewTile savedView={savedView} onRename={handleRename} editable />
    */
-  onRename?: ((savedViewId: string, newName: string | undefined) => void) | undefined;
+  onRename?: ((savedViewId: string, newName: string) => void) | undefined;
 
   /**
    * Click handler meant for triggering the render of iModel onto the screen with the saved view applied
@@ -91,7 +93,7 @@ export function SavedViewTile(props: SavedViewTileProps): ReactElement {
         {savedViewTags.slice(0, numShownTags).map(
           (tag, i) => (
             <div
-              key={tag.id}
+              key={tag.tagId}
               className="svr-tile--tag"
               style={{ flexShrink: i === numShownTags - 1 ? "unset" : 0 }}
             >
@@ -146,7 +148,10 @@ export function SavedViewTile(props: SavedViewTileProps): ReactElement {
 
   return (
     <SavedViewTileContextProvider value={savedViewTileContext}>
-      <Tile.Wrapper className={`svr-tile ${props.className || ""}`} onClick={() => props.onClick?.(props.savedView.id)}>
+      <Tile.Wrapper
+        className={`svr-tile ${props.className || ""}`}
+        onClick={() => props.onClick?.(props.savedView.savedViewId)}
+      >
         {!props.editable && <Tile.Action />}
         <Tile.Name className="svr-tile-name">
           <EditableTileName
@@ -156,20 +161,14 @@ export function SavedViewTile(props: SavedViewTileProps): ReactElement {
               onStartEditing: () => setEditingName(true),
               onEndEditing: (newName, commit) => {
                 setEditingName(false);
-                props.onRename?.(props.savedView.id, commit ? newName : undefined);
+                commit && props.onRename?.(props.savedView.savedViewId, newName);
               },
             }}
             editable={props.editable || editingName}
           />
         </Tile.Name>
         <Tile.ThumbnailArea className="svr-tile-thumbnail">
-          {
-            typeof props.savedView.thumbnail === "string"
-              ? <Tile.ThumbnailPicture url={props.savedView.thumbnail} />
-              : props.savedView.thumbnail
-                ? props.savedView.thumbnail
-                : <Tile.ThumbnailPicture><SvgSavedView /></Tile.ThumbnailPicture>
-          }
+          {props.thumbnail ?? <Tile.ThumbnailPicture><SvgSavedView /></Tile.ThumbnailPicture>}
           <TileIconContainer style={{ placeSelf: "start" }} icons={props.leftIcons} />
           <TileIconContainer style={{ placeSelf: "start end" }} icons={rightIcons} />
         </Tile.ThumbnailArea>
