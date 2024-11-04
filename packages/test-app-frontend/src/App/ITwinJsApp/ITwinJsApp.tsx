@@ -2,13 +2,12 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { Id64 } from "@itwin/core-bentley";
 import {
   BentleyCloudRpcManager, BentleyCloudRpcParams, IModelReadRpcInterface, IModelTileRpcInterface,
   type AuthorizationClient,
 } from "@itwin/core-common";
 import {
-  CheckpointConnection, IModelApp, ViewCreator3d, type IModelConnection, type ViewState, type Viewport,
+  CheckpointConnection, IModelApp, type IModelConnection, type Viewport, type ViewState,
 } from "@itwin/core-frontend";
 import { ITwinLocalization } from "@itwin/core-i18n";
 import { UiCore } from "@itwin/core-react";
@@ -24,6 +23,7 @@ import { useAuthorization } from "../Authorization.js";
 import { LoadingScreen } from "../common/LoadingScreen.js";
 import { Overlap } from "../common/Overlap.js";
 import { SavedViewsWidget } from "./SavedViewsWidget.js";
+import { ViewCreator } from "./ViewCreator.js";
 
 import "./ITwinJsApp.css";
 
@@ -34,77 +34,25 @@ export interface ITwinJsAppProps {
 
 export function ITwinJsApp(props: ITwinJsAppProps): ReactElement | null {
   const { authorizationClient } = useAuthorization();
-
-  type LoadingState = "opening-imodel" | "opening-viewstate" | "creating-viewstate" | "loaded" | "rendering-imodel"
-    | "rendered";
-  const [loadingState, setLoadingState] = useState<LoadingState>("opening-imodel");
-  const [viewState, setViewState] = useState<ViewState>();
   const iModel = useIModel(props.iTwinId, props.iModelId, authorizationClient);
-
-  useEffect(
-    () => {
-      if (!iModel) {
-        return;
-      }
-
-      let disposed = false;
-      void (async () => {
-        setLoadingState("opening-viewstate");
-        let viewState = await getStoredViewState(iModel);
-        if (disposed) {
-          return;
-        }
-
-        if (!viewState) {
-          setLoadingState("creating-viewstate");
-          const viewCreator = new ViewCreator3d(iModel);
-          viewState = await viewCreator.createDefaultView();
-        }
-
-        if (!disposed) {
-          setLoadingState("loaded");
-          setViewState(viewState);
-        }
-      })();
-      return () => { disposed = true; };
-    },
-    [iModel],
-  );
-
+  const viewState = useDefaultView(iModel);
   const [viewport, setViewport] = useState<Viewport>();
-
-  if (loadingState === "rendering-imodel") {
-    return <LoadingScreen>Opening View...</LoadingScreen>;
-  }
 
   if (!iModel) {
     return <LoadingScreen>Opening iModel...</LoadingScreen>;
   }
 
-  if (loadingState === "opening-viewstate") {
-    return <LoadingScreen>Opening ViewState...</LoadingScreen>;
-  }
-
-  if (loadingState === "creating-viewstate") {
-    return <LoadingScreen>Creating ViewState...</LoadingScreen>;
+  if (!viewState) {
+    return <LoadingScreen>Opening View...</LoadingScreen>;
   }
 
   return (
     <PageLayout.Content>
       <Overlap style={{ height: "100%" }}>
-        <ViewportComponent
-          imodel={iModel}
-          viewState={viewState}
-          viewportRef={setViewport}
-        />
+        <ViewportComponent imodel={iModel} viewState={viewState} viewportRef={setViewport} />
         {
           viewport &&
-          <SavedViewsWidget
-            iTwinId={props.iTwinId}
-            iModelId={props.iModelId}
-            iModel={iModel}
-            viewport={viewport}
-          />
+          <SavedViewsWidget iTwinId={props.iTwinId} iModelId={props.iModelId} iModel={iModel} viewport={viewport} />
         }
       </Overlap>
     </PageLayout.Content>
@@ -187,12 +135,32 @@ function displayIModelError(toaster: ReturnType<typeof useToaster>, message: str
   toaster.negative(<>{message}<br /> {errorMessage}</>);
 }
 
-async function getStoredViewState(iModel: IModelConnection): Promise<ViewState | undefined> {
-  let viewId: string | undefined = await iModel.views.queryDefaultViewId();
-  if (viewId === Id64.invalid) {
-    const viewDefinitionProps = await iModel.views.queryProps({ wantPrivate: false, limit: 1 });
-    viewId = viewDefinitionProps[0]?.id;
-  }
+function useDefaultView(iModel: IModelConnection | undefined) {
+  const [viewState, setViewState] = useState<ViewState>();
 
-  return viewId ? iModel.views.load(viewId) : undefined;
+  useEffect(
+    () => {
+      if (!iModel) {
+        return;
+      }
+
+      let disposed = false;
+      const unregister = IModelApp.viewManager.onViewOpen.addOnce(ViewCreator.onViewOpen);
+
+      void (async () => {
+        const viewState = await ViewCreator.create(iModel);
+        if (!disposed) {
+          setViewState(viewState);
+        }
+      })();
+
+      return () => {
+        unregister();
+        disposed = true;
+      };
+    },
+    [iModel],
+  );
+
+  return viewState;
 }

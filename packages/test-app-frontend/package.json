@@ -19,6 +19,7 @@
     "@itwin/core-bentley": "^4.4.3",
     "@itwin/core-common": "^4.4.3",
     "@itwin/core-frontend": "^4.4.3",
+    "@itwin/core-geometry": "^4.0.6",
     "@itwin/core-i18n": "^4.4.3",
     "@itwin/core-react": "^4.10.0",
     "@itwin/imodel-components-react": "^4.10.0",

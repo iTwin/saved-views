@@ -201,6 +201,9 @@ importers:
       '@itwin/core-frontend':
         specifier: ^4.4.3
         version: 4.4.3(@itwin/appui-abstract@4.4.3(@itwin/core-bentley@4.4.3))(@itwin/core-bentley@4.4.3)(@itwin/core-common@4.4.3(@itwin/core-bentley@4.4.3)(@itwin/core-geometry@4.4.3))(@itwin/core-geometry@4.4.3)(@itwin/core-orbitgt@4.4.3)(@itwin/core-quantity@4.4.3(@itwin/core-bentley@4.4.3))(inversify@6.0.2)(reflect-metadata@0.1.13)
+      '@itwin/core-geometry':
+        specifier: ^4.0.6
+        version: 4.4.3
       '@itwin/core-i18n':
         specifier: ^4.4.3
         version: 4.4.3(@itwin/core-bentley@4.4.3)
@@ -304,6 +307,7 @@ packages:
   '@azure/core-http@3.0.4':
     resolution: {integrity: sha512-Fok9VVhMdxAFOtqiiAtg74fL0UJkt0z3D+ouUUxcRLzZNBioPRAMJFVxiWoJljYpXsRi4GDQHzQHDc9AiYaIUQ==}
     engines: {node: '>=14.0.0'}
+    deprecated: This package is no longer supported. Please migrate to use @azure/core-rest-pipeline
 
   '@azure/core-lro@2.5.4':
     resolution: {integrity: sha512-3GJiMVH7/10bulzOKGrrLeG/uCBH/9VtxqaMcB9lIqAeamI/xYQSHJL/KcsLDuH+yTjYpro/u6D/MuRe4dN70Q==}
@@ -722,6 +726,10 @@ packages:
 
   '@inquirer/figures@1.0.3':
     resolution: {integrity: sha512-ErXXzENMH5pJt5/ssXV0DfWUZqly8nGzf0UcBV9xTnP+KyffE2mqyxIMBrZ8ijQck2nU0TQm40EQB53YreyWHw==}
+    engines: {node: '>=18'}
+
+  '@inquirer/figures@1.0.7':
+    resolution: {integrity: sha512-m+Trk77mp54Zma6xLkLuY+mvanPxlE4A7yNKs2HBiyZ4UkVs28Mv5c/pgWrHeInx+USHeX/WEPzjrWrcJiQgjw==}
     engines: {node: '>=18'}
 
   '@inquirer/input@2.1.9':
@@ -1810,6 +1818,7 @@ packages:
   eslint@8.57.0:
     resolution: {integrity: sha512-dZ6+mexnaTIbSBZWgou51U6OmzIhYM2VcNdtiTtI7qPNZm35Akpr0f6vtw3w1Kmn5PYo+tZVfh13WrhpS6oLqQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
 
   espree@9.6.1:
@@ -2183,6 +2192,7 @@ packages:
 
   inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
+    deprecated: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
 
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
@@ -4018,7 +4028,7 @@ snapshots:
 
   '@inquirer/core@8.2.2':
     dependencies:
-      '@inquirer/figures': 1.0.3
+      '@inquirer/figures': 1.0.7
       '@inquirer/type': 1.3.3
       '@types/mute-stream': 0.0.4
       '@types/node': 20.14.2
@@ -4045,6 +4055,8 @@ snapshots:
       chalk: 4.1.2
 
   '@inquirer/figures@1.0.3': {}
+
+  '@inquirer/figures@1.0.7': {}
 
   '@inquirer/input@2.1.9':
     dependencies:
