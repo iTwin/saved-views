@@ -773,7 +773,7 @@ export const extractDisplayStyle3d = (data: object) => {
   const range = output?.thematic?.range;
     if (range && Array.isArray(range) && range.length === 0) {
       // Range is optional, so delete it if it's empty
-      delete output.thematic.range;
+      output.thematic.range = undefined;
     }
   if (styles === undefined) {
     return undefined;
