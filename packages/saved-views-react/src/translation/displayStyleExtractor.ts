@@ -770,6 +770,11 @@ export const extractDisplayStyle3d = (data: object) => {
     styles = (data as LegacySavedView3d).displayStyleProps.jsonProperties?.styles;
     applyExtraction(styles, output, displayStyle3dLegacyMapping);
   }
+  const range = output?.thematic?.range;
+    if (range && Array.isArray(range) && range.length === 0) {
+      // Range is optional, so delete it if it's empty
+      output.thematic.range = undefined;
+    }
   if (styles === undefined) {
     return undefined;
   }
