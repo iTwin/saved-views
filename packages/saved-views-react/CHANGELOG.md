@@ -43,6 +43,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   * Thumbnails that were specified as image URLs now need to be explicitly passed as `<img src={url} />`
   * `onRename` callback will no longer send `undefined` for `newName` argument
 
+### Fixes
+
+* Replace usage of internal iTwin.js API with public alternative
+
 ## [0.6.0](https://github.com/iTwin/saved-views/tree/react-v0.6.0/packages/saved-views-react/) - 2024-07-22
 
 ### Breaking changes
