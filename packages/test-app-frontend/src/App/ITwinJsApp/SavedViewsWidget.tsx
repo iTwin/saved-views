@@ -70,6 +70,19 @@ export function SavedViewsWidget(props: SavedViewsWidgetProps): ReactElement {
     return <LoadingScreen>Loading saved views...</LoadingScreen>;
   }
 
+  const handleCaptureSavedView = async () => {
+    try {
+      const savedViewData = await captureSavedViewData({ viewport: props.viewport });
+      toaster.positive("Captured saved view. See output in console.");
+      // eslint-disable-next-line no-console
+      console.log(savedViewData);
+    } catch (error) {
+      toaster.negative("Failed to capture saved view.");
+      // eslint-disable-next-line no-console
+      console.error(error);
+    }
+  };
+
   const handleCreateView = async () => {
     const savedViewData = await captureSavedViewData({ viewport: props.viewport });
     const savedViewId = await savedViews.createSavedView({ displayName: "0 Saved View Name" }, savedViewData);
@@ -124,7 +137,14 @@ export function SavedViewsWidget(props: SavedViewsWidgetProps): ReactElement {
       alignContent: "start",
       minHeight: 0,
     }}>
-      <div style={{ display: "flex", gap: "var(--iui-size-s)", paddingTop: "var(--iui-size-s)", alignItems: "center" }}>
+      <div style={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "var(--iui-size-s)",
+        paddingTop: "var(--iui-size-s)",
+        alignItems: "center",
+      }}>
+        <Button onClick={handleCaptureSavedView}>Capture saved view</Button>
         <Button onClick={handleCreateView}>Create saved view</Button>
         <Button onClick={() => savedViews.createGroup("0 Group")}>Create group</Button>
         {operationsInProgress > 0 && "Updating saved views..."}

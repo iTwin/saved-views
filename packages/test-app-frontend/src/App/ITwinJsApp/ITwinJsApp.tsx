@@ -3,11 +3,11 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import {
-  BentleyCloudRpcManager, BentleyCloudRpcParams, IModelReadRpcInterface, IModelTileRpcInterface,
+  BentleyCloudRpcManager, BentleyCloudRpcParams, Cartographic, IModelReadRpcInterface, IModelTileRpcInterface,
   type AuthorizationClient,
 } from "@itwin/core-common";
 import {
-  CheckpointConnection, IModelApp, type IModelConnection, type Viewport, type ViewState,
+  BlankConnection, CheckpointConnection, IModelApp, type IModelConnection, type Viewport, type ViewState,
 } from "@itwin/core-frontend";
 import { ITwinLocalization } from "@itwin/core-i18n";
 import { UiCore } from "@itwin/core-react";
@@ -96,7 +96,17 @@ function useIModel(
       IModelApp.authorizationClient = authorizationClient;
 
       let disposed = false;
-      const iModelPromise = CheckpointConnection.openRemote(iTwinId, iModelId);
+      const iModelPromise = iModelId === ""
+        ? (
+          Promise.resolve(
+            BlankConnection.create({
+              name: "saved-viws-test-app-blank-connection",
+              location: Cartographic.createZero(),
+              extents: { low: { x: 0.0, y: 0.0, z: 0.0 }, high: { x: 1.0, y: 1.0, z: 1.0 } },
+            }),
+          )
+        )
+        : CheckpointConnection.openRemote(iTwinId, iModelId);
       void (async () => {
         try {
           const openedIModel = await iModelPromise;

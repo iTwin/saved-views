@@ -72,6 +72,7 @@ function Main(): ReactElement {
             <Route path=":iTwinId" element={<IModelBrowser />} />
           </Route>
           <Route path="open-imodel/:iTwinId/:iModelId" element={<OpenIModel iTwinJsApp={iTwinJsApp} />} />
+          <Route path="open-blank-connection" element={<OpenBlankConnection iTwinJsApp={iTwinJsApp} />} />
         </Route>
       </Routes>
     </>
@@ -188,4 +189,16 @@ function OpenIModel(props: OpenIModelProps): ReactElement | null {
   }
 
   return <props.iTwinJsApp iTwinId={iTwinId} iModelId={iModelId} />;
+}
+
+interface OpenBlankConnectionProps {
+  iTwinJsApp: typeof ITwinJsApp | undefined;
+}
+
+function OpenBlankConnection(props: OpenBlankConnectionProps): ReactElement {
+  if (props.iTwinJsApp === undefined) {
+    return <LoadingScreen>Initializing...</LoadingScreen>;
+  }
+
+  return <props.iTwinJsApp iTwinId="" iModelId="" />;
 }
