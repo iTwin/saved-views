@@ -2,29 +2,21 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { ViewState, type IModelConnection, type Viewport } from "@itwin/core-frontend";
+import { ViewChangeOptions, ViewPose, ViewState, type IModelConnection, type Viewport } from "@itwin/core-frontend";
 
-import type { SavedViewData } from "./SavedView.js";
+import type { SavedViewData, SavedViewExtension } from "./SavedView.js";
 import { createViewState } from "./createViewState.js";
-import { extensionHandlers, type ExtensionHandler } from "./translation/SavedViewsExtensionHandlers.js";
+import { extensionHandlers } from "./translation/SavedViewsExtensionHandlers.js";
 
 export interface ApplySavedViewSettings {
   /**
-   * Strategy to use when other setting does not specify one. By default, viewport is reset to default state and then
-   * all captured Saved View data is applied on top.
+   * How to make use of captured {@link ViewState} data. The default behavior is
+   * to generate a new `ViewState` object out of {@linkcode SavedViewData.viewData}
+   * and apply it to viewport.
+   *
+   * You can optionally provide a pre-made `ViewState` instance.
+   *
    * @default "apply"
-   *
-   * @example
-   * await applySavedView(iModel, viewport, savedView, { all: "keep", viewState: "apply" });
-   */
-  all?: ApplyStrategy | undefined;
-
-  /**
-   * How to handle captured {@link ViewState} data. The default behavior is to generate a new `ViewState` object out of
-   * {@linkcode SavedViewData.viewData} and apply it to viewport.
-   *
-   * You can optionally provide a pre-made `ViewState` instance to conserve resources. It is usually obtained from
-   * {@link createViewState} result.
    *
    * @example
    * import { applySavedView, createViewState } from "@itwin/saved-views-react";
@@ -34,36 +26,47 @@ export interface ApplySavedViewSettings {
    *   applySavedView(iModel, viewport1, savedView, { viewState }),
    *   applySavedView(iModel, viewport2, savedView, { viewState }),
    * ]);
-   *
-   * @remarks
-   * When neither `SavedView.viewData` nor `ViewState` is provided, current {@linkcode Viewport.view} is preserved.
    */
   viewState?: ApplyStrategy | ViewState | undefined;
 
   /**
-   * How to handle visibility of models and categories that exist in iModel but are not captured in Saved View data. Has
-   * effect only when `modelAndCategoryVisibility` strategy is set to `"apply"`.
+   * How to handle camera pose in captured data.
+   * @default "apply"
+   */
+  camera?: ApplyStrategy | ViewPose | undefined;
+
+  /**
+   * How to handle element emphasis in captured data.
+   * @default "apply"
+   */
+  emphasis?: ApplyStrategy | "clear" | undefined;
+
+  /**
+   * How to handle captured {@link Viewport.perModelCategoryVisibility} data.
+   * @default "apply"
+   */
+  perModelCategoryVisibility?: ApplyStrategy | "clear" | undefined;
+
+  /**
+   * How to handle visibility of models and categories that exist in iModel but
+   * are not captured in Saved View data.
    * @default "hidden"
    */
   modelAndCategoryVisibilityFallback?: "visible" | "hidden" | undefined;
 
-  /** How to handle captured element emphasis data. In default state emphasis is turned off. */
-  emphasis?: ApplyStrategy | undefined;
-
   /**
-   * How to handle captured {@link Viewport.perModelCategoryVisibility} data. In default state no overrides are present.
+   * Options forwarded to {@link Viewport.changeView}.
+   * @default undefined
    */
-  perModelCategoryVisibility?: ApplyStrategy | undefined;
+  viewChangeOptions?: ViewChangeOptions | undefined;
 }
 
 /**
  * Controls how viewport state is going to be altered.
- *
- * * `"apply"` – Apply captured Saved View state. Falls back to `"reset"` on failure (e.g. missing Saved View data).
- * * `"reset"` – Reset to the default viewport state
- * * `"keep"` – Keep the current viewport state
+ *   * `"apply"` – Apply captured Saved View state to viewport
+ *   * `"keep"` – Preserve current viewport state
  */
-type ApplyStrategy = "apply" | "reset" | "keep";
+type ApplyStrategy = "apply" | "keep";
 
 /**
  * Updates {@linkcode viewport} state to match captured Saved View.
@@ -83,33 +86,91 @@ export async function applySavedView(
   savedViewData: SavedViewData,
   settings: ApplySavedViewSettings | undefined = {},
 ): Promise<void> {
-  const defaultStrategy = settings.all ?? "apply";
+  if (settings.viewState !== "keep") {
+    // We use "hidden" as the default value for modelAndCategoryVisibilityFallback
+    // because users expect modelSelector.enabled and categorySelector.enabled to
+    // act as exclusive whitelists when modelSelector.disabled or categorySelector.disabled
+    // arrays are empty, respectively.
+    const { modelAndCategoryVisibilityFallback = "hidden" } = settings;
+    const viewState = settings.viewState instanceof ViewState
+      ? settings.viewState
+      : await createViewState(
+        iModel,
+        savedViewData.viewData,
+        { modelAndCategoryVisibilityFallback },
+      );
 
-  if ((settings.viewState ?? defaultStrategy) !== "keep") {
-    if (settings.viewState instanceof ViewState) {
-      viewport.changeView(settings.viewState);
-    } else if (savedViewData.viewData) {
-      const { modelAndCategoryVisibilityFallback } = settings;
-      const viewState = await createViewState(iModel, savedViewData.viewData, { modelAndCategoryVisibilityFallback });
-      viewport.changeView(viewState);
+    if (settings.camera instanceof ViewPose) {
+      viewState.applyPose(settings.camera);
+    } else if (settings.camera === "keep") {
+      viewState.applyPose(viewport.view.savePose());
+    }
+
+    viewport.changeView(viewState, settings.viewChangeOptions);
+  }
+
+  const extensions = findKnownExtensions(savedViewData.extensions ?? []);
+  if (extensions.emphasis) {
+    if (settings.emphasis !== "keep") {
+      extensionHandlers.emphasizeElements.reset(viewport);
+    }
+
+    if (settings.emphasis === "apply") {
+      extensionHandlers.emphasizeElements.apply(extensions.emphasis, viewport);
     }
   }
 
-  const extensions = new Map(savedViewData.extensions?.map(({ extensionName, data }) => [extensionName, data]));
-  const processExtension = (extensionHandler: ExtensionHandler, strategy: ApplyStrategy = defaultStrategy) => {
-    if (strategy === "keep") {
-      return;
+  if (extensions.perModelCategoryVisibility) {
+    if (settings.perModelCategoryVisibility !== "keep") {
+      extensionHandlers.perModelCategoryVisibility.reset(viewport);
     }
 
-    extensionHandler.reset(viewport);
-    if (strategy === "apply") {
-      const extensionData = extensions.get(extensionHandler.extensionName);
-      if (extensionData) {
-        extensionHandler.apply(extensionData, viewport);
-      }
+    if (settings.perModelCategoryVisibility === "apply") {
+      extensionHandlers.perModelCategoryVisibility.apply(
+        extensions.perModelCategoryVisibility,
+        viewport,
+      );
     }
+  }
+}
+
+interface FindKnownExtensionsResult {
+  emphasis: string | undefined;
+  perModelCategoryVisibility: string | undefined;
+}
+
+/** Finds first occurences of known extensions. */
+function findKnownExtensions(extensions: SavedViewExtension[]): FindKnownExtensionsResult {
+  const result: FindKnownExtensionsResult = {
+    emphasis: undefined,
+    perModelCategoryVisibility: undefined,
   };
 
-  processExtension(extensionHandlers.emphasizeElements, settings.emphasis);
-  processExtension(extensionHandlers.perModelCategoryVisibility, settings.perModelCategoryVisibility);
+  for (const extension of extensions) {
+    if (
+      result.emphasis === undefined &&
+      extension.extensionName === extensionHandlers.emphasizeElements.extensionName
+    ) {
+      result.emphasis = extension.data;
+      if (result.perModelCategoryVisibility) {
+        break;
+      }
+    }
+
+    if (
+      result.perModelCategoryVisibility === undefined &&
+      extension.extensionName === extensionHandlers.perModelCategoryVisibility.extensionName
+    ) {
+      result.perModelCategoryVisibility = extension.data;
+      if (result.emphasis) {
+        break;
+      }
+    }
+
+    if (result.emphasis && result.perModelCategoryVisibility) {
+      break;
+    }
+  }
+
+  return result;
 }
