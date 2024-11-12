@@ -39,7 +39,7 @@ export function App(): ReactElement {
           redirectUri="/auth/callback"
           silentRedirectUri="/auth/silent"
           postLogoutRedirectUri="/"
-          scope="itwins:read users:read savedviews:modify savedviews:read imodels:read imodelaccess:read"
+          scope="itwin-platform"
         >
           <PageLayout>
             <PageLayout.Header>

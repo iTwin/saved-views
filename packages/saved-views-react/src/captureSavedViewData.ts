@@ -10,7 +10,9 @@ import type {
 import type { AngleProps, XYProps, XYZProps, YawPitchRollProps } from "@itwin/core-geometry";
 import type { ViewITwinDrawing, ViewYawPitchRoll } from "@itwin/saved-views-client";
 
-import type { ITwin3dViewData, ITwinDrawingdata, ITwinSheetData, SavedViewData, ViewData } from "./SavedView.js";
+import type {
+  ITwin3dViewData, ITwinDrawingdata, ITwinSheetData, SavedViewData, ViewData,
+} from "./SavedView.js";
 import { ExtensionHandler, extensionHandlers } from "./translation/SavedViewsExtensionHandlers.js";
 import { extractClipVectorsFromLegacy } from "./translation/clipVectorsLegacyExtractor.js";
 import {
@@ -22,28 +24,28 @@ interface CaptureSavedViewDataArgs {
   viewport: Viewport;
 
   /**
-   * Whether to skip capturing data for `"EmphasizeElements"` extension.
+   * Whether function will skip capturing element emphasis state.
    * @default false
    */
   omitEmphasis?: boolean | undefined;
 
   /**
-   * Whether to skip capturing data for `"PerModelCategoryVisibility"` extension.
+   * Whether function will skip capturing `viewport.perModelCategoryVisibility` state.
    * @default false
    */
   omitPerModelCategoryVisibility?: boolean | undefined;
 }
 
 /**
- * Captures current {@link Viewport} state into serializable format. The returned data can later be used to restore
- * viewport's view.
+ * Captures current {@link Viewport} state into serializable format. The returned
+ * data can later be used to restore viewport's view.
  *
  * @example
  * import { captureSavedViewData, captureSavedViewThumbnail } from "@itwin/saved-views-react";
  *
  * async function saveViewport(viewport) {
  *   const { viewData, extensions = [] } = await captureSavedViewData({ viewport });
- *   const myExtensions = captureMyCustomState(viewport);
+ *   const myExtensions = captureMyCustomViewportState(viewport);
  *   const thumbnail = captureSavedViewThumbnail(viewport);
  *   return { thumbnail, viewData, extensions: extensions.concat(myExtensions) };
  * }
@@ -70,7 +72,7 @@ export async function captureSavedViewData(args: CaptureSavedViewDataArgs): Prom
 }
 
 async function createSavedViewVariant(viewport: Viewport): Promise<ViewData> {
-  const hiddenCategoriesPromise = getMissingCategories(
+  const hiddenCategoriesPromise = queryMissingCategories(
     viewport.iModel,
     new Set(viewport.view.categorySelector.toJSON().categories),
   );
@@ -78,7 +80,7 @@ async function createSavedViewVariant(viewport: Viewport): Promise<ViewData> {
   if (viewport.view.isSpatialView()) {
     const [hiddenCategories, hiddenModels] = await Promise.all([
       hiddenCategoriesPromise,
-      getMissingModels(viewport.iModel, new Set(viewport.view.modelSelector.toJSON().models)),
+      queryMissingModels(viewport.iModel, new Set(viewport.view.modelSelector.toJSON().models)),
     ]);
     return createSpatialSavedViewObject(viewport, hiddenCategories, hiddenModels);
   }
@@ -101,7 +103,8 @@ function createSpatialSavedViewObject(
 
   // Clear the timePoint if no schedule script is available on the viewState
   if (
-    viewState.is3d() && displayStyleProps.jsonProperties?.styles?.timePoint && !viewState.displayStyle.scheduleScript
+    viewState.is3d() && displayStyleProps.jsonProperties?.styles?.timePoint &&
+    !viewState.displayStyle.scheduleScript
   ) {
     displayStyleProps.jsonProperties.styles.timePoint = undefined;
   }
@@ -152,7 +155,10 @@ function toYawPitchRoll(angles: YawPitchRollProps): ViewYawPitchRoll {
   };
 }
 
-function createDrawingSavedViewObject(vp: Viewport, hiddenCategories: Id64Array | undefined): ITwinDrawingdata {
+function createDrawingSavedViewObject(
+  vp: Viewport,
+  hiddenCategories: Id64Array | undefined,
+): ITwinDrawingdata {
   const viewState = vp.view as DrawingViewState;
   const viewDefinitionProps = viewState.toJSON();
 
@@ -171,7 +177,10 @@ function createDrawingSavedViewObject(vp: Viewport, hiddenCategories: Id64Array 
   };
 }
 
-function createSheetSavedViewObject(vp: Viewport, hiddenCategories: Id64Array | undefined): ITwinSheetData {
+function createSheetSavedViewObject(
+  vp: Viewport,
+  hiddenCategories: Id64Array | undefined,
+): ITwinSheetData {
   const viewState = vp.view as SheetViewState;
   const viewDefinitionProps = viewState.toJSON();
 
@@ -217,25 +226,30 @@ function toDegrees(angle: AngleProps): number | undefined {
   return undefined;
 }
 
-export async function getMissingModels(iModel: IModelConnection, knownModels: Set<string>): Promise<string[]> {
+export async function queryMissingModels(
+  iModel: IModelConnection,
+  knownModels: Set<string>,
+): Promise<string[]> {
   if (iModel.isBlank) {
     return [];
   }
 
-  const allModels = await getAllModels(iModel);
-  return allModels.map(({ id }) => id).filter((model) => !knownModels.has(model));
+  const allModels = await queryAllSpatiallyLocatedModels(iModel);
+  return allModels.filter((modelId) => !knownModels.has(modelId));
 }
 
-async function getAllModels(iModel: IModelConnection): Promise<Array<{ id: string; }>> {
-  // Note: IsNotSpatiallyLocated was introduced in a later version of the BisCore ECSchema. If the iModel has an earlier
-  // version, the statement will throw because the property does not exist. If the iModel was created from an earlier
-  // version and later upgraded to a newer version, the property may be NULL for models created prior to the upgrade.
+export async function queryAllSpatiallyLocatedModels(iModel: IModelConnection): Promise<string[]> {
+  // BisCore ECSchema gained IsNotSpatiallyLocated property in 2019, almost exactly
+  // one year after the initial iTwin.js release. The following query will fail to
+  // compile with iModels created in that time frame unless user has performed
+  // schema upgrade which assigned NULL value to the property.
   try {
     return await executeQuery(
       iModel,
       "SELECT ECInstanceId FROM Bis.GeometricModel3D WHERE IsPrivate = false AND IsTemplate = false AND (IsNotSpatiallyLocated IS NULL OR IsNotSpatiallyLocated = false)",
     );
   } catch {
+    // Above query failed, assume we have an old iModel
     return executeQuery(
       iModel,
       "SELECT ECInstanceId FROM Bis.GeometricModel3D WHERE IsPrivate = false AND IsTemplate = false",
@@ -243,22 +257,30 @@ async function getAllModels(iModel: IModelConnection): Promise<Array<{ id: strin
   }
 }
 
-export async function getMissingCategories(iModel: IModelConnection, knownCategories: Set<string>): Promise<Id64Array> {
+export async function queryMissingCategories(
+  iModel: IModelConnection,
+  knownCategories: Set<string>,
+): Promise<Id64Array> {
   if (iModel.isBlank) {
     return [];
   }
 
-  const allCategories = await getAllCategories(iModel);
-  return allCategories.map(({ id }) => id).filter((category) => !knownCategories.has(category));
+  const allCategories = await queryAllCategories(iModel);
+  return allCategories.filter((categoryId) => !knownCategories.has(categoryId));
 }
 
-async function getAllCategories(iModel: IModelConnection): Promise<Array<{ id: string; }>> {
+export async function queryAllCategories(iModel: IModelConnection): Promise<string[]> {
   return executeQuery(
     iModel,
     "SELECT DISTINCT Category.Id AS id FROM BisCore.GeometricElement3d WHERE Category.Id IN (SELECT ECInstanceId FROM BisCore.SpatialCategory)",
   );
 }
 
-async function executeQuery(iModel: IModelConnection, query: string): Promise<Array<{ id: string; }>> {
-  return iModel.createQueryReader(query, undefined, { rowFormat: QueryRowFormat.UseJsPropertyNames }).toArray();
+async function executeQuery(iModel: IModelConnection, query: string): Promise<string[]> {
+  const result = await iModel.createQueryReader(
+    query,
+    undefined,
+    { rowFormat: QueryRowFormat.UseECSqlPropertyIndexes },
+  ).toArray();
+  return result.flat();
 }

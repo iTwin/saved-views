@@ -3,22 +3,23 @@
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
 import {
-  Camera, type CodeProps, type SpatialViewDefinitionProps, type ViewDefinition2dProps, type ViewStateProps,
+  Camera, type CodeProps, type SpatialViewDefinitionProps, type ViewDefinition2dProps,
+  type ViewStateProps,
 } from "@itwin/core-common";
 import {
   DrawingViewState, SheetViewState, SpatialViewState, type IModelConnection, type ViewState,
 } from "@itwin/core-frontend";
 import type { ViewITwin3d, ViewITwinDrawing, ViewITwinSheet } from "@itwin/saved-views-client";
 
-import { getMissingCategories, getMissingModels } from "./captureSavedViewData.js";
+import { queryMissingCategories, queryMissingModels } from "./captureSavedViewData.js";
 import type { ViewData } from "./SavedView.js";
 import { extractClipVectors } from "./translation/clipVectorsExtractor.js";
 import { extractDisplayStyle, extractDisplayStyle3d } from "./translation/displayStyleExtractor.js";
 
 export interface ViewStateCreateSettings {
   /**
-   * Normally {@link createViewState} function invokes and awaits {@linkcode ViewState.load} method before returning.
-   * You may skip this step if you intend to perform it later.
+   * Normally {@link createViewState} function invokes and awaits {@linkcode ViewState.load}
+   * method before returning. You may skip this step if you intend to perform it later.
    * @default false
    *
    * @example
@@ -29,15 +30,16 @@ export interface ViewStateCreateSettings {
   skipViewStateLoad?: boolean | undefined;
 
   /**
-   * How to handle visibility of models and categories that exist in iModel but are not captured in Saved View data.
+   * How to handle visibility of models and categories that exist in iModel but
+   * not captured in Saved View data.
    * @default "hidden"
    */
   modelAndCategoryVisibilityFallback?: "visible" | "hidden" | undefined;
 }
 
 /**
- * Creates {@link ViewState} object out of Saved View data. It provides a lower-level access to view data for advanced
- * use.
+ * Creates {@link ViewState} object out of Saved View data. It provides a lower-level
+ * access to view data for advanced use.
  *
  * @example
  * const viewState = await createViewState(iModel, savedViewData.viewData);
@@ -312,8 +314,8 @@ async function unhideNewModelsAndCategories(
     }
 
     const [visibleCategories, visibleModels] = await Promise.all([
-      getMissingCategories(iModel, new Set(viewData.categories.disabled)),
-      getMissingModels(iModel, new Set(viewData.models.disabled)),
+      queryMissingCategories(iModel, new Set(viewData.categories.disabled)),
+      queryMissingModels(iModel, new Set(viewData.models.disabled)),
     ]);
 
     viewState.categorySelector.addCategories(visibleCategories);
@@ -325,6 +327,9 @@ async function unhideNewModelsAndCategories(
     return;
   }
 
-  const visibleCategories = await getMissingCategories(iModel, new Set(viewData.categories.disabled));
+  const visibleCategories = await queryMissingCategories(
+    iModel,
+    new Set(viewData.categories.disabled),
+  );
   viewState.categorySelector.addCategories(visibleCategories);
 }

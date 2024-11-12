@@ -8,24 +8,22 @@ A collection of utilities and React components for building iTwin applications t
 
 ### [captureSavedViewData](./src/captureSavedViewData.ts)
 
-Captures current viewport state into serializable format. The returned data can later be used to restore viewport's view.
+Capture current viewport state into serializable format. You can use this data later to restore the view.
 
 ```ts
-const { viewData, extensions = [] } = await captureSavedViewData({ viewport });
-extensions.push(myCustomExtension(viewport));
+const { viewData, extensions } = await captureSavedViewData({ viewport });
 console.log({ viewData, extensions }); /*
 {
   viewData: { itwin3dView: {...} },
   extensions: {
     { extensionName: "EmphasizeElements", data: "{...}" },
-    { extensionName: "MyCustomExtension", data: "my_custom_extension_data" },
   }
 } */
 ```
 
 ### [captureSavedViewThumbnail](./src/captureSavedViewThumbnail.ts)
 
-Generates Saved View thumbnail based on what is currently displayed on the viewport.
+Generate Saved View thumbnail based on what is currently displayed on the viewport.
 
 ```ts
 const thumbnail = captureSavedViewThumbnail(viewport);
@@ -34,24 +32,12 @@ console.log(thumbnail); // "data:image/png;base64,iVBORw0KGoAAAANSUhEUg..."
 
 ### [applySavedView](./src/applySavedView.ts)
 
-Updates viewport state to match captured Saved View.
+Update viewport state to match captured Saved View.
 
 ```ts
 // Capture viewport state
 const savedViewData = await captureSavedViewData({ viewport });
 // Restore viewport state
-await applySavedView(iModel, viewport, savedViewData);
-```
-
-### [createViewState](./src/createViewState.ts)
-
-Creates ViewState object out of Saved View data. It provides a lower-level access to view data for advanced use.
-
-```ts
-const viewState = await createViewState(iModel, savedViewData.viewData);
-await applySavedView(iModel, viewport, savedViewData, { viewState });
-
-// The two lines above are equivalent to
 await applySavedView(iModel, viewport, savedViewData);
 ```
 
@@ -99,8 +85,7 @@ export function SavedViewsWidget(props) {
 import { useSavedViews, ITwinSavedViewsClient } from "@itwin/saved-views-react";
 
 const client = new ITwinSavedViewsClient({
-  // auth_token should have access to savedviews:read and savedviews:modify OIDC scopes
-  getAccessToken: async () => "auth_token",
+  getAccessToken: async () => "itwin_platform_auth_token",
 });
 
 export function SavedViewsWidget(props) {
