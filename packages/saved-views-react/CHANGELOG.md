@@ -14,6 +14,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   * Move `viewData` and `extensions` properties to `SavedViewData` type
     * Type of `viewData` has changed and definition has moved to `@itwin/saved-views-react`
   * Change type of `creationTime` and `lastModified` properties to `Date | undefined`
+* Make `applySavedView` settings easier to understand
+  * Remove `"reset"` from `ApplyStrategy` union, instead make `"clear"` a valid value for `emphasis` and `perModelCategoryVisibility` properties
+  * Remove `all` property which set default `ApplyStrategy` of all settings
+  * Update documentation
 * `useSavedViews` hook rework
   * No longer implements optimistic behaviour
   * Lazily loads Saved View thumbnails and `SavedViewData`
@@ -42,6 +46,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   * Add `thumbnail` prop
   * Thumbnails that were specified as image URLs now need to be explicitly passed as `<img src={url} />`
   * `onRename` callback will no longer send `undefined` for `newName` argument
+
+### Minor changes
+
+* `applySavedView` enhancements
+  * Accept custom `viewChangeOptions` that the function will internally pass through to `viewport.changeView` call
+  * Add `camera` setting that controls how camera data is applied. Allow supplying a custom `ViewPose` or ignoring Saved View data to keep the camera in place.
 
 ### Fixes
 
