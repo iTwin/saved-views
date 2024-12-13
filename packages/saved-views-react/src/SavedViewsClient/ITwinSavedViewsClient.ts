@@ -159,13 +159,6 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
   }
 
   async deleteGroup(args: DeleteGroupArgs): Promise<void> {
-    const savedViewPages = this.#client.getAllSavedViewsMinimal({ groupId: args.groupId, signal: args.signal });
-    for await (const { savedViews } of savedViewPages) {
-      await Promise.all(
-        savedViews.map(({ id }) => this.#client.deleteSavedView({ savedViewId: id, signal: args.signal })),
-      );
-    }
-
     await this.#client.deleteGroup({ groupId: args.groupId, signal: args.signal });
   }
 
