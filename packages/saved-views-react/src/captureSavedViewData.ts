@@ -13,7 +13,7 @@ import type { ViewITwinDrawing, ViewYawPitchRoll } from "@itwin/saved-views-clie
 import type {
   ITwin3dViewData, ITwinDrawingdata, ITwinSheetData, SavedViewData, ViewData,
 } from "./SavedView.js";
-import { ExtensionHandler, extensionHandlers } from "./translation/SavedViewsExtensionHandlers.js";
+import { ExtensionHandler, extensionHandlers, type DefaultExtensionHandlersCaptureOverrides } from "./translation/SavedViewsExtensionHandlers.js";
 import { extractClipVectorsFromLegacy } from "./translation/clipVectorsLegacyExtractor.js";
 import {
   extractDisplayStyle2dFromLegacy, extractDisplayStyle3dFromLegacy,
@@ -34,6 +34,11 @@ interface CaptureSavedViewDataArgs {
    * @default false
    */
   omitPerModelCategoryVisibility?: boolean | undefined;
+
+  /**
+   * Overrides for the capture function of default extension handlers .
+   */
+  overrides?: DefaultExtensionHandlersCaptureOverrides;
 }
 
 /**
@@ -53,11 +58,18 @@ interface CaptureSavedViewDataArgs {
 export async function captureSavedViewData(args: CaptureSavedViewDataArgs): Promise<SavedViewData> {
   const extensions: ExtensionHandler[] = [];
   if (!args.omitEmphasis) {
-    extensions.push(extensionHandlers.emphasizeElements);
+    extensions.push({
+        ...extensionHandlers.emphasizeElements,
+        capture: args.overrides?.emphasizeElements?.capture ?? extensionHandlers.emphasizeElements.capture,
+      },
+    );
   }
 
   if (!args.omitPerModelCategoryVisibility) {
-    extensions.push(extensionHandlers.perModelCategoryVisibility);
+    extensions.push({
+      ...extensionHandlers.perModelCategoryVisibility,
+        capture: args.overrides?.perModelCategoryVisibility?.capture ?? extensionHandlers.perModelCategoryVisibility.capture,
+    });
   }
 
   return {

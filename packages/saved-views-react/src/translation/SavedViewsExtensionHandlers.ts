@@ -1,10 +1,17 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
-import { EmphasizeElements, PerModelCategoryVisibility, type Viewport } from "@itwin/core-frontend";
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import {
+  EmphasizeElements,
+  PerModelCategoryVisibility,
+  type Viewport,
+} from "@itwin/core-frontend";
 
-import { extractEmphasizeElements, extractPerModelCategoryVisibility } from "./extensionExtractor.js";
+import {
+  extractEmphasizeElements,
+  extractPerModelCategoryVisibility,
+} from "./extensionExtractor.js";
 import type { PerModelCategoryVisibilityProps } from "./SavedViewTypes.js";
 
 export interface ExtensionHandler {
@@ -12,6 +19,16 @@ export interface ExtensionHandler {
   apply: (extensionData: string, viewport: Viewport) => void;
   reset: (viewport: Viewport) => void;
   capture: (viewport: Viewport) => string | undefined;
+}
+
+export interface DefaultExtensionHandlersApplyOverrides {
+  emphasizeElements?: Partial<Pick<ExtensionHandler, "apply" | "reset" >>;
+  perModelCategoryVisibility?: Partial<Pick<ExtensionHandler, "apply" | "reset" >>;
+}
+
+export interface DefaultExtensionHandlersCaptureOverrides {
+  emphasizeElements?: Partial<Pick<ExtensionHandler, "capture">>;
+  perModelCategoryVisibility?: Partial<Pick<ExtensionHandler, "capture">>;
 }
 
 export const extensionHandlers = {
