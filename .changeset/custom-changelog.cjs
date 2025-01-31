@@ -3,6 +3,7 @@ const path = require('path');
 
 /**
  * Get the current package version
+ * @param {"@itwin/saved-views-react" | "@itwin/saved-views-client"} packageName - The package name
  * @returns {Promise<string>} - The current package version
  */
 async function getPackageVersion(packageName) {
