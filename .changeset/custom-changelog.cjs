@@ -5,8 +5,11 @@ const path = require('path');
  * Get the current package version
  * @returns {Promise<string>} - The current package version
  */
-async function getPackageVersion() {
-  const packageJsonPath = path.resolve(__dirname, '../packages/changed-elements-react/package.json');
+async function getPackageVersion(packageName) {
+  const packageJsonPath = path.resolve(__dirname,
+      packageName === "@itwin/saved-views-react" ?
+      '../packages/saved-views-react/package.json' :
+      '../packages/saved-views-client/package.json');
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
   return packageJson.version;
 }
@@ -40,12 +43,15 @@ function incrementVersion(version, versionType) {
  * @returns {Promise<string>} - The release line for the changelog
  */
 async function getReleaseLine(changeset, versionType, changelogOpts) {
-  const newVersion = incrementVersion(await getPackageVersion(), versionType);
+  const packageName = changeset.releases[0].name === "@itwin/saved-views-react" ? "@itwin/saved-views-react" : "@itwin/saved-views-client";
+  const newVersion = incrementVersion(await getPackageVersion(packageName), versionType);
   // Get the current date in yyyy-mm-dd format
   const date = new Date().toISOString().split('T')[0];
-  const releaseDateAndLinkToRelease = `#### [${newVersion}](https://github.com/iTwin/changed-elements-react/tree/v${newVersion}/packages/changed-elements-react) - ${date}`;
+  const releaseDateAndLinkToRelease = packageName === "@itwin/saved-views-react" ?
+    `#### [${newVersion}](https://github.com/iTwin/saved-views/tree/v${newVersion}-react/packages/saved-views-react) - ${date}` :
+    `#### [${newVersion}](https://github.com/iTwin/saved-views/tree/v${newVersion}-client/packages/saved-views-client) - ${date}`;
   // Customize your release line here
-  return `${releaseDateAndLinkToRelease}\n${changeset.summary}`;
+  return `${releaseDateAndLinkToRelease}\n${changeset.summary}${changeset.releases[0].name}`;
 }
 
 /**
