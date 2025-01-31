@@ -20,7 +20,7 @@
   "engines": {
     "pnpm": ">=8",
     "npm": "<0",
-    "node": ">=18"
+    "node": ">=20"
   },
   "dependencies": {
     "@changesets/types": "6.0.0",
