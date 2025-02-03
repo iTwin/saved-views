@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.0
+
+### Minor Changes
+
+#### [0.5.0](https://github.com/iTwin/saved-views/tree/v0.5.0-client/packages/saved-views-client) - 2025-02-03
+
+- Change `priority` property from `PlanarClipMaskProps` to be a number instead of restricted to the enum `PlanarClipMaskPriority`
+- Change `transformation` property from `ShapeProps` and `modelExtents` property from `ViewITwinDrawing` to be optional@itwin/saved-views-client
+
 ## 0.4.0
 
 ### Minor Changes
@@ -52,6 +61,7 @@
 - Remove `SavedViewBase` type
 - Omit `savedViewData` property from `SavedViewListMinimalResponse` type
 - Rename types
+
   - `SavedViewWithDataMinimal` -> `SavedViewMinimal`
   - `SavedViewWithDataRepresentation` -> `SavedViewRepresentation`
   - `ViewDataItwin3d` -> `ViewDataITwin3d`
