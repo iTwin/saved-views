@@ -1,19 +1,24 @@
 name: CI
 
 on:
+  push:
+    branches: [ master ]
   pull_request:
-    branches: master
+    branches: [ master ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
+    strategy:
+      matrix:
+        node-version: [18]
+
+    name: Build and run tests
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0  # Fetch all history for all branches and tags
+      uses: actions/checkout@v2
 
     - name: Install pnpm
       uses: pnpm/action-setup@v2
@@ -21,10 +26,10 @@ jobs:
         version: 9
         run_install: false
 
-    - name: Use Node.js 20
-      uses: actions/setup-node@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
       with:
-        node-version: 20
+        node-version: ${{ matrix.node-version }}
         cache: "pnpm"
 
     - name: Install dependencies
@@ -41,11 +46,3 @@ jobs:
 
     - name: Check saved-views-react unit test coverage
       run: npm run test:cover --prefix ./packages/saved-views-react
-
-    - name: Check if changeset is present
-      if: github.actor != 'imodeljs-admin'
-      run: |
-        # There are issues with changesets in github workflows, so we need to force pull the master branch
-        # Fix for issue https://github.com/changesets/changesets/issues/517#issuecomment-884778604
-        git pull -f origin master:master
-        pnpm changeset status --since=master
