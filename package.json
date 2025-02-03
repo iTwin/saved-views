@@ -20,9 +20,11 @@
   "engines": {
     "pnpm": ">=8",
     "npm": "<0",
-    "node": ">=18"
+    "node": ">=20"
   },
   "dependencies": {
+    "@changesets/types": "6.0.0",
+    "@changesets/cli": "^2.27.11",
     "@commander-js/extra-typings": "^12.1.0",
     "@inquirer/prompts": "^5.0.5",
     "@types/node": "^18.11.9",
