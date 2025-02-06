@@ -1,12 +1,21 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
-import { ViewChangeOptions, ViewPose, ViewState, type IModelConnection, type Viewport } from "@itwin/core-frontend";
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
+import {
+  ViewChangeOptions,
+  ViewPose,
+  ViewState,
+  type IModelConnection,
+  type Viewport,
+} from "@itwin/core-frontend";
 
 import type { SavedViewData, SavedViewExtension } from "./SavedView.js";
 import { createViewState } from "./createViewState.js";
-import { extensionHandlers } from "./translation/SavedViewsExtensionHandlers.js";
+import {
+  extensionHandlers,
+  type DefaultExtensionHandlersApplyOverrides,
+} from "./translation/SavedViewsExtensionHandlers.js";
 
 export interface ApplySavedViewSettings {
   /**
@@ -85,6 +94,7 @@ export async function applySavedView(
   viewport: Viewport,
   savedViewData: SavedViewData,
   settings: ApplySavedViewSettings | undefined = {},
+  overrides?: DefaultExtensionHandlersApplyOverrides,
 ): Promise<void> {
   if (settings.viewState !== "keep") {
     // We use "hidden" as the default value for modelAndCategoryVisibilityFallback
@@ -92,13 +102,12 @@ export async function applySavedView(
     // act as exclusive whitelists when modelSelector.disabled or categorySelector.disabled
     // arrays are empty, respectively.
     const { modelAndCategoryVisibilityFallback = "hidden" } = settings;
-    const viewState = settings.viewState instanceof ViewState
-      ? settings.viewState
-      : await createViewState(
-        iModel,
-        savedViewData.viewData,
-        { modelAndCategoryVisibilityFallback },
-      );
+    const viewState =
+      settings.viewState instanceof ViewState
+        ? settings.viewState
+        : await createViewState(iModel, savedViewData.viewData, {
+            modelAndCategoryVisibilityFallback,
+          });
 
     if (settings.camera instanceof ViewPose) {
       viewState.applyPose(settings.camera);
@@ -111,25 +120,39 @@ export async function applySavedView(
 
   const extensions = findKnownExtensions(savedViewData.extensions ?? []);
   if (extensions.emphasis) {
+    const override = overrides?.emphasizeElements;
+
     if (settings.emphasis !== "keep") {
-      extensionHandlers.emphasizeElements.reset(viewport);
+      override?.reset
+        ? override.reset(viewport)
+        : extensionHandlers.emphasizeElements.reset(viewport);
     }
 
     if (settings.emphasis === "apply") {
-      extensionHandlers.emphasizeElements.apply(extensions.emphasis, viewport);
+      override?.apply
+        ? override.apply(extensions.emphasis, viewport)
+        : extensionHandlers.emphasizeElements.apply(
+            extensions.emphasis,
+            viewport,
+          );
     }
   }
 
   if (extensions.perModelCategoryVisibility) {
+    const override = overrides?.perModelCategoryVisibility;
     if (settings.perModelCategoryVisibility !== "keep") {
-      extensionHandlers.perModelCategoryVisibility.reset(viewport);
+      override?.reset
+        ? override.reset(viewport)
+        : extensionHandlers.perModelCategoryVisibility.reset(viewport);
     }
 
     if (settings.perModelCategoryVisibility === "apply") {
-      extensionHandlers.perModelCategoryVisibility.apply(
-        extensions.perModelCategoryVisibility,
-        viewport,
-      );
+      override?.apply
+        ? override.apply(extensions.perModelCategoryVisibility, viewport)
+        : extensionHandlers.perModelCategoryVisibility.apply(
+            extensions.perModelCategoryVisibility,
+            viewport,
+          );
     }
   }
 }
@@ -140,7 +163,9 @@ interface FindKnownExtensionsResult {
 }
 
 /** Finds first occurences of known extensions. */
-function findKnownExtensions(extensions: SavedViewExtension[]): FindKnownExtensionsResult {
+function findKnownExtensions(
+  extensions: SavedViewExtension[],
+): FindKnownExtensionsResult {
   const result: FindKnownExtensionsResult = {
     emphasis: undefined,
     perModelCategoryVisibility: undefined,
@@ -149,7 +174,8 @@ function findKnownExtensions(extensions: SavedViewExtension[]): FindKnownExtensi
   for (const extension of extensions) {
     if (
       result.emphasis === undefined &&
-      extension.extensionName === extensionHandlers.emphasizeElements.extensionName
+      extension.extensionName ===
+        extensionHandlers.emphasizeElements.extensionName
     ) {
       result.emphasis = extension.data;
       if (result.perModelCategoryVisibility) {
@@ -159,7 +185,8 @@ function findKnownExtensions(extensions: SavedViewExtension[]): FindKnownExtensi
 
     if (
       result.perModelCategoryVisibility === undefined &&
-      extension.extensionName === extensionHandlers.perModelCategoryVisibility.extensionName
+      extension.extensionName ===
+        extensionHandlers.perModelCategoryVisibility.extensionName
     ) {
       result.perModelCategoryVisibility = extension.data;
       if (result.emphasis) {
