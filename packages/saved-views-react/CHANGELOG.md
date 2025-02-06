@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.9.0
+
+### Minor Changes
+
+#### [0.9.0](https://github.com/iTwin/saved-views/tree/v0.9.0-react/packages/saved-views-react) - 2025-02-06
+
+Add overrides for emphasizeElements extension when apply/capturing saved view@itwin/saved-views-react
+
 ## 0.8.0
 
 ### Minor Changes
