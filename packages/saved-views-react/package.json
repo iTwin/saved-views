@@ -1,6 +1,6 @@
 {
   "name": "@itwin/saved-views-react",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -40,12 +40,16 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@itwin/core-bentley": "^4.0.6",
-    "@itwin/core-common": "^4.0.6",
-    "@itwin/core-frontend": "^4.0.6",
-    "@itwin/core-geometry": "^4.0.6",
-    "@testing-library/react": "^12.1.5",
-    "@types/react": "^17.0.39",
+    "@itwin/core-bentley": "^4.10.6",
+    "@itwin/core-common": "^4.10.6",
+    "@itwin/core-frontend": "^4.10.6",
+    "@itwin/core-geometry": "^4.10.6",
+    "@testing-library/react": "^16.2.0",
+    "@itwin/appui-abstract": "^4.10.6",
+    "@itwin/core-orbitgt": "^4.10.6",
+    "@itwin/core-quantity": "^4.10.6",
+    "@testing-library/dom": "^10.0.0",
+    "@types/react": "^18.0.0",
     "@types/recursive-readdir": "^2.2.2",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "@vitest/coverage-v8": "^2.1.4",
@@ -54,23 +58,26 @@
     "npm-run-all": "^4.1.5",
     "postcss-cli": "^10.1.0",
     "postcss-modules": "^6.0.0",
-    "react": "^17.0.0",
-    "react-dom": "^17.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "recursive-readdir": "^2.2.3",
     "typescript": "^5.5.4",
     "vite": "^5.4.11",
     "vitest": "^2.1.4"
   },
   "peerDependencies": {
-    "@itwin/core-common": "^4.0.6",
-    "@itwin/core-frontend": "^4.0.6",
-    "@itwin/core-geometry": "^4.0.6",
-    "react": "^17.0.0 || ^18.0.0",
-    "react-dom": "^17.0.0 || ^18.0.0"
+    "@itwin/core-common": "^4.10.6",
+    "@itwin/core-frontend": "^4.10.6",
+    "@itwin/core-geometry": "^4.10.6",
+    "@itwin/appui-abstract": "^4.10.6",
+    "@itwin/core-orbitgt": "^4.10.6",
+    "@itwin/core-quantity": "^4.10.6",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
   },
   "dependencies": {
     "@itwin/itwinui-icons-react": "^2.9.0",
-    "@itwin/itwinui-react": "^3.8.1",
+    "@itwin/itwinui-react": "^3.15.0",
     "@itwin/saved-views-client": "workspace:^",
     "fuse.js": "^6.6.2"
   }
