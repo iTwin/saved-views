@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.9.3
+
+### Patch Changes
+
+#### [0.9.3](https://github.com/iTwin/saved-views/tree/v0.9.3-react/packages/saved-views-react) - 2025-02-27
+
+Fix clearing emphasized elements when applying a saved view.@itwin/saved-views-react
+
 ## 0.9.2
 
 ### Patch Changes
