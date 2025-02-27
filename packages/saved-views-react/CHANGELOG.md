@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.9.1
+
+### Patch Changes
+
+### [0.9.1](https://github.com/iTwin/saved-views/tree/v0.9.1-react/packages/saved-views-react) - 2025-02-25
+
+- Update react to always clear `emphasizeElements` and `perModelCategoryVisibility` anytime you apply a view
+
 ## 0.9.0
 
 ### Minor Changes
