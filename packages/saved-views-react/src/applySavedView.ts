@@ -118,16 +118,21 @@ export async function applySavedView(
     viewport.changeView(viewState, settings.viewChangeOptions);
   }
 
+  // Reset each extension even if it's not present in the saved view data
+  if (settings.emphasis !== "keep") {
+    overrides?.emphasizeElements?.reset
+      ? overrides?.emphasizeElements.reset(viewport)
+      : extensionHandlers.emphasizeElements.reset(viewport);
+  }
+  if (settings.perModelCategoryVisibility !== "keep") {
+    overrides?.perModelCategoryVisibility?.reset
+      ? overrides?.perModelCategoryVisibility.reset(viewport)
+      : extensionHandlers.perModelCategoryVisibility.reset(viewport);
+  }
+
   const extensions = findKnownExtensions(savedViewData.extensions ?? []);
   if (extensions.emphasis) {
     const override = overrides?.emphasizeElements;
-
-    if (settings.emphasis !== "keep") {
-      override?.reset
-        ? override.reset(viewport)
-        : extensionHandlers.emphasizeElements.reset(viewport);
-    }
-
     if (settings.emphasis === "apply") {
       override?.apply
         ? override.apply(extensions.emphasis, viewport)
@@ -140,12 +145,6 @@ export async function applySavedView(
 
   if (extensions.perModelCategoryVisibility) {
     const override = overrides?.perModelCategoryVisibility;
-    if (settings.perModelCategoryVisibility !== "keep") {
-      override?.reset
-        ? override.reset(viewport)
-        : extensionHandlers.perModelCategoryVisibility.reset(viewport);
-    }
-
     if (settings.perModelCategoryVisibility === "apply") {
       override?.apply
         ? override.apply(extensions.perModelCategoryVisibility, viewport)
