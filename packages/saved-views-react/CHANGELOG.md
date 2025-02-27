@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.9.2
+
+### Patch Changes
+
+#### [0.5.1](https://github.com/iTwin/saved-views/tree/v0.5.1-client/packages/saved-views-client) - 2025-02-27
+
+Change publishing artifact to use node.js 20.x@itwin/saved-views-client
+
+#### [0.9.2](https://github.com/iTwin/saved-views/tree/v0.9.2-react/packages/saved-views-react) - 2025-02-27
+
+Clear emphasizeElements and perModelCatVis everytime you apply a view (before the view is applied) instead of just if the saved view has that extension.@itwin/saved-views-react
+
+#### [0.5.1](https://github.com/iTwin/saved-views/tree/v0.5.1-client/packages/saved-views-client) - 2025-02-27
+
+Updated versions of dependencies to comply with yarn audit@itwin/saved-views-client
+
 ## 0.9.1
 
 ### Patch Changes
