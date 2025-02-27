@@ -36,6 +36,9 @@ jobs:
     - name: Typecheck
       run: npm run typecheck
 
+    - name: Run Audit
+      run: pnpm audit --audit-level high
+  
     - name: Check saved-views-client unit test coverage
       run: npm run test:cover --prefix ./packages/saved-views-client
 
