@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.5.1
+
+### Patch Changes
+
+#### [0.5.1](https://github.com/iTwin/saved-views/tree/v0.5.1-client/packages/saved-views-client) - 2025-02-27
+
+Change publishing artifact to use node.js 20.x@itwin/saved-views-client
+
+#### [0.5.1](https://github.com/iTwin/saved-views/tree/v0.5.1-client/packages/saved-views-client) - 2025-02-27
+
+Updated versions of dependencies to comply with yarn audit@itwin/saved-views-client
+
 ## 0.5.0
 
 ### Minor Changes
