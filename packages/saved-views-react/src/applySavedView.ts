@@ -104,7 +104,7 @@ export async function applySavedView(
   viewport: Viewport,
   savedViewData: SavedViewData,
   settings: ApplySavedViewSettings | undefined = {},
-  overrides?: DefaultExtensionHandlersApplyOverrides
+  overrides?: DefaultExtensionHandlersApplyOverrides,
 ): Promise<void> {
   if (settings.viewState !== "keep" || settings.camera !== "keep") {
     // We use "hidden" as the default value for modelAndCategoryVisibilityFallback
@@ -126,7 +126,7 @@ export async function applySavedView(
               : viewport.view,
             {
               modelAndCategoryVisibilityFallback,
-            }
+            },
           );
 
     if (settings.camera instanceof ViewPose) {
