@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  axios: ^1.8.2
+
 importers:
 
   .:
@@ -1686,8 +1689,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  axios@1.7.9:
-    resolution: {integrity: sha512-LhLcE7Hbiryz8oMDdDptSrWowmB4Bl6RCt6sIJKpRB4XtVf0iEgewX3au/pJqm+Py1kCASkb/FFKjxQaLtxJvw==}
+  axios@1.8.4:
+    resolution: {integrity: sha512-eBSYY4Y68NNlHbHBMdeDmKNtDgXWhQsJcGqzO3iLUM0GraQFSS9cVgPX5I9b3lbdFKyYoAEGAZF1DwhTaljNAw==}
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -4636,7 +4639,7 @@ snapshots:
       '@itwin/core-common': 4.10.7(@itwin/core-bentley@4.10.7)(@itwin/core-geometry@4.10.7)
       '@itwin/imodels-access-common': 5.2.3(@itwin/core-bentley@4.10.7)(@itwin/core-common@4.10.7(@itwin/core-bentley@4.10.7)(@itwin/core-geometry@4.10.7))
       '@itwin/imodels-client-authoring': 5.9.0(inversify@6.0.3)(reflect-metadata@0.1.14)
-      axios: 1.7.9
+      axios: 1.8.4
     transitivePeerDependencies:
       - debug
       - inversify
@@ -4675,7 +4678,7 @@ snapshots:
 
   '@itwin/imodels-client-management@5.9.0':
     dependencies:
-      axios: 1.7.9
+      axios: 1.8.4
     transitivePeerDependencies:
       - debug
 
@@ -4728,7 +4731,7 @@ snapshots:
   '@itwin/object-storage-core@2.3.0(inversify@6.0.3)(reflect-metadata@0.1.14)':
     dependencies:
       '@itwin/cloud-agnostic-core': 2.3.0(inversify@6.0.3)(reflect-metadata@0.1.14)
-      axios: 1.7.9
+      axios: 1.8.4
     optionalDependencies:
       inversify: 6.0.3
       reflect-metadata: 0.1.14
@@ -5362,7 +5365,7 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.1.0
 
-  axios@1.7.9:
+  axios@1.8.4:
     dependencies:
       follow-redirects: 1.15.9
       form-data: 4.0.2
