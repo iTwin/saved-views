@@ -137,7 +137,7 @@ export async function applySavedView(
         savedViewData.viewData,
         {
           modelAndCategoryVisibilityFallback,
-        }
+        },
       );
       viewState.applyPose(newViewState.savePose());
     }
