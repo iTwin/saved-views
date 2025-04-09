@@ -2,23 +2,13 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { Camera } from "@itwin/core-common";
 import {
   ViewChangeOptions,
   ViewPose,
-  ViewPose2d,
-  ViewPose3d,
   ViewState,
   type IModelConnection,
   type Viewport,
 } from "@itwin/core-frontend";
-import {
-  Angle,
-  Point2d,
-  Point3d,
-  Vector3d,
-  YawPitchRollAngles,
-} from "@itwin/core-geometry";
 
 import type { SavedViewData, SavedViewExtension } from "./SavedView.js";
 import { createViewState } from "./createViewState.js";
@@ -106,51 +96,50 @@ export async function applySavedView(
   settings: ApplySavedViewSettings | undefined = {},
   overrides?: DefaultExtensionHandlersApplyOverrides,
 ): Promise<void> {
-  if (settings.viewState !== "keep" || settings.camera !== "keep") {
+  if (settings.viewState !== "keep") {
     // We use "hidden" as the default value for modelAndCategoryVisibilityFallback
     // because users expect modelSelector.enabled and categorySelector.enabled to
     // act as exclusive whitelists when modelSelector.disabled or categorySelector.disabled
     // arrays are empty, respectively.
     const { modelAndCategoryVisibilityFallback = "hidden" } = settings;
-    const baseView =
-      settings.viewState !== "keep"
-        ? settings.viewState
-        : viewport.view.clone();
     const viewState =
-      baseView instanceof ViewState
-        ? baseView
-        : await createViewState(
-            iModel,
-            settings.viewState !== "keep"
-              ? savedViewData.viewData
-              : viewport.view,
-            {
-              modelAndCategoryVisibilityFallback,
-            },
-          );
+      settings.viewState instanceof ViewState
+        ? settings.viewState
+        : await createViewState(iModel, savedViewData.viewData, {
+            modelAndCategoryVisibilityFallback,
+          });
 
     if (settings.camera instanceof ViewPose) {
       viewState.applyPose(settings.camera);
     } else if (settings.camera === "keep") {
       viewState.applyPose(viewport.view.savePose());
-    } else if (settings.viewState === "keep") {
-      const data = savedViewData.viewData;
-      const pose: ViewPose =
-        data.type === "iTwin3d"
-          ? new ViewPose3d({
-              isCameraOn: data.camera !== undefined,
-              origin: Point3d.fromJSON(data.origin),
-              extents: Vector3d.fromJSON(data.extents),
-              rotation: YawPitchRollAngles.fromJSON(data.angles).toMatrix3d(),
-              camera: new Camera(data.camera),
-            })
-          : new ViewPose2d({
-              isCameraOn: false,
-              origin2d: Point2d.fromJSON(data.origin),
-              delta: Point2d.fromJSON(data.delta),
-              angle: Angle.fromJSON(data.angle),
-            });
-      viewState.applyPose(pose);
+    }
+
+    viewport.changeView(viewState, settings.viewChangeOptions);
+  } else if (settings.camera !== "keep") {
+    // We use "hidden" as the default value for modelAndCategoryVisibilityFallback
+    // because users expect modelSelector.enabled and categorySelector.enabled to
+    // act as exclusive whitelists when modelSelector.disabled or categorySelector.disabled
+    // arrays are empty, respectively.
+    const { modelAndCategoryVisibilityFallback = "hidden" } = settings;
+    const viewState =
+      viewport.view instanceof ViewState
+        ? viewport.view.clone()
+        : await createViewState(iModel, viewport.view, {
+            modelAndCategoryVisibilityFallback,
+          });
+
+    if (settings.camera instanceof ViewPose) {
+      viewState.applyPose(settings.camera);
+    } else {
+      const newViewState = await createViewState(
+        iModel,
+        savedViewData.viewData,
+        {
+          modelAndCategoryVisibilityFallback,
+        }
+      );
+      viewState.applyPose(newViewState.savePose());
     }
 
     viewport.changeView(viewState, settings.viewChangeOptions);
