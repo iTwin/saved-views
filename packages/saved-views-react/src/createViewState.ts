@@ -1,20 +1,37 @@
 /*---------------------------------------------------------------------------------------------
-* Copyright (c) Bentley Systems, Incorporated. All rights reserved.
-* See LICENSE.md in the project root for license terms and full copyright notice.
-*--------------------------------------------------------------------------------------------*/
+ * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
+ * See LICENSE.md in the project root for license terms and full copyright notice.
+ *--------------------------------------------------------------------------------------------*/
 import {
-  Camera, type CodeProps, type SpatialViewDefinitionProps, type ViewDefinition2dProps,
+  Camera,
+  type CodeProps,
+  type SpatialViewDefinitionProps,
+  type ViewDefinition2dProps,
   type ViewStateProps,
 } from "@itwin/core-common";
 import {
-  DrawingViewState, SheetViewState, SpatialViewState, type IModelConnection, type ViewState,
+  DrawingViewState,
+  SheetViewState,
+  SpatialViewState,
+  type IModelConnection,
+  type ViewState,
 } from "@itwin/core-frontend";
-import type { ViewITwin3d, ViewITwinDrawing, ViewITwinSheet } from "@itwin/saved-views-client";
+import type {
+  ViewITwin3d,
+  ViewITwinDrawing,
+  ViewITwinSheet,
+} from "@itwin/saved-views-client";
 
-import { queryMissingCategories, queryMissingModels } from "./captureSavedViewData.js";
+import {
+  queryMissingCategories,
+  queryMissingModels,
+} from "./captureSavedViewData.js";
 import type { ViewData } from "./SavedView.js";
 import { extractClipVectors } from "./translation/clipVectorsExtractor.js";
-import { extractDisplayStyle, extractDisplayStyle3d } from "./translation/displayStyleExtractor.js";
+import {
+  extractDisplayStyle,
+  extractDisplayStyle3d,
+} from "./translation/displayStyleExtractor.js";
 
 export interface ViewStateCreateSettings {
   /**
@@ -38,7 +55,74 @@ export interface ViewStateCreateSettings {
 }
 
 /**
+ * Creates {@link ViewStateProps} object out of Saved View data. It provides a lower-level
+ * access to view data for advanced use.
+ *
+ * @example
+ * const viewStateProps = await createViewStateProps(iModel, savedViewData.viewData);
+ * const viewState = createViewStateFromProps(viewStateProps);
+ * await applySavedView(iModel, viewport, savedViewData, { viewState });
+ *
+ * // The three lines above are equivalent to
+ * const viewState = await createViewState(iModel, savedViewData.viewData);
+ * await applySavedView(iModel, viewport, savedViewData, { viewState });
+ */
+export async function createViewStateProps(
+  iModel: IModelConnection,
+  viewData: ViewData
+): Promise<ViewStateProps> {
+  const viewStateProps = await createViewStatePropsVariant(iModel, viewData);
+  return viewStateProps;
+}
+
+async function applyViewStateOptions(
+  viewState: ViewState,
+  iModel: IModelConnection,
+  viewData: ViewData,
+  settings: ViewStateCreateSettings = {}
+) {
+  if (settings.modelAndCategoryVisibilityFallback === "visible") {
+    await unhideNewModelsAndCategories(iModel, viewState, viewData);
+  }
+
+  if (!settings.skipViewStateLoad) {
+    await viewState.load();
+  }
+}
+
+/**
  * Creates {@link ViewState} object out of Saved View data. It provides a lower-level
+ * access to view data for advanced use.
+ *
+ * @example
+ * const viewStateProps = await createViewStateProps(iModel, savedViewData.viewData);
+ * const viewState = createViewStateFromProps(viewStateProps);
+ * await applySavedView(iModel, viewport, savedViewData, { viewState });
+ *
+ * // The three lines above are equivalent to
+ * const viewState = await createViewState(iModel, savedViewData.viewData);
+ * await applySavedView(iModel, viewport, savedViewData, { viewState });
+ */
+export async function createViewStateFromProps(
+  props: ViewStateProps,
+  iModel: IModelConnection,
+  viewData: ViewData,
+  settings: ViewStateCreateSettings = {}
+): Promise<ViewState> {
+  let viewState: ViewState;
+  if (viewData.type === "iTwinDrawing") {
+    viewState = DrawingViewState.createFromProps(props, iModel);
+  } else if (viewData.type === "iTwinSheet") {
+    viewState = SheetViewState.createFromProps(props, iModel);
+  } else {
+    viewState = SpatialViewState.createFromProps(props, iModel);
+  }
+  await applyViewStateOptions(viewState, iModel, viewData, settings);
+  return viewState;
+}
+
+/**
+ * Creates {@link ViewState} object out of ViewStateProps. It provides a lower-level
  * access to view data for advanced use.
  *
  * @example
@@ -51,23 +135,31 @@ export interface ViewStateCreateSettings {
 export async function createViewState(
   iModel: IModelConnection,
   viewData: ViewData,
-  settings: ViewStateCreateSettings = {},
+  settings: ViewStateCreateSettings = {}
 ): Promise<ViewState> {
   const viewState = await createViewStateVariant(iModel, viewData);
-  if (settings.modelAndCategoryVisibilityFallback === "visible") {
-    await unhideNewModelsAndCategories(iModel, viewState, viewData);
-  }
-
-  if (!settings.skipViewStateLoad) {
-    await viewState.load();
-  }
-
+  await applyViewStateOptions(viewState, iModel, viewData, settings);
   return viewState;
+}
+
+async function createViewStatePropsVariant(
+  iModel: IModelConnection,
+  viewData: ViewData
+): Promise<ViewStateProps> {
+  if (viewData.type === "iTwinDrawing") {
+    return createDrawingViewStateProps(iModel, viewData);
+  }
+
+  if (viewData.type === "iTwinSheet") {
+    return createSheetViewStateProps(iModel, viewData);
+  }
+
+  return createSpatialViewStateProps(iModel, viewData);
 }
 
 async function createViewStateVariant(
   iModel: IModelConnection,
-  viewData: ViewData,
+  viewData: ViewData
 ): Promise<ViewState> {
   if (viewData.type === "iTwinDrawing") {
     return createDrawingViewState(iModel, viewData);
@@ -84,8 +176,14 @@ interface SpatialViewStateProps extends ViewStateProps {
   viewDefinitionProps: SpatialViewDefinitionProps;
 }
 
-async function createSpatialViewState(iModel: IModelConnection, viewData: ViewITwin3d): Promise<SpatialViewState> {
-  const seedViewState = await fetchIModelViewData(iModel, SpatialViewState.classFullName) as SpatialViewState;
+async function createSpatialViewStateProps(
+  iModel: IModelConnection,
+  viewData: ViewITwin3d
+): Promise<SpatialViewStateProps> {
+  const seedViewState = (await fetchIModelViewData(
+    iModel,
+    SpatialViewState.classFullName
+  )) as SpatialViewState;
   const props: SpatialViewStateProps = {
     viewDefinitionProps: {
       origin: viewData.origin,
@@ -125,6 +223,14 @@ async function createSpatialViewState(iModel: IModelConnection, viewData: ViewIT
       },
     },
   };
+  return props;
+}
+
+async function createSpatialViewState(
+  iModel: IModelConnection,
+  viewData: ViewITwin3d
+): Promise<SpatialViewState> {
+  const props = await createSpatialViewStateProps(iModel, viewData);
   return SpatialViewState.createFromProps(props, iModel);
 }
 
@@ -132,8 +238,14 @@ interface DrawingViewStateProps extends ViewStateProps {
   viewDefinitionProps: ViewDefinition2dProps;
 }
 
-async function createDrawingViewState(iModel: IModelConnection, viewData: ViewITwinDrawing): Promise<DrawingViewState> {
-  const seedViewState = await fetchIModelViewData(iModel, DrawingViewState.classFullName) as DrawingViewState;
+async function createDrawingViewStateProps(
+  iModel: IModelConnection,
+  viewData: ViewITwinDrawing
+): Promise<DrawingViewStateProps> {
+  const seedViewState = (await fetchIModelViewData(
+    iModel,
+    DrawingViewState.classFullName
+  )) as DrawingViewState;
   const props: DrawingViewStateProps = {
     viewDefinitionProps: {
       classFullName: seedViewState.classFullName,
@@ -174,6 +286,14 @@ async function createDrawingViewState(iModel: IModelConnection, viewData: ViewIT
       federationGuid: seedViewState.displayStyle.federationGuid,
     },
   };
+  return props;
+}
+
+async function createDrawingViewState(
+  iModel: IModelConnection,
+  viewData: ViewITwinDrawing
+): Promise<DrawingViewState> {
+  const props = await createDrawingViewStateProps(iModel, viewData);
   return DrawingViewState.createFromProps(props, iModel);
 }
 
@@ -181,8 +301,14 @@ interface SheetViewStateProps extends ViewStateProps {
   viewDefinitionProps: ViewDefinition2dProps;
 }
 
-async function createSheetViewState(iModel: IModelConnection, viewData: ViewITwinSheet): Promise<SheetViewState> {
-  const seedViewState = await fetchIModelViewData(iModel, SheetViewState.classFullName) as SheetViewState;
+async function createSheetViewStateProps(
+  iModel: IModelConnection,
+  viewData: ViewITwinSheet
+): Promise<SheetViewStateProps> {
+  const seedViewState = (await fetchIModelViewData(
+    iModel,
+    SheetViewState.classFullName
+  )) as SheetViewState;
   const props: SheetViewStateProps = {
     viewDefinitionProps: {
       classFullName: seedViewState.classFullName,
@@ -235,10 +361,21 @@ async function createSheetViewState(iModel: IModelConnection, viewData: ViewITwi
     },
     sheetAttachments: viewData.sheetAttachments,
   };
+  return props;
+}
+
+async function createSheetViewState(
+  iModel: IModelConnection,
+  viewData: ViewITwinSheet
+): Promise<SheetViewState> {
+  const props = await createSheetViewStateProps(iModel, viewData);
   return SheetViewState.createFromProps(props, iModel);
 }
 
-async function fetchIModelViewData(iModel: IModelConnection, viewClassName: string): Promise<ViewState> {
+async function fetchIModelViewData(
+  iModel: IModelConnection,
+  viewClassName: string
+): Promise<ViewState> {
   if (iModel.isBlankConnection()) {
     return createEmptyViewState(iModel, viewClassName);
   }
@@ -251,11 +388,14 @@ async function fetchIModelViewData(iModel: IModelConnection, viewClassName: stri
   return iModel.views.load(viewId);
 }
 
-function createEmptyViewState(iModel: IModelConnection, viewClassName: string): ViewState {
+function createEmptyViewState(
+  iModel: IModelConnection,
+  viewClassName: string
+): ViewState {
   const blankViewState = SpatialViewState.createBlank(
     iModel,
     { x: 0, y: 0, z: 0 },
-    { x: 0, y: 0, z: 0 },
+    { x: 0, y: 0, z: 0 }
   );
 
   if (viewClassName === SpatialViewState.classFullName) {
@@ -278,16 +418,25 @@ function createEmptyViewState(iModel: IModelConnection, viewClassName: string): 
   }
 }
 
-async function getDefaultViewIdFromClassName(iModel: IModelConnection, viewClassName: string): Promise<string> {
+async function getDefaultViewIdFromClassName(
+  iModel: IModelConnection,
+  viewClassName: string
+): Promise<string> {
   // Check validity of default view
   const viewId = await iModel.views.queryDefaultViewId();
-  const viewProps = await iModel.elements.queryProps({ from: viewClassName, where: "ECInstanceId=" + viewId });
+  const viewProps = await iModel.elements.queryProps({
+    from: viewClassName,
+    where: "ECInstanceId=" + viewId,
+  });
   if (viewProps.length > 0) {
     return viewId;
   }
 
   // Return the first view we can find
-  const viewList = await iModel.views.getViewList({ from: viewClassName, wantPrivate: false });
+  const viewList = await iModel.views.getViewList({
+    from: viewClassName,
+    wantPrivate: false,
+  });
   if (viewList.length === 0) {
     return "";
   }
@@ -302,7 +451,7 @@ function cloneCode({ spec, scope, value }: CodeProps): CodeProps {
 async function unhideNewModelsAndCategories(
   iModel: IModelConnection,
   viewState: ViewState,
-  viewData: ViewData,
+  viewData: ViewData
 ): Promise<void> {
   if (viewData.type === "iTwin3d") {
     if (!viewState.isSpatialView()) {
@@ -329,7 +478,7 @@ async function unhideNewModelsAndCategories(
 
   const visibleCategories = await queryMissingCategories(
     iModel,
-    new Set(viewData.categories.disabled),
+    new Set(viewData.categories.disabled)
   );
   viewState.categorySelector.addCategories(visibleCategories);
 }
