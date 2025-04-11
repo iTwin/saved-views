@@ -103,7 +103,7 @@ async function createSeedViewStateProps(
   if (settings.viewState !== "keep") {
     return settings.viewState instanceof ViewState
       ? settings.viewState.toProps()
-      : await createViewStateProps(iModel, savedViewData.viewData);
+      : createViewStateProps(iModel, savedViewData.viewData);
   }
   return viewport.view.toProps();
 }
@@ -113,7 +113,7 @@ function applyCameraOptions(
   _iModel: IModelConnection,
   viewport: Viewport,
   savedViewData: SavedViewData,
-  settings: ApplySavedViewSettings
+  settings: ApplySavedViewSettings,
 ): ViewStateProps {
   const setCameraInfo = (
     seedViewDef: ViewStateProps,
@@ -128,8 +128,8 @@ function applyCameraOptions(
         viewDef.origin = cameraProps.origin;
         viewDef.extents = cameraProps.extents;
         viewDef.angles = YawPitchRollAngles.createFromMatrix3d(
-          cameraProps.rotation
-        )!.toJSON();
+          cameraProps.rotation,
+        )?.toJSON();
         viewDef.camera = cameraProps.camera;
       } else {
         const cameraProps3d = cameraProps as ViewDefinition3dProps;
