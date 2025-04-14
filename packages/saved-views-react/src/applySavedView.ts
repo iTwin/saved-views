@@ -118,7 +118,7 @@ function applyCameraOptions(
   const setCameraInfo = (
     seedViewDef: ViewStateProps,
     cameraProps: ViewPose | ViewDefinitionProps | ViewData,
-    viewDataType: string = "iTwin3d",
+    viewDataType: "iTwin3d" | "iTwinDrawing" | "iTwinSheet" = "iTwin3d"
   ): ViewStateProps => {
     if (viewDataType === "iTwin3d") {
       const viewDef =
