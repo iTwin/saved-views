@@ -41,5 +41,8 @@
     "semver": "^7.6.2",
     "tsx": "^4.15.4",
     "typescript": "^5.5.4"
+  },
+  "resolutions": {
+    "axios": "^1.8.2"
   }
 }
