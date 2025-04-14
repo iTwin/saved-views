@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.9.4
+
+### Patch Changes
+
+#### [0.9.4](https://github.com/iTwin/saved-views/tree/v0.9.4-react/packages/saved-views-react) - 2025-04-14
+
+Fix applySavedView when changing camera but not the view state@itwin/saved-views-react
+
 ## 0.9.3
 
 ### Patch Changes
