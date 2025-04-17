@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.9.5
+
+### Patch Changes
+
+#### [0.9.5](https://github.com/iTwin/saved-views/tree/v0.9.5-react/packages/saved-views-react) - 2025-04-17
+
+Fix extraction of realityDataSourceKey in contextRealityModels@itwin/saved-views-react
+
 ## 0.9.4
 
 ### Patch Changes
