@@ -1,1 +1,11 @@
-* @roluk @diegopinate @CalebGerman
+# Global owners
+* @diegopinate @CalebGerman @hnn0003 @sarah-pontier @roluk 
+
+# saved-views-client owners
+/packages/saved-views-client/ @diegopinate @CalebGerman @hnn0003 @sarah-pontier
+
+# saved-views-react owners
+/packages/saved-views-react/ @diegopinate @CalebGerman @hnn0003 @sarah-pontier
+
+# Codeowners owners
+/.github/CODEOWNERS @diegopinate @CalebGerman
