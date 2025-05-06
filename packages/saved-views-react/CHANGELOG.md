@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.9.6
+
+### Patch Changes
+
+#### [0.9.6](https://github.com/iTwin/saved-views/tree/v0.9.6-react/packages/saved-views-react) - 2025-05-06
+
+Change package CODEOWNERS git file@itwin/saved-views-react
+
+#### [0.9.6](https://github.com/iTwin/saved-views/tree/v0.9.6-react/packages/saved-views-react) - 2025-05-06
+
+Update @itwin/core packages to version 5.0.0-dev.111@itwin/saved-views-react
+
 ## 0.9.5
 
 ### Patch Changes
