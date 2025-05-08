@@ -59,8 +59,8 @@ const clipVectorMappings: ExtractionFunc<void, void>[] = [
         mappings: [...clipPrimitiveShapeMappings],
       },
     ],
-    "clip",
     "clipVectors",
+    "clip",
   ),
 ];
 
@@ -77,5 +77,5 @@ export const extractClipVectors = (input: object) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const output: any = {};
   applyExtraction(viewDetails, output, clipVectorMappings);
-  return output.clipVectors;
+  return output.clip;
 };
