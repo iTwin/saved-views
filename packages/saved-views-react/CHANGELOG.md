@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.9.7
+
+### Patch Changes
+
+#### [0.9.7](https://github.com/iTwin/saved-views/tree/v0.9.7-react/packages/saved-views-react) - 2025-05-08
+
+Fix extraction of clip data from clipVectors@itwin/saved-views-react
+
+#### [0.9.7](https://github.com/iTwin/saved-views/tree/v0.9.7-react/packages/saved-views-react) - 2025-05-08
+
+fix new content apply mode when using mesh tiles@itwin/saved-views-react
+
 ## 0.9.6
 
 ### Patch Changes
