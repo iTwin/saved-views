@@ -35,7 +35,7 @@ const clipPrimitiveShapeMappings: ExtractionFunc<void, void>[] = [
 
 const clipPlaneMappings: ExtractionFunc<void, void>[] = [
   extractSimpleArray(simpleTypeOf("number"), "normal"),
-  extractNumber("dist", "distance"),
+  extractNumber("distance", "dist"),
   extractBoolean("invisible"),
   extractBoolean("interior"),
 ];
