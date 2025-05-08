@@ -468,7 +468,9 @@ async function unhideNewModelsAndCategories(
     ]);
 
     viewState.categorySelector.addCategories(visibleCategories);
-    viewState.modelSelector.addModels(visibleModels);
+    const modelSelector = viewState.modelSelector.clone();
+    modelSelector.addModels(visibleModels);
+    viewState.modelSelector = modelSelector;
     return;
   }
 
