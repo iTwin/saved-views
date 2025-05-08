@@ -77,5 +77,5 @@ export const extractClipVectors = (input: object) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const output: any = {};
   applyExtraction(viewDetails, output, clipVectorMappings);
-  return output.clip;
+  return output;
 };
