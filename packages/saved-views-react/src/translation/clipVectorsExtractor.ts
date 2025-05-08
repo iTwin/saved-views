@@ -35,7 +35,7 @@ const clipPrimitiveShapeMappings: ExtractionFunc<void, void>[] = [
 
 const clipPlaneMappings: ExtractionFunc<void, void>[] = [
   extractSimpleArray(simpleTypeOf("number"), "normal"),
-  extractNumber("dist", "distance"),
+  extractNumber("distance", "dist"),
   extractBoolean("invisible"),
   extractBoolean("interior"),
 ];
@@ -59,8 +59,8 @@ const clipVectorMappings: ExtractionFunc<void, void>[] = [
         mappings: [...clipPrimitiveShapeMappings],
       },
     ],
-    "clip",
     "clipVectors",
+    "clip",
   ),
 ];
 
@@ -77,5 +77,5 @@ export const extractClipVectors = (input: object) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const output: any = {};
   applyExtraction(viewDetails, output, clipVectorMappings);
-  return output.clipVectors;
+  return output;
 };
