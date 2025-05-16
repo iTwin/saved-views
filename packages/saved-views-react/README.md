@@ -158,7 +158,7 @@ function OpenSavedView(props) {
 
 ## Contributing
 
-We welcome contributions to make this package better. You can submit feature requests or report bugs by creating an [issue](https://github.com/iTwin/saved-views/issues).
+ [Contributing](../../README.md#contributing).
 
 ---
 

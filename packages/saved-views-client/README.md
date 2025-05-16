@@ -31,8 +31,8 @@ console.log(savedView); /*
 
 ## Contributing
 
-We welcome contributions to make this package better. You can submit feature requests or report bugs by creating an [issue](https://github.com/iTwin/saved-views/issues).
-
+ [Contributing](../../README.md#contributing).
+ 
 ---
 
 Copyright © Bentley Systems, Incorporated. All rights reserved. See [LICENSE.md](./LICENSE.md) for license terms and full copyright notice.
