@@ -422,7 +422,7 @@ describe("ITwinSavedViewsClient", () => {
           ...args.headers,
         } : {
           Authorization: "test_auth_token",
-          ...args.headers
+          ...args.headers,
         },
         body: args.body,
       },
