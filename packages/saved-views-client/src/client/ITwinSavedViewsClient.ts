@@ -35,10 +35,10 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
     return callITwinApi({
       url: args.url,
       method: args.method,
-      headers: {
+      headers: args.body ? {
         "Content-Type": "application/json",
         ...args.headers,
-      },
+      } : args.headers,
       body: args.body,
       getAccessToken: this.getAccessToken,
       signal: args.signal,
