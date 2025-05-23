@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.2
+
+### Patch Changes
+
+#### [0.5.2](https://github.com/iTwin/saved-views/tree/v0.5.2-client/packages/saved-views-client) - 2025-05-22
+
+Remove content type header when request body is empty@itwin/saved-views-client
+
 ## 0.5.1
 
 ### Patch Changes
