@@ -73,6 +73,22 @@ export interface ApplySavedViewSettings {
    */
   perModelCategoryVisibility?: ApplyStrategy | "clear" | undefined;
 
+
+  /**
+   * How to handle the visibility of models that exist in iModel but
+   * are not captured in Saved View data.
+   * @default "apply-hidden"
+   */
+  models?: "apply-visible" | "apply-hidden" | "keep" | "reset" | undefined;
+
+  /**
+   * How to handle the visibility of categories that exist in iModel but
+   * are not captured in Saved View data.
+   * @default "apply-hidden"
+   */
+  categories?: "apply-visible" | "apply-hidden" | "keep" | "reset" | undefined;
+
+
   /**
    * How to handle visibility of models and categories that exist in iModel but
    * are not captured in Saved View data.
@@ -177,13 +193,14 @@ async function applyViewStateProps(
   // because users expect modelSelector.enabled and categorySelector.enabled to
   // act as exclusive whitelists when modelSelector.disabled or categorySelector.disabled
   // arrays are empty, respectively.
-  const { modelAndCategoryVisibilityFallback = "hidden" } = settings;
+  const { models = "apply-hidden", categories = "apply-hidden" } = settings;
   const viewState = await createViewStateFromProps(
     viewStateProps,
     iModel,
     savedViewData.viewData,
     {
-      modelAndCategoryVisibilityFallback,
+      models,
+      categories,
     },
   );
   viewport.changeView(viewState, settings.viewChangeOptions);

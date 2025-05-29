@@ -47,11 +47,18 @@ export interface ViewStateCreateSettings {
   skipViewStateLoad?: boolean | undefined;
 
   /**
-   * How to handle visibility of models and categories that exist in iModel but
-   * not captured in Saved View data.
-   * @default "hidden"
+   * How to handle the visibility of models that exist in iModel but
+   * are not captured in Saved View data.
+   * @default "apply-hidden"
    */
-  modelAndCategoryVisibilityFallback?: "visible" | "hidden" | undefined;
+  models?: "apply-visible" | "apply-hidden" | "keep" | "reset" | undefined;
+
+  /**
+   * How to handle the visibility of categories that exist in iModel but
+   * are not captured in Saved View data.
+   * @default "apply-hidden"
+   */
+  categories?: "apply-visible" | "apply-hidden" | "keep" | "reset" | undefined;
 }
 
 /**
@@ -69,7 +76,7 @@ export interface ViewStateCreateSettings {
  */
 export async function createViewStateProps(
   iModel: IModelConnection,
-  viewData: ViewData,
+  viewData: ViewData
 ): Promise<ViewStateProps> {
   const viewStateProps = await createViewStatePropsVariant(iModel, viewData);
   return viewStateProps;
@@ -81,8 +88,27 @@ async function applyViewStateOptions(
   viewData: ViewData,
   settings: ViewStateCreateSettings = {},
 ) {
-  if (settings.modelAndCategoryVisibilityFallback === "visible") {
-    await unhideNewModelsAndCategories(iModel, viewState, viewData);
+  switch (settings.models) {
+    case "reset":
+      await unhideNewModels(iModel, viewState, viewData, true);
+      break;
+    case "apply-visible":
+      await unhideNewModels(iModel, viewState, viewData, false);
+      break;
+    default:
+      // "keep" or "reset" - do nothing
+      break;
+  }
+  switch (settings.categories) {
+    case "reset":
+      await unhideNewCategories(iModel, viewState, viewData, true);
+      break;
+    case "apply-visible":
+      await unhideNewCategories(iModel, viewState, viewData, false);
+      break;
+    default:
+      // "keep" or "reset" - do nothing
+      break;
   }
 
   if (!settings.skipViewStateLoad) {
@@ -448,39 +474,43 @@ function cloneCode({ spec, scope, value }: CodeProps): CodeProps {
   return { spec, scope, value };
 }
 
-async function unhideNewModelsAndCategories(
+async function unhideNewModels(
   iModel: IModelConnection,
   viewState: ViewState,
   viewData: ViewData,
+  reset = false,
 ): Promise<void> {
   if (viewData.type === "iTwin3d") {
     if (!viewState.isSpatialView()) {
       return;
     }
 
-    if (!viewData.categories?.disabled || !viewData.models?.disabled) {
+    if (!reset && !viewData.models?.disabled) {
       return;
     }
 
-    const [visibleCategories, visibleModels] = await Promise.all([
-      queryMissingCategories(iModel, new Set(viewData.categories.disabled)),
-      queryMissingModels(iModel, new Set(viewData.models.disabled)),
-    ]);
-
-    viewState.categorySelector.addCategories(visibleCategories);
+    const visibleModels = await queryMissingModels(
+      iModel,
+      reset ? undefined : new Set(viewData.models?.disabled)
+    );
     const modelSelector = viewState.modelSelector.clone();
     modelSelector.addModels(visibleModels);
     viewState.modelSelector = modelSelector;
     return;
   }
+}
 
-  if (!viewData.categories?.disabled) {
+async function unhideNewCategories(
+  iModel: IModelConnection,
+  viewState: ViewState,
+  viewData: ViewData,
+  reset = false,
+): Promise<void> {
+  if (!reset && !viewData.categories?.disabled) {
     return;
   }
 
-  const visibleCategories = await queryMissingCategories(
-    iModel,
-    new Set(viewData.categories.disabled),
-  );
+  const visibleCategories = await queryMissingCategories(iModel, reset ? undefined : new Set(viewData.categories?.disabled));
   viewState.categorySelector.addCategories(visibleCategories);
+  return;
 }
