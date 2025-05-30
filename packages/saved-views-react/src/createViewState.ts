@@ -32,6 +32,29 @@ import {
   extractDisplayStyle,
   extractDisplayStyle3d,
 } from "./translation/displayStyleExtractor.js";
+import { Id64Array } from "@itwin/core-bentley";
+
+/**
+ * Settings for how to handle the visibility of elements (models or categories) in iModel.
+ *   * `enabled` – Enabled is the set of enabled elements (models or categories) that are stored in the saved view. Default is ignore.
+ *   * `disabled` – Disabled is the set of disabled elements (models or categories) that are stored in the saved view. Default is ignore.
+ *   * `other` – Other is the set of elements (models or categories) that are not stored in the saved view. Default is ignore.
+ *
+ * @default '{ enabled: "ignore", disabled: "ignore", other: "ignore" }'
+ */
+export interface ElementSettings {
+  enabled?: ShowStrategy | undefined;
+  disabled?: ShowStrategy | undefined;
+  other?: ShowStrategy | undefined;
+}
+
+/**
+ * Controls how models or categories are going to be altered.
+ *   * `"show"` – Show the elements in this list
+ *   * `"hide"` – Hide (ie do not show) the elements in this list
+ *   * `"ignore"` – Preserve current elements that are shown in viewport
+ */
+type ShowStrategy = "show" | "hide" | "ignore";
 
 export interface ViewStateCreateSettings {
   /**
@@ -47,18 +70,18 @@ export interface ViewStateCreateSettings {
   skipViewStateLoad?: boolean | undefined;
 
   /**
-   * How to handle the visibility of models that exist in iModel but
-   * are not captured in Saved View data.
-   * @default "apply-hidden"
+   * How to handle the visibility of models that exist in iModel,
+   * including those not captured in Saved View data.
+   * @default '{ enabled: "ignore", disabled: "ignore", other: "ignore" }'
    */
-  models?: "apply-visible" | "apply-hidden" | "keep" | "reset" | undefined;
+  models?: ElementSettings | undefined;
 
   /**
-   * How to handle the visibility of categories that exist in iModel but
-   * are not captured in Saved View data.
-   * @default "apply-hidden"
+   * How to handle the visibility of categories that exist in iModel,
+   * including those not captured in Saved View data.
+   * @default '{ enabled: "ignore", disabled: "ignore", other: "ignore" }'
    */
-  categories?: "apply-visible" | "apply-hidden" | "keep" | "reset" | undefined;
+  categories?: ElementSettings | undefined;
 }
 
 /**
@@ -86,30 +109,10 @@ async function applyViewStateOptions(
   viewState: ViewState,
   iModel: IModelConnection,
   viewData: ViewData,
-  settings: ViewStateCreateSettings = {},
+  settings: ViewStateCreateSettings = {}
 ) {
-  switch (settings.models) {
-    case "reset":
-      await unhideNewModels(iModel, viewState, viewData, true);
-      break;
-    case "apply-visible":
-      await unhideNewModels(iModel, viewState, viewData, false);
-      break;
-    default:
-      // "keep" or "reset" - do nothing
-      break;
-  }
-  switch (settings.categories) {
-    case "reset":
-      await unhideNewCategories(iModel, viewState, viewData, true);
-      break;
-    case "apply-visible":
-      await unhideNewCategories(iModel, viewState, viewData, false);
-      break;
-    default:
-      // "keep" or "reset" - do nothing
-      break;
-  }
+  await applyModelSettings(iModel, viewState, viewData, settings.models);
+  await applyCategorySettings(iModel, viewState, viewData, settings.categories);
 
   if (!settings.skipViewStateLoad) {
     await viewState.load();
@@ -474,43 +477,98 @@ function cloneCode({ spec, scope, value }: CodeProps): CodeProps {
   return { spec, scope, value };
 }
 
-async function unhideNewModels(
+async function applyModelSettings(
   iModel: IModelConnection,
   viewState: ViewState,
   viewData: ViewData,
-  reset = false,
+  settings?: ElementSettings,
 ): Promise<void> {
   if (viewData.type === "iTwin3d") {
     if (!viewState.isSpatialView()) {
       return;
     }
 
-    if (!reset && !viewData.models?.disabled) {
+    const addModels: Id64Array = [];
+    const dropModels: Id64Array = [];
+    if (settings?.enabled === "show") {
+      addModels.push(...(viewData.models?.enabled ?? []));
+    } else if (settings?.enabled === "hide") {
+      dropModels.push(...(viewData.models?.enabled ?? []));
+    }
+    if (settings?.disabled === "show") {
+      addModels.push(...(viewData.models?.disabled ?? []));
+    } else if (settings?.disabled === "hide") {
+      dropModels.push(...(viewData.models?.disabled ?? []));
+    }
+    if (settings?.other !== "ignore") {
+      const otherModels = await queryMissingModels(
+        iModel,
+        new Set([
+          ...(viewData.models?.disabled ?? []),
+          ...(viewData.models?.enabled ?? []),
+        ])
+      );
+      if (settings?.other === "show") {
+        addModels.push(...otherModels);
+      } else if (settings?.other === "hide") {
+        dropModels.push(...otherModels);
+      }
+    }
+
+    if (addModels.length === 0 && dropModels.length === 0) {
       return;
     }
 
-    const visibleModels = await queryMissingModels(
-      iModel,
-      reset ? undefined : new Set(viewData.models?.disabled)
-    );
+    // Update model selector
     const modelSelector = viewState.modelSelector.clone();
-    modelSelector.addModels(visibleModels);
+    modelSelector.addModels(addModels);
+    modelSelector.dropModels(dropModels);
     viewState.modelSelector = modelSelector;
     return;
   }
 }
 
-async function unhideNewCategories(
+async function applyCategorySettings(
   iModel: IModelConnection,
   viewState: ViewState,
   viewData: ViewData,
-  reset = false,
+  settings?: ElementSettings,
 ): Promise<void> {
-  if (!reset && !viewData.categories?.disabled) {
+  const addCategories: Id64Array = [];
+  const dropCategories: Id64Array = [];
+  if (settings?.enabled === "show") {
+    addCategories.push(...(viewData.categories?.enabled ?? []));
+  } else if (settings?.enabled === "hide") {
+    dropCategories.push(...(viewData.categories?.enabled ?? []));
+  }
+  if (settings?.disabled === "show") {
+    addCategories.push(...(viewData.categories?.disabled ?? []));
+  } else if (settings?.disabled === "hide") {
+    dropCategories.push(...(viewData.categories?.disabled ?? []));
+  }
+  if (settings?.other !== "ignore") {
+    const otherCategories = await queryMissingCategories(
+      iModel,
+      new Set([
+        ...(viewData.categories?.disabled ?? []),
+        ...(viewData.categories?.enabled ?? []),
+      ])
+    );
+    if (settings?.other === "show") {
+      addCategories.push(...otherCategories);
+    } else if (settings?.other === "hide") {
+      dropCategories.push(...otherCategories);
+    }
+  }
+
+  if (addCategories.length === 0 && dropCategories.length === 0) {
     return;
   }
 
-  const visibleCategories = await queryMissingCategories(iModel, reset ? undefined : new Set(viewData.categories?.disabled));
-  viewState.categorySelector.addCategories(visibleCategories);
+  // Update model selector
+  const categorySelector = viewState.categorySelector.clone();
+  categorySelector.addCategories(addCategories);
+  categorySelector.dropCategories(dropCategories);
+  viewState.categorySelector = categorySelector;
   return;
 }
