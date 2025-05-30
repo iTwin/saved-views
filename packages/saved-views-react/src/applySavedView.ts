@@ -106,7 +106,7 @@ async function createSeedViewStateProps(
   iModel: IModelConnection,
   viewport: Viewport,
   savedViewData: SavedViewData,
-  settings: ApplySavedViewSettings | undefined = {}
+  settings: ApplySavedViewSettings | undefined = {},
 ): Promise<ViewStateProps> {
   if (settings.viewState !== "keep") {
     return settings.viewState instanceof ViewState
@@ -179,7 +179,7 @@ async function applyViewStateProps(
   iModel: IModelConnection,
   viewport: Viewport,
   savedViewData: SavedViewData,
-  settings: ApplySavedViewSettings
+  settings: ApplySavedViewSettings,
 ): Promise<void> {
   // We use {enabled: "ignore", disabled: "ignore", other: "ignore"} as the default values
   // for models and categories because users expect modelSelector.enabled and

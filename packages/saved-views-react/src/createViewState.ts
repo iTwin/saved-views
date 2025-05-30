@@ -99,7 +99,7 @@ export interface ViewStateCreateSettings {
  */
 export async function createViewStateProps(
   iModel: IModelConnection,
-  viewData: ViewData
+  viewData: ViewData,
 ): Promise<ViewStateProps> {
   const viewStateProps = await createViewStatePropsVariant(iModel, viewData);
   return viewStateProps;
@@ -109,7 +109,7 @@ async function applyViewStateOptions(
   viewState: ViewState,
   iModel: IModelConnection,
   viewData: ViewData,
-  settings: ViewStateCreateSettings = {}
+  settings: ViewStateCreateSettings = {},
 ) {
   await applyModelSettings(iModel, viewState, viewData, settings.models);
   await applyCategorySettings(iModel, viewState, viewData, settings.categories);
@@ -506,7 +506,7 @@ async function applyModelSettings(
         new Set([
           ...(viewData.models?.disabled ?? []),
           ...(viewData.models?.enabled ?? []),
-        ])
+        ]),
       );
       if (settings?.other === "show") {
         addModels.push(...otherModels);
@@ -552,7 +552,7 @@ async function applyCategorySettings(
       new Set([
         ...(viewData.categories?.disabled ?? []),
         ...(viewData.categories?.enabled ?? []),
-      ])
+      ]),
     );
     if (settings?.other === "show") {
       addCategories.push(...otherCategories);
