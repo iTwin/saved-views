@@ -42,7 +42,7 @@ import { Id64Array } from "@itwin/core-bentley";
  *
  * @default '{ enabled: "ignore", disabled: "ignore", other: "ignore" }'
  */
-export interface ElementSettings {
+export interface ApplyVisibilitySettings {
   enabled?: ShowStrategy | undefined;
   disabled?: ShowStrategy | undefined;
   other?: ShowStrategy | undefined;
@@ -72,16 +72,24 @@ export interface ViewStateCreateSettings {
   /**
    * How to handle the visibility of models that exist in iModel,
    * including those not captured in Saved View data.
+   * Settings for how to handle the visibility of models in iModel.
+   *   * `enabled` – Enabled is the set of enabled models that are stored in the saved view. Default is ignore.
+   *   * `disabled` – Disabled is the set of disabled models that are stored in the saved view. Default is ignore.
+   *   * `other` – Other is the set of models that are not stored in the saved view. Default is ignore.
    * @default '{ enabled: "ignore", disabled: "ignore", other: "ignore" }'
    */
-  models?: ElementSettings | undefined;
+  models?: ApplyVisibilitySettings | undefined;
 
   /**
    * How to handle the visibility of categories that exist in iModel,
    * including those not captured in Saved View data.
+   * Settings for how to handle the visibility of categories in iModel.
+   *   * `enabled` – Enabled is the set of enabled categories that are stored in the saved view. Default is ignore.
+   *   * `disabled` – Disabled is the set of disabled categories that are stored in the saved view. Default is ignore.
+   *   * `other` – Other is the set of categories that are not stored in the saved view. Default is ignore.
    * @default '{ enabled: "ignore", disabled: "ignore", other: "ignore" }'
    */
-  categories?: ElementSettings | undefined;
+  categories?: ApplyVisibilitySettings | undefined;
 }
 
 /**
@@ -477,11 +485,20 @@ function cloneCode({ spec, scope, value }: CodeProps): CodeProps {
   return { spec, scope, value };
 }
 
+/**
+ * Apply the model settings to the view state.
+ * This function modifies the model selector of the view state based on the provided settings.
+ * @param iModel The current IModelConnection.
+ * @param viewState The view state to modify.
+ * @param viewData The view data containing the lists of enabled and disabled models that will be applied.
+ * @param settings The settings for how to handle the visibility of enabled, disabled, and other model lists. Default is 'ignore' for all.
+ * @returns A promise that resolves when the model settings have been applied.
+ */
 async function applyModelSettings(
   iModel: IModelConnection,
   viewState: ViewState,
   viewData: ViewData,
-  settings?: ElementSettings,
+  settings?: ApplyVisibilitySettings,
 ): Promise<void> {
   if (viewData.type === "iTwin3d") {
     if (!viewState.isSpatialView()) {
@@ -528,11 +545,20 @@ async function applyModelSettings(
   }
 }
 
+/**
+ * Apply the category settings to the view state.
+ * This function modifies the category selector of the view state based on the provided settings.
+ * @param iModel The current IModelConnection.
+ * @param viewState The view state to modify.
+ * @param viewData The view data containing the lists of enabled and disabled categories that will be applied.
+ * @param settings The settings for how to handle the visibility of enabled, disabled, and other category lists. Default is 'ignore' for all.
+ * @returns A promise that resolves when the category settings have been applied.
+ */
 async function applyCategorySettings(
   iModel: IModelConnection,
   viewState: ViewState,
   viewData: ViewData,
-  settings?: ElementSettings,
+  settings?: ApplyVisibilitySettings,
 ): Promise<void> {
   const addCategories: Id64Array = [];
   const dropCategories: Id64Array = [];
