@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0
+
+### Major Changes
+
+#### [1.0.0](https://github.com/iTwin/saved-views/tree/v1.0.0-react/packages/saved-views-react) - 2025-06-03
+
+Change models and categories fallback setting option to seperate and further define settings for models and categories@itwin/saved-views-react
+
 ## 0.9.8
 
 ## 0.9.7
