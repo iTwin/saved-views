@@ -240,13 +240,16 @@ function toDegrees(angle: AngleProps): number | undefined {
 
 export async function queryMissingModels(
   iModel: IModelConnection,
-  knownModels: Set<string>,
+  knownModels?: Set<string>,
 ): Promise<string[]> {
   if (iModel.isBlank) {
     return [];
   }
 
   const allModels = await queryAllSpatiallyLocatedModels(iModel);
+  if (!knownModels || knownModels.size === 0) {
+    return allModels;
+  }
   return allModels.filter((modelId) => !knownModels.has(modelId));
 }
 
@@ -271,13 +274,16 @@ export async function queryAllSpatiallyLocatedModels(iModel: IModelConnection): 
 
 export async function queryMissingCategories(
   iModel: IModelConnection,
-  knownCategories: Set<string>,
+  knownCategories?: Set<string>,
 ): Promise<Id64Array> {
   if (iModel.isBlank) {
     return [];
   }
 
   const allCategories = await queryAllCategories(iModel);
+  if (!knownCategories || knownCategories.size === 0) {
+    return allCategories;
+  }
   return allCategories.filter((categoryId) => !knownCategories.has(categoryId));
 }
 

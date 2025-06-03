@@ -32,6 +32,29 @@ import {
   extractDisplayStyle,
   extractDisplayStyle3d,
 } from "./translation/displayStyleExtractor.js";
+import { Id64Array } from "@itwin/core-bentley";
+
+/**
+ * Settings for how to handle the visibility of elements (models or categories) in iModel.
+ *   * `enabled` – Enabled is the set of enabled elements (models or categories) that are stored in the saved view. Default is ignore.
+ *   * `disabled` – Disabled is the set of disabled elements (models or categories) that are stored in the saved view. Default is ignore.
+ *   * `other` – Other is the set of elements (models or categories) that are not stored in the saved view. Default is ignore.
+ *
+ * @default '{ enabled: "ignore", disabled: "ignore", other: "ignore" }'
+ */
+export interface ApplyVisibilitySettings {
+  enabled?: ShowStrategy | undefined;
+  disabled?: ShowStrategy | undefined;
+  other?: ShowStrategy | undefined;
+}
+
+/**
+ * Controls how models or categories are going to be altered.
+ *   * `"show"` – Show the elements in this list
+ *   * `"hide"` – Hide (ie do not show) the elements in this list
+ *   * `"ignore"` – Preserve current elements that are shown in viewport
+ */
+type ShowStrategy = "show" | "hide" | "ignore";
 
 export interface ViewStateCreateSettings {
   /**
@@ -47,11 +70,26 @@ export interface ViewStateCreateSettings {
   skipViewStateLoad?: boolean | undefined;
 
   /**
-   * How to handle visibility of models and categories that exist in iModel but
-   * not captured in Saved View data.
-   * @default "hidden"
+   * How to handle the visibility of models that exist in iModel,
+   * including those not captured in Saved View data.
+   * Settings for how to handle the visibility of models in iModel.
+   *   * `enabled` – Enabled is the set of enabled models that are stored in the saved view. Default is ignore.
+   *   * `disabled` – Disabled is the set of disabled models that are stored in the saved view. Default is ignore.
+   *   * `other` – Other is the set of models that are not stored in the saved view. Default is ignore.
+   * @default '{ enabled: "ignore", disabled: "ignore", other: "ignore" }'
    */
-  modelAndCategoryVisibilityFallback?: "visible" | "hidden" | undefined;
+  models?: ApplyVisibilitySettings | undefined;
+
+  /**
+   * How to handle the visibility of categories that exist in iModel,
+   * including those not captured in Saved View data.
+   * Settings for how to handle the visibility of categories in iModel.
+   *   * `enabled` – Enabled is the set of enabled categories that are stored in the saved view. Default is ignore.
+   *   * `disabled` – Disabled is the set of disabled categories that are stored in the saved view. Default is ignore.
+   *   * `other` – Other is the set of categories that are not stored in the saved view. Default is ignore.
+   * @default '{ enabled: "ignore", disabled: "ignore", other: "ignore" }'
+   */
+  categories?: ApplyVisibilitySettings | undefined;
 }
 
 /**
@@ -81,9 +119,8 @@ async function applyViewStateOptions(
   viewData: ViewData,
   settings: ViewStateCreateSettings = {},
 ) {
-  if (settings.modelAndCategoryVisibilityFallback === "visible") {
-    await unhideNewModelsAndCategories(iModel, viewState, viewData);
-  }
+  await applyModelSettings(iModel, viewState, viewData, settings.models);
+  await applyCategorySettings(iModel, viewState, viewData, settings.categories);
 
   if (!settings.skipViewStateLoad) {
     await viewState.load();
@@ -448,39 +485,116 @@ function cloneCode({ spec, scope, value }: CodeProps): CodeProps {
   return { spec, scope, value };
 }
 
-async function unhideNewModelsAndCategories(
+/**
+ * Apply the model settings to the view state.
+ * This function modifies the model selector of the view state based on the provided settings.
+ * @param iModel The current IModelConnection.
+ * @param viewState The view state to modify.
+ * @param viewData The view data containing the lists of enabled and disabled models that will be applied.
+ * @param settings The settings for how to handle the visibility of enabled, disabled, and other model lists. Default is 'ignore' for all.
+ * @returns A promise that resolves when the model settings have been applied.
+ */
+async function applyModelSettings(
   iModel: IModelConnection,
   viewState: ViewState,
   viewData: ViewData,
+  settings?: ApplyVisibilitySettings,
 ): Promise<void> {
   if (viewData.type === "iTwin3d") {
     if (!viewState.isSpatialView()) {
       return;
     }
 
-    if (!viewData.categories?.disabled || !viewData.models?.disabled) {
+    const addModels: Id64Array = [];
+    const dropModels: Id64Array = [];
+    if (settings?.enabled === "show") {
+      addModels.push(...(viewData.models?.enabled ?? []));
+    } else if (settings?.enabled === "hide") {
+      dropModels.push(...(viewData.models?.enabled ?? []));
+    }
+    if (settings?.disabled === "show") {
+      addModels.push(...(viewData.models?.disabled ?? []));
+    } else if (settings?.disabled === "hide") {
+      dropModels.push(...(viewData.models?.disabled ?? []));
+    }
+    if (settings?.other !== "ignore") {
+      const otherModels = await queryMissingModels(
+        iModel,
+        new Set([
+          ...(viewData.models?.disabled ?? []),
+          ...(viewData.models?.enabled ?? []),
+        ]),
+      );
+      if (settings?.other === "show") {
+        addModels.push(...otherModels);
+      } else if (settings?.other === "hide") {
+        dropModels.push(...otherModels);
+      }
+    }
+
+    if (addModels.length === 0 && dropModels.length === 0) {
       return;
     }
 
-    const [visibleCategories, visibleModels] = await Promise.all([
-      queryMissingCategories(iModel, new Set(viewData.categories.disabled)),
-      queryMissingModels(iModel, new Set(viewData.models.disabled)),
-    ]);
-
-    viewState.categorySelector.addCategories(visibleCategories);
+    // Update model selector
     const modelSelector = viewState.modelSelector.clone();
-    modelSelector.addModels(visibleModels);
+    modelSelector.addModels(addModels);
+    modelSelector.dropModels(dropModels);
     viewState.modelSelector = modelSelector;
     return;
   }
+}
 
-  if (!viewData.categories?.disabled) {
+/**
+ * Apply the category settings to the view state.
+ * This function modifies the category selector of the view state based on the provided settings.
+ * @param iModel The current IModelConnection.
+ * @param viewState The view state to modify.
+ * @param viewData The view data containing the lists of enabled and disabled categories that will be applied.
+ * @param settings The settings for how to handle the visibility of enabled, disabled, and other category lists. Default is 'ignore' for all.
+ * @returns A promise that resolves when the category settings have been applied.
+ */
+async function applyCategorySettings(
+  iModel: IModelConnection,
+  viewState: ViewState,
+  viewData: ViewData,
+  settings?: ApplyVisibilitySettings,
+): Promise<void> {
+  const addCategories: Id64Array = [];
+  const dropCategories: Id64Array = [];
+  if (settings?.enabled === "show") {
+    addCategories.push(...(viewData.categories?.enabled ?? []));
+  } else if (settings?.enabled === "hide") {
+    dropCategories.push(...(viewData.categories?.enabled ?? []));
+  }
+  if (settings?.disabled === "show") {
+    addCategories.push(...(viewData.categories?.disabled ?? []));
+  } else if (settings?.disabled === "hide") {
+    dropCategories.push(...(viewData.categories?.disabled ?? []));
+  }
+  if (settings?.other !== "ignore") {
+    const otherCategories = await queryMissingCategories(
+      iModel,
+      new Set([
+        ...(viewData.categories?.disabled ?? []),
+        ...(viewData.categories?.enabled ?? []),
+      ]),
+    );
+    if (settings?.other === "show") {
+      addCategories.push(...otherCategories);
+    } else if (settings?.other === "hide") {
+      dropCategories.push(...otherCategories);
+    }
+  }
+
+  if (addCategories.length === 0 && dropCategories.length === 0) {
     return;
   }
 
-  const visibleCategories = await queryMissingCategories(
-    iModel,
-    new Set(viewData.categories.disabled),
-  );
-  viewState.categorySelector.addCategories(visibleCategories);
+  // Update model selector
+  const categorySelector = viewState.categorySelector.clone();
+  categorySelector.addCategories(addCategories);
+  categorySelector.dropCategories(dropCategories);
+  viewState.categorySelector = categorySelector;
+  return;
 }

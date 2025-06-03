@@ -28,6 +28,7 @@ import type {
 import {
   createViewStateFromProps,
   createViewStateProps,
+  type ApplyVisibilitySettings,
 } from "./createViewState.js";
 import {
   extensionHandlers,
@@ -74,11 +75,18 @@ export interface ApplySavedViewSettings {
   perModelCategoryVisibility?: ApplyStrategy | "clear" | undefined;
 
   /**
-   * How to handle visibility of models and categories that exist in iModel but
-   * are not captured in Saved View data.
-   * @default "hidden"
+   * How to handle the visibility of models that exist in iModel,
+   * including those not captured in Saved View data.
+   * @default '{ enabled: "ignore", disabled: "ignore", other: "ignore" }'
    */
-  modelAndCategoryVisibilityFallback?: "visible" | "hidden" | undefined;
+  models?: ApplyVisibilitySettings | undefined;
+
+  /**
+   * How to handle the visibility of categories that exist in iModel,
+   * including those not captured in Saved View data.
+   * @default '{ enabled: "ignore", disabled: "ignore", other: "ignore" }'
+   */
+  categories?: ApplyVisibilitySettings | undefined;
 
   /**
    * Options forwarded to {@link Viewport.changeView}.
@@ -173,17 +181,27 @@ async function applyViewStateProps(
   savedViewData: SavedViewData,
   settings: ApplySavedViewSettings,
 ): Promise<void> {
-  // We use "hidden" as the default value for modelAndCategoryVisibilityFallback
-  // because users expect modelSelector.enabled and categorySelector.enabled to
-  // act as exclusive whitelists when modelSelector.disabled or categorySelector.disabled
-  // arrays are empty, respectively.
-  const { modelAndCategoryVisibilityFallback = "hidden" } = settings;
+  // We use {enabled: "ignore", disabled: "ignore", other: "ignore"} as the default values
+  // for models and categories because users expect modelSelector.enabled and
+  // categorySelector.enabled to act as exclusive whitelists when modelSelector.disabled
+  // or categorySelector.disabled arrays are empty, respectively.
+  const models: ApplyVisibilitySettings = {
+    enabled: settings.models?.enabled ?? "ignore",
+    disabled: settings.models?.disabled ?? "ignore",
+    other: settings.models?.other ?? "ignore",
+  };
+  const categories: ApplyVisibilitySettings = {
+    enabled: settings.categories?.enabled ?? "ignore",
+    disabled: settings.categories?.disabled ?? "ignore",
+    other: settings.categories?.other ?? "ignore",
+  };
   const viewState = await createViewStateFromProps(
     viewStateProps,
     iModel,
     savedViewData.viewData,
     {
-      modelAndCategoryVisibilityFallback,
+      models,
+      categories,
     },
   );
   viewport.changeView(viewState, settings.viewChangeOptions);
