@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.0
+
+### Minor Changes
+
+#### [1.1.0](https://github.com/iTwin/saved-views/tree/v1.1.0-react/packages/saved-views-react) - 2025-06-05
+
+Add subcategories option in applyView settings.@itwin/saved-views-react
+
 ## 1.0.0
 
 ### Major Changes
