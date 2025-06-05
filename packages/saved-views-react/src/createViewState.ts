@@ -616,7 +616,7 @@ async function applyCategorySettings(
   const { addCategories, dropCategories } = await sortCategories(
     iModel,
     viewData,
-    settings
+    settings,
   );
   if (addCategories.length === 0 && dropCategories.length === 0) {
     return;
