@@ -54,7 +54,7 @@ export interface ApplyVisibilitySettings {
  *   * `"hide"` – Hide (ie do not show) the elements in this list
  *   * `"ignore"` – Preserve current elements that are shown in viewport
  */
-type ShowStrategy = "show" | "hide" | "ignore";
+export type ShowStrategy = "show" | "hide" | "ignore";
 
 export interface ViewStateCreateSettings {
   /**
@@ -90,6 +90,12 @@ export interface ViewStateCreateSettings {
    * @default '{ enabled: "ignore", disabled: "ignore", other: "ignore" }'
    */
   categories?: ApplyVisibilitySettings | undefined;
+
+  /**
+   * How to handle the visibility of subcategories that exist in iModel.
+   * @default "reset"
+   */
+  subcategories?: ShowStrategy | undefined;
 }
 
 /**
@@ -120,8 +126,10 @@ async function applyViewStateOptions(
   settings: ViewStateCreateSettings = {},
 ) {
   await applyModelSettings(iModel, viewState, viewData, settings.models);
-  await applyCategorySettings(iModel, viewState, viewData, settings.categories);
-
+  if (settings.subcategories === "ignore") {
+    // If subcategories are ignored, we apply category settings here instead of on the viewport.
+    await applyCategorySettings(iModel, viewState, viewData, settings.categories);
+  }
   if (!settings.skipViewStateLoad) {
     await viewState.load();
   }
@@ -546,20 +554,21 @@ async function applyModelSettings(
 }
 
 /**
- * Apply the category settings to the view state.
- * This function modifies the category selector of the view state based on the provided settings.
+ * Determine, out of all categories in the iModel, which ones should be added or dropped 
+ * (ie visible or hidden) based on the provided settings.
  * @param iModel The current IModelConnection.
- * @param viewState The view state to modify.
  * @param viewData The view data containing the lists of enabled and disabled categories that will be applied.
  * @param settings The settings for how to handle the visibility of enabled, disabled, and other category lists. Default is 'ignore' for all.
- * @returns A promise that resolves when the category settings have been applied.
+ * @returns A list of categories that should be added or dropped (ie visible or hidden).
  */
-async function applyCategorySettings(
+export async function sortCategories(
   iModel: IModelConnection,
-  viewState: ViewState,
   viewData: ViewData,
   settings?: ApplyVisibilitySettings,
-): Promise<void> {
+): Promise<{
+  addCategories: Id64Array;
+  dropCategories: Id64Array;
+}> {
   const addCategories: Id64Array = [];
   const dropCategories: Id64Array = [];
   if (settings?.enabled === "show") {
@@ -586,12 +595,34 @@ async function applyCategorySettings(
       dropCategories.push(...otherCategories);
     }
   }
+  return { addCategories, dropCategories };
+}
 
+/**
+ * Apply the category settings to the view state.
+ * This function modifies the category selector of the view state based on the provided settings.
+ * @param iModel The current IModelConnection.
+ * @param viewState The view state to modify.
+ * @param viewData The view data containing the lists of enabled and disabled categories that will be applied.
+ * @param settings The settings for how to handle the visibility of enabled, disabled, and other category lists. Default is 'ignore' for all.
+ * @returns A promise that resolves when the category settings have been applied.
+ */
+async function applyCategorySettings(
+  iModel: IModelConnection,
+  viewState: ViewState,
+  viewData: ViewData,
+  settings?: ApplyVisibilitySettings,
+): Promise<void> {
+  const { addCategories, dropCategories } = await sortCategories(
+    iModel,
+    viewData,
+    settings
+  );
   if (addCategories.length === 0 && dropCategories.length === 0) {
     return;
   }
 
-  // Update model selector
+  // Update category selector
   const categorySelector = viewState.categorySelector.clone();
   categorySelector.addCategories(addCategories);
   categorySelector.dropCategories(dropCategories);

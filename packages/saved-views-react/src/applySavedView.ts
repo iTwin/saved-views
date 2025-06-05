@@ -28,6 +28,8 @@ import type {
 import {
   createViewStateFromProps,
   createViewStateProps,
+  ShowStrategy,
+  sortCategories,
   type ApplyVisibilitySettings,
 } from "./createViewState.js";
 import {
@@ -87,6 +89,12 @@ export interface ApplySavedViewSettings {
    * @default '{ enabled: "ignore", disabled: "ignore", other: "ignore" }'
    */
   categories?: ApplyVisibilitySettings | undefined;
+
+  /**
+   * How to handle the visibility of subcategories that exist in iModel.
+   * @default "reset"
+   */
+  subcategories?: ShowStrategy | undefined;
 
   /**
    * Options forwarded to {@link Viewport.changeView}.
@@ -202,9 +210,19 @@ async function applyViewStateProps(
     {
       models,
       categories,
+      subcategories: settings.subcategories ?? "ignore",
     },
   );
   viewport.changeView(viewState, settings.viewChangeOptions);
+
+  if (settings.subcategories !== "ignore") {
+    // If subcategories are not ignored, we need to reset them here, 
+    // otherwise we might end up with subcategories not shown correctly
+    const {addCategories, dropCategories} =
+      await sortCategories(iModel, savedViewData.viewData, categories);
+    viewport.changeCategoryDisplay(dropCategories, false);
+    viewport.changeCategoryDisplay(addCategories, true, settings.subcategories === "show");
+  }
 }
 
 /**
