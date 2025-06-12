@@ -523,7 +523,7 @@ const displayStylesLegacyMapping: ExtractionFunc<void, void>[] = [
   extractArray(displayStyleSubCategoryLegacyMappings, "subCategoryOvr", "subCategoryOverrides"),
   extractObject(backgroundMapMappings, "backgroundMap"),
   extractArrayElementsConditionally(
-    (value) => !value?.invisible,
+    (value) => value && !value.invisible,
     contextRealityModelsLegacyMappings,
     "contextRealityModels",
   ),
