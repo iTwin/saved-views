@@ -614,6 +614,41 @@ export const extractArray = (
 };
 
 /**
+ * Creates an extraction function that will extract each value of an array if it meets the given condition
+ * by using a single extraction function on each of the array values
+ * @param condition Function that checks if the value should be extracted
+ * @param extractionFunc Array of extraction functions to apply to each value in the array that meets the condition
+ * @param from Accessor string where the array is in the input object
+ * @param to Accessor string to store it in the output object
+ * @returns Function that extracts an array of values conditionally
+ */
+export const extractArrayElementsConditionally = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  condition: (value: any) => boolean,
+  extractionFunc: ExtractionFunc<void, void>[],
+  from: string,
+  to?: string,
+) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (input: any, output: any) => {
+    const adjustedTo = to ?? from;
+    if (input[from] !== undefined && Array.isArray(input[from])) {
+      output[adjustedTo] = [];
+      let outputIndex = 0;
+      (input[from] as unknown[]).forEach((_: unknown, index: number) => {
+        if (condition(input[from][index])) {
+          output[adjustedTo].push({});
+          extractionFunc.forEach((func: ExtractionFunc<void, void>) =>
+            func(input[from][index], output[adjustedTo][outputIndex]),
+          );
+          outputIndex++;
+        }
+      });
+    }
+  };
+};
+
+/**
  * Creates an extraction function that will extract the values inside a 2D array from the given accessor
  * @param extractionFunc Extraction functions to apply to each entry in the array
  * @param from Accessor string for the 2D array in the input object

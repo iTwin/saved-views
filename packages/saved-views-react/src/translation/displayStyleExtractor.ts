@@ -10,7 +10,7 @@ import type {
 
 import type { LegacySavedView3d, LegacySavedView2d } from "./SavedViewTypes.js";
 import {
-  applyExtraction, extractArray, extractArrayConditionally, extractBoolean, extractColor, extractColorLegacy,
+  applyExtraction, extractArray, extractArrayConditionally, extractArrayElementsConditionally, extractBoolean, extractColor, extractColorLegacy,
   extractConditionally, extractLinePixels, extractNumber, extractNumberOrBool, extractObject, extractPlainTypedMap, extractRGB,
   extractSimpleArray, extractString, extractStringOrArray, extractStringOrNumber, extractStringOrNumberArray,
   isAnyColorFormat, simpleTypeOf, type ExtractionFunc,
@@ -522,7 +522,11 @@ const displayStylesLegacyMapping: ExtractionFunc<void, void>[] = [
   extractNumber("timePoint"),
   extractArray(displayStyleSubCategoryLegacyMappings, "subCategoryOvr", "subCategoryOverrides"),
   extractObject(backgroundMapMappings, "backgroundMap"),
-  extractArray(contextRealityModelsLegacyMappings, "contextRealityModels"),
+  extractArrayElementsConditionally(
+    (value) => value && !value.invisible,
+    contextRealityModelsLegacyMappings,
+    "contextRealityModels",
+  ),
   extractStringOrArray("excludedElements"),
   extractObject(mapImageryLegacyMapping, "mapImagery"),
   extractArray(displayStyleModelAppearanceLegacyMappings, "modelOvr", "modelOverrides"),
