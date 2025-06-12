@@ -623,11 +623,13 @@ export const extractArray = (
  * @returns Function that extracts an array of values conditionally
  */
 export const extractArrayElementsConditionally = (
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   condition: (value: any) => boolean,
   extractionFunc: ExtractionFunc<void, void>[],
   from: string,
   to?: string,
 ) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (input: any, output: any) => {
     const adjustedTo = to ?? from;
     if (input[from] !== undefined && Array.isArray(input[from])) {
