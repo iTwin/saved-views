@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.1
+
+### Patch Changes
+
+#### [1.1.1](https://github.com/iTwin/saved-views/tree/v1.1.1-react/packages/saved-views-react) - 2025-06-13
+
+Add extractArrayElementsConditionally and handle invisible contextRealityModelsLegacyMappings@itwin/saved-views-react
+
 ## 1.1.0
 
 ### Minor Changes
