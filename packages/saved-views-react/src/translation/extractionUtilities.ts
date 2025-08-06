@@ -803,6 +803,7 @@ export const extractValidPlainTypedMap = (
   from: string,
   to?: string,
 ) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (input: any, output: any) => {
     if (input[from] !== undefined) {
       const adjustedTo = to ?? from;

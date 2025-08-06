@@ -463,7 +463,7 @@ export interface ImageMapLayerProps extends CommonMapLayerProps {
   url: string;
   formatId: string;
   subLayers?: MapSubLayerProps[];
-  queryParams?: { [key: string]: string };
+  queryParams?: { [key: string]: string; };
   properties?: MapLayerProviderProperties;
 }
 
@@ -494,7 +494,7 @@ export interface MapSubLayerProps {
 /**
  * Type for map layer provider properties.
  */
-export interface MapLayerProviderProperties { [key: string]: number | string | boolean | number[] | string[] | boolean[] };
+export interface MapLayerProviderProperties { [key: string]: number | string | boolean | number[] | string[] | boolean[]; }
 
 /**
  * A {@linkcode FeatureAppearanceProps} applied to a specific model to override its appearance within the context of a
