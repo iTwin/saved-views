@@ -17,6 +17,21 @@ export const simpleTypeOf = (typeOfString: string) => {
 };
 
 /**
+ * Returns a function that does determines if a value is of any of the provided types or arrays of those types
+ * @param typeOfString Array of strings to compare against type
+ * @returns
+ */
+export const simpleTypeOrArrayOf = (typeOfString: string[]) => {
+  return (value: unknown) =>
+    typeOfString.some((type) => {
+      if (Array.isArray(value)) {
+        return value.every((inner) => typeof inner === type);
+      }
+      return typeof value === type;
+    });
+};
+
+/**
  * Type check for colors in format {r: number, g: number, b:number}
  * @param value
  * @returns
@@ -412,6 +427,28 @@ export const extractStringOrNumberArray = (
 };
 
 /**
+ * Creates a extraction function that will extract an array of type: (string | number)[]
+ * @param from Accessor that will be used on input to access value
+ * @param to Accessor that will be used to stored the value in the output object
+ * @returns Function that extracts a string | number array value and type checks it
+ */
+export const extractStringOrNumberOrBoolOrArray = (
+  from: string,
+  to?: string,
+): ExtractionFunc<void, void> => {
+  return createExtractionFunc(
+    from,
+    to ?? from,
+    (value: unknown) =>
+      (typeof value === "number" || typeof value === "string" || typeof value === "boolean") ||
+      Array.isArray(value) &&
+      value.every(
+        (val: unknown) => typeof val === "number" || typeof val === "string" || typeof val === "boolean",
+      ),
+  );
+};
+
+/**
  * Creates a extraction function that will extract an array in which all the elements are type checked with the
  * given function
  * @param typeCheck Function to check each value of the array
@@ -751,6 +788,34 @@ export const extractPlainTypedMap = (
     }
   };
 };
+
+/**
+ * Creates an extraction function that will extract a plain typed map
+ * @param isValidValue Checker for the validity of the values
+ * @param isValidKey Checker for the validity of the key
+ * @param from Accessor where the plain typed map exists
+ * @param to Accessor to store the plain typed map to
+ * @returns
+ */
+export const extractValidPlainTypedMap = (
+  isValidValue: (value: unknown) => boolean,
+  isValidKey: (key: unknown) => boolean,
+  from: string,
+  to?: string,
+) => {
+  return (input: any, output: any) => {
+    if (input[from] !== undefined) {
+      const adjustedTo = to ?? from;
+      output[adjustedTo] = {};
+      for (const prop in input[from]) {
+        if (isValidKey(prop) && isValidValue(input[from][prop])) {
+          output[adjustedTo][prop] = input[from][prop];
+        }
+      }
+    }
+  };
+};
+
 
 /**
  * Applies an array of extraction functions to extract the data from the input object
