@@ -427,28 +427,6 @@ export const extractStringOrNumberArray = (
 };
 
 /**
- * Creates a extraction function that will extract an array of type: (string | number)[]
- * @param from Accessor that will be used on input to access value
- * @param to Accessor that will be used to stored the value in the output object
- * @returns Function that extracts a string | number array value and type checks it
- */
-export const extractStringOrNumberOrBoolOrArray = (
-  from: string,
-  to?: string,
-): ExtractionFunc<void, void> => {
-  return createExtractionFunc(
-    from,
-    to ?? from,
-    (value: unknown) =>
-      (typeof value === "number" || typeof value === "string" || typeof value === "boolean") ||
-      Array.isArray(value) &&
-      value.every(
-        (val: unknown) => typeof val === "number" || typeof val === "string" || typeof val === "boolean",
-      ),
-  );
-};
-
-/**
  * Creates a extraction function that will extract an array in which all the elements are type checked with the
  * given function
  * @param typeCheck Function to check each value of the array
