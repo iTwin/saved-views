@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.3
+
+### Patch Changes
+
+#### [0.5.3](https://github.com/iTwin/saved-views/tree/v0.5.3-client/packages/saved-views-client) - 2025-08-07
+
+Add support for properties and queryParams in ImageMapLayerProps@itwin/saved-views-client
+
 ## 0.5.2
 
 ### Patch Changes
