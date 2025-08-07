@@ -8,12 +8,12 @@ import type {
   DisplayStyle3dSettingsProps, DisplayStyleSettingsProps, ViewITwin2d, ViewITwin3d,
 } from "@itwin/saved-views-client";
 
-import type { LegacySavedView3d, LegacySavedView2d } from "./SavedViewTypes.js";
+import type { LegacySavedView2d, LegacySavedView3d } from "./SavedViewTypes.js";
 import {
   applyExtraction, extractArray, extractArrayConditionally, extractArrayElementsConditionally, extractBoolean, extractColor, extractColorLegacy,
   extractConditionally, extractLinePixels, extractNumber, extractNumberOrBool, extractObject, extractPlainTypedMap, extractRGB,
-  extractSimpleArray, extractString, extractStringOrArray, extractStringOrNumber, extractStringOrNumberArray,
-  isAnyColorFormat, simpleTypeOf, type ExtractionFunc,
+  extractSimpleArray, extractString, extractStringOrArray, extractStringOrNumber, extractStringOrNumberArray, extractValidPlainTypedMap,
+  isAnyColorFormat, simpleTypeOf, simpleTypeOrArrayOf, type ExtractionFunc,
 } from "./extractionUtilities.js";
 
 const viewFlagMappings: ExtractionFunc<void, void>[] = [
@@ -257,6 +257,12 @@ const imageMapLayerPropsMapping: ExtractionFunc<void, void>[] = [
   extractString("url"),
   extractString("formatId"),
   extractArray(mapSubLayerMappings, "subLayers"),
+  extractValidPlainTypedMap(simpleTypeOf("string"), simpleTypeOf("string"), "queryParams"),
+  extractValidPlainTypedMap(
+    simpleTypeOrArrayOf(["string", "number", "boolean"]),
+    simpleTypeOf("string"),
+    "properties",
+  ),
 ];
 
 const baseMapLayerPropsMapping: ExtractionFunc<void, void>[] = [
