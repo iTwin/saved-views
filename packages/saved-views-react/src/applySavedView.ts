@@ -246,6 +246,7 @@ export async function applySavedView(
 ): Promise<void> {
   // Apply default ApplyVisibilitySettings settings
   settings = {
+    ...settings,
     viewState: settings.viewState ?? "apply",
     camera: settings.camera ?? "apply",
     emphasis: settings.emphasis ?? "apply",
@@ -262,7 +263,6 @@ export async function applySavedView(
       other: settings.categories?.other ?? "ignore",
     },
     subcategories: settings.subcategories ?? "ignore",
-    viewChangeOptions: settings.viewChangeOptions,
   }
 
   let viewStateProps: ViewStateProps = await createSeedViewStateProps(
