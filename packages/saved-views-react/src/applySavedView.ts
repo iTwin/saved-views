@@ -92,7 +92,7 @@ export interface ApplySavedViewSettings {
 
   /**
    * How to handle the visibility of subcategories that exist in iModel.
-   * @default "reset"
+   * @default "ignore"
    */
   subcategories?: ShowStrategy | undefined;
 
@@ -244,6 +244,27 @@ export async function applySavedView(
   settings: ApplySavedViewSettings | undefined = {},
   overrides?: DefaultExtensionHandlersApplyOverrides,
 ): Promise<void> {
+  // Apply default ApplyVisibilitySettings settings
+  settings = {
+    viewState: settings.viewState ?? "apply",
+    camera: settings.camera ?? "apply",
+    emphasis: settings.emphasis ?? "apply",
+    perModelCategoryVisibility:
+      settings.perModelCategoryVisibility ?? "apply",
+    models: {
+      enabled: settings.models?.enabled ?? "ignore",
+      disabled: settings.models?.disabled ?? "ignore",
+      other: settings.models?.other ?? "ignore",
+    },
+    categories: {
+      enabled: settings.categories?.enabled ?? "ignore",
+      disabled: settings.categories?.disabled ?? "ignore",
+      other: settings.categories?.other ?? "ignore",
+    },
+    subcategories: settings.subcategories ?? "ignore",
+    viewChangeOptions: settings.viewChangeOptions,
+  }
+
   let viewStateProps: ViewStateProps = await createSeedViewStateProps(
     iModel,
     viewport,
