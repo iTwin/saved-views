@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.3
+
+### Patch Changes
+
+#### [1.1.3](https://github.com/iTwin/saved-views/tree/v1.1.3-react/packages/saved-views-react) - 2025-09-05
+
+Fix defaults for ApplySavedViewSettings when using the applySavedView function@itwin/saved-views-react
+
 ## 1.1.2
 
 ### Patch Changes
