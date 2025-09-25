@@ -33,10 +33,10 @@
     "build:transpile": "run-s build:transpile:*",
     "build:transpile:client": "cd ../saved-views-client && npm run build",
     "build:transpile:react": "tsc --project ./tsconfig.build.json",
-    "build:css": "postcss src/**/*.css --base ./src --dir ./lib",
-    "test": "vitest run --passWithNoTests --dir ./lib",
-    "test:cover": "vitest run --coverage --passWithNoTests --dir ./lib",
-    "test:watch": "vitest watch --dir ./lib",
+    "build:css": "cpx \"./src/**/*.css\" ./lib",
+    "test": "vitest run --passWithNoTests",
+    "test:cover": "vitest run --coverage --passWithNoTests",
+    "test:watch": "vitest watch",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
@@ -56,8 +56,6 @@
     "cpx2": "^5.0.0",
     "happy-dom": "^15.11.4",
     "npm-run-all": "^4.1.5",
-    "postcss-cli": "^10.1.0",
-    "postcss-modules": "^6.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "recursive-readdir": "^2.2.3",
