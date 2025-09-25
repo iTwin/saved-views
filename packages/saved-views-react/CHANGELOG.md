@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.1.4
+
+### Patch Changes
+
+#### [0.5.4](https://github.com/iTwin/saved-views/tree/v0.5.4-client/packages/saved-views-client) - 2025-09-25
+
+Updated `axios` dependency version to `^1.12.0`@itwin/saved-views-client
+
+#### [1.1.4](https://github.com/iTwin/saved-views/tree/v1.1.4-react/packages/saved-views-react) - 2025-09-25
+
+Updated `@itwin/core-react` dependency version to `^5.2.0`@itwin/saved-views-react
+
 ## 1.1.3
 
 ### Patch Changes
