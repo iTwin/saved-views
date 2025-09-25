@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.4
+
+### Patch Changes
+
+#### [0.5.4](https://github.com/iTwin/saved-views/tree/v0.5.4-client/packages/saved-views-client) - 2025-09-25
+
+Updated `axios` dependency version to `^1.12.0`@itwin/saved-views-client
+
 ## 0.5.3
 
 ### Patch Changes
