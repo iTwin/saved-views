@@ -43,6 +43,7 @@
     "typescript": "^5.5.4"
   },
   "resolutions": {
+    "@babel/runtime": "^7.26.10",
     "@eslint/plugin-kit": "^0.3.3",
     "axios": "^1.12.0",
     "brace-expansion": "^2.0.2",
