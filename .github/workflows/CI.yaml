@@ -18,7 +18,7 @@ jobs:
     - name: Install pnpm
       uses: pnpm/action-setup@v2
       with:
-        version: 9
+        version: 10
         run_install: false
 
     - name: Use Node.js 20
@@ -38,7 +38,7 @@ jobs:
 
     - name: Run Audit
       run: pnpm audit --audit-level high
-  
+
     - name: Check saved-views-client unit test coverage
       run: npm run test:cover --prefix ./packages/saved-views-client
 
