@@ -1,2 +1,8 @@
 packages:
-  - "packages/*"
+  - packages/*
+
+onlyBuiltDependencies:
+  - '@bentley/imodeljs-native'
+  - '@parcel/watcher'
+  - '@swc/core'
+  - esbuild
