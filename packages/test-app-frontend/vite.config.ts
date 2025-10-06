@@ -16,7 +16,6 @@ export default defineConfig(() => ({
     react(),
     viteStaticCopy({
       targets: [
-        { src: "./node_modules/@itwin/saved-views-react/public/locales", dest: "." },
         { src: "./node_modules/@itwin/core-frontend/lib/public/**", dest: "." },
         { src: "./node_modules/@itwin/core-react/lib/public/locales", dest: "." },
         { src: "./node_modules/@itwin/imodel-components-react/lib/public/locales", dest: "." },
