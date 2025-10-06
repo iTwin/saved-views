@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.0
+
+### Minor Changes
+
+#### [1.2.0](https://github.com/iTwin/saved-views/tree/v1.2.0-react/packages/saved-views-react) - 2025-10-06
+
+Updated itwin core packages to 5.2.0@itwin/saved-views-react
+
 ## 1.1.4
 
 ### Patch Changes
