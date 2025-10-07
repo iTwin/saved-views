@@ -88,7 +88,7 @@ export function SavedViewsWidget(props: SavedViewsWidgetProps): ReactElement {
     const savedViewId = await savedViews.createSavedView({ displayName: "0 Saved View Name" }, savedViewData);
     const thumbnail = captureSavedViewThumbnail(props.viewport);
     if (thumbnail) {
-      savedViews.uploadThumbnail(savedViewId, thumbnail);
+      await savedViews.uploadThumbnail(savedViewId, thumbnail);
     }
   };
 

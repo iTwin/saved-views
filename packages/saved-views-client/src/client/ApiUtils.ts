@@ -34,13 +34,19 @@ export async function callITwinApi(args: CallITwinApiParams): Promise<unknown> {
   }
 }
 
+/** Type guard for error responses */
+function isErrorResponse(value: unknown): value is { error: unknown; } {
+  return typeof value === "object" && value !== null && "error" in value;
+}
+
 async function throwBadResponseCodeError(response: Response, errorMessage: string): Promise<never> {
   let error: unknown;
   try {
-    error = (await response.json()).error;
-    if (!error) {
+    const resp = (await response.json());
+    if (!isErrorResponse(resp)) {
       throw 0;
     }
+    error = resp.error;
   } catch {
     const statusText = response.statusText ? ` ${response.statusText}` : "";
     throw new Error(
