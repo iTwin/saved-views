@@ -12,7 +12,7 @@
     "test:components": "npm test --prefix packages/saved-views-react",
     "cover": "run-p --silent cover:*",
     "cover:components": "npm run test:cover --prefix packages/saved-views-react",
-    "lint": "eslint '**/*.{ts,tsx}'",
+    "lint": "eslint \"**/{src,test}/**/*.{ts,tsx}\"",
     "typecheck": "run-p --silent typecheck:*",
     "typecheck:components": "npm run typecheck --prefix packages/saved-views-react",
     "typecheck:client": "npm run typecheck --prefix packages/saved-views-client",

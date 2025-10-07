@@ -123,13 +123,13 @@ export class ITwinSavedViewsClient implements SavedViewsClient {
       signal: args.signal,
     });
 
-    await Promise.all((args.savedViewData?.extensions ?? []).map(({ extensionName, data }) => {
+    await Promise.all((args.savedViewData?.extensions ?? []).map(({ extensionName, data }) =>
       this.#client.createExtension({
         savedViewId: args.savedViewId,
         extensionName,
         data,
-      });
-    }));
+      }),
+    ));
 
     return savedViewResponseToSavedView(savedView);
   }
