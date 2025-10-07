@@ -35,7 +35,7 @@ export async function callITwinApi(args: CallITwinApiParams): Promise<unknown> {
 }
 
 /** Type guard for error responses */
-function isErrorResponse(value: unknown): value is { error: unknown } {
+function isErrorResponse(value: unknown): value is { error: unknown; } {
   return typeof value === "object" && value !== null && "error" in value;
 }
 
