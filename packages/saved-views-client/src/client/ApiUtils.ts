@@ -37,10 +37,11 @@ export async function callITwinApi(args: CallITwinApiParams): Promise<unknown> {
 async function throwBadResponseCodeError(response: Response, errorMessage: string): Promise<never> {
   let error: unknown;
   try {
-    error = (await response.json()).error;
-    if (!error) {
+    const resp = (await response.json());
+    if (!resp || typeof resp !== "object" || resp === null || !("error" in resp)) {
       throw 0;
     }
+    error = resp.error;
   } catch {
     const statusText = response.statusText ? ` ${response.statusText}` : "";
     throw new Error(
