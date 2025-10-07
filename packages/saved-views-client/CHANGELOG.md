@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.0
+
+### Minor Changes
+
+#### [0.6.0](https://github.com/iTwin/saved-views/tree/v0.6.0-client/packages/saved-views-client) - 2025-10-07
+
+Expose CommonJS build for @itwin/saved-views-client@itwin/saved-views-client
+
 ## 0.5.4
 
 ### Patch Changes
