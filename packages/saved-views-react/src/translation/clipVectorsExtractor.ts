@@ -47,7 +47,7 @@ const clipPrimitivePlaneMappings: ExtractionFunc<void, void>[] = [
   ),
 ];
 
-const clipVectorMappings: ExtractionFunc<void, void>[] = [
+export const clipVectorMappings: ExtractionFunc<void, void>[] = [
   extractArrayConditionally(
     [
       {

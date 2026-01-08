@@ -60,7 +60,7 @@ const clipPrimitiveShapeLegacyMappings = [
   ),
 ];
 
-const clipVectorLegacyMappings = [
+export const clipVectorLegacyMappings = [
   extractArrayConditionally(
     [
       { discriminator: "planes", mappings: clipPrimitivePlaneLegacyMappings },

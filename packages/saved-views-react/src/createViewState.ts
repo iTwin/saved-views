@@ -33,6 +33,7 @@ import {
   extractDisplayStyle3d,
 } from "./translation/displayStyleExtractor.js";
 import { Id64Array } from "@itwin/core-bentley";
+import { extractViewDetails2d, extractViewDetails3d } from "./translation/viewDetailsExtractor.js";
 
 /**
  * Settings for how to handle the visibility of elements (models or categories) in iModel.
@@ -236,7 +237,17 @@ async function createSpatialViewStateProps(
       angles: viewData.angles,
       camera: viewData.camera ?? new Camera(),
       jsonProperties: {
-        viewDetails: extractClipVectors(viewData),
+        viewDetails: {
+          acs: seedViewState.getAuxiliaryCoordinateSystemId(),
+          aspectSkew: seedViewState.getAspectRatioSkew(),
+          gridOrient: seedViewState.getGridOrientation(),
+          gridPerRef: seedViewState.getGridsPerRef(),
+          gridSpaceX: seedViewState.getGridSpacing().x,
+          gridSpaceY: seedViewState.getGridSpacing().y,
+          disable3dManipulations: !seedViewState.allow3dManipulations,
+          ...extractClipVectors(viewData),
+          ...extractViewDetails3d(viewData),
+        },
       },
       classFullName: seedViewState.classFullName,
       code: seedViewState.code,
@@ -297,7 +308,14 @@ async function createDrawingViewStateProps(
       id: seedViewState.id,
       jsonProperties: {
         viewDetails: {
+          acs: seedViewState.getAuxiliaryCoordinateSystemId(),
+          aspectSkew: seedViewState.getAspectRatioSkew(),
           gridOrient: seedViewState.getGridOrientation(),
+          gridPerRef: seedViewState.getGridsPerRef(),
+          gridSpaceX: seedViewState.getGridSpacing().x,
+          gridSpaceY: seedViewState.getGridSpacing().y,
+          ...extractClipVectors(viewData),
+          ...extractViewDetails2d(viewData),
         },
       },
       code: cloneCode(seedViewState.code),
@@ -360,7 +378,15 @@ async function createSheetViewStateProps(
       id: seedViewState.id,
       jsonProperties: {
         viewDetails: {
+          acs: seedViewState.getAuxiliaryCoordinateSystemId(),
+          aspectSkew: seedViewState.getAspectRatioSkew(),
           gridOrient: seedViewState.getGridOrientation(),
+          gridPerRef: seedViewState.getGridsPerRef(),
+          gridSpaceX: seedViewState.getGridSpacing().x,
+          gridSpaceY: seedViewState.getGridSpacing().y,
+          ...extractClipVectors(viewData),
+          ...extractViewDetails2d(viewData),
+
         },
       },
       code: cloneCode(seedViewState.code),
