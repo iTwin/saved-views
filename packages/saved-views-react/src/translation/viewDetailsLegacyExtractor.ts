@@ -5,26 +5,24 @@
 import type {
   SpatialViewDefinitionProps,
   ViewDefinition2dProps,
-  ViewDetails3dProps,
-  ViewDetailsProps,
 } from "@itwin/core-common";
 import type {
-  ClipPrimitivePlaneProps,
-  ClipPrimitiveShapeProps,
-  ViewITwin2d,
-  ViewITwin3d,
+  ViewDetails3dProps,
+  ViewDetailsProps,
 } from "@itwin/saved-views-client";
 
-import { clipVectorLegacyMappings } from "./clipVectorsLegacyExtractor.js";
+import {
+  clipVectorLegacyMappings,
+  filterClipPrimatives,
+} from "./clipVectorsLegacyExtractor.js";
 import {
   applyExtraction,
   extractArray,
   extractBoolean,
-  extractNumber,
   extractSimpleArray,
-  extractString,
   simpleTypeOf,
 } from "./extractionUtilities.js";
+import { viewDetailsMappings } from "./viewDetailsExtractor.js";
 
 export function extractViewDetails2dFromLegacy(
   input: ViewDefinition2dProps,
@@ -34,9 +32,9 @@ export function extractViewDetails2dFromLegacy(
     return undefined;
   }
 
-  const output = {} as ViewITwin2d;
-  applyExtraction(viewDetails, output, viewDetailsLegacyMappings);
-  return output.viewDetails;
+  const output = {} as ViewDetailsProps;
+  applyExtraction(viewDetails, output, viewDetailsMappings);
+  return output;
 }
 
 export function extractViewDetails3dFromLegacy(
@@ -47,33 +45,16 @@ export function extractViewDetails3dFromLegacy(
     return undefined;
   }
 
-  const output = {} as ViewITwin3d;
+  const output = {} as ViewDetails3dProps;
   applyExtraction(viewDetails, output, viewDetails3dLegacyMappings);
 
   // Filter out any plane clipVectors that have no planes actually defined
-  for (const clip of output.viewDetails?.modelClipGroups ?? []) {
-    clip.clipVectors = clip.clipVectors?.filter(
-      (value: ClipPrimitivePlaneProps | ClipPrimitiveShapeProps) => {
-        const hasPlanes = "planes" in value;
-        return (
-          !hasPlanes || (value.planes && Object.keys(value.planes).length > 0)
-        );
-      },
-    );
+  for (const clipGroup of output?.modelClipGroups ?? []) {
+    clipGroup.clipVectors = clipGroup.clipVectors?.filter(filterClipPrimatives);
   }
 
-  return output.viewDetails;
+  return viewDetails;
 }
-
-const viewDetailsLegacyMappings = [
-  extractString("acs"),
-  extractNumber("aspectSkew"),
-  extractNumber("gridOrient"), // enum GridOrientationType
-  extractNumber("gridPerRef"),
-  extractNumber("gridSpaceX"),
-  extractNumber("gridSpaceY"),
-  // clip is already extracted in clipVectors property of the view
-];
 
 const modelClipGroupLegacyMappings = [
   ...clipVectorLegacyMappings,
@@ -81,7 +62,7 @@ const modelClipGroupLegacyMappings = [
 ];
 
 const viewDetails3dLegacyMappings = [
-  ...viewDetailsLegacyMappings,
+  ...viewDetailsMappings,
   extractBoolean("disable3dManipulations"),
   extractArray(modelClipGroupLegacyMappings, "modelClipGroups"),
 ];

@@ -13,5 +13,5 @@ export { isViewDataITwin3d, isViewDataITwinDrawing, isViewDataITwinSheet } from 
 export type {
   ClipPlaneProps, ClipPrimitivePlaneProps, ClipPrimitiveShapeProps, PlanesProps, SavedView, SavedViewMinimal,
   SavedViewRepresentation, ShapeProps, ViewCamera, ViewData, ViewDataITwin3d, ViewDataITwinDrawing, ViewDataITwinSheet,
-  ViewITwin2d, ViewITwin3d, ViewITwinDrawing, ViewITwinSheet, ViewVisibilityList, ViewYawPitchRoll,
+  ViewDetails3dProps, ViewDetailsProps, ViewITwin2d, ViewITwin3d, ViewITwinDrawing, ViewITwinSheet, ViewVisibilityList, ViewYawPitchRoll,
 } from "./models/savedViews/View.js";

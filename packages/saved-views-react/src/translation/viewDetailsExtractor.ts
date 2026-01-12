@@ -3,8 +3,6 @@
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
 import type {
-  ClipPrimitivePlaneProps,
-  ClipPrimitiveShapeProps,
   ViewITwin2d,
   ViewITwin3d,
 } from "@itwin/saved-views-client";
@@ -42,22 +40,10 @@ export const extractViewDetails3d = (input: ViewITwin3d) => {
   const output: any = {};
   applyExtraction(viewDetails, output, viewDetails3dMappings);
 
-  // Filter out any plane clipVectors that have no planes actually defined
-  for (const clip of output.modelClipGroups ?? []) {
-    clip.clipVectors = clip.clipVectors?.filter(
-      (value: ClipPrimitivePlaneProps | ClipPrimitiveShapeProps) => {
-        const hasPlanes = "planes" in value;
-        return (
-          !hasPlanes || (value.planes && Object.keys(value.planes).length > 0)
-        );
-      },
-    );
-  }
-
   return output;
 };
 
-const viewDetailsMappings = [
+export const viewDetailsMappings = [
   extractString("acs"),
   extractNumber("aspectSkew"),
   extractNumber("gridOrient"), // enum GridOrientationType
