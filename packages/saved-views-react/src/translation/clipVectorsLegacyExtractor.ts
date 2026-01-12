@@ -11,13 +11,13 @@ import {
 } from "./extractionUtilities.js";
 
 export function filterClipPrimatives(
-  value: ClipPrimitivePlaneProps | ClipPrimitiveShapeProps
+  value: ClipPrimitivePlaneProps | ClipPrimitiveShapeProps,
 ): boolean {
   const hasPlanes = "planes" in value;
   return (
     !hasPlanes || (value.planes && Object.keys(value.planes).length > 0)
   );
-};
+}
 
 export function extractClipVectorsFromLegacy(
   input: SpatialViewDefinitionProps,
