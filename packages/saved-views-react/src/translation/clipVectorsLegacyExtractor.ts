@@ -10,7 +10,7 @@ import {
   extractSimpleArray, simpleTypeOf,
 } from "./extractionUtilities.js";
 
-export function filterClipPrimatives(
+export function isValidClipPrimitive(
   value: ClipPrimitivePlaneProps | ClipPrimitiveShapeProps,
 ): boolean {
   const hasPlanes = "planes" in value;
@@ -29,7 +29,7 @@ export function extractClipVectorsFromLegacy(
 
   const output = {} as ViewITwin3d;
   applyExtraction(viewDetails, output, clipVectorLegacyMappings);
-  output.clipVectors = output.clipVectors?.filter(filterClipPrimatives);
+  output.clipVectors = output.clipVectors?.filter(isValidClipPrimitive);
 
   return output.clipVectors;
 }

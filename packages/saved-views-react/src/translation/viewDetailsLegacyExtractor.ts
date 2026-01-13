@@ -13,7 +13,7 @@ import type {
 
 import {
   clipVectorLegacyMappings,
-  filterClipPrimatives,
+  isValidClipPrimitive,
 } from "./clipVectorsLegacyExtractor.js";
 import {
   applyExtraction,
@@ -50,7 +50,7 @@ export function extractViewDetails3dFromLegacy(
 
   // Filter out any plane clipVectors that have no planes actually defined
   for (const clipGroup of output?.modelClipGroups ?? []) {
-    clipGroup.clipVectors = clipGroup.clipVectors?.filter(filterClipPrimatives);
+    clipGroup.clipVectors = clipGroup.clipVectors?.filter(isValidClipPrimitive);
   }
 
   return viewDetails;
