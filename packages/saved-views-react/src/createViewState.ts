@@ -386,7 +386,6 @@ async function createSheetViewStateProps(
           gridSpaceY: seedViewState.getGridSpacing().y,
           ...extractClipVectors(viewData),
           ...extractViewDetails2d(viewData),
-
         },
       },
       code: cloneCode(seedViewState.code),
