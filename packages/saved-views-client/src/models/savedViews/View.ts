@@ -137,7 +137,7 @@ export interface ViewDetails3dProps extends ViewDetailsProps {
   modelClipGroups?: ModelClipGroupProps[];
 }
 
-/** JSON representation of a ModelClipGroup. */
+/* JSON representation of a ModelClipGroup. */
 export interface ModelClipGroupProps {
   models?: string[];
   clipVectors?: Array<ClipPrimitivePlaneProps | ClipPrimitiveShapeProps>;
