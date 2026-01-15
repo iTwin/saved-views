@@ -111,7 +111,10 @@ export interface ViewITwin2d {
   viewDetails?: ViewDetailsProps;
 }
 
-/* JSON representation of the view details */
+/**
+ * JSON representation of the view details.
+ * ClipVectors are stored separately in the view's clipVectors property.
+ */
 export interface ViewDetailsProps {
   /** Id of the aux coord system. Default: invalid. */
   acs?: string;
@@ -125,8 +128,6 @@ export interface ViewDetailsProps {
   gridSpaceX?: number;
   /** Default: same as gridSpaceX. */
   gridSpaceY?: number;
-  /** Array of clip vectors in the view. */
-  // clipVectors?: Array<ClipPrimitivePlaneProps | ClipPrimitiveShapeProps>; // Already stored in the view's clipVectors property
 }
 
 /* JSON representation of the 3d view details */
