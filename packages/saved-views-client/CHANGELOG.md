@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.1
+
+### Patch Changes
+
+#### [0.6.1](https://github.com/iTwin/saved-views/tree/v0.6.1-client/packages/saved-views-client) - 2026-01-15
+
+Add support for viewDetails to saved-views@itwin/saved-views-client
+
 ## 0.6.0
 
 ### Minor Changes
