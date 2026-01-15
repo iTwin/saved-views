@@ -18,6 +18,10 @@ import { extractClipVectorsFromLegacy } from "./translation/clipVectorsLegacyExt
 import {
   extractDisplayStyle2dFromLegacy, extractDisplayStyle3dFromLegacy,
 } from "./translation/displayStyleExtractor.js";
+import {
+  extractViewDetails2dFromLegacy,
+  extractViewDetails3dFromLegacy,
+} from "./translation/viewDetailsLegacyExtractor.js";
 
 interface CaptureSavedViewDataArgs {
   /** Viewport to capture. */
@@ -148,6 +152,7 @@ function createSpatialSavedViewObject(
     },
     displayStyle: extractDisplayStyle3dFromLegacy(displayStyleProps),
     clipVectors: extractClipVectorsFromLegacy(viewDefinitionProps),
+    viewDetails: extractViewDetails3dFromLegacy(viewDefinitionProps),
   };
 }
 
@@ -186,6 +191,7 @@ function createDrawingSavedViewObject(
       enabled: viewState.categorySelector.toJSON().categories,
       disabled: hiddenCategories,
     },
+    viewDetails: extractViewDetails2dFromLegacy(viewDefinitionProps),
   };
 }
 
@@ -210,6 +216,7 @@ function createSheetSavedViewObject(
     width: viewState.sheetSize.x,
     height: viewState.sheetSize.y,
     sheetAttachments: viewState.attachmentIds,
+    viewDetails: extractViewDetails2dFromLegacy(viewDefinitionProps),
   };
 }
 

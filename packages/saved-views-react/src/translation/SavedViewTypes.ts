@@ -4,8 +4,17 @@
  *--------------------------------------------------------------------------------------------*/
 import type { Id64Array } from "@itwin/core-bentley";
 import type {
-  CategorySelectorProps, DisplayStyle3dProps, DisplayStyleProps, EmphasizeElementsProps, ModelSelectorProps,
-  SectionDrawingViewProps, SheetProps, SpatialViewDefinitionProps, ViewDefinition2dProps,
+  CategorySelectorProps,
+  DisplayStyle3dProps,
+  DisplayStyleProps,
+  EmphasizeElementsProps,
+  ModelSelectorProps,
+  SectionDrawingViewProps,
+  SheetProps,
+  SpatialViewDefinitionProps,
+  ViewDefinition2dProps,
+  ViewDetails3dProps,
+  ViewDetailsProps,
 } from "@itwin/core-common";
 import type { Range3dProps } from "@itwin/core-geometry";
 
@@ -15,6 +24,7 @@ export interface LegacySavedView3d extends LegacySavedViewBase {
   viewDefinitionProps: SpatialViewDefinitionProps;
   perModelCategoryVisibility?: PerModelCategoryVisibilityProps[];
   hiddenModels?: Id64Array;
+  viewDetails?: ViewDetails3dProps;
 }
 
 export interface PerModelCategoryVisibilityProps {
@@ -30,6 +40,7 @@ export interface LegacySavedView2d extends LegacySavedViewBase {
   sheetProps?: SheetProps;
   sheetAttachments?: Id64Array;
   modelExtents?: Range3dProps;
+  viewDetails?: ViewDetailsProps;
 }
 
 export interface LegacySavedViewBase {

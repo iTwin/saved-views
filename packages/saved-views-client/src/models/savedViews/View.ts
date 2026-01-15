@@ -57,6 +57,7 @@ export interface ViewITwin3d {
   displayStyle?: DisplayStyle3dSettingsProps;
   categories?: ViewVisibilityList;
   clipVectors?: Array<ClipPrimitivePlaneProps | ClipPrimitiveShapeProps>;
+  viewDetails?: ViewDetails3dProps;
 }
 
 /** Representation of the 3d orientation of an object in space. */
@@ -107,6 +108,54 @@ export interface ViewITwin2d {
   displayStyle?: DisplayStyleSettingsProps;
   categories?: ViewVisibilityList;
   clipVectors?: Array<ClipPrimitivePlaneProps | ClipPrimitiveShapeProps>;
+  viewDetails?: ViewDetailsProps;
+}
+
+/**
+ * JSON representation of the view details.
+ * ClipVectors are stored separately in the view's clipVectors property.
+ */
+export interface ViewDetailsProps {
+  /** Id of the aux coord system. Default: invalid. */
+  acs?: string;
+  /** Aspect ratio skew (x/y) used to exaggerate the y axis of the view. Default: 1.0. */
+  aspectSkew?: number;
+  /** Grid orientation. Default: WorldXY. */
+  gridOrient?: GridOrientationType;
+  /** Default: 10. */
+  gridPerRef?: number;
+  /** Default: 1.0. */
+  gridSpaceX?: number;
+  /** Default: same as gridSpaceX. */
+  gridSpaceY?: number;
+}
+
+/* JSON representation of the 3d view details */
+export interface ViewDetails3dProps extends ViewDetailsProps {
+  /** Whether viewing tools are prohibited from operating in 3 dimensions on this view. Default: false. */
+  disable3dManipulations?: boolean;
+  /** Defines how to clip groups of models. */
+  modelClipGroups?: ModelClipGroupProps[];
+}
+
+/* JSON representation of a ModelClipGroup. */
+export interface ModelClipGroupProps {
+  models?: string[];
+  clipVectors?: Array<ClipPrimitivePlaneProps | ClipPrimitiveShapeProps>;
+}
+
+/* Describes the orientation of the grid displayed within a viewport. */
+export enum GridOrientationType {
+  /** Oriented with the view. */
+  View = 0,
+  /** Top */
+  WorldXY = 1,
+  /** Right */
+  WorldYZ = 2,
+  /** Front */
+  WorldXZ = 3,
+  /** Oriented by the auxiliary coordinate system. */
+  AuxCoord = 4,
 }
 
 /** A clip primitive made of a set of planes. */

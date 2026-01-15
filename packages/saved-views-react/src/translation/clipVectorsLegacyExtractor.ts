@@ -10,6 +10,15 @@ import {
   extractSimpleArray, simpleTypeOf,
 } from "./extractionUtilities.js";
 
+export function isValidClipPrimitive(
+  value: ClipPrimitivePlaneProps | ClipPrimitiveShapeProps,
+): boolean {
+  const hasPlanes = "planes" in value;
+  return (
+    !hasPlanes || (value.planes && Object.keys(value.planes).length > 0)
+  );
+}
+
 export function extractClipVectorsFromLegacy(
   input: SpatialViewDefinitionProps,
 ): Array<ClipPrimitivePlaneProps | ClipPrimitiveShapeProps> | undefined {
@@ -20,14 +29,7 @@ export function extractClipVectorsFromLegacy(
 
   const output = {} as ViewITwin3d;
   applyExtraction(viewDetails, output, clipVectorLegacyMappings);
-  output.clipVectors = output.clipVectors?.filter(
-    (value: ClipPrimitivePlaneProps | ClipPrimitiveShapeProps) => {
-      const hasPlanes = "planes" in value;
-      return (
-        !hasPlanes || (value.planes && Object.keys(value.planes).length > 0)
-      );
-    },
-  );
+  output.clipVectors = output.clipVectors?.filter(isValidClipPrimitive);
 
   return output.clipVectors;
 }
@@ -60,7 +62,7 @@ const clipPrimitiveShapeLegacyMappings = [
   ),
 ];
 
-const clipVectorLegacyMappings = [
+export const clipVectorLegacyMappings = [
   extractArrayConditionally(
     [
       { discriminator: "planes", mappings: clipPrimitivePlaneLegacyMappings },
