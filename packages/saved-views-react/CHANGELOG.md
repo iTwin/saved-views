@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.3
+
+### Patch Changes
+
+#### [1.2.3](https://github.com/iTwin/saved-views/tree/v1.2.3-react/packages/saved-views-react) - 2026-01-22
+
+Update sv-client version to support string sanitization fix@itwin/saved-views-react
+
 ## 1.2.2
 
 ### Patch Changes
