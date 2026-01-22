@@ -350,13 +350,21 @@ function replaceAllUrlFields(input: unknown, callback: (value: string) => string
 function toITwinApi(url: string): string {
   return url
     .replaceAll("&", "++and++")
-    .replaceAll(".", "++dot++");
+    .replaceAll(".", "++dot++")
+    .replaceAll("<", "++lst++")
+    .replaceAll(">", "++gtr++")
+    .replaceAll("'", "++sqt++")
+    .replaceAll("\"", "++dqt++");
 }
 
 function fromITwinApi(url: string): string {
   return url
     .replaceAll("++and++", "&")
-    .replaceAll("++dot++", ".");
+    .replaceAll("++dot++", ".")
+    .replaceAll("++lst++", "<")
+    .replaceAll("++gtr++", ">")
+    .replaceAll("++sqt++", "'")
+    .replaceAll("++dqt++", "\"");
 }
 
 async function* iteratePagedEndpoint<T extends { _links: HalLinks<["next"?]>; }>(
