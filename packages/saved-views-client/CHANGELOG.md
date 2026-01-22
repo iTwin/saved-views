@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.2
+
+### Patch Changes
+
+#### [0.6.2](https://github.com/iTwin/saved-views/tree/v0.6.2-client/packages/saved-views-client) - 2026-01-22
+
+Update sanitization of url strings to include greater than, less than, single and double quotes.@itwin/saved-views-client
+
 ## 0.6.1
 
 ### Patch Changes
