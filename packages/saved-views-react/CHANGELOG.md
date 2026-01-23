@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.4
+
+### Patch Changes
+
+#### [1.2.4](https://github.com/iTwin/saved-views/tree/v1.2.4-react/packages/saved-views-react) - 2026-01-23
+
+Fix for viewDetails when a view has a clip plane@itwin/saved-views-react
+
 ## 1.2.3
 
 ### Patch Changes
