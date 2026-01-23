@@ -53,7 +53,7 @@ export function extractViewDetails3dFromLegacy(
     clipGroup.clipVectors = clipGroup.clipVectors?.filter(isValidClipPrimitive);
   }
 
-  return viewDetails;
+  return output;
 }
 
 const modelClipGroupLegacyMappings = [
