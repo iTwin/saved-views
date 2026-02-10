@@ -74,7 +74,26 @@ export interface SkyBoxProps {
   image?: SkyBoxImageProps;
 }
 
+/**
+ * Supported types of SkyBox images.
+ */
+export enum SkyBoxImageType {
+  /** No image, indicating a SkyGradient should be displayed. */
+  None = 0,
+  /** A single image mapped to the surface of a sphere.
+   */
+  Spherical = 1,
+  /** Six images mapped to the faces of a cube.
+   */
+  Cube = 3,
+}
+
+/**
+ * JSON representation of the image(s) to be mapped to the surfaces of a SkyBox.
+ * @see {@link SkyBoxProps.image}.
+ */
 export interface SkyBoxImageProps {
+  type: SkyBoxImageType;
   texture?: string;
   textures?: SkyCubeProps;
 }
