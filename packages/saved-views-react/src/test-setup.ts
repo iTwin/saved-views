@@ -2,15 +2,4 @@
 * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
 * See LICENSE.md in the project root for license terms and full copyright notice.
 *--------------------------------------------------------------------------------------------*/
-import { defineConfig } from "vitest/config";
-
-import react from "@vitejs/plugin-react-swc";
-
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [react()],
-  test: {
-    environment: "happy-dom",
-    setupFiles: ["./src/test-setup.ts"],
-  },
-});
+import "@testing-library/jest-dom/vitest";
