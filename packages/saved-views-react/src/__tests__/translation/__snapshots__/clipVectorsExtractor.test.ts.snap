@@ -1,0 +1,141 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`extractClipVectors > snapshot > matches snapshot for mixed clips 1`] = `
+{
+  "clip": [
+    {
+      "planes": {
+        "clips": [
+          [
+            {
+              "dist": 25,
+              "normal": [
+                0,
+                0,
+                1,
+              ],
+            },
+          ],
+        ],
+      },
+    },
+    {
+      "shape": {
+        "points": [
+          [
+            10,
+            10,
+            0,
+          ],
+          [
+            90,
+            10,
+            0,
+          ],
+          [
+            90,
+            90,
+            0,
+          ],
+          [
+            10,
+            90,
+            0,
+          ],
+        ],
+        "zhigh": 100,
+        "zlow": -10,
+      },
+    },
+  ],
+}
+`;
+
+exports[`extractClipVectors > snapshot > matches snapshot for plane clips 1`] = `
+{
+  "clip": [
+    {
+      "planes": {
+        "clips": [
+          [
+            {
+              "dist": 10,
+              "normal": [
+                1,
+                0,
+                0,
+              ],
+            },
+            {
+              "dist": 20,
+              "normal": [
+                0,
+                1,
+                0,
+              ],
+            },
+          ],
+        ],
+        "invisible": false,
+      },
+    },
+  ],
+}
+`;
+
+exports[`extractClipVectors > snapshot > matches snapshot for shape clips 1`] = `
+{
+  "clip": [
+    {
+      "shape": {
+        "invisible": false,
+        "mask": false,
+        "points": [
+          [
+            0,
+            0,
+            0,
+          ],
+          [
+            100,
+            0,
+            0,
+          ],
+          [
+            100,
+            100,
+            0,
+          ],
+          [
+            0,
+            100,
+            0,
+          ],
+        ],
+        "trans": [
+          [
+            1,
+            0,
+            0,
+            0,
+          ],
+          [
+            0,
+            1,
+            0,
+            0,
+          ],
+          [
+            0,
+            0,
+            1,
+            0,
+          ],
+        ],
+        "zhigh": 50,
+        "zlow": 0,
+      },
+    },
+  ],
+}
+`;
