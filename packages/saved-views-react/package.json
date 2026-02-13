@@ -37,7 +37,7 @@
     "test": "vitest run --passWithNoTests",
     "test:cover": "vitest run --coverage --passWithNoTests",
     "test:watch": "vitest watch",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit --project ./tsconfig.build.json"
   },
   "devDependencies": {
     "@itwin/core-bentley": "^5.2.0",
