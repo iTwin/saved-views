@@ -12,7 +12,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 const {
   itwinFrontendMock,
   resetItwinFrontendMockDefaults,
-  createRichMockSeedViewState,
   createRichMockViewState,
   createMockModelSelector,
   createMockCategorySelector,
@@ -61,7 +60,7 @@ const {
   }
 
   function createMockModelSelector(
-    options: { id?: string; models?: string[] } = {},
+    options: { id?: string; models?: string[]; } = {},
   ) {
     const { id = "0x200", models = [] } = options;
     const selector: Record<string, unknown> = {
@@ -93,7 +92,7 @@ const {
   }
 
   function createMockDisplayStyle(
-    options: { id?: string; is3d?: boolean } = {},
+    options: { id?: string; is3d?: boolean; } = {},
   ) {
     const { id = "0x300", is3d = true } = options;
     return {
@@ -181,7 +180,7 @@ const {
   }
 
   function createRichMockViewState(
-    options: { is3d?: boolean; isDrawing?: boolean } = {},
+    options: { is3d?: boolean; isDrawing?: boolean; } = {},
   ) {
     const { is3d = true, isDrawing = false } = options;
     const isSheet = !is3d && !isDrawing;
@@ -671,10 +670,7 @@ describe("createViewStateProps", () => {
   });
 
   it("reads grid settings from seed ViewState", async () => {
-    const props = await createViewStateProps(
-      mockIModel as never,
-      iTwin3dViewData,
-    );
+    await createViewStateProps(mockIModel as never, iTwin3dViewData);
 
     // The seed view state's grid methods should have been called
     const seedViewState = mockIModel.seedViewState;

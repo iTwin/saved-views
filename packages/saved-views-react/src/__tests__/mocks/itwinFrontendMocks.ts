@@ -9,7 +9,7 @@ import { vi } from "vitest";
 // ============================================================================
 
 export function createMockCategorySelector(
-  options: { id?: string; federationGuid?: string; categories?: string[] } = {},
+  options: { id?: string; federationGuid?: string; categories?: string[]; } = {},
 ) {
   const {
     id = "0x100",
@@ -49,7 +49,7 @@ export function createMockCategorySelector(
 }
 
 export function createMockModelSelector(
-  options: { id?: string; models?: string[] } = {},
+  options: { id?: string; models?: string[]; } = {},
 ) {
   const { id = "0x200", models = [] } = options;
 

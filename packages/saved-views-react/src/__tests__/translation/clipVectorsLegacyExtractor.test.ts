@@ -36,7 +36,7 @@ describe("extractClipVectorsFromLegacy", () => {
 
       const planes = (
         result![0] as {
-          planes: { clips: Array<Array<{ distance?: number; dist?: number }>> };
+          planes: { clips: Array<Array<{ distance?: number; dist?: number; }>>; };
         }
       ).planes;
       const firstClip = planes.clips[0][0];
@@ -50,7 +50,7 @@ describe("extractClipVectorsFromLegacy", () => {
       );
 
       const planes = (
-        result![0] as { planes: { clips: Array<Array<{ normal: number[] }>> } }
+        result![0] as { planes: { clips: Array<Array<{ normal: number[]; }>>; }; }
       ).planes;
       expect(planes.clips[0][0].normal).toEqual([1, 0, 0]);
     });
@@ -60,7 +60,7 @@ describe("extractClipVectorsFromLegacy", () => {
         legacyViewWithPlaneClips as SpatialViewDefinitionProps,
       );
 
-      const planes = (result![0] as { planes: { clips: unknown[][] } }).planes;
+      const planes = (result![0] as { planes: { clips: unknown[][]; }; }).planes;
       expect(planes.clips).toHaveLength(2);
       expect(planes.clips[0]).toHaveLength(2);
       expect(planes.clips[1]).toHaveLength(1);
@@ -77,7 +77,7 @@ describe("extractClipVectorsFromLegacy", () => {
       expect(result).toHaveLength(1);
 
       const shape = (
-        result![0] as { shape: { transform?: unknown; trans?: unknown } }
+        result![0] as { shape: { transform?: unknown; trans?: unknown; }; }
       ).shape;
       expect(shape.transform).toBeDefined();
       expect(shape.trans).toBeUndefined();
@@ -109,7 +109,7 @@ describe("extractClipVectorsFromLegacy", () => {
         legacyViewWithShapeClips as SpatialViewDefinitionProps,
       );
 
-      const shape = (result![0] as { shape: { points: number[][] } }).shape;
+      const shape = (result![0] as { shape: { points: number[][]; }; }).shape;
       expect(shape.points).toEqual([
         [0, 0, 0],
         [100, 0, 0],
@@ -123,7 +123,7 @@ describe("extractClipVectorsFromLegacy", () => {
         legacyViewWithShapeClips as SpatialViewDefinitionProps,
       );
 
-      const shape = (result![0] as { shape: { transform: number[][] } }).shape;
+      const shape = (result![0] as { shape: { transform: number[][]; }; }).shape;
       expect(shape.transform).toEqual([
         [1, 0, 0, 0],
         [0, 1, 0, 0],
@@ -151,9 +151,9 @@ describe("extractClipVectorsFromLegacy", () => {
 
       // First should be planes, second should be shape
       const firstClip = result![0] as {
-        planes: { clips: Array<Array<{ distance: number }>> };
+        planes: { clips: Array<Array<{ distance: number; }>>; };
       };
-      const secondClip = result![1] as { shape: { zHigh: number } };
+      const secondClip = result![1] as { shape: { zHigh: number; }; };
 
       expect(firstClip.planes.clips[0][0].distance).toBe(25);
       expect(secondClip.shape.zHigh).toBe(100);

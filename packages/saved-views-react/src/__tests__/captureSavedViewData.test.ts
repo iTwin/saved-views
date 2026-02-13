@@ -60,10 +60,7 @@ import {
 } from "../captureSavedViewData.js";
 
 // Import helper for mocks - safe because they don't need to be hoisted
-import {
-  createMockIModel,
-  createCaptureViewport,
-} from "./mocks/iModelMocks.js";
+import { createMockIModel } from "./mocks/iModelMocks.js";
 
 // ============================================================================
 // Mock Factories (viewport-specific)
@@ -232,7 +229,7 @@ function createViewportForCapture(
     categoryId: string;
     visible: boolean;
   }> = [],
-  iModelOptions: { isBlank?: boolean } = {},
+  iModelOptions: { isBlank?: boolean; } = {},
 ) {
   const iModel = createMockIModel(iModelOptions);
   const view = viewStateFactory();

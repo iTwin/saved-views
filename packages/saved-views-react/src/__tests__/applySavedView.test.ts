@@ -10,270 +10,267 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 // ============================================================================
 
 // Create complete mock INSIDE vi.hoisted - no external imports allowed here
-const {
-  itwinFrontendMock,
-  MockViewState,
-  MockViewPose3d,
-  createRichMockViewState,
-  resetItwinFrontendMockDefaults,
-} = vi.hoisted(() => {
-  // Selector mocks
-  function createMockCategorySelector(
-    options: {
-      id?: string;
-      federationGuid?: string;
-      categories?: string[];
-    } = {},
-  ) {
-    const {
-      id = "0x100",
-      federationGuid = "cat-selector-guid",
-      categories = [],
-    } = options;
-    const selector: Record<string, unknown> = {
-      id,
-      federationGuid,
-      categories: [...categories],
-      code: { spec: "0x1", scope: "0x1", value: "" },
-      toJSON: () => ({
-        classFullName: "BisCore:CategorySelector",
+const { itwinFrontendMock, MockViewState, resetItwinFrontendMockDefaults } =
+  vi.hoisted(() => {
+    // Selector mocks
+    function createMockCategorySelector(
+      options: {
+        id?: string;
+        federationGuid?: string;
+        categories?: string[];
+      } = {},
+    ) {
+      const {
+        id = "0x100",
+        federationGuid = "cat-selector-guid",
+        categories = [],
+      } = options;
+      const selector: Record<string, unknown> = {
         id,
-        code: selector.code,
-        categories: selector.categories,
-      }),
-      clone: () =>
-        createMockCategorySelector({
+        federationGuid,
+        categories: [...categories],
+        code: { spec: "0x1", scope: "0x1", value: "" },
+        toJSON: () => ({
+          classFullName: "BisCore:CategorySelector",
           id,
-          federationGuid,
-          categories: [...(selector.categories as string[])],
+          code: selector.code,
+          categories: selector.categories,
         }),
-      addCategories: (ids: string[]) => {
-        (selector.categories as string[]).push(...ids);
-      },
-      dropCategories: (ids: string[]) => {
-        selector.categories = (selector.categories as string[]).filter(
-          (c: string) => !ids.includes(c),
-        );
-      },
-    };
-    return selector;
-  }
+        clone: () =>
+          createMockCategorySelector({
+            id,
+            federationGuid,
+            categories: [...(selector.categories as string[])],
+          }),
+        addCategories: (ids: string[]) => {
+          (selector.categories as string[]).push(...ids);
+        },
+        dropCategories: (ids: string[]) => {
+          selector.categories = (selector.categories as string[]).filter(
+            (c: string) => !ids.includes(c),
+          );
+        },
+      };
+      return selector;
+    }
 
-  function createMockModelSelector(
-    options: { id?: string; models?: string[] } = {},
-  ) {
-    const { id = "0x200", models = [] } = options;
-    const selector: Record<string, unknown> = {
-      id,
-      models: [...models],
-      code: { spec: "0x1", scope: "0x1", value: "" },
-      toJSON: () => ({
-        classFullName: "BisCore:ModelSelector",
+    function createMockModelSelector(
+      options: { id?: string; models?: string[]; } = {},
+    ) {
+      const { id = "0x200", models = [] } = options;
+      const selector: Record<string, unknown> = {
         id,
-        code: selector.code,
-        models: selector.models,
-      }),
-      clone: () =>
-        createMockModelSelector({
+        models: [...models],
+        code: { spec: "0x1", scope: "0x1", value: "" },
+        toJSON: () => ({
+          classFullName: "BisCore:ModelSelector",
           id,
-          models: [...(selector.models as string[])],
+          code: selector.code,
+          models: selector.models,
         }),
-      addModels: (ids: string[]) => {
-        (selector.models as string[]).push(...ids);
-      },
-      dropModels: (ids: string[]) => {
-        selector.models = (selector.models as string[]).filter(
-          (m: string) => !ids.includes(m),
-        );
-      },
-    };
-    return selector;
-  }
+        clone: () =>
+          createMockModelSelector({
+            id,
+            models: [...(selector.models as string[])],
+          }),
+        addModels: (ids: string[]) => {
+          (selector.models as string[]).push(...ids);
+        },
+        dropModels: (ids: string[]) => {
+          selector.models = (selector.models as string[]).filter(
+            (m: string) => !ids.includes(m),
+          );
+        },
+      };
+      return selector;
+    }
 
-  function createMockDisplayStyle(
-    options: { id?: string; is3d?: boolean } = {},
-  ) {
-    const { id = "0x300", is3d = true } = options;
-    return {
-      id,
-      classFullName: is3d ? "BisCore:DisplayStyle3d" : "BisCore:DisplayStyle2d",
-      code: { spec: "0x1", scope: "0x1", value: "" },
-      model: "0x10",
-      toJSON: () => ({
+    function createMockDisplayStyle(
+      options: { id?: string; is3d?: boolean; } = {},
+    ) {
+      const { id = "0x300", is3d = true } = options;
+      return {
+        id,
         classFullName: is3d
           ? "BisCore:DisplayStyle3d"
           : "BisCore:DisplayStyle2d",
-        id,
         code: { spec: "0x1", scope: "0x1", value: "" },
         model: "0x10",
-        jsonProperties: { styles: { viewflags: { renderMode: 6 } } },
-      }),
-    };
-  }
-
-  // ViewState class for instanceof
-  class MockViewState {
-    toProps = vi.fn(() => ({
-      viewDefinitionProps: {
-        classFullName: "BisCore:SpatialViewDefinition",
-        id: "0x400",
-        code: { spec: "0x1", scope: "0x1", value: "" },
-        model: "0x10",
-        origin: [0, 0, 0],
-        extents: [100, 100, 100],
-        angles: { yaw: 0, pitch: 0, roll: 0 },
-        cameraOn: false,
-        camera: { lens: 90, focusDist: 1, eye: [0, 0, 0] },
-      },
-      categorySelectorProps: {
-        classFullName: "BisCore:CategorySelector",
-        id: "0x100",
-        categories: [],
-      },
-      displayStyleProps: {
-        classFullName: "BisCore:DisplayStyle3d",
-        id: "0x300",
-      },
-      modelSelectorProps: {
-        classFullName: "BisCore:ModelSelector",
-        id: "0x200",
-        models: [],
-      },
-    }));
-    is3d = vi.fn(() => true);
-    isSpatialView = vi.fn(() => true);
-    isDrawingView = vi.fn(() => false);
-    isSheetView = vi.fn(() => false);
-    load = vi.fn(() => Promise.resolve());
-  }
-
-  class MockViewPose {}
-  class MockViewPose3d extends MockViewPose {
-    origin = { x: 0, y: 0, z: 0 };
-    extents = { x: 100, y: 100, z: 100 };
-    rotation = {
-      toJSON: () => [
-        [1, 0, 0],
-        [0, 1, 0],
-        [0, 0, 1],
-      ],
-    };
-    camera = { lens: 90, focusDist: 1, eye: { x: 0, y: 0, z: 0 } };
-    cameraOn = true;
-  }
-
-  function createRichMockViewState(
-    options: { is3d?: boolean; isDrawing?: boolean } = {},
-  ) {
-    const { is3d = true, isDrawing = false } = options;
-    const isSheet = !is3d && !isDrawing;
-    const categorySelector = createMockCategorySelector();
-    const modelSelector = is3d ? createMockModelSelector() : undefined;
-    const displayStyle = createMockDisplayStyle({ is3d });
-    return {
-      id: "0x600",
-      categorySelector,
-      modelSelector,
-      displayStyle,
-      is3d: () => is3d,
-      isSpatialView: () => is3d,
-      isDrawingView: () => isDrawing,
-      isSheetView: () => isSheet,
-      load: () => Promise.resolve(),
-      toProps: () => ({
-        viewDefinitionProps: {
+        toJSON: () => ({
           classFullName: is3d
-            ? "BisCore:SpatialViewDefinition"
-            : isDrawing
-              ? "BisCore:DrawingViewDefinition"
-              : "BisCore:SheetViewDefinition",
-          id: "0x600",
+            ? "BisCore:DisplayStyle3d"
+            : "BisCore:DisplayStyle2d",
+          id,
           code: { spec: "0x1", scope: "0x1", value: "" },
           model: "0x10",
-          origin: is3d ? [0, 0, 0] : [0, 0],
-          extents: is3d ? [100, 100, 100] : [100, 100],
+          jsonProperties: { styles: { viewflags: { renderMode: 6 } } },
+        }),
+      };
+    }
+
+    // ViewState class for instanceof
+    class MockViewState {
+      toProps = vi.fn(() => ({
+        viewDefinitionProps: {
+          classFullName: "BisCore:SpatialViewDefinition",
+          id: "0x400",
+          code: { spec: "0x1", scope: "0x1", value: "" },
+          model: "0x10",
+          origin: [0, 0, 0],
+          extents: [100, 100, 100],
           angles: { yaw: 0, pitch: 0, roll: 0 },
           cameraOn: false,
           camera: { lens: 90, focusDist: 1, eye: [0, 0, 0] },
         },
-        categorySelectorProps: categorySelector.toJSON(),
-        displayStyleProps: displayStyle.toJSON(),
-        ...(is3d &&
-          modelSelector && { modelSelectorProps: modelSelector.toJSON() }),
-      }),
+        categorySelectorProps: {
+          classFullName: "BisCore:CategorySelector",
+          id: "0x100",
+          categories: [],
+        },
+        displayStyleProps: {
+          classFullName: "BisCore:DisplayStyle3d",
+          id: "0x300",
+        },
+        modelSelectorProps: {
+          classFullName: "BisCore:ModelSelector",
+          id: "0x200",
+          models: [],
+        },
+      }));
+      is3d = vi.fn(() => true);
+      isSpatialView = vi.fn(() => true);
+      isDrawingView = vi.fn(() => false);
+      isSheetView = vi.fn(() => false);
+      load = vi.fn(() => Promise.resolve());
+    }
+
+    class MockViewPose {}
+    class MockViewPose3d extends MockViewPose {
+      origin = { x: 0, y: 0, z: 0 };
+      extents = { x: 100, y: 100, z: 100 };
+      rotation = {
+        toJSON: () => [
+          [1, 0, 0],
+          [0, 1, 0],
+          [0, 0, 1],
+        ],
+      };
+      camera = { lens: 90, focusDist: 1, eye: { x: 0, y: 0, z: 0 } };
+      cameraOn = true;
+    }
+
+    function createRichMockViewState(
+      options: { is3d?: boolean; isDrawing?: boolean; } = {},
+    ) {
+      const { is3d = true, isDrawing = false } = options;
+      const isSheet = !is3d && !isDrawing;
+      const categorySelector = createMockCategorySelector();
+      const modelSelector = is3d ? createMockModelSelector() : undefined;
+      const displayStyle = createMockDisplayStyle({ is3d });
+      return {
+        id: "0x600",
+        categorySelector,
+        modelSelector,
+        displayStyle,
+        is3d: () => is3d,
+        isSpatialView: () => is3d,
+        isDrawingView: () => isDrawing,
+        isSheetView: () => isSheet,
+        load: () => Promise.resolve(),
+        toProps: () => ({
+          viewDefinitionProps: {
+            classFullName: is3d
+              ? "BisCore:SpatialViewDefinition"
+              : isDrawing
+                ? "BisCore:DrawingViewDefinition"
+                : "BisCore:SheetViewDefinition",
+            id: "0x600",
+            code: { spec: "0x1", scope: "0x1", value: "" },
+            model: "0x10",
+            origin: is3d ? [0, 0, 0] : [0, 0],
+            extents: is3d ? [100, 100, 100] : [100, 100],
+            angles: { yaw: 0, pitch: 0, roll: 0 },
+            cameraOn: false,
+            camera: { lens: 90, focusDist: 1, eye: [0, 0, 0] },
+          },
+          categorySelectorProps: categorySelector.toJSON(),
+          displayStyleProps: displayStyle.toJSON(),
+          ...(is3d &&
+            modelSelector && { modelSelectorProps: modelSelector.toJSON() }),
+        }),
+      };
+    }
+
+    // EmphasizeElements mock
+    const emphasizeInstance = {
+      clear: vi.fn(),
+      fromJSON: vi.fn(),
+      toJSON: vi.fn(() => ({})),
     };
-  }
 
-  // EmphasizeElements mock
-  const emphasizeInstance = {
-    clear: vi.fn(),
-    fromJSON: vi.fn(),
-    toJSON: vi.fn(() => ({})),
-  };
+    const emphasizeElements = {
+      get: vi.fn(() => undefined),
+      getOrCreate: vi.fn(() => emphasizeInstance),
+      clear: vi.fn(),
+      instance: emphasizeInstance,
+    };
 
-  const emphasizeElements = {
-    get: vi.fn(() => undefined),
-    getOrCreate: vi.fn(() => emphasizeInstance),
-    clear: vi.fn(),
-    instance: emphasizeInstance,
-  };
-
-  const itwinFrontendMock = {
-    ViewState: MockViewState,
-    ViewPose: MockViewPose,
-    ViewPose2d: class extends MockViewPose {},
-    ViewPose3d: MockViewPose3d,
-    SpatialViewState: {
-      createFromProps: vi.fn(() => createRichMockViewState({ is3d: true })),
-    },
-    DrawingViewState: {
-      createFromProps: vi.fn(() =>
-        createRichMockViewState({ is3d: false, isDrawing: true }),
-      ),
-    },
-    SheetViewState: {
-      createFromProps: vi.fn(() =>
-        createRichMockViewState({ is3d: false, isDrawing: false }),
-      ),
-    },
-    EmphasizeElements: emphasizeElements,
-    PerModelCategoryVisibility: {
-      Override: {
-        Show: 1,
-        Hide: 2,
-        None: 0,
+    const itwinFrontendMock = {
+      ViewState: MockViewState,
+      ViewPose: MockViewPose,
+      ViewPose2d: class extends MockViewPose {},
+      ViewPose3d: MockViewPose3d,
+      SpatialViewState: {
+        createFromProps: vi.fn(() => createRichMockViewState({ is3d: true })),
       },
-    },
-    IModelConnection: {},
-    Viewport: {},
-  };
+      DrawingViewState: {
+        createFromProps: vi.fn(() =>
+          createRichMockViewState({ is3d: false, isDrawing: true }),
+        ),
+      },
+      SheetViewState: {
+        createFromProps: vi.fn(() =>
+          createRichMockViewState({ is3d: false, isDrawing: false }),
+        ),
+      },
+      EmphasizeElements: emphasizeElements,
+      PerModelCategoryVisibility: {
+        Override: {
+          Show: 1,
+          Hide: 2,
+          None: 0,
+        },
+      },
+      IModelConnection: {},
+      Viewport: {},
+    };
 
-  function resetItwinFrontendMockDefaults(mock: typeof itwinFrontendMock) {
-    mock.EmphasizeElements.get.mockReturnValue(undefined);
-    mock.EmphasizeElements.getOrCreate.mockReturnValue(
-      mock.EmphasizeElements.instance,
-    );
-    mock.EmphasizeElements.instance.clear.mockClear();
-    mock.EmphasizeElements.instance.fromJSON.mockClear();
-    mock.SpatialViewState.createFromProps.mockImplementation(() =>
-      createRichMockViewState({ is3d: true }),
-    );
-    mock.DrawingViewState.createFromProps.mockImplementation(() =>
-      createRichMockViewState({ is3d: false, isDrawing: true }),
-    );
-    mock.SheetViewState.createFromProps.mockImplementation(() =>
-      createRichMockViewState({ is3d: false, isDrawing: false }),
-    );
-  }
+    function resetItwinFrontendMockDefaults(mock: typeof itwinFrontendMock) {
+      mock.EmphasizeElements.get.mockReturnValue(undefined);
+      mock.EmphasizeElements.getOrCreate.mockReturnValue(
+        mock.EmphasizeElements.instance,
+      );
+      mock.EmphasizeElements.instance.clear.mockClear();
+      mock.EmphasizeElements.instance.fromJSON.mockClear();
+      mock.SpatialViewState.createFromProps.mockImplementation(() =>
+        createRichMockViewState({ is3d: true }),
+      );
+      mock.DrawingViewState.createFromProps.mockImplementation(() =>
+        createRichMockViewState({ is3d: false, isDrawing: true }),
+      );
+      mock.SheetViewState.createFromProps.mockImplementation(() =>
+        createRichMockViewState({ is3d: false, isDrawing: false }),
+      );
+    }
 
-  return {
-    itwinFrontendMock,
-    MockViewState,
-    MockViewPose3d,
-    createRichMockViewState,
-    resetItwinFrontendMockDefaults,
-  };
-});
+    return {
+      itwinFrontendMock,
+      MockViewState,
+      MockViewPose3d,
+      createRichMockViewState,
+      resetItwinFrontendMockDefaults,
+    };
+  });
 
 vi.mock("@itwin/core-frontend", () => itwinFrontendMock);
 

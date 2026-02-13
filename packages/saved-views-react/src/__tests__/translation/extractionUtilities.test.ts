@@ -2,7 +2,7 @@
  * Copyright (c) Bentley Systems, Incorporated. All rights reserved.
  * See LICENSE.md in the project root for license terms and full copyright notice.
  *--------------------------------------------------------------------------------------------*/
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 
 // Mock @itwin/core-common for ColorDef dependency
 vi.mock("@itwin/core-common", () => ({
@@ -19,7 +19,6 @@ import {
   extractString,
   extractSimpleArray,
   extractColor,
-  extractColorLegacy,
   applyExtraction,
   extractArrayConditionally,
   extractObject,
@@ -526,7 +525,7 @@ describe("extractionUtilities", () => {
         [
           {
             discriminator: (v: unknown) =>
-              typeof (v as { data: unknown }).data === "number",
+              typeof (v as { data: unknown; }).data === "number",
             mappings: [extractNumber("data")],
           },
         ],

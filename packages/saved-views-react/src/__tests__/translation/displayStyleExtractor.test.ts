@@ -13,10 +13,6 @@ vi.mock("@itwin/core-common", () => ({
   },
 }));
 
-// Mock @itwin/core-frontend for ViewState
-const mockGetGridOrientation = vi.fn();
-const mockGetGridsPerRef = vi.fn();
-
 vi.mock("@itwin/core-frontend", () => ({
   IModelApp: {},
 }));

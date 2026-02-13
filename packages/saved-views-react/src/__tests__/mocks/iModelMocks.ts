@@ -9,7 +9,7 @@ import { vi } from "vitest";
 // ============================================================================
 
 function _createMockCategorySelector(
-  options: { id?: string; categories?: string[] } = {},
+  options: { id?: string; categories?: string[]; } = {},
 ) {
   const { id = "0x100", categories = [] } = options;
   return {
@@ -35,7 +35,7 @@ function _createMockCategorySelector(
 }
 
 function _createMockModelSelector(
-  options: { id?: string; models?: string[] } = {},
+  options: { id?: string; models?: string[]; } = {},
 ) {
   const { id = "0x200", models = [] } = options;
   return {
@@ -58,7 +58,7 @@ function _createMockModelSelector(
   };
 }
 
-function _createMockDisplayStyle(options: { is3d?: boolean } = {}) {
+function _createMockDisplayStyle(options: { is3d?: boolean; } = {}) {
   const { is3d = true } = options;
   return {
     id: "0x300",
@@ -122,7 +122,7 @@ function _createSeedViewState(
 }
 
 function _createRichMockViewState(
-  options: { is3d?: boolean; isDrawing?: boolean } = {},
+  options: { is3d?: boolean; isDrawing?: boolean; } = {},
 ) {
   const { is3d = true, isDrawing = false } = options;
   const categorySelector = _createMockCategorySelector();
@@ -172,7 +172,7 @@ export function createMockIModel(
     isBlank?: boolean;
     seedViewStateType?: "spatial" | "drawing" | "sheet";
     queryPropsResults?: unknown[];
-    getViewListResults?: Array<{ id: string; name: string; className: string }>;
+    getViewListResults?: Array<{ id: string; name: string; className: string; }>;
   } = {},
 ): Record<string, unknown> {
   const {
