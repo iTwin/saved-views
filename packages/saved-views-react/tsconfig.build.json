@@ -2,8 +2,9 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     // Specifying @itwin/saved-views-client path mapping in the parent config makes TypeScript think its source code
-    // is part of the current package and include its files in the output
+    // is part of the current package and include its files in the output.
+    // For build (emit), we clear paths. For typecheck (noEmit), paths are preserved via tsconfig.json.
     "paths": { },
   },
-  "exclude": [ "**/*.test.*" ],
+  "exclude": [ "**/*.test.*", "src/__tests__/**" ],
 }
