@@ -149,7 +149,7 @@ function applyCameraOptions(
         viewDef.camera = cameraProps.camera;
       } else {
         const cameraProps3d = cameraProps as ViewDefinition3dProps;
-        viewDef.cameraOn = cameraProps3d.camera !== undefined;
+viewDef.cameraOn = cameraProps3d.cameraOn ?? false;
         viewDef.origin = cameraProps3d.origin;
         viewDef.extents = cameraProps3d.extents;
         viewDef.angles = cameraProps3d.angles;
@@ -216,7 +216,7 @@ async function applyViewStateProps(
   viewport.changeView(viewState, settings.viewChangeOptions);
 
   if (settings.subcategories !== "ignore") {
-    // If subcategories are not ignored, we need to reset them here, 
+    // If subcategories are not ignored, we need to reset them here,
     // otherwise we might end up with subcategories not shown correctly
     const {addCategories, dropCategories} =
       await sortCategories(iModel, savedViewData.viewData, categories);
