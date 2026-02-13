@@ -39,11 +39,13 @@ const createViewDetails3d = () => ({
   modelClipGroups: [
     {
       models: ["0x1", "0x2"],
-      clip: {
-        planes: {
-          clips: [[{ dist: 10.5, normal: [1, 0, 0] }]],
+      clipVectors: [
+        {
+          planes: {
+            clips: [[{ distance: 10.5, normal: [1, 0, 0] }]],
+          },
         },
-      },
+      ],
     },
   ],
 });
@@ -238,9 +240,9 @@ describe("viewDetailsExtractor", () => {
           modelClipGroups: [
             {
               models: ["0xA"],
-              clip: {
-                shapes: [
-                  {
+              clipVectors: [
+                {
+                  shape: {
                     points: [
                       [0, 0, 0],
                       [1, 0, 0],
@@ -248,8 +250,8 @@ describe("viewDetailsExtractor", () => {
                       [0, 1, 0],
                     ],
                   },
-                ],
-              },
+                },
+              ],
             },
           ],
         },

@@ -22,7 +22,24 @@ exports[`viewDetailsLegacyExtractor > snapshot tests > matches snapshot for full
   "gridSpaceY": 100,
   "modelClipGroups": [
     {
-      "clipVectors": undefined,
+      "clipVectors": [
+        {
+          "planes": {
+            "clips": [
+              [
+                {
+                  "distance": 10,
+                  "normal": [
+                    1,
+                    0,
+                    0,
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+      ],
       "models": [
         "0x1",
         "0x2",

@@ -41,14 +41,12 @@ const createLegacyViewDetails3d = () => ({
   modelClipGroups: [
     {
       models: ["0x1", "0x2"],
-      clips: [
-        [
-          {
-            planes: {
-              clips: [[{ origin: [0, 0, 0], direction: [1, 0, 0] }]],
-            },
+      clip: [
+        {
+          planes: {
+            clips: [[{ normal: [1, 0, 0], dist: 10 }]],
           },
-        ],
+        },
       ],
     },
   ],
@@ -237,7 +235,7 @@ describe("viewDetailsLegacyExtractor", () => {
                 // Valid clip primitive with planes
                 {
                   planes: {
-                    clips: [[{ origin: [0, 0, 0], direction: [1, 0, 0] }]],
+                    clips: [[{ normal: [1, 0, 0], dist: 10 }]],
                   },
                 },
               ],
@@ -324,7 +322,16 @@ describe("viewDetailsLegacyExtractor", () => {
         createLegacyViewDetails3d(),
       );
 
+      console.log(
+        `Input for 3D view details extraction snapshot test: ${JSON.stringify(input, null, 2)}`,
+      );
+
       const result = extractViewDetails3dFromLegacy(input);
+
+      console.log(
+        `Result for 3D view details extraction snapshot test: ${JSON.stringify(result, null, 2)}`,
+        result,
+      );
 
       expect(result).toMatchSnapshot();
     });

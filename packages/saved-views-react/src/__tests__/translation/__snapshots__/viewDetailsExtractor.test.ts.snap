@@ -22,6 +22,24 @@ exports[`viewDetailsExtractor > snapshot tests > matches snapshot for full 3D vi
   "gridSpaceY": 100,
   "modelClipGroups": [
     {
+      "clip": [
+        {
+          "planes": {
+            "clips": [
+              [
+                {
+                  "dist": 10.5,
+                  "normal": [
+                    1,
+                    0,
+                    0,
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+      ],
       "models": [
         "0x1",
         "0x2",
