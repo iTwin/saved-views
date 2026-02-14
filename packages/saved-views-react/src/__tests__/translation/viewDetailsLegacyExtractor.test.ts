@@ -230,23 +230,19 @@ describe("viewDetailsLegacyExtractor", () => {
         modelClipGroups: [
           {
             models: ["0xA"],
-            clips: [
-              [
-                // Valid clip primitive with planes
-                {
-                  planes: {
-                    clips: [[{ normal: [1, 0, 0], dist: 10 }]],
-                  },
+            clip: [
+              // Valid clip primitive with planes
+              {
+                planes: {
+                  clips: [[{ normal: [1, 0, 0], dist: 10 }]],
                 },
-              ],
-              [
-                // Invalid - plane with no actual clips
-                {
-                  planes: {
-                    clips: [],
-                  },
+              },
+              // Invalid - plane with no actual clips
+              {
+                planes: {
+                  // clips: [],
                 },
-              ],
+              },
             ],
           },
         ],
@@ -257,8 +253,11 @@ describe("viewDetailsLegacyExtractor", () => {
 
       expect(result!.modelClipGroups).toBeDefined();
       expect(result!.modelClipGroups![0]).toBeDefined();
+      const firstGroup = result!.modelClipGroups![0] as any;
       // The clipVectors property will contain only valid clips after filtering
-      // Invalid clips with empty planes.clips should be filtered out
+      // Invalid clips with empty planes.clip should be filtered out
+      expect(firstGroup.clipVectors).toBeDefined();
+      expect(firstGroup.clipVectors).toHaveLength(1);
     });
 
     it("handles modelClipGroups with shape clips", () => {
@@ -266,7 +265,7 @@ describe("viewDetailsLegacyExtractor", () => {
         modelClipGroups: [
           {
             models: ["0xB"],
-            clips: [
+            clip: [
               [
                 {
                   shape: {
@@ -321,18 +320,7 @@ describe("viewDetailsLegacyExtractor", () => {
       const input = createLegacySpatialViewDefinitionProps(
         createLegacyViewDetails3d(),
       );
-
-      console.log(
-        `Input for 3D view details extraction snapshot test: ${JSON.stringify(input, null, 2)}`,
-      );
-
       const result = extractViewDetails3dFromLegacy(input);
-
-      console.log(
-        `Result for 3D view details extraction snapshot test: ${JSON.stringify(result, null, 2)}`,
-        result,
-      );
-
       expect(result).toMatchSnapshot();
     });
   });
