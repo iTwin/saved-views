@@ -21,6 +21,7 @@ import {
 import { YawPitchRollAngles } from "@itwin/core-geometry";
 
 import type {
+  ITwin3dViewData,
   SavedViewData,
   SavedViewExtension,
   ViewData,
@@ -147,9 +148,15 @@ function applyCameraOptions(
           cameraProps.rotation,
         )?.toJSON();
         viewDef.camera = cameraProps.camera;
-      } else {
-        const cameraProps3d = cameraProps as ViewDefinition3dProps;
-        viewDef.cameraOn = cameraProps3d.camera !== undefined;
+      } else if (!(cameraProps instanceof ViewPose)) {
+        const cameraProps3d = cameraProps as ViewDefinition3dProps | ITwin3dViewData;
+        // cameraOn property only exists on ViewDefinitionProps (from viewport),
+        // not on ViewData/ViewITwin3d. For saved view data, infer from camera presence.
+        if (settings.camera === "keep") {
+          viewDef.cameraOn = (cameraProps as ViewDefinition3dProps).cameraOn ?? false;
+        } else {
+          viewDef.cameraOn = cameraProps3d.camera !== undefined;
+        }
         viewDef.origin = cameraProps3d.origin;
         viewDef.extents = cameraProps3d.extents;
         viewDef.angles = cameraProps3d.angles;
@@ -216,7 +223,7 @@ async function applyViewStateProps(
   viewport.changeView(viewState, settings.viewChangeOptions);
 
   if (settings.subcategories !== "ignore") {
-    // If subcategories are not ignored, we need to reset them here, 
+    // If subcategories are not ignored, we need to reset them here,
     // otherwise we might end up with subcategories not shown correctly
     const {addCategories, dropCategories} =
       await sortCategories(iModel, savedViewData.viewData, categories);
