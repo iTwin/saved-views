@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.6.3
+
+### Patch Changes
+
+#### [0.6.3](https://github.com/iTwin/saved-views/tree/v0.6.3-client/packages/saved-views-client) - 2026-02-16
+
+Address GHSA-37qj-frw5-hhjh, GHSA-7h2j-956f-4vf2, and GHSA-xxjr-mmjv-4gpg@itwin/saved-views-client
+
+#### [0.6.3](https://github.com/iTwin/saved-views/tree/v0.6.3-client/packages/saved-views-client) - 2026-02-16
+
+Fix SkyBoxImageProps to align types with itwin.js core and Saved Views Service@itwin/saved-views-client
+
 ## 0.6.2
 
 ### Patch Changes
