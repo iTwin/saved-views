@@ -342,7 +342,7 @@ const iTwin3dViewData: ITwin3dViewData = {
 const iTwinDrawingData: ITwinDrawingdata = {
   type: "iTwinDrawing",
   origin: [0, 0],
-  extents: [500, 500],
+  delta: [500, 500],
   angle: 0,
   baseModelId: "0x1000",
   categories: { enabled: ["0xcat1"], disabled: [] },
@@ -352,7 +352,7 @@ const iTwinDrawingData: ITwinDrawingdata = {
 const iTwinSheetData: ITwinSheetData = {
   type: "iTwinSheet",
   origin: [0, 0],
-  extents: [200, 300],
+  delta: [200, 300],
   angle: 0,
   baseModelId: "0x2000",
   width: 200,
