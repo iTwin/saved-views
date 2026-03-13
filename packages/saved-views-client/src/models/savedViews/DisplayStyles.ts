@@ -204,6 +204,7 @@ export interface DisplayStyleSettingsProps {
   backgroundColor?: RgbatColorProps;
   monochromeColor?: RgbatColorProps;
   monochromeMode?: MonochromeMode;
+  // Omit scheduleScript - may cause excessively large JSON.
   renderTimeline?: string;
   /**
    * The point in time reflected by the view, in UNIX seconds. This identifies a point on the timeline of the style's
@@ -218,6 +219,7 @@ export interface DisplayStyleSettingsProps {
   mapImagery?: MapImageryProps;
   // Original name: modelOvr
   modelOverrides?: DisplayStyleModelAppearanceProps[];
+  realityModelDisplay?: DisplayStyleRealityModelDisplayProps[];
   clipStyle?: ClipStyleProps;
   // Original name: planarClipOvr
   planarClipOverrides?: DisplayStylePlanarClipMaskProps[];
@@ -370,16 +372,68 @@ export enum GlobeMode {
   Plane = 1,
 }
 
+/**
+ * Specifies how the sizes of the individual points within a point cloud are computed.
+ *  - "pixel": Each point is an exact number of pixels in diameter, as specified by [[PointCloudDisplaySettings.pixelSize]].
+ *  - "voxel": Each point is the size of a "voxel" in meters, as specified by the [Tile]($frontend) to which the point belongs.
+ */
+export type PointCloudSizeMode = "voxel" | "pixel";
+
+/**
+ * Specifies the shape drawn for each individual point within a point cloud.
+ *  - "round": Each point is drawn as a circle.
+ *  - "square": Each point is drawn as a square.
+ */
+export type PointCloudShape = "square" | "round";
+
+/**
+ * Specifies the Eye-Dome Lighting mode used for a point cloud.
+ *  - "off": EDL is not calculated
+ *  - "on": EDL is calculated using a single pass.
+ *  - "full" EDL is calculated with full algorithm including optional filtering
+ */
+export type PointCloudEDLMode = "off" | "on" | "full";
+
+/** The JSON representation of PointCloudDisplaySettings. */
+export interface PointCloudDisplayProps {
+  sizeMode?: PointCloudSizeMode;
+  voxelScale?: number;
+  minPixelsPerVoxel?: number;
+  maxPixelsPerVoxel?: number;
+  pixelSize?: number;
+  shape?: PointCloudShape;
+  edlMode?: PointCloudEDLMode;
+  edlStrength?: number;
+  edlRadius?: number;
+  edlFilter?: number;
+  edlMixWts1?: number;
+  edlMixWts2?: number;
+  edlMixWts4?: number;
+}
+
+/** The JSON representation of RealityModelDisplaySettings. */
+export interface RealityModelDisplayProps {
+  pointCloud?: PointCloudDisplayProps;
+  overrideColorRatio?: number;
+}
+
+/** A RealityModelDisplayProps applied to a specific model to override its reality model display within the context of a DisplayStyle. */
+export interface DisplayStyleRealityModelDisplayProps extends RealityModelDisplayProps {
+  modelId?: string;
+}
+
 /** JSON representation of a ContextRealityModel. */
 export interface ContextRealityModelProps {
   realityDataSourceKey?: RealityDataSourceKey;
   tilesetUrl: string;
+  // Omit orbitGtBlob - marked as @alpha
   realityDataId?: string;
   name?: string;
   description?: string;
   classifiers?: SpatialClassifierProps[];
   planarClipMask?: PlanarClipMaskProps;
   appearanceOverrides?: FeatureAppearanceProps;
+  displaySettings?: RealityModelDisplayProps;
 }
 
 /** JSON representation of a SpatialClassifier. */
