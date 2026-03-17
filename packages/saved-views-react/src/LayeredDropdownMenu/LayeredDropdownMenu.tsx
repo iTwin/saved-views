@@ -61,7 +61,7 @@ export function LayeredDropdownMenu(props: LayeredDropdownMenuProps): ReactEleme
   return (
     <layeredDropdownMenuContext.Provider value={{ activeMenuItem, setActiveMenuItem }}>
       <DropdownMenu menuItems={menuItems} onVisibleChange={(visible) => !visible && setActiveMenuItem(undefined)}>
-        {props.children}
+        {props.children as React.JSX.Element}
       </DropdownMenu>
     </layeredDropdownMenuContext.Provider>
   );

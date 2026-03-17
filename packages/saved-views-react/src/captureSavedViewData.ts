@@ -215,7 +215,7 @@ function createSheetSavedViewObject(
     },
     width: viewState.sheetSize.x,
     height: viewState.sheetSize.y,
-    sheetAttachments: viewState.attachmentIds,
+    sheetAttachments: [...viewState.attachmentIds],
     viewDetails: extractViewDetails2dFromLegacy(viewDefinitionProps),
   };
 }
