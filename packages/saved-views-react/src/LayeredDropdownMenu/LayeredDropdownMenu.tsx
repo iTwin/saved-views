@@ -16,7 +16,7 @@ interface LayeredDropdownMenuProps {
   menuItems: ReactElement[] | ((close: () => void) => ReactElement[]);
 
   /** Dropdown menu trigger to pass to iTwinUI `<DropdownMenu />` component. */
-  children: ReactNode;
+  children: React.JSX.Element;
 }
 
 /**
