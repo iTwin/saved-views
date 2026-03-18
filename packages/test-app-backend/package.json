@@ -21,6 +21,8 @@
     "@types/dotenv-flow": "^3.2.0",
     "@types/node": "^18.0.0",
     "dotenv-flow": "^3.2.0",
+    "inversify": "^8.1.0",
+    "reflect-metadata": "^0.2.2",
     "tsx": "^4.15.4",
     "typescript": "^5.5.4"
   }
