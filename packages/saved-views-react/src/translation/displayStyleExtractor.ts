@@ -164,6 +164,33 @@ const displayStyleModelAppearanceLegacyMappings: ExtractionFunc<void, void>[] = 
   extractString("modelId"),
 ];
 
+export const realityModelDisplayMappings: ExtractionFunc<void, void>[] = [
+  extractObject(
+    [
+      extractString("sizeMode"),
+      extractNumber("voxelScale"),
+      extractNumber("minPixelsPerVoxel"),
+      extractNumber("maxPixelsPerVoxel"),
+      extractNumber("pixelSize"),
+      extractString("shape"),
+      extractString("edlMode"),
+      extractNumber("edlStrength"),
+      extractNumber("edlRadius"),
+      extractNumber("edlFilter"),
+      extractNumber("edlMixWts1"),
+      extractNumber("edlMixWts2"),
+      extractNumber("edlMixWts4"),
+    ],
+    "pointCloud",
+  ),
+  extractNumber("overrideColorRatio"),
+];
+
+const displayStyleRealityModelDisplayMappings: ExtractionFunc<void, void>[] = [
+  ...realityModelDisplayMappings,
+  extractString("modelId"),
+];
+
 const contextRealityModelsMappings: ExtractionFunc<void, void>[] = [
   extractObject(
     [
@@ -198,6 +225,7 @@ const contextRealityModelsMappings: ExtractionFunc<void, void>[] = [
   ),
   extractObject(planarClipMaskMappings, "planarClipMask"),
   extractObject(featureAppearanceMappings, "appearanceOverrides"),
+  extractObject(realityModelDisplayMappings, "displaySettings"),
 ];
 
 const contextRealityModelsLegacyMappings: ExtractionFunc<void, void>[] = [
@@ -234,6 +262,7 @@ const contextRealityModelsLegacyMappings: ExtractionFunc<void, void>[] = [
   ),
   extractObject(planarClipMaskMappings, "planarClipMask"),
   extractObject(featureAppearanceLegacyMappings, "appearanceOverrides"),
+  extractObject(realityModelDisplayMappings, "displaySettings"),
 ];
 
 const commonMapLayerPropsMapping: ExtractionFunc<void, void>[] = [
@@ -511,6 +540,7 @@ const displayStylesMapping: ExtractionFunc<void, void>[] = [
     "modelOverrides",
     "modelOvr",
   ),
+  extractArray(displayStyleRealityModelDisplayMappings, "realityModelDisplay"),
   extractObject(clipStyleMappings, "clipStyle"),
   extractArray(
     displayStylePlanarClipMaskMappings,
@@ -536,6 +566,11 @@ const displayStylesLegacyMapping: ExtractionFunc<void, void>[] = [
   extractStringOrArray("excludedElements"),
   extractObject(mapImageryLegacyMapping, "mapImagery"),
   extractArray(displayStyleModelAppearanceLegacyMappings, "modelOvr", "modelOverrides"),
+  extractArrayElementsConditionally(
+    (value) => value && !value.invisible,
+    displayStyleRealityModelDisplayMappings,
+    "realityModelDisplay",
+  ),
   extractObject(clipStyleLegacyMappings, "clipStyle"),
   extractArray(displayStylePlanarClipMaskMappings, "planarClipOvr", "planarClipOverrides"),
 ];

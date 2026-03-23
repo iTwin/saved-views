@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.6
+
+### Patch Changes
+
+#### [0.6.4](https://github.com/iTwin/saved-views/tree/v0.6.4-client/packages/saved-views-client) - 2026-03-18
+
+Add support for realityModelDisplay@itwin/saved-views-client
+
 ## 1.2.5
 
 ### Patch Changes
