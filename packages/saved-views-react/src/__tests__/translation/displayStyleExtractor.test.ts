@@ -408,7 +408,7 @@ describe("displayStyleExtractor", () => {
       expect(result.viewflags).toBeDefined();
     });
 
-    it("handles data without jsonProperties gracefully", () => {
+    it("handles data without jsonProperties by throwing an error", () => {
       const data = {} as any;
 
       // Function tries to access undefined properties

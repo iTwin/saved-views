@@ -479,7 +479,7 @@ describe("extractionUtilities", () => {
       expect((output.items as unknown[])[1]).toHaveProperty("shape");
     });
 
-    it("handles null entry gracefully (throws in current implementation)", () => {
+    it("handles null entry by throwing error", () => {
       const input = {
         items: [null, { planes: { clips: [] } }],
       };
