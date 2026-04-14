@@ -39,12 +39,6 @@ function getActiveViewport(): ScreenViewport | undefined {
 /**
  * Returns the active viewport's current view state as {@link ViewStateProps}.
  * Returns `undefined` if there is no active viewport.
- * @note
- * Use this to capture the current camera/view state before making changes, or to inspect
- * what the user is currently looking at.
- * - Valid use case: "What is the current view?" / "Capture the active viewport state".
- * - Invalid use case: "List all saved views" (use the saved views client for that instead).
- * @code-mode
  */
 export function getActiveView(): ViewStateProps | undefined {
   return getActiveViewport()?.view.toProps();
@@ -59,18 +53,12 @@ export async function listSavedViews(): Promise<{ id: string; displayName: strin
 }
 
 /**
- *
+ * Sets the active viewport's view.
  * - When passed a **saved view ID** (string), fetches the saved view data via the
  *   client supplied to {@link initViewOperations} and applies it.
  * - When passed **{@link ViewStateProps}**, constructs a `ViewState` from the props
  *   and applies it directly — no client required.
- * @note
- * Use a saved view ID when the intent names a known saved view. Use {@link ViewStateProps}
- * when restoring a view previously captured with {@link getActiveView}.
- * - Valid use case: "Apply the 'North Elevation' saved view" / "Restore the view I had before".
- * - Invalid use case: "Create a new saved view" (use `saveCurrentView` for that instead).
  * @returns `true` on success, `false` on any failure.
- * @code-mode
  */
 export async function setView(viewIdOrProps: string | ViewStateProps): Promise<boolean> {
   const vp = getActiveViewport();
