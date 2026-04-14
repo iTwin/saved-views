@@ -24,3 +24,4 @@ export { useSavedViewTileContext, type SavedViewTileContext } from "./SavedViewT
 export { StickyExpandableBlock } from "./StickyExpandableBlock/StickyExpandableBlock.js";
 export { TileGrid } from "./TileGrid/TileGrid.js";
 export { useSavedViews, type SavedViewsActions } from "./useSavedViews.js";
+export { getActiveView, initViewOperations, listSavedViews, setView, type ViewOperationsClient } from "./viewOperations.js";
