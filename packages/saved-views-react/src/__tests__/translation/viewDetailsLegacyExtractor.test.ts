@@ -237,10 +237,15 @@ describe("viewDetailsLegacyExtractor", () => {
                   clips: [[{ normal: [1, 0, 0], dist: 10 }]],
                 },
               },
+              // Valid clip primitive with planes with empty clips array
+              {
+                planes: {
+                  clips: [],
+                },
+              },
               // Invalid - plane with no actual clips
               {
                 planes: {
-                  // clips: [],
                 },
               },
             ],
@@ -257,7 +262,7 @@ describe("viewDetailsLegacyExtractor", () => {
       // The clipVectors property will contain only valid clips after filtering
       // Invalid clips with empty planes.clip should be filtered out
       expect(firstGroup.clipVectors).toBeDefined();
-      expect(firstGroup.clipVectors).toHaveLength(1);
+      expect(firstGroup.clipVectors).toHaveLength(2);
     });
 
     it("handles modelClipGroups with shape clips", () => {
