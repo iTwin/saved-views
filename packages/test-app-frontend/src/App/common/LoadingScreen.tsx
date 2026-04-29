@@ -6,7 +6,6 @@ import { PageLayout } from "@itwin/itwinui-layouts-react";
 import { PropsWithChildren, ReactElement } from "react";
 import { LoadingIndicator } from "./LoadingIndicator";
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export function LoadingScreen(props: PropsWithChildren<{}>): ReactElement {
   return (
     <PageLayout.Content>

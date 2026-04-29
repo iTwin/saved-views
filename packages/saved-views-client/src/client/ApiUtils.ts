@@ -44,7 +44,7 @@ async function throwBadResponseCodeError(response: Response, errorMessage: strin
   try {
     const resp = (await response.json());
     if (!isErrorResponse(resp)) {
-      throw 0;
+      throw new Error();
     }
     error = resp.error;
   } catch {
