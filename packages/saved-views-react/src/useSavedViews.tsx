@@ -125,7 +125,7 @@ export interface SavedViewsActions {
   updateSavedView: (
     savedViewId: string,
     savedView: Partial<WriteableSavedViewProperties>,
-    savedViewData?: SavedViewData | undefined,
+    savedViewData?: SavedViewData,
   ) => Promise<void>;
 
   /**

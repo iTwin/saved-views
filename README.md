@@ -21,17 +21,17 @@
 * Start the test application.
 
   ```shell
-  npm start
+  pnpm start
   ```
 
 * You can now edit TypeScript and CSS source files and changes will automatically be reflected in the test app.
 
 ## Top-level commands
 
-* `npm start` – starts the test app which can be accessed at [http://localhost:7948](http://localhost:7948)
+* `pnpm start` – starts the test app which can be accessed at [http://localhost:7948](http://localhost:7948)
   * To enable app features that use [iTwin Platform](https://developer.bentley.com/), see [`packages/test-app-frontend/.env`](./packages/test-app-frontend/.env) file.
-* `npm run lint` – runs ESLint on all TypeScript files in this repository
-* `npm run typecheck` – type checks all packages in this repository
+* `pnpm run lint` – runs ESLint on all TypeScript files in this repository
+* `pnpm run typecheck` – type checks all packages in this repository
 
 ## Contributing
 
