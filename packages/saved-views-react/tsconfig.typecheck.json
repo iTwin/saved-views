@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // Keep paths mapping for typecheck since --noEmit doesn't produce output
+  },
+  "exclude": [ "src/__tests__/**" ],
+}
