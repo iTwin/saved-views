@@ -1,0 +1,184 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`displayStyleExtractor > snapshot tests > matches snapshot for full 2D display style extraction 1`] = `
+{
+  "backgroundColor": 16777215,
+  "subCategoryOvr": [
+    {
+      "invisible": false,
+      "subCategory": "0x456",
+    },
+  ],
+  "viewflags": {
+    "monochrome": false,
+    "noConstruct": false,
+    "noStyle": false,
+    "noWeight": false,
+    "renderMode": 4,
+  },
+}
+`;
+
+exports[`displayStyleExtractor > snapshot tests > matches snapshot for full 3D display style extraction 1`] = `
+{
+  "ao": {
+    "bias": 0.25,
+    "intensity": 1,
+    "maxDistance": 100,
+    "zLengthCap": 0.0025,
+  },
+  "backgroundColor": 16777215,
+  "contextRealityModels": [
+    {
+      "description": "A test reality model",
+      "name": "Test Reality Model",
+      "tilesetUrl": "https://example.com/tileset.json",
+    },
+  ],
+  "environment": {
+    "ground": {
+      "aboveColor": 13158600,
+      "belowColor": 6579300,
+      "display": true,
+      "elevation": 0,
+    },
+    "sky": {
+      "display": true,
+      "groundColor": 6579300,
+      "skyColor": 15453831,
+      "twoColor": false,
+    },
+  },
+  "lights": {
+    "ambient": {
+      "color": 16777215,
+      "intensity": 0.2,
+    },
+    "hemisphere": {
+      "intensity": 0.5,
+      "lowerColor": 13158600,
+      "upperColor": 16777215,
+    },
+    "portrait": {
+      "intensity": 0.3,
+    },
+    "solar": {
+      "direction": [
+        0,
+        0,
+        -1,
+      ],
+      "intensity": 1,
+    },
+  },
+  "monochromeColor": 8421504,
+  "monochromeMode": 0,
+  "solarShadows": {
+    "color": 8421504,
+  },
+  "subCategoryOvr": [
+    {
+      "color": 255,
+      "invisible": false,
+      "subCategory": "0x123",
+      "weight": 2,
+    },
+  ],
+  "viewflags": {
+    "monochrome": false,
+    "noConstruct": true,
+    "renderMode": 6,
+    "shadows": true,
+    "visEdges": false,
+  },
+}
+`;
+
+exports[`displayStyleExtractor > snapshot tests > matches snapshot for legacy 3D extraction 1`] = `
+{
+  "ambientOcclusion": {
+    "bias": 0.25,
+    "intensity": 1,
+    "zLengthCap": 0.0025,
+  },
+  "backgroundColor": {
+    "blue": 255,
+    "green": 255,
+    "red": 255,
+  },
+  "contextRealityModels": [
+    {
+      "name": "Test Reality Model",
+      "tilesetUrl": "https://example.com/tileset.json",
+    },
+  ],
+  "environment": {
+    "ground": {
+      "aboveColor": {
+        "blue": 200,
+        "green": 200,
+        "red": 200,
+      },
+      "belowColor": {
+        "blue": 100,
+        "green": 100,
+        "red": 100,
+      },
+      "display": true,
+      "elevation": 0,
+    },
+    "sky": {
+      "display": true,
+      "skyColor": {
+        "blue": 235,
+        "green": 206,
+        "red": 135,
+      },
+      "twoColor": false,
+    },
+  },
+  "hiddenLine": {
+    "transparencyThreshold": 0.5,
+    "visible": {
+      "color": {
+        "blue": 0,
+        "green": 0,
+        "red": 0,
+      },
+      "overrideColor": true,
+    },
+  },
+  "monochromeColor": {
+    "blue": 128,
+    "green": 128,
+    "red": 128,
+  },
+  "monochromeMode": 0,
+  "solarShadows": {
+    "color": {
+      "blue": 128,
+      "green": 128,
+      "red": 128,
+    },
+  },
+  "subCategoryOverrides": [
+    {
+      "color": {
+        "blue": 0,
+        "green": 0,
+        "red": 255,
+      },
+      "invisible": false,
+      "subCategory": "0x123",
+      "weight": 2,
+    },
+  ],
+  "viewflags": {
+    "monochrome": false,
+    "noConstructions": true,
+    "renderMode": 6,
+    "shadows": true,
+    "visibleEdges": false,
+  },
+}
+`;
