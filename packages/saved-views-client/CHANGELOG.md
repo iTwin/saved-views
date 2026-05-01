@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.5
+
+### Patch Changes
+
+#### [0.6.5](https://github.com/iTwin/saved-views/tree/v0.6.5-client/packages/saved-views-client) - 2026-05-01
+
+Update dependencies to fix audit issues and throw error instead of 0 on callITwinApi failure@itwin/saved-views-client
+
 ## 0.6.4
 
 ### Patch Changes
