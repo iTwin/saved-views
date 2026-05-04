@@ -43,7 +43,7 @@ Read the output carefully. Note:
 
 ### Step 2: Diagnose the Affected Packages
 
-For each vulnerable package, determine which workspace package(s) depend on it:
+Run `pnpm why` for each vulnerable package — this is mandatory, not optional. You need to know whether each package is a **direct dependency** or **purely transitive** before you can choose the right fix strategy. Guessing leads to incomplete fixes.
 
 ```powershell
 pnpm why <vulnerable-package>
@@ -53,6 +53,10 @@ pnpm why <vulnerable-package>
 > ```powershell
 > Select-String -Path pnpm-lock.yaml -Pattern "^  <vulnerable-package>@"
 > ```
+
+For each vulnerable package, record:
+- **Is it a direct dep?** Check each `package.json` that appears in `pnpm why`'s output
+- **Full dependency path(s):** e.g. `eslint@8.57.1 > cross-spawn@7.0.3` — these tell you which packages could be bumped to eliminate the transitive pull
 
 Check the sub-package `package.json` files in:
 - `packages/saved-views-client/package.json`
@@ -79,6 +83,8 @@ Edit the relevant `package.json` and update the version range, then:
 ```powershell
 cmd /c "cd /d e:\saved-views_1\saved-views && pnpm install 2>&1"
 ```
+
+> **Use a range, not a pin:** Write `"^7.0.5"` or `">=7.0.5"` rather than `"7.0.5"` so future patch releases are automatically resolved. Exact pins require manual bumps every time a new patch drops.
 
 **Option B — Add/update a pnpm override** (root `package.json`):
 ```json
@@ -114,15 +120,21 @@ Re-run the audit to confirm vulnerabilities are resolved:
 pnpm audit 2>&1
 ```
 
-### Step 7: Try to Reduce Overrides
+### Step 7: Minimise the Fix Footprint
 
-Before finishing, check whether any override can be eliminated by bumping a direct dependency instead. For each override, trace the chain with `pnpm why` and check if the direct dep that pulls it in has a newer version with the vulnerability fixed:
+Before finishing, review every change you made and ask whether it can be simplified:
 
+**Can an override be replaced by bumping a direct dep?**
+For each override, trace the chain with `pnpm why` and check if the direct dep that pulls in the vulnerable package has a newer version where the vulnerability is already fixed:
 ```powershell
 pnpm view <direct-dep>@latest dependencies --json
 ```
+If yes, bump that direct dep and remove the override — a self-maintaining dep bump is always preferable to a long-lived override.
 
-Removing an override is always preferable to keeping one — it means the fix is self-maintaining.
+**Did you add a direct dep that shouldn't exist?**
+If `pnpm why` showed the vulnerable package was *only* transitive, but you added a direct `devDependency` entry just as a fix mechanism, reconsider: adding a dep purely to control its version creates unnecessary maintenance burden. A scoped `pnpm.overrides` entry achieves the same result with less footprint. Remove the spurious direct dep and use an override instead.
+
+Only keep changes that are truly necessary.
 
 ### Step 8: Confirm Nothing is Broken
 
