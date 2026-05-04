@@ -120,7 +120,7 @@ Re-run the audit to confirm vulnerabilities are resolved:
 pnpm audit 2>&1
 ```
 
-### Step 7: Minimise the Fix Footprint
+### Step 7: Minimize the Fix Footprint
 
 Before finishing, review every change you made and ask whether it can be simplified:
 
