@@ -6,3 +6,14 @@ onlyBuiltDependencies:
   - '@parcel/watcher'
   - '@swc/core'
   - esbuild
+
+overrides:
+  axios@<1.16.0: '>=1.16.0'
+  brace-expansion@>=5.0.0 <5.0.6: '>=5.0.6'
+  fast-xml-builder@<1.1.7: '>=1.1.7'
+  '@itwin/ecschema-metadata': 5.10.2
+  '@itwin/ecschema-rpcinterface-common': 5.10.2
+  qs@>=6.11.1 <=6.15.1: '>=6.15.2'
+  react-router@>=6.7.0 <6.30.4: 6.30.4
+  shell-quote@>=1.1.0 <=1.8.3: '>=1.8.4'
+  ws@>=8.0.0 <8.20.1: '>=8.20.1'

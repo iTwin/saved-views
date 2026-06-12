@@ -12,10 +12,11 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@itwin/core-backend": "^5.2.0",
-    "@itwin/core-bentley": "^5.2.0",
-    "@itwin/core-common": "^5.2.0",
-    "@itwin/express-server": "^5.2.0",
+    "@itwin/core-backend": "^5.10.2",
+    "@itwin/core-bentley": "^5.10.2",
+    "@itwin/core-common": "^5.10.2",
+    "@itwin/ecschema-metadata": "^5.10.2",
+    "@itwin/express-server": "^5.10.2",
     "@itwin/imodels-access-backend": "^5.2.2",
     "@itwin/imodels-client-authoring": "^5.8.2",
     "@types/dotenv-flow": "^3.2.0",
