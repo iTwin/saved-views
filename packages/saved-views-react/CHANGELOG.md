@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.2.7
+
+### Patch Changes
+
+#### [0.6.5](https://github.com/iTwin/saved-views/tree/v0.6.5-client/packages/saved-views-client) - 2026-05-01
+
+Update dependencies to fix audit issues and throw error instead of 0 on callITwinApi failure@itwin/saved-views-client
+
+#### [1.2.7](https://github.com/iTwin/saved-views/tree/v1.2.7-react/packages/saved-views-react) - 2026-05-01
+
+Add tests to saved-views-react@itwin/saved-views-react
+
 ## 1.2.6
 
 ### Patch Changes
