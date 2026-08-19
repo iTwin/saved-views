@@ -3,4 +3,4 @@
 "@itwin/saved-views-react": minor
 ---
 
-Fix audit vulnerabilities. Update itwin packages.
+Fix audit vulnerabilities. Update @itwin packages
