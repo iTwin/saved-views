@@ -8,6 +8,7 @@ import { BentleyCloudRpcManager, IModelReadRpcInterface, IModelTileRpcInterface 
 import { IModelJsExpressServer } from "@itwin/express-server";
 import { BackendIModelsAccess } from "@itwin/imodels-access-backend";
 import { IModelsClient } from "@itwin/imodels-client-authoring";
+import { AzureClientStorage, BlockBlobClientWrapperFactory } from "@itwin/object-storage-azure";
 import { config } from "dotenv-flow";
 
 config({ path: "../test-app-frontend" });
@@ -18,7 +19,10 @@ void (async () => {
   await IModelHost.startup({
     cacheDir: "./.cache",
     hubAccess: new BackendIModelsAccess(
-      new IModelsClient({ api: { baseUrl: `https://${process.env.VITE_URL_PREFIX}api.bentley.com/imodels` } }),
+      new IModelsClient({
+        api: { baseUrl: `https://${process.env.VITE_URL_PREFIX}api.bentley.com/imodels` },
+        cloudStorage: new AzureClientStorage(new BlockBlobClientWrapperFactory()),
+      }),
     ),
   });
 

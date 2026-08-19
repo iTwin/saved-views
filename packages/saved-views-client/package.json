@@ -43,10 +43,10 @@
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^4.0.16",
-    "happy-dom": "^20.8.9",
+    "happy-dom": "^20.11.2",
     "rimraf": "^6.1.2",
     "typescript": "^5.5.4",
-    "vite": "^6.4.2",
+    "vite": "^6.4.3",
     "vitest": "^4.0.16"
   }
 }
