@@ -63,7 +63,7 @@
     "recursive-readdir": "^2.2.3",
     "typescript": "^5.5.4",
     "vite": "^6.4.3",
-    "vitest": "^4.0.16"
+    "vitest": "^4.1.11"
   },
   "peerDependencies": {
     "@itwin/core-common": "^5.12.4",
