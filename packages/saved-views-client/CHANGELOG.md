@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.1
+
+### Patch Changes
+
+#### [0.7.1](https://github.com/iTwin/saved-views/tree/v0.7.1-client/packages/saved-views-client) - 2026-10-14
+Vulnerability fixes for audit@itwin/saved-views-client
+
 ## 0.7.0
 
 ### Minor Changes
