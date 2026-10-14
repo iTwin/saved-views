@@ -3,6 +3,7 @@ lib
 dist
 node_modules
 .cache
+packages/test-app-frontend/.vite-public
 
 npm-debug.log*
 pnpm-debug.log*
