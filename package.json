@@ -22,7 +22,7 @@
   "engines": {
     "pnpm": ">=10",
     "npm": "<0",
-    "node": ">=20"
+    "node": ">=24"
   },
   "dependencies": {
     "@changesets/cli": "^3.0.3",

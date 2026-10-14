@@ -17,7 +17,7 @@ Workflow for identifying, fixing, and verifying high-severity security vulnerabi
 ## Prerequisites
 
 - pnpm >= 10 installed
-- Node >= 20
+- Node >= 24
 - Run commands from the **repository root** (`e:\saved-views_1\saved-views\`)
 - On Windows, prefix commands with `cmd /c "cd /d <repo-root> && <command> 2>&1"`
 
