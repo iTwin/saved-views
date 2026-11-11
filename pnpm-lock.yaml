@@ -32,19 +32,19 @@ importers:
         version: 18.19.130
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.71.2
-        version: 8.71.2(@typescript-eslint/parser@8.71.2(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)
+        version: 8.71.2(@typescript-eslint/parser@8.71.2(eslint@8.57.1(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3))(eslint@8.57.1(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)
       '@typescript-eslint/parser':
         specifier: ^8.71.2
-        version: 8.71.2(eslint@8.57.1)(typescript@5.9.3)
+        version: 8.71.2(eslint@8.57.1(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)
       eslint:
         specifier: ^8.57.0
-        version: 8.57.1
+        version: 8.57.1(supports-color@7.2.0)
       eslint-plugin-react:
         specifier: ^7.35.2
-        version: 7.37.5(eslint@8.57.1)
+        version: 7.37.5(eslint@8.57.1(supports-color@7.2.0))
       eslint-plugin-react-hooks:
         specifier: ^4.6.2
-        version: 4.6.2(eslint@8.57.1)
+        version: 4.6.2(eslint@8.57.1(supports-color@7.2.0))
       npm-run-all:
         specifier: ^4.1.5
         version: 4.1.5
@@ -168,7 +168,7 @@ importers:
     dependencies:
       '@itwin/core-backend':
         specifier: ^5.14.3
-        version: 5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
+        version: 5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0)
       '@itwin/core-bentley':
         specifier: ^5.14.3
         version: 5.14.3
@@ -180,16 +180,16 @@ importers:
         version: 5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))
       '@itwin/express-server':
         specifier: ^5.14.3
-        version: 5.14.3(@itwin/core-backend@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2))(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))
+        version: 5.14.3(@itwin/core-backend@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0))(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(supports-color@7.2.0)
       '@itwin/imodels-access-backend':
         specifier: ^6.1.3
-        version: 6.1.3(@itwin/core-backend@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2))(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
+        version: 6.1.3(@itwin/core-backend@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0))(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0)
       '@itwin/imodels-client-authoring':
         specifier: ^6.2.2
-        version: 6.2.2(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
+        version: 6.2.2(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0)
       '@itwin/object-storage-azure':
         specifier: ^3.1.3
-        version: 3.1.3(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
+        version: 3.1.3(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0)
       '@types/dotenv-flow':
         specifier: ^3.2.0
         version: 3.3.3
@@ -258,10 +258,10 @@ importers:
         version: 5.35.1(f4a508a75bbd12eebf020065426a87da)
       '@itwin/imodels-access-frontend':
         specifier: ^6.1.3
-        version: 6.1.3(@itwin/core-bentley@5.14.3)(@itwin/core-frontend@5.14.3(@itwin/appui-abstract@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/core-orbitgt@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))(@itwin/ecschema-rpcinterface-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))))
+        version: 6.1.3(@itwin/core-bentley@5.14.3)(@itwin/core-frontend@5.14.3(@itwin/appui-abstract@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/core-orbitgt@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))(@itwin/ecschema-rpcinterface-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))))(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
       '@itwin/imodels-client-management':
         specifier: ^6.2.2
-        version: 6.2.2
+        version: 6.2.2(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
       '@itwin/itwinui-icons-react':
         specifier: ^2.9.0
         version: 2.11.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -288,7 +288,7 @@ importers:
         version: 18.3.7(@types/react@18.3.28)
       '@vitejs/plugin-react-swc':
         specifier: ^3.5.0
-        version: 3.11.0(@swc/helpers@0.5.19)(vite@6.4.3(@types/node@25.9.9)(sass@1.98.0)(tsx@4.23.12)(yaml@2.9.1))
+        version: 3.11.0(@swc/helpers@0.5.19)(vite@6.4.3(@types/node@18.19.130)(sass@1.98.0)(tsx@4.23.12)(yaml@2.9.1))
       immer:
         specifier: ^10.0.2
         version: 10.2.0
@@ -312,10 +312,10 @@ importers:
         version: 5.9.3
       vite:
         specifier: ^6.4.3
-        version: 6.4.3(@types/node@25.9.9)(sass@1.98.0)(tsx@4.23.12)(yaml@2.9.1)
+        version: 6.4.3(@types/node@18.19.130)(sass@1.98.0)(tsx@4.23.12)(yaml@2.9.1)
       vite-tsconfig-paths:
         specifier: ^4.3.1
-        version: 4.3.2(typescript@5.9.3)(vite@6.4.3(@types/node@25.9.9)(sass@1.98.0)(tsx@4.23.12)(yaml@2.9.1))
+        version: 4.3.2(supports-color@7.2.0)(typescript@5.9.3)(vite@6.4.3(@types/node@18.19.130)(sass@1.98.0)(tsx@4.23.12)(yaml@2.9.1))
 
 packages:
 
@@ -1230,9 +1230,6 @@ packages:
 
   '@math.gl/types@4.1.0':
     resolution: {integrity: sha512-clYZdHcmRvMzVK5fjeDkQlHUzXQSNdZ7s4xOqC3nJPgz4C/TZkUecTo9YS4PruZqtDda/ag4erndP0MIn40dGA==}
-
-  '@nodable/entities@2.1.0':
-    resolution: {integrity: sha512-nyT7T3nbMyBI/lvr6L5TyWbFJAI9FTgVRakNoBqCD+PmID8DzFrrNdLLtHMwMszOtqZa8PAOV24ZqDnQrhQINA==}
 
   '@nodable/entities@3.1.0':
     resolution: {integrity: sha512-LsS/DjHr+uDM647Gru/cA8+J3a3HfhttwCKLyuoyN7yXTFCxKBtSgMQBvrW9yNPa2/zDRUNuGPaH5QUFoa4arQ==}
@@ -2380,12 +2377,8 @@ packages:
   fast-xml-builder@1.3.1:
     resolution: {integrity: sha512-pIM/1n3ntFXKYrUZwW7QCK0gAW7XY+wzj1YMIV3tLDvPj/V+zTGJK5e3/4WJfwj0qWw2ElNXiTixda/R+3YSug==}
 
-  fast-xml-parser@5.11.2:
-    resolution: {integrity: sha512-R9iDuNrQYeQut46cn2r2wHKn4HYzVDvDm5J1wW+koZewykv0yuO2HChTYeZtrULyHIDM9cj9TUXloCsueCQUog==}
-    hasBin: true
-
-  fast-xml-parser@5.7.0:
-    resolution: {integrity: sha512-MTcrUoRQ1GSQ9iG3QJzBGquYYYeA7piZaJoIWbPFGbRn6Jj6z7xgoAyi4DrZX4y2ZIQQBF59gc/zmvvejjgoFQ==}
+  fast-xml-parser@5.12.0:
+    resolution: {integrity: sha512-/pXxRBtwxY9w8z7YbgsvIPPcPvFDsTbIkWwTQJhzNJPokj+TbN6ftmcv4j/pEQDvOCNnKGDzuk5Bo2oogIOiFg==}
     hasBin: true
 
   fastq@1.20.1:
@@ -2853,8 +2846,8 @@ packages:
     resolution: {integrity: sha512-p3EcsicXjit7SaskXHs1hA91QxgTw46Fv6EFKKGS5DRFLD8yKnohjF3hxoju94b/OcMZoQukzpPpBE9uLVKzgQ==}
     engines: {node: '>= 0.4'}
 
-  is-unsafe@2.0.2:
-    resolution: {integrity: sha512-HgbIHPBH0KHHCcjLfGsCvhtPTVxjaAZlXjwdz7/GQC40SjSe4sfQsar8J5VFo8JOSbarkpV0OLG95bbaNd9aAQ==}
+  is-unsafe@2.0.3:
+    resolution: {integrity: sha512-ZBllczCCO267vgdFb6Tq3pv+LhHaCiGMdr+ZsuL+OopruAg7S+3ZDs1vD0RPC0uSrkjzbraxaGjtX1YBxjPeFQ==}
 
   is-weakmap@2.0.2:
     resolution: {integrity: sha512-K5pXYOm9wqY1RgjpL3YTkF39tni1XajUIkawTLUo9EZEVUFga5gSQJF8nNS7ZwJQ02y+1YCNYcMh+HIf1ZqE+w==}
@@ -3227,10 +3220,6 @@ packages:
   path-exists@4.0.0:
     resolution: {integrity: sha512-ak9Qy5Q7jYb2Wwcey5Fpvg2KoAc/ZIhLSLOSBmRmygPsGwkVVt0fZa0qrtMz+m6tJTAHfZQ8FnmB4MG4LWy7/w==}
     engines: {node: '>=8'}
-
-  path-expression-matcher@1.5.0:
-    resolution: {integrity: sha512-cbrerZV+6rvdQrrD+iGMcZFEiiSrbv9Tfdkvnusy6y0x0GKBXREFg/Y65GhIfm0tnLntThhzCnfKwp1WRjeCyQ==}
-    engines: {node: '>=14.0.0'}
 
   path-expression-matcher@1.6.2:
     resolution: {integrity: sha512-enSlaiat05iasnzmgNxRj8reFdj3puY2QpNgP1aPIaVfT6nn9ICuPoFlKHk8EN22HcwewshO+mN2DGbkCEOtqQ==}
@@ -3700,9 +3689,6 @@ packages:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
 
-  strnum@2.2.3:
-    resolution: {integrity: sha512-oKx6RUCuHfT3oyVjtnrmn19H1SiCqgJSg+54XqURKp5aCMbrXrhLjRN9TjuwMjiYstZ0MzDrHqkGZ5dFTKd+zg==}
-
   strnum@2.5.1:
     resolution: {integrity: sha512-UM4nTLWzQiDBseVxUGxN0wJzIk0UU89Qi7pKXz9qISo+lhviJikTuikBsK/oFRlpvYHvSdz0TVoLyQ+sEpYwxA==}
 
@@ -3783,6 +3769,7 @@ packages:
   tsconfck@3.1.6:
     resolution: {integrity: sha512-ks6Vjr/jEw0P1gmOVwutM3B7fWxoWBL2KRDb1JfqGVawBmO5UsvmWOQFGHBPl5yxYz4eERr19E6L7NMv+Fej4w==}
     engines: {node: ^18 || >=20}
+    deprecated: unmaintained
     hasBin: true
     peerDependencies:
       typescript: ^5.0.0
@@ -4094,63 +4081,63 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@azure/core-auth@1.10.1':
+  '@azure/core-auth@1.10.1(supports-color@7.2.0)':
     dependencies:
       '@azure/abort-controller': 2.1.2
-      '@azure/core-util': 1.13.1
+      '@azure/core-util': 1.13.1(supports-color@7.2.0)
       tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
 
-  '@azure/core-auth@1.11.0':
+  '@azure/core-auth@1.11.0(supports-color@7.2.0)':
     dependencies:
       '@azure/abort-controller': 2.2.0
-      '@azure/core-util': 1.14.0
+      '@azure/core-util': 1.14.0(supports-color@7.2.0)
       tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
 
-  '@azure/core-client@1.10.1':
+  '@azure/core-client@1.10.1(supports-color@7.2.0)':
     dependencies:
       '@azure/abort-controller': 2.1.2
-      '@azure/core-auth': 1.10.1
-      '@azure/core-rest-pipeline': 1.23.0
+      '@azure/core-auth': 1.10.1(supports-color@7.2.0)
+      '@azure/core-rest-pipeline': 1.23.0(supports-color@7.2.0)
       '@azure/core-tracing': 1.3.1
-      '@azure/core-util': 1.13.1
-      '@azure/logger': 1.3.0
+      '@azure/core-util': 1.13.1(supports-color@7.2.0)
+      '@azure/logger': 1.3.0(supports-color@7.2.0)
       tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
 
-  '@azure/core-client@1.11.1':
+  '@azure/core-client@1.11.1(supports-color@7.2.0)':
     dependencies:
       '@azure/abort-controller': 2.2.0
-      '@azure/core-auth': 1.11.0
-      '@azure/core-rest-pipeline': 1.25.0
+      '@azure/core-auth': 1.11.0(supports-color@7.2.0)
+      '@azure/core-rest-pipeline': 1.25.0(supports-color@7.2.0)
       '@azure/core-tracing': 1.4.0
-      '@azure/core-util': 1.14.0
-      '@azure/logger': 1.4.0
+      '@azure/core-util': 1.14.0(supports-color@7.2.0)
+      '@azure/logger': 1.4.0(supports-color@7.2.0)
       tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
 
-  '@azure/core-http-compat@2.3.2(@azure/core-client@1.10.1)(@azure/core-rest-pipeline@1.23.0)':
+  '@azure/core-http-compat@2.3.2(@azure/core-client@1.10.1(supports-color@7.2.0))(@azure/core-rest-pipeline@1.23.0(supports-color@7.2.0))':
     dependencies:
       '@azure/abort-controller': 2.1.2
-      '@azure/core-client': 1.10.1
-      '@azure/core-rest-pipeline': 1.23.0
+      '@azure/core-client': 1.10.1(supports-color@7.2.0)
+      '@azure/core-rest-pipeline': 1.23.0(supports-color@7.2.0)
 
-  '@azure/core-http-compat@2.5.0(@azure/core-client@1.11.1)(@azure/core-rest-pipeline@1.25.0)':
+  '@azure/core-http-compat@2.5.0(@azure/core-client@1.11.1(supports-color@7.2.0))(@azure/core-rest-pipeline@1.25.0(supports-color@7.2.0))':
     dependencies:
       '@azure/abort-controller': 2.2.0
-      '@azure/core-client': 1.11.1
-      '@azure/core-rest-pipeline': 1.25.0
+      '@azure/core-client': 1.11.1(supports-color@7.2.0)
+      '@azure/core-rest-pipeline': 1.25.0(supports-color@7.2.0)
 
-  '@azure/core-lro@2.7.2':
+  '@azure/core-lro@2.7.2(supports-color@7.2.0)':
     dependencies:
       '@azure/abort-controller': 2.1.2
-      '@azure/core-util': 1.13.1
-      '@azure/logger': 1.3.0
+      '@azure/core-util': 1.13.1(supports-color@7.2.0)
+      '@azure/logger': 1.3.0(supports-color@7.2.0)
       tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
@@ -4163,26 +4150,26 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@azure/core-rest-pipeline@1.23.0':
+  '@azure/core-rest-pipeline@1.23.0(supports-color@7.2.0)':
     dependencies:
       '@azure/abort-controller': 2.1.2
-      '@azure/core-auth': 1.10.1
+      '@azure/core-auth': 1.10.1(supports-color@7.2.0)
       '@azure/core-tracing': 1.3.1
-      '@azure/core-util': 1.13.1
-      '@azure/logger': 1.3.0
-      '@typespec/ts-http-runtime': 0.3.4
+      '@azure/core-util': 1.13.1(supports-color@7.2.0)
+      '@azure/logger': 1.3.0(supports-color@7.2.0)
+      '@typespec/ts-http-runtime': 0.3.4(supports-color@7.2.0)
       tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
 
-  '@azure/core-rest-pipeline@1.25.0':
+  '@azure/core-rest-pipeline@1.25.0(supports-color@7.2.0)':
     dependencies:
       '@azure/abort-controller': 2.2.0
-      '@azure/core-auth': 1.11.0
+      '@azure/core-auth': 1.11.0(supports-color@7.2.0)
       '@azure/core-tracing': 1.4.0
-      '@azure/core-util': 1.14.0
-      '@azure/logger': 1.4.0
-      '@typespec/ts-http-runtime': 0.3.9
+      '@azure/core-util': 1.14.0(supports-color@7.2.0)
+      '@azure/logger': 1.4.0(supports-color@7.2.0)
+      '@typespec/ts-http-runtime': 0.3.9(supports-color@7.2.0)
       tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
@@ -4195,109 +4182,109 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@azure/core-util@1.13.1':
+  '@azure/core-util@1.13.1(supports-color@7.2.0)':
     dependencies:
       '@azure/abort-controller': 2.1.2
-      '@typespec/ts-http-runtime': 0.3.4
+      '@typespec/ts-http-runtime': 0.3.4(supports-color@7.2.0)
       tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
 
-  '@azure/core-util@1.14.0':
+  '@azure/core-util@1.14.0(supports-color@7.2.0)':
     dependencies:
       '@azure/abort-controller': 2.2.0
-      '@typespec/ts-http-runtime': 0.3.9
+      '@typespec/ts-http-runtime': 0.3.9(supports-color@7.2.0)
       tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
 
   '@azure/core-xml@1.5.0':
     dependencies:
-      fast-xml-parser: 5.7.0
+      fast-xml-parser: 5.12.0
       tslib: 2.8.1
 
   '@azure/core-xml@1.6.0':
     dependencies:
-      fast-xml-parser: 5.11.2
+      fast-xml-parser: 5.12.0
       tslib: 2.8.1
 
-  '@azure/logger@1.3.0':
+  '@azure/logger@1.3.0(supports-color@7.2.0)':
     dependencies:
-      '@typespec/ts-http-runtime': 0.3.4
+      '@typespec/ts-http-runtime': 0.3.4(supports-color@7.2.0)
       tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
 
-  '@azure/logger@1.4.0':
+  '@azure/logger@1.4.0(supports-color@7.2.0)':
     dependencies:
-      '@typespec/ts-http-runtime': 0.3.9
+      '@typespec/ts-http-runtime': 0.3.9(supports-color@7.2.0)
       tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
 
-  '@azure/storage-blob@12.31.0':
+  '@azure/storage-blob@12.31.0(supports-color@7.2.0)':
     dependencies:
       '@azure/abort-controller': 2.1.2
-      '@azure/core-auth': 1.10.1
-      '@azure/core-client': 1.10.1
-      '@azure/core-http-compat': 2.3.2(@azure/core-client@1.10.1)(@azure/core-rest-pipeline@1.23.0)
-      '@azure/core-lro': 2.7.2
+      '@azure/core-auth': 1.10.1(supports-color@7.2.0)
+      '@azure/core-client': 1.10.1(supports-color@7.2.0)
+      '@azure/core-http-compat': 2.3.2(@azure/core-client@1.10.1(supports-color@7.2.0))(@azure/core-rest-pipeline@1.23.0(supports-color@7.2.0))
+      '@azure/core-lro': 2.7.2(supports-color@7.2.0)
       '@azure/core-paging': 1.6.2
-      '@azure/core-rest-pipeline': 1.23.0
+      '@azure/core-rest-pipeline': 1.23.0(supports-color@7.2.0)
       '@azure/core-tracing': 1.3.1
-      '@azure/core-util': 1.13.1
+      '@azure/core-util': 1.13.1(supports-color@7.2.0)
       '@azure/core-xml': 1.5.0
-      '@azure/logger': 1.3.0
-      '@azure/storage-common': 12.3.0(@azure/core-client@1.10.1)
+      '@azure/logger': 1.3.0(supports-color@7.2.0)
+      '@azure/storage-common': 12.3.0(@azure/core-client@1.10.1(supports-color@7.2.0))(supports-color@7.2.0)
       events: 3.3.0
       tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
 
-  '@azure/storage-blob@12.34.0':
+  '@azure/storage-blob@12.34.0(supports-color@7.2.0)':
     dependencies:
       '@azure/abort-controller': 2.2.0
-      '@azure/core-auth': 1.11.0
-      '@azure/core-client': 1.11.1
-      '@azure/core-http-compat': 2.5.0(@azure/core-client@1.11.1)(@azure/core-rest-pipeline@1.25.0)
-      '@azure/core-lro': 2.7.2
+      '@azure/core-auth': 1.11.0(supports-color@7.2.0)
+      '@azure/core-client': 1.11.1(supports-color@7.2.0)
+      '@azure/core-http-compat': 2.5.0(@azure/core-client@1.11.1(supports-color@7.2.0))(@azure/core-rest-pipeline@1.25.0(supports-color@7.2.0))
+      '@azure/core-lro': 2.7.2(supports-color@7.2.0)
       '@azure/core-paging': 1.7.0
-      '@azure/core-rest-pipeline': 1.25.0
+      '@azure/core-rest-pipeline': 1.25.0(supports-color@7.2.0)
       '@azure/core-tracing': 1.4.0
-      '@azure/core-util': 1.14.0
+      '@azure/core-util': 1.14.0(supports-color@7.2.0)
       '@azure/core-xml': 1.6.0
-      '@azure/logger': 1.4.0
-      '@azure/storage-common': 12.5.0(@azure/core-client@1.11.1)
+      '@azure/logger': 1.4.0(supports-color@7.2.0)
+      '@azure/storage-common': 12.5.0(@azure/core-client@1.11.1(supports-color@7.2.0))(supports-color@7.2.0)
       apache-arrow: 21.2.0
       events: 3.3.0
       tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
 
-  '@azure/storage-common@12.3.0(@azure/core-client@1.10.1)':
+  '@azure/storage-common@12.3.0(@azure/core-client@1.10.1(supports-color@7.2.0))(supports-color@7.2.0)':
     dependencies:
       '@azure/abort-controller': 2.1.2
-      '@azure/core-auth': 1.10.1
-      '@azure/core-http-compat': 2.3.2(@azure/core-client@1.10.1)(@azure/core-rest-pipeline@1.23.0)
-      '@azure/core-rest-pipeline': 1.23.0
+      '@azure/core-auth': 1.10.1(supports-color@7.2.0)
+      '@azure/core-http-compat': 2.3.2(@azure/core-client@1.10.1(supports-color@7.2.0))(@azure/core-rest-pipeline@1.23.0(supports-color@7.2.0))
+      '@azure/core-rest-pipeline': 1.23.0(supports-color@7.2.0)
       '@azure/core-tracing': 1.3.1
-      '@azure/core-util': 1.13.1
-      '@azure/logger': 1.3.0
+      '@azure/core-util': 1.13.1(supports-color@7.2.0)
+      '@azure/logger': 1.3.0(supports-color@7.2.0)
       events: 3.3.0
       tslib: 2.8.1
     transitivePeerDependencies:
       - '@azure/core-client'
       - supports-color
 
-  '@azure/storage-common@12.5.0(@azure/core-client@1.11.1)':
+  '@azure/storage-common@12.5.0(@azure/core-client@1.11.1(supports-color@7.2.0))(supports-color@7.2.0)':
     dependencies:
       '@azure/abort-controller': 2.2.0
-      '@azure/core-auth': 1.11.0
-      '@azure/core-http-compat': 2.5.0(@azure/core-client@1.11.1)(@azure/core-rest-pipeline@1.25.0)
-      '@azure/core-rest-pipeline': 1.25.0
+      '@azure/core-auth': 1.11.0(supports-color@7.2.0)
+      '@azure/core-http-compat': 2.5.0(@azure/core-client@1.11.1(supports-color@7.2.0))(@azure/core-rest-pipeline@1.25.0(supports-color@7.2.0))
+      '@azure/core-rest-pipeline': 1.25.0(supports-color@7.2.0)
       '@azure/core-tracing': 1.4.0
-      '@azure/core-util': 1.14.0
-      '@azure/logger': 1.4.0
+      '@azure/core-util': 1.14.0(supports-color@7.2.0)
+      '@azure/logger': 1.4.0(supports-color@7.2.0)
       events: 3.3.0
       tslib: 2.8.1
     transitivePeerDependencies:
@@ -4609,22 +4596,22 @@ snapshots:
   '@esbuild/win32-x64@0.28.2':
     optional: true
 
-  '@eslint-community/eslint-utils@4.10.1(eslint@8.57.1)':
+  '@eslint-community/eslint-utils@4.10.1(eslint@8.57.1(supports-color@7.2.0))':
     dependencies:
-      eslint: 8.57.1
+      eslint: 8.57.1(supports-color@7.2.0)
       eslint-visitor-keys: 3.4.3
 
-  '@eslint-community/eslint-utils@4.9.1(eslint@8.57.1)':
+  '@eslint-community/eslint-utils@4.9.1(eslint@8.57.1(supports-color@7.2.0))':
     dependencies:
-      eslint: 8.57.1
+      eslint: 8.57.1(supports-color@7.2.0)
       eslint-visitor-keys: 3.4.3
 
   '@eslint-community/regexpp@4.12.2': {}
 
-  '@eslint/eslintrc@2.1.4':
+  '@eslint/eslintrc@2.1.4(supports-color@7.2.0)':
     dependencies:
       ajv: 6.14.0
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@7.2.0)
       espree: 9.6.1
       globals: 13.24.0
       ignore: 5.3.2
@@ -4671,13 +4658,13 @@ snapshots:
 
   '@google-cloud/promisify@4.0.0': {}
 
-  '@google-cloud/storage-control@0.5.0':
+  '@google-cloud/storage-control@0.5.0(supports-color@7.2.0)':
     dependencies:
-      google-gax: 5.0.8
+      google-gax: 5.0.8(supports-color@7.2.0)
     transitivePeerDependencies:
       - supports-color
 
-  '@google-cloud/storage@7.22.0':
+  '@google-cloud/storage@7.22.0(supports-color@7.2.0)':
     dependencies:
       '@google-cloud/paginator': 5.0.2
       '@google-cloud/projectify': 4.0.0
@@ -4685,14 +4672,14 @@ snapshots:
       abort-controller: 3.0.0
       async-retry: 1.3.3
       duplexify: 4.1.3
-      fast-xml-parser: 5.7.0
-      gaxios: 6.7.1
-      google-auth-library: 9.15.1
+      fast-xml-parser: 5.12.0
+      gaxios: 6.7.1(supports-color@7.2.0)
+      google-auth-library: 9.15.1(supports-color@7.2.0)
       html-entities: 2.6.0
       mime: 3.0.0
       p-limit: 3.1.0
-      retry-request: 7.0.2
-      teeny-request: 9.0.0
+      retry-request: 7.0.2(supports-color@7.2.0)
+      teeny-request: 9.0.0(supports-color@7.2.0)
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -4709,10 +4696,10 @@ snapshots:
       protobufjs: 7.6.5
       yargs: 17.7.3
 
-  '@humanwhocodes/config-array@0.13.0':
+  '@humanwhocodes/config-array@0.13.0(supports-color@7.2.0)':
     dependencies:
       '@humanwhocodes/object-schema': 2.0.3
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@7.2.0)
       minimatch: 3.1.5
     transitivePeerDependencies:
       - supports-color
@@ -4784,16 +4771,16 @@ snapshots:
       rxjs: 7.8.2
       ts-key-enum: 2.0.13
 
-  '@itwin/core-backend@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)':
+  '@itwin/core-backend@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0)':
     dependencies:
-      '@azure/storage-blob': 12.34.0
+      '@azure/storage-blob': 12.34.0(supports-color@7.2.0)
       '@bentley/imodeljs-native': 5.14.48
       '@itwin/core-bentley': 5.14.3
       '@itwin/core-common': 5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3)
       '@itwin/core-geometry': 5.14.3
       '@itwin/core-quantity': 5.14.3(@itwin/core-bentley@5.14.3)
       '@itwin/ecschema-metadata': 5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))
-      '@itwin/object-storage-azure': 3.1.3(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
+      '@itwin/object-storage-azure': 3.1.3(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0)
       form-data: 4.0.6
       fs-extra: 8.1.0
       json5: 2.2.3
@@ -4880,12 +4867,12 @@ snapshots:
       '@itwin/core-geometry': 5.14.3
       '@itwin/ecschema-metadata': 5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))
 
-  '@itwin/express-server@5.14.3(@itwin/core-backend@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2))(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))':
+  '@itwin/express-server@5.14.3(@itwin/core-backend@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0))(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(supports-color@7.2.0)':
     dependencies:
-      '@itwin/core-backend': 5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
+      '@itwin/core-backend': 5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0)
       '@itwin/core-common': 5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3)
-      express: 4.22.3
-      express-ws: 5.0.2(express@4.22.3)
+      express: 4.22.3(supports-color@7.2.0)
+      express-ws: 5.0.2(express@4.22.3(supports-color@7.2.0))
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -4908,18 +4895,18 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       ts-key-enum: 2.0.13
 
-  '@itwin/imodels-access-backend@6.1.3(@itwin/core-backend@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2))(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)':
+  '@itwin/imodels-access-backend@6.1.3(@itwin/core-backend@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0))(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0)':
     dependencies:
-      '@itwin/core-backend': 5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
+      '@itwin/core-backend': 5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0)
       '@itwin/core-bentley': 5.14.3
       '@itwin/core-common': 5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3)
-      '@itwin/imodels-access-common': 6.1.3(@itwin/core-bentley@5.14.3)(@itwin/imodels-client-management@6.2.2)
-      '@itwin/imodels-client-authoring': 6.2.2(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
-      '@itwin/imodels-client-management': 6.2.2
-      '@itwin/object-storage-azure': 3.1.3(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
-      '@itwin/object-storage-core': 3.1.3(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
-      '@itwin/object-storage-google': 3.1.3(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
-      axios: 1.20.0
+      '@itwin/imodels-access-common': 6.1.3(@itwin/core-bentley@5.14.3)(@itwin/imodels-client-management@6.2.2(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0))
+      '@itwin/imodels-client-authoring': 6.2.2(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0)
+      '@itwin/imodels-client-management': 6.2.2(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+      '@itwin/object-storage-azure': 3.1.3(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0)
+      '@itwin/object-storage-core': 3.1.3(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0)
+      '@itwin/object-storage-google': 3.1.3(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0)
+      axios: 1.20.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
     transitivePeerDependencies:
       - debug
       - encoding
@@ -4927,34 +4914,34 @@ snapshots:
       - reflect-metadata
       - supports-color
 
-  '@itwin/imodels-access-common@6.1.3(@itwin/core-bentley@5.14.3)(@itwin/imodels-client-management@6.2.2)':
+  '@itwin/imodels-access-common@6.1.3(@itwin/core-bentley@5.14.3)(@itwin/imodels-client-management@6.2.2(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0))':
     dependencies:
       '@itwin/core-bentley': 5.14.3
-      '@itwin/imodels-client-management': 6.2.2
+      '@itwin/imodels-client-management': 6.2.2(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
 
-  '@itwin/imodels-access-frontend@6.1.3(@itwin/core-bentley@5.14.3)(@itwin/core-frontend@5.14.3(@itwin/appui-abstract@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/core-orbitgt@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))(@itwin/ecschema-rpcinterface-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))))':
+  '@itwin/imodels-access-frontend@6.1.3(@itwin/core-bentley@5.14.3)(@itwin/core-frontend@5.14.3(@itwin/appui-abstract@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/core-orbitgt@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))(@itwin/ecschema-rpcinterface-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))))(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)':
     dependencies:
       '@itwin/core-bentley': 5.14.3
       '@itwin/core-frontend': 5.14.3(@itwin/appui-abstract@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/core-orbitgt@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3)))(@itwin/ecschema-rpcinterface-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-common@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-geometry@5.14.3))(@itwin/core-geometry@5.14.3)(@itwin/ecschema-metadata@5.14.3(@itwin/core-bentley@5.14.3)(@itwin/core-quantity@5.14.3(@itwin/core-bentley@5.14.3))))
-      '@itwin/imodels-access-common': 6.1.3(@itwin/core-bentley@5.14.3)(@itwin/imodels-client-management@6.2.2)
-      '@itwin/imodels-client-management': 6.2.2
+      '@itwin/imodels-access-common': 6.1.3(@itwin/core-bentley@5.14.3)(@itwin/imodels-client-management@6.2.2(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0))
+      '@itwin/imodels-client-management': 6.2.2(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
     transitivePeerDependencies:
       - debug
       - supports-color
 
-  '@itwin/imodels-client-authoring@6.2.2(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)':
+  '@itwin/imodels-client-authoring@6.2.2(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0)':
     dependencies:
-      '@itwin/imodels-client-management': 6.2.2
-      '@itwin/object-storage-core': 3.1.3(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
+      '@itwin/imodels-client-management': 6.2.2(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+      '@itwin/object-storage-core': 3.1.3(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0)
     transitivePeerDependencies:
       - debug
       - inversify
       - reflect-metadata
       - supports-color
 
-  '@itwin/imodels-client-management@6.2.2':
+  '@itwin/imodels-client-management@6.2.2(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)':
     dependencies:
-      axios: 1.20.0
+      axios: 1.20.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
     transitivePeerDependencies:
       - debug
       - supports-color
@@ -4989,12 +4976,12 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       react-table: 7.8.0(react@18.3.1)
 
-  '@itwin/object-storage-azure@3.1.3(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)':
+  '@itwin/object-storage-azure@3.1.3(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0)':
     dependencies:
       '@azure/core-paging': 1.6.2
-      '@azure/storage-blob': 12.31.0
+      '@azure/storage-blob': 12.31.0(supports-color@7.2.0)
       '@itwin/cloud-agnostic-core': 3.1.3(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
-      '@itwin/object-storage-core': 3.1.3(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
+      '@itwin/object-storage-core': 3.1.3(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0)
     optionalDependencies:
       inversify: 7.11.0(reflect-metadata@0.2.2)
       reflect-metadata: 0.2.2
@@ -5002,10 +4989,10 @@ snapshots:
       - debug
       - supports-color
 
-  '@itwin/object-storage-core@3.1.3(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)':
+  '@itwin/object-storage-core@3.1.3(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0)':
     dependencies:
       '@itwin/cloud-agnostic-core': 3.1.3(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
-      axios: 1.20.0
+      axios: 1.20.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
     optionalDependencies:
       inversify: 7.11.0(reflect-metadata@0.2.2)
       reflect-metadata: 0.2.2
@@ -5013,14 +5000,14 @@ snapshots:
       - debug
       - supports-color
 
-  '@itwin/object-storage-google@3.1.3(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)':
+  '@itwin/object-storage-google@3.1.3(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0)':
     dependencies:
-      '@google-cloud/storage': 7.22.0
-      '@google-cloud/storage-control': 0.5.0
+      '@google-cloud/storage': 7.22.0(supports-color@7.2.0)
+      '@google-cloud/storage-control': 0.5.0(supports-color@7.2.0)
       '@itwin/cloud-agnostic-core': 3.1.3(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
-      '@itwin/object-storage-core': 3.1.3(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)
-      axios: 1.20.0
-      google-auth-library: 10.9.1
+      '@itwin/object-storage-core': 3.1.3(debug@4.4.3(supports-color@7.2.0))(inversify@7.11.0(reflect-metadata@0.2.2))(reflect-metadata@0.2.2)(supports-color@7.2.0)
+      axios: 1.20.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0)
+      google-auth-library: 10.9.1(supports-color@7.2.0)
     optionalDependencies:
       inversify: 7.11.0(reflect-metadata@0.2.2)
       reflect-metadata: 0.2.2
@@ -5103,8 +5090,6 @@ snapshots:
       yaml: 2.9.1
 
   '@math.gl/types@4.1.0': {}
-
-  '@nodable/entities@2.1.0': {}
 
   '@nodable/entities@3.1.0': {}
 
@@ -5445,15 +5430,15 @@ snapshots:
     dependencies:
       '@types/node': 18.19.130
 
-  '@typescript-eslint/eslint-plugin@8.71.2(@typescript-eslint/parser@8.71.2(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3)':
+  '@typescript-eslint/eslint-plugin@8.71.2(@typescript-eslint/parser@8.71.2(eslint@8.57.1(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3))(eslint@8.57.1(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)':
     dependencies:
       '@eslint-community/regexpp': 4.12.2
-      '@typescript-eslint/parser': 8.71.2(eslint@8.57.1)(typescript@5.9.3)
+      '@typescript-eslint/parser': 8.71.2(eslint@8.57.1(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)
       '@typescript-eslint/scope-manager': 8.71.2
-      '@typescript-eslint/type-utils': 8.71.2(eslint@8.57.1)(typescript@5.9.3)
-      '@typescript-eslint/utils': 8.71.2(eslint@8.57.1)(typescript@5.9.3)
+      '@typescript-eslint/type-utils': 8.71.2(eslint@8.57.1(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)
+      '@typescript-eslint/utils': 8.71.2(eslint@8.57.1(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)
       '@typescript-eslint/visitor-keys': 8.71.2
-      eslint: 8.57.1
+      eslint: 8.57.1(supports-color@7.2.0)
       ignore: 7.0.12
       natural-compare: 1.4.0
       ts-api-utils: 2.5.0(typescript@5.9.3)
@@ -5461,23 +5446,23 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/parser@8.71.2(eslint@8.57.1)(typescript@5.9.3)':
+  '@typescript-eslint/parser@8.71.2(eslint@8.57.1(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)':
     dependencies:
       '@typescript-eslint/scope-manager': 8.71.2
       '@typescript-eslint/types': 8.71.2
-      '@typescript-eslint/typescript-estree': 8.71.2(typescript@5.9.3)
+      '@typescript-eslint/typescript-estree': 8.71.2(supports-color@7.2.0)(typescript@5.9.3)
       '@typescript-eslint/visitor-keys': 8.71.2
-      debug: 4.4.3
-      eslint: 8.57.1
+      debug: 4.4.3(supports-color@7.2.0)
+      eslint: 8.57.1(supports-color@7.2.0)
       typescript: 5.9.3
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/project-service@8.71.2(typescript@5.9.3)':
+  '@typescript-eslint/project-service@8.71.2(supports-color@7.2.0)(typescript@5.9.3)':
     dependencies:
       '@typescript-eslint/tsconfig-utils': 8.71.2(typescript@5.9.3)
       '@typescript-eslint/types': 8.71.2
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@7.2.0)
       typescript: 5.9.3
     transitivePeerDependencies:
       - supports-color
@@ -5491,13 +5476,13 @@ snapshots:
     dependencies:
       typescript: 5.9.3
 
-  '@typescript-eslint/type-utils@8.71.2(eslint@8.57.1)(typescript@5.9.3)':
+  '@typescript-eslint/type-utils@8.71.2(eslint@8.57.1(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)':
     dependencies:
       '@typescript-eslint/types': 8.71.2
-      '@typescript-eslint/typescript-estree': 8.71.2(typescript@5.9.3)
-      '@typescript-eslint/utils': 8.71.2(eslint@8.57.1)(typescript@5.9.3)
-      debug: 4.4.3
-      eslint: 8.57.1
+      '@typescript-eslint/typescript-estree': 8.71.2(supports-color@7.2.0)(typescript@5.9.3)
+      '@typescript-eslint/utils': 8.71.2(eslint@8.57.1(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)
+      debug: 4.4.3(supports-color@7.2.0)
+      eslint: 8.57.1(supports-color@7.2.0)
       ts-api-utils: 2.5.0(typescript@5.9.3)
       typescript: 5.9.3
     transitivePeerDependencies:
@@ -5505,13 +5490,13 @@ snapshots:
 
   '@typescript-eslint/types@8.71.2': {}
 
-  '@typescript-eslint/typescript-estree@8.71.2(typescript@5.9.3)':
+  '@typescript-eslint/typescript-estree@8.71.2(supports-color@7.2.0)(typescript@5.9.3)':
     dependencies:
-      '@typescript-eslint/project-service': 8.71.2(typescript@5.9.3)
+      '@typescript-eslint/project-service': 8.71.2(supports-color@7.2.0)(typescript@5.9.3)
       '@typescript-eslint/tsconfig-utils': 8.71.2(typescript@5.9.3)
       '@typescript-eslint/types': 8.71.2
       '@typescript-eslint/visitor-keys': 8.71.2
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@7.2.0)
       minimatch: 10.2.6
       semver: 7.8.5
       tinyglobby: 0.2.17
@@ -5520,13 +5505,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/utils@8.71.2(eslint@8.57.1)(typescript@5.9.3)':
+  '@typescript-eslint/utils@8.71.2(eslint@8.57.1(supports-color@7.2.0))(supports-color@7.2.0)(typescript@5.9.3)':
     dependencies:
-      '@eslint-community/eslint-utils': 4.10.1(eslint@8.57.1)
+      '@eslint-community/eslint-utils': 4.10.1(eslint@8.57.1(supports-color@7.2.0))
       '@typescript-eslint/scope-manager': 8.71.2
       '@typescript-eslint/types': 8.71.2
-      '@typescript-eslint/typescript-estree': 8.71.2(typescript@5.9.3)
-      eslint: 8.57.1
+      '@typescript-eslint/typescript-estree': 8.71.2(supports-color@7.2.0)(typescript@5.9.3)
+      eslint: 8.57.1(supports-color@7.2.0)
       typescript: 5.9.3
     transitivePeerDependencies:
       - supports-color
@@ -5536,23 +5521,31 @@ snapshots:
       '@typescript-eslint/types': 8.71.2
       eslint-visitor-keys: 5.0.1
 
-  '@typespec/ts-http-runtime@0.3.4':
+  '@typespec/ts-http-runtime@0.3.4(supports-color@7.2.0)':
     dependencies:
-      http-proxy-agent: 7.0.2
-      https-proxy-agent: 7.0.6
+      http-proxy-agent: 7.0.2(supports-color@7.2.0)
+      https-proxy-agent: 7.0.6(supports-color@7.2.0)
       tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
 
-  '@typespec/ts-http-runtime@0.3.9':
+  '@typespec/ts-http-runtime@0.3.9(supports-color@7.2.0)':
     dependencies:
-      http-proxy-agent: 7.0.2
-      https-proxy-agent: 7.0.6
+      http-proxy-agent: 7.0.2(supports-color@7.2.0)
+      https-proxy-agent: 7.0.6(supports-color@7.2.0)
       tslib: 2.8.1
     transitivePeerDependencies:
       - supports-color
 
   '@ungap/structured-clone@1.3.0': {}
+
+  '@vitejs/plugin-react-swc@3.11.0(@swc/helpers@0.5.19)(vite@6.4.3(@types/node@18.19.130)(sass@1.98.0)(tsx@4.23.12)(yaml@2.9.1))':
+    dependencies:
+      '@rolldown/pluginutils': 1.0.0-beta.27
+      '@swc/core': 1.15.18(@swc/helpers@0.5.19)
+      vite: 6.4.3(@types/node@18.19.130)(sass@1.98.0)(tsx@4.23.12)(yaml@2.9.1)
+    transitivePeerDependencies:
+      - '@swc/helpers'
 
   '@vitejs/plugin-react-swc@3.11.0(@swc/helpers@0.5.19)(vite@6.4.3(@types/node@25.9.9)(sass@1.98.0)(tsx@4.23.12)(yaml@2.9.1))':
     dependencies:
@@ -5632,9 +5625,9 @@ snapshots:
 
   acorn@8.16.0: {}
 
-  agent-base@6.0.2:
+  agent-base@6.0.2(supports-color@7.2.0):
     dependencies:
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@7.2.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -5759,11 +5752,11 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.1.0
 
-  axios@1.20.0:
+  axios@1.20.0(debug@4.4.3(supports-color@7.2.0))(supports-color@7.2.0):
     dependencies:
-      follow-redirects: 1.16.1
+      follow-redirects: 1.16.1(debug@4.4.3(supports-color@7.2.0))
       form-data: 4.0.6
-      https-proxy-agent: 5.0.1
+      https-proxy-agent: 5.0.1(supports-color@7.2.0)
       proxy-from-env: 2.1.0
     transitivePeerDependencies:
       - debug
@@ -5779,11 +5772,11 @@ snapshots:
 
   bignumber.js@9.3.1: {}
 
-  body-parser@1.20.8:
+  body-parser@1.20.8(supports-color@7.2.0):
     dependencies:
       bytes: 3.1.2
       content-type: 1.0.5
-      debug: 2.6.9
+      debug: 2.6.9(supports-color@7.2.0)
       depd: 2.0.0
       destroy: 1.2.0
       http-errors: 2.0.1
@@ -5947,13 +5940,17 @@ snapshots:
 
   debounce@3.0.0: {}
 
-  debug@2.6.9:
+  debug@2.6.9(supports-color@7.2.0):
     dependencies:
       ms: 2.0.0
+    optionalDependencies:
+      supports-color: 7.2.0
 
-  debug@4.4.3:
+  debug@4.4.3(supports-color@7.2.0):
     dependencies:
       ms: 2.1.3
+    optionalDependencies:
+      supports-color: 7.2.0
 
   deep-is@0.1.4: {}
 
@@ -6211,11 +6208,11 @@ snapshots:
 
   escape-string-regexp@4.0.0: {}
 
-  eslint-plugin-react-hooks@4.6.2(eslint@8.57.1):
+  eslint-plugin-react-hooks@4.6.2(eslint@8.57.1(supports-color@7.2.0)):
     dependencies:
-      eslint: 8.57.1
+      eslint: 8.57.1(supports-color@7.2.0)
 
-  eslint-plugin-react@7.37.5(eslint@8.57.1):
+  eslint-plugin-react@7.37.5(eslint@8.57.1(supports-color@7.2.0)):
     dependencies:
       array-includes: 3.1.9
       array.prototype.findlast: 1.2.5
@@ -6223,7 +6220,7 @@ snapshots:
       array.prototype.tosorted: 1.1.4
       doctrine: 2.1.0
       es-iterator-helpers: 1.3.1
-      eslint: 8.57.1
+      eslint: 8.57.1(supports-color@7.2.0)
       estraverse: 5.3.0
       hasown: 2.0.2
       jsx-ast-utils: 3.3.5
@@ -6246,20 +6243,20 @@ snapshots:
 
   eslint-visitor-keys@5.0.1: {}
 
-  eslint@8.57.1:
+  eslint@8.57.1(supports-color@7.2.0):
     dependencies:
-      '@eslint-community/eslint-utils': 4.9.1(eslint@8.57.1)
+      '@eslint-community/eslint-utils': 4.9.1(eslint@8.57.1(supports-color@7.2.0))
       '@eslint-community/regexpp': 4.12.2
-      '@eslint/eslintrc': 2.1.4
+      '@eslint/eslintrc': 2.1.4(supports-color@7.2.0)
       '@eslint/js': 8.57.1
-      '@humanwhocodes/config-array': 0.13.0
+      '@humanwhocodes/config-array': 0.13.0(supports-color@7.2.0)
       '@humanwhocodes/module-importer': 1.0.1
       '@nodelib/fs.walk': 1.2.8
       '@ungap/structured-clone': 1.3.0
       ajv: 6.14.0
       chalk: 4.1.2
       cross-spawn: 7.0.6
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@7.2.0)
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
       eslint-scope: 7.2.2
@@ -6319,29 +6316,29 @@ snapshots:
 
   expect-type@1.4.0: {}
 
-  express-ws@5.0.2(express@4.22.3):
+  express-ws@5.0.2(express@4.22.3(supports-color@7.2.0)):
     dependencies:
-      express: 4.22.3
+      express: 4.22.3(supports-color@7.2.0)
       ws: 7.5.13
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  express@4.22.3:
+  express@4.22.3(supports-color@7.2.0):
     dependencies:
       accepts: 1.3.8
       array-flatten: 1.1.1
-      body-parser: 1.20.8
+      body-parser: 1.20.8(supports-color@7.2.0)
       content-disposition: 0.5.4
       content-type: 1.0.5
       cookie: 0.7.2
       cookie-signature: 1.0.7
-      debug: 2.6.9
+      debug: 2.6.9(supports-color@7.2.0)
       depd: 2.0.0
       encodeurl: 2.0.0
       escape-html: 1.0.3
       etag: 1.8.1
-      finalhandler: 1.3.2
+      finalhandler: 1.3.2(supports-color@7.2.0)
       fresh: 0.5.2
       http-errors: 2.0.1
       merge-descriptors: 1.0.3
@@ -6353,8 +6350,8 @@ snapshots:
       qs: 6.16.0
       range-parser: 1.2.1
       safe-buffer: 5.2.1
-      send: 0.19.2
-      serve-static: 1.16.3
+      send: 0.19.2(supports-color@7.2.0)
+      serve-static: 1.16.3(supports-color@7.2.0)
       setprototypeof: 1.2.0
       statuses: 2.0.2
       type-is: 1.6.18
@@ -6386,21 +6383,14 @@ snapshots:
       path-expression-matcher: 1.6.2
       xml-naming: 0.3.0
 
-  fast-xml-parser@5.11.2:
+  fast-xml-parser@5.12.0:
     dependencies:
       '@nodable/entities': 3.1.0
       fast-xml-builder: 1.3.1
-      is-unsafe: 2.0.2
+      is-unsafe: 2.0.3
       path-expression-matcher: 1.6.2
       strnum: 2.5.1
       xml-naming: 0.3.0
-
-  fast-xml-parser@5.7.0:
-    dependencies:
-      '@nodable/entities': 2.1.0
-      fast-xml-builder: 1.3.1
-      path-expression-matcher: 1.5.0
-      strnum: 2.2.3
 
   fastq@1.20.1:
     dependencies:
@@ -6423,9 +6413,9 @@ snapshots:
     dependencies:
       flat-cache: 3.2.0
 
-  finalhandler@1.3.2:
+  finalhandler@1.3.2(supports-color@7.2.0):
     dependencies:
-      debug: 2.6.9
+      debug: 2.6.9(supports-color@7.2.0)
       encodeurl: 2.0.0
       escape-html: 1.0.3
       on-finished: 2.4.1
@@ -6454,7 +6444,9 @@ snapshots:
 
   flatted@3.4.2: {}
 
-  follow-redirects@1.16.1: {}
+  follow-redirects@1.16.1(debug@4.4.3(supports-color@7.2.0)):
+    optionalDependencies:
+      debug: 4.4.3(supports-color@7.2.0)
 
   for-each@0.3.5:
     dependencies:
@@ -6518,10 +6510,10 @@ snapshots:
 
   fuse.js@6.6.2: {}
 
-  gaxios@6.7.1:
+  gaxios@6.7.1(supports-color@7.2.0):
     dependencies:
       extend: 3.0.2
-      https-proxy-agent: 7.0.6
+      https-proxy-agent: 7.0.6(supports-color@7.2.0)
       is-stream: 2.0.1
       node-fetch: 2.7.0
       uuid: 14.0.2
@@ -6529,43 +6521,43 @@ snapshots:
       - encoding
       - supports-color
 
-  gaxios@7.1.3:
+  gaxios@7.1.3(supports-color@7.2.0):
     dependencies:
       extend: 3.0.2
-      https-proxy-agent: 7.0.6
+      https-proxy-agent: 7.0.6(supports-color@7.2.0)
       node-fetch: 3.3.2
       rimraf: 5.0.10
     transitivePeerDependencies:
       - supports-color
 
-  gaxios@7.3.1:
+  gaxios@7.3.1(supports-color@7.2.0):
     dependencies:
       extend: 3.0.2
-      https-proxy-agent: 7.0.6
+      https-proxy-agent: 7.0.6(supports-color@7.2.0)
       node-fetch: 3.3.2
     transitivePeerDependencies:
       - supports-color
 
-  gcp-metadata@6.1.1:
+  gcp-metadata@6.1.1(supports-color@7.2.0):
     dependencies:
-      gaxios: 6.7.1
+      gaxios: 6.7.1(supports-color@7.2.0)
       google-logging-utils: 0.0.2
       json-bigint: 1.0.0
     transitivePeerDependencies:
       - encoding
       - supports-color
 
-  gcp-metadata@8.1.2:
+  gcp-metadata@8.1.2(supports-color@7.2.0):
     dependencies:
-      gaxios: 7.3.1
+      gaxios: 7.3.1(supports-color@7.2.0)
       google-logging-utils: 1.1.3
       json-bigint: 1.0.0
     transitivePeerDependencies:
       - supports-color
 
-  gcp-metadata@8.1.4:
+  gcp-metadata@8.1.4(supports-color@7.2.0):
     dependencies:
-      gaxios: 7.1.3
+      gaxios: 7.1.3(supports-color@7.2.0)
       google-logging-utils: 1.1.3
       json-bigint: 1.0.0
     transitivePeerDependencies:
@@ -6642,53 +6634,53 @@ snapshots:
 
   globrex@0.1.2: {}
 
-  google-auth-library@10.5.0:
+  google-auth-library@10.5.0(supports-color@7.2.0):
     dependencies:
       base64-js: 1.5.1
       ecdsa-sig-formatter: 1.0.11
-      gaxios: 7.3.1
-      gcp-metadata: 8.1.4
+      gaxios: 7.3.1(supports-color@7.2.0)
+      gcp-metadata: 8.1.4(supports-color@7.2.0)
       google-logging-utils: 1.1.3
-      gtoken: 8.0.0
+      gtoken: 8.0.0(supports-color@7.2.0)
       jws: 4.0.1
     transitivePeerDependencies:
       - supports-color
 
-  google-auth-library@10.9.1:
+  google-auth-library@10.9.1(supports-color@7.2.0):
     dependencies:
       base64-js: 1.5.1
       ecdsa-sig-formatter: 1.0.11
-      gaxios: 7.3.1
-      gcp-metadata: 8.1.2
+      gaxios: 7.3.1(supports-color@7.2.0)
+      gcp-metadata: 8.1.2(supports-color@7.2.0)
       google-logging-utils: 1.1.3
       jws: 4.0.1
     transitivePeerDependencies:
       - supports-color
 
-  google-auth-library@9.15.1:
+  google-auth-library@9.15.1(supports-color@7.2.0):
     dependencies:
       base64-js: 1.5.1
       ecdsa-sig-formatter: 1.0.11
-      gaxios: 6.7.1
-      gcp-metadata: 6.1.1
-      gtoken: 7.1.0
+      gaxios: 6.7.1(supports-color@7.2.0)
+      gcp-metadata: 6.1.1(supports-color@7.2.0)
+      gtoken: 7.1.0(supports-color@7.2.0)
       jws: 4.0.1
     transitivePeerDependencies:
       - encoding
       - supports-color
 
-  google-gax@5.0.8:
+  google-gax@5.0.8(supports-color@7.2.0):
     dependencies:
       '@grpc/grpc-js': 1.14.5
       '@grpc/proto-loader': 0.8.1
       duplexify: 4.1.3
-      google-auth-library: 10.5.0
+      google-auth-library: 10.5.0(supports-color@7.2.0)
       google-logging-utils: 1.1.3
       node-fetch: 3.3.2
       object-hash: 3.0.0
       proto3-json-serializer: 3.0.4
       protobufjs: 7.6.5
-      retry-request: 8.0.4
+      retry-request: 8.0.4(supports-color@7.2.0)
       rimraf: 5.0.10
     transitivePeerDependencies:
       - supports-color
@@ -6703,17 +6695,17 @@ snapshots:
 
   graphemer@1.4.0: {}
 
-  gtoken@7.1.0:
+  gtoken@7.1.0(supports-color@7.2.0):
     dependencies:
-      gaxios: 6.7.1
+      gaxios: 6.7.1(supports-color@7.2.0)
       jws: 4.0.1
     transitivePeerDependencies:
       - encoding
       - supports-color
 
-  gtoken@8.0.0:
+  gtoken@8.0.0(supports-color@7.2.0):
     dependencies:
-      gaxios: 7.3.1
+      gaxios: 7.3.1(supports-color@7.2.0)
       jws: 4.0.1
     transitivePeerDependencies:
       - supports-color
@@ -6781,32 +6773,32 @@ snapshots:
       statuses: 2.0.2
       toidentifier: 1.0.1
 
-  http-proxy-agent@5.0.0:
+  http-proxy-agent@5.0.0(supports-color@7.2.0):
     dependencies:
       '@tootallnate/once': 2.0.1
-      agent-base: 6.0.2
-      debug: 4.4.3
+      agent-base: 6.0.2(supports-color@7.2.0)
+      debug: 4.4.3(supports-color@7.2.0)
     transitivePeerDependencies:
       - supports-color
 
-  http-proxy-agent@7.0.2:
+  http-proxy-agent@7.0.2(supports-color@7.2.0):
     dependencies:
       agent-base: 7.1.4
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@7.2.0)
     transitivePeerDependencies:
       - supports-color
 
-  https-proxy-agent@5.0.1:
+  https-proxy-agent@5.0.1(supports-color@7.2.0):
     dependencies:
-      agent-base: 6.0.2
-      debug: 4.4.3
+      agent-base: 6.0.2(supports-color@7.2.0)
+      debug: 4.4.3(supports-color@7.2.0)
     transitivePeerDependencies:
       - supports-color
 
-  https-proxy-agent@7.0.6:
+  https-proxy-agent@7.0.6(supports-color@7.2.0):
     dependencies:
       agent-base: 7.1.4
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@7.2.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -6971,7 +6963,7 @@ snapshots:
     dependencies:
       which-typed-array: 1.1.20
 
-  is-unsafe@2.0.2: {}
+  is-unsafe@2.0.3: {}
 
   is-weakmap@2.0.2: {}
 
@@ -7336,8 +7328,6 @@ snapshots:
 
   path-exists@4.0.0: {}
 
-  path-expression-matcher@1.5.0: {}
-
   path-expression-matcher@1.6.2: {}
 
   path-is-absolute@1.0.1: {}
@@ -7554,19 +7544,19 @@ snapshots:
       path-parse: 1.0.7
       supports-preserve-symlinks-flag: 1.0.0
 
-  retry-request@7.0.2:
+  retry-request@7.0.2(supports-color@7.2.0):
     dependencies:
       '@types/request': 2.48.13
       extend: 3.0.2
-      teeny-request: 9.0.0
+      teeny-request: 9.0.0(supports-color@7.2.0)
     transitivePeerDependencies:
       - encoding
       - supports-color
 
-  retry-request@8.0.4:
+  retry-request@8.0.4(supports-color@7.2.0):
     dependencies:
       extend: 3.0.2
-      teeny-request: 10.1.4
+      teeny-request: 10.1.4(supports-color@7.2.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -7669,9 +7659,9 @@ snapshots:
 
   semver@7.8.5: {}
 
-  send@0.19.2:
+  send@0.19.2(supports-color@7.2.0):
     dependencies:
-      debug: 2.6.9
+      debug: 2.6.9(supports-color@7.2.0)
       depd: 2.0.0
       destroy: 1.2.0
       encodeurl: 2.0.0
@@ -7687,12 +7677,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  serve-static@1.16.3:
+  serve-static@1.16.3(supports-color@7.2.0):
     dependencies:
       encodeurl: 2.0.0
       escape-html: 1.0.3
       parseurl: 1.3.3
-      send: 0.19.2
+      send: 0.19.2(supports-color@7.2.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -7899,8 +7889,6 @@ snapshots:
 
   strip-json-comments@3.1.1: {}
 
-  strnum@2.2.3: {}
-
   strnum@2.5.1:
     dependencies:
       anynum: 1.0.1
@@ -7923,19 +7911,19 @@ snapshots:
 
   tabbable@6.4.0: {}
 
-  teeny-request@10.1.4:
+  teeny-request@10.1.4(supports-color@7.2.0):
     dependencies:
-      http-proxy-agent: 7.0.2
-      https-proxy-agent: 7.0.6
+      http-proxy-agent: 7.0.2(supports-color@7.2.0)
+      https-proxy-agent: 7.0.6(supports-color@7.2.0)
       node-fetch: 3.3.2
       stream-events: 1.0.5
     transitivePeerDependencies:
       - supports-color
 
-  teeny-request@9.0.0:
+  teeny-request@9.0.0(supports-color@7.2.0):
     dependencies:
-      http-proxy-agent: 5.0.0
-      https-proxy-agent: 5.0.1
+      http-proxy-agent: 5.0.0(supports-color@7.2.0)
+      https-proxy-agent: 5.0.1(supports-color@7.2.0)
       node-fetch: 2.7.0
       stream-events: 1.0.5
       uuid: 14.0.2
@@ -8078,16 +8066,31 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite-tsconfig-paths@4.3.2(typescript@5.9.3)(vite@6.4.3(@types/node@25.9.9)(sass@1.98.0)(tsx@4.23.12)(yaml@2.9.1)):
+  vite-tsconfig-paths@4.3.2(supports-color@7.2.0)(typescript@5.9.3)(vite@6.4.3(@types/node@18.19.130)(sass@1.98.0)(tsx@4.23.12)(yaml@2.9.1)):
     dependencies:
-      debug: 4.4.3
+      debug: 4.4.3(supports-color@7.2.0)
       globrex: 0.1.2
       tsconfck: 3.1.6(typescript@5.9.3)
     optionalDependencies:
-      vite: 6.4.3(@types/node@25.9.9)(sass@1.98.0)(tsx@4.23.12)(yaml@2.9.1)
+      vite: 6.4.3(@types/node@18.19.130)(sass@1.98.0)(tsx@4.23.12)(yaml@2.9.1)
     transitivePeerDependencies:
       - supports-color
       - typescript
+
+  vite@6.4.3(@types/node@18.19.130)(sass@1.98.0)(tsx@4.23.12)(yaml@2.9.1):
+    dependencies:
+      esbuild: 0.25.12
+      fdir: 6.5.0(picomatch@4.0.4)
+      picomatch: 4.0.4
+      postcss: 8.5.26
+      rollup: 4.59.0
+      tinyglobby: 0.2.15
+    optionalDependencies:
+      '@types/node': 18.19.130
+      fsevents: 2.3.3
+      sass: 1.98.0
+      tsx: 4.23.12
+      yaml: 2.9.1
 
   vite@6.4.3(@types/node@25.9.9)(sass@1.98.0)(tsx@4.23.12)(yaml@2.9.1):
     dependencies:
