@@ -315,6 +315,7 @@ import {
   createViewState,
   createViewStateProps,
   createViewStateFromProps,
+  sortCategories,
 } from "../createViewState.js";
 import type {
   ITwin3dViewData,
@@ -644,6 +645,41 @@ describe("createViewState", () => {
       // When all settings are "ignore", selectors should not be cloned/modified
       expect(knownModelSelector.clone).not.toHaveBeenCalled();
       expect(knownCategorySelector.clone).not.toHaveBeenCalled();
+    });
+
+    it("does not query missing models when settings are omitted", async () => {
+      await createViewState(mockIModel as never, iTwin3dViewData);
+
+      expect(mockIModel.createQueryReader).not.toHaveBeenCalled();
+    });
+
+    it("queries missing models when models.other is show or hide", async () => {
+      await createViewState(mockIModel as never, iTwin3dViewData, {
+        models: { other: "show" },
+      });
+      await createViewState(mockIModel as never, iTwin3dViewData, {
+        models: { other: "hide" },
+      });
+
+      expect(mockIModel.createQueryReader).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe("sortCategories", () => {
+    it("does not query missing categories when other is undefined", async () => {
+      await sortCategories(mockIModel as never, iTwin3dViewData, {
+        enabled: "show",
+      });
+
+      expect(mockIModel.createQueryReader).not.toHaveBeenCalled();
+    });
+
+    it("queries missing categories when other is show", async () => {
+      await sortCategories(mockIModel as never, iTwin3dViewData, {
+        other: "show",
+      });
+
+      expect(mockIModel.createQueryReader).toHaveBeenCalledTimes(1);
     });
   });
 });

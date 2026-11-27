@@ -550,7 +550,8 @@ async function applyModelSettings(
     } else if (settings?.disabled === "hide") {
       dropModels.push(...(viewData.models?.disabled ?? []));
     }
-    if (settings?.other !== "ignore") {
+    // Missing models are only needed when they will be shown or hidden; undefined means "ignore"
+    if (settings?.other === "show" || settings?.other === "hide") {
       const otherModels = await queryMissingModels(
         iModel,
         new Set([
@@ -606,7 +607,8 @@ export async function sortCategories(
   } else if (settings?.disabled === "hide") {
     dropCategories.push(...(viewData.categories?.disabled ?? []));
   }
-  if (settings?.other !== "ignore") {
+  // Missing categories are only needed when they will be shown or hidden; undefined means "ignore"
+  if (settings?.other === "show" || settings?.other === "hide") {
     const otherCategories = await queryMissingCategories(
       iModel,
       new Set([
