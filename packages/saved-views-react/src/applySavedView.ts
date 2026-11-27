@@ -102,6 +102,14 @@ export interface ApplySavedViewSettings {
    * @default undefined
    */
   viewChangeOptions?: ViewChangeOptions | undefined;
+
+  /**
+   * Pre-loaded spatial {@link ViewState} to use as the seed when a new `ViewState` is generated
+   * for an iTwin3d Saved View, instead of querying the iModel default view. Ignored when
+   * {@linkcode viewState} is provided or set to `"keep"`.
+   * @default undefined
+   */
+  seedViewState?: ViewState | undefined;
 }
 
 /**
@@ -120,7 +128,9 @@ async function createSeedViewStateProps(
   if (settings.viewState !== "keep") {
     return settings.viewState instanceof ViewState
       ? settings.viewState.toProps()
-      : createViewStateProps(iModel, savedViewData.viewData);
+      : createViewStateProps(iModel, savedViewData.viewData, {
+          seedViewState: settings.seedViewState,
+        });
   }
   return viewport.view.toProps();
 }

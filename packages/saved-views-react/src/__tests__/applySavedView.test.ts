@@ -403,6 +403,21 @@ describe("applySavedView", () => {
   });
 
   describe("viewState handling", () => {
+    it("forwards seedViewState when generating a new ViewState", async () => {
+      const providedSeed = createMockIModel().seedViewState;
+
+      await applySavedView(
+        mockIModel as never,
+        mockViewport as never,
+        minimalSavedViewData,
+        { seedViewState: providedSeed as never },
+      );
+
+      expect(mockIModel.views.queryDefaultViewId).not.toHaveBeenCalled();
+      expect(providedSeed.getGridSpacing).toHaveBeenCalled();
+      expect(mockViewport.changeView).toHaveBeenCalled();
+    });
+
     it("keeps ViewState when viewState='keep'", async () => {
       const viewToProps = vi.fn(() => ({
         viewDefinitionProps: {

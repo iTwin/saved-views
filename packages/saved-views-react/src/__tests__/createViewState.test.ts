@@ -681,6 +681,30 @@ describe("createViewStateProps", () => {
     expect(seedViewState.getAspectRatioSkew).toHaveBeenCalled();
   });
 
+  it("uses provided spatial seedViewState instead of querying the default view", async () => {
+    const providedSeed = createMockIModel().seedViewState;
+
+    await createViewStateProps(mockIModel as never, iTwin3dViewData, {
+      seedViewState: providedSeed as never,
+    });
+
+    expect(mockIModel.views.queryDefaultViewId).not.toHaveBeenCalled();
+    expect(mockIModel.views.load).not.toHaveBeenCalled();
+    expect(providedSeed.getGridSpacing).toHaveBeenCalled();
+  });
+
+  it("ignores provided seedViewState that is not a spatial view", async () => {
+    const providedSeed = createMockIModel({ seedViewStateType: "drawing" })
+      .seedViewState;
+
+    await createViewStateProps(mockIModel as never, iTwin3dViewData, {
+      seedViewState: providedSeed as never,
+    });
+
+    expect(mockIModel.views.load).toHaveBeenCalled();
+    expect(mockIModel.seedViewState.getGridSpacing).toHaveBeenCalled();
+  });
+
   it("reads federationGuid from seed for Drawing view", async () => {
     mockIModel = createMockIModel({ seedViewStateType: "drawing" });
 

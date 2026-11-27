@@ -97,6 +97,15 @@ export interface ViewStateCreateSettings {
    * @default "reset"
    */
   subcategories?: ShowStrategy | undefined;
+
+  /**
+   * Pre-loaded spatial {@link ViewState} to use as the seed for iTwin3d views instead of
+   * querying the iModel default view. Lets callers load the seed in parallel with fetching
+   * Saved View data. Ignored for drawing and sheet views, or when the provided view is not
+   * a spatial view.
+   * @default undefined
+   */
+  seedViewState?: ViewState | undefined;
 }
 
 /**
@@ -115,8 +124,13 @@ export interface ViewStateCreateSettings {
 export async function createViewStateProps(
   iModel: IModelConnection,
   viewData: ViewData,
+  settings: Pick<ViewStateCreateSettings, "seedViewState"> = {},
 ): Promise<ViewStateProps> {
-  const viewStateProps = await createViewStatePropsVariant(iModel, viewData);
+  const viewStateProps = await createViewStatePropsVariant(
+    iModel,
+    viewData,
+    settings.seedViewState,
+  );
   return viewStateProps;
 }
 
@@ -183,7 +197,11 @@ export async function createViewState(
   viewData: ViewData,
   settings: ViewStateCreateSettings = {},
 ): Promise<ViewState> {
-  const viewState = await createViewStateVariant(iModel, viewData);
+  const viewState = await createViewStateVariant(
+    iModel,
+    viewData,
+    settings.seedViewState,
+  );
   await applyViewStateOptions(viewState, iModel, viewData, settings);
   return viewState;
 }
@@ -191,6 +209,7 @@ export async function createViewState(
 async function createViewStatePropsVariant(
   iModel: IModelConnection,
   viewData: ViewData,
+  seedViewState: ViewState | undefined,
 ): Promise<ViewStateProps> {
   if (viewData.type === "iTwinDrawing") {
     return createDrawingViewStateProps(iModel, viewData);
@@ -200,12 +219,13 @@ async function createViewStatePropsVariant(
     return createSheetViewStateProps(iModel, viewData);
   }
 
-  return createSpatialViewStateProps(iModel, viewData);
+  return createSpatialViewStateProps(iModel, viewData, seedViewState);
 }
 
 async function createViewStateVariant(
   iModel: IModelConnection,
   viewData: ViewData,
+  seedViewState: ViewState | undefined,
 ): Promise<ViewState> {
   if (viewData.type === "iTwinDrawing") {
     return createDrawingViewState(iModel, viewData);
@@ -215,7 +235,7 @@ async function createViewStateVariant(
     return createSheetViewState(iModel, viewData);
   }
 
-  return createSpatialViewState(iModel, viewData);
+  return createSpatialViewState(iModel, viewData, seedViewState);
 }
 
 interface SpatialViewStateProps extends ViewStateProps {
@@ -225,11 +245,14 @@ interface SpatialViewStateProps extends ViewStateProps {
 async function createSpatialViewStateProps(
   iModel: IModelConnection,
   viewData: ViewITwin3d,
+  providedSeedViewState?: ViewState,
 ): Promise<SpatialViewStateProps> {
-  const seedViewState = (await fetchIModelViewData(
-    iModel,
-    SpatialViewState.classFullName,
-  )) as SpatialViewState;
+  const seedViewState = providedSeedViewState?.isSpatialView()
+    ? providedSeedViewState
+    : ((await fetchIModelViewData(
+        iModel,
+        SpatialViewState.classFullName,
+      )) as SpatialViewState);
   const props: SpatialViewStateProps = {
     viewDefinitionProps: {
       origin: viewData.origin,
@@ -285,8 +308,13 @@ async function createSpatialViewStateProps(
 async function createSpatialViewState(
   iModel: IModelConnection,
   viewData: ViewITwin3d,
+  seedViewState: ViewState | undefined,
 ): Promise<SpatialViewState> {
-  const props = await createSpatialViewStateProps(iModel, viewData);
+  const props = await createSpatialViewStateProps(
+    iModel,
+    viewData,
+    seedViewState,
+  );
   return SpatialViewState.createFromProps(props, iModel);
 }
 
